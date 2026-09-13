@@ -365,5 +365,80 @@ function executeInMemoryFallback<T>(text: string, params: any[] = []): T[] {
 		return [] as any;
 	}
 
+	// 16. SELECT transactions
+	if (sql.includes('FROM transactions')) {
+		if (sql.includes('WHERE id = $1')) {
+			const found = memoryTransactions.find(t => t.id === params[0] || t.transaction_id === params[0]);
+			return found ? ([found] as any) : [];
+		}
+		if (sql.includes('idempotency_key = $1')) {
+			const found = memoryTransactions.find(t => t.idempotency_key === params[0]);
+			return found ? ([found] as any) : [];
+		}
+		return memoryTransactions as any;
+	}
+
 	return [] as any;
 }
+
+export let memoryTransactions: any[] = [];
+
+export function recordMemoryTransaction(tx: any) {
+	memoryTransactions.unshift(tx);
+}
+
+export function voidMemoryTransaction(txId: string) {
+	const found = memoryTransactions.find(t => t.id === txId || t.transaction_id === txId);
+	if (found) {
+		found.status = 'VOID';
+	}
+}
+
+export function getProductForCheckout(unitId: string) {
+	const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(unitId);
+	let unit: any = null;
+	if (isUuid) {
+		unit = memoryProductUnits.find(u => u.id === unitId);
+	} else {
+		const clean = unitId.replace(/^u-/, '').toLowerCase();
+		unit = memoryProductUnits.find(u => u.barcode.toLowerCase() === clean || u.id.toLowerCase() === clean);
+	}
+
+	let product: any = null;
+	if (unit) {
+		product = memoryProducts.find(p => p.id === unit.product_id);
+	}
+	
+	if (!product) {
+		const clean = unitId.replace(/^u-/, '').toLowerCase();
+		product = memoryProducts.find(p => 
+			p.id === unitId || 
+			p.sku.toLowerCase() === clean || 
+			(p.barcode && p.barcode.toLowerCase() === clean) ||
+			p.name.toLowerCase().includes(clean)
+		);
+		if (product && !unit) {
+			unit = {
+				id: product.id,
+				product_id: product.id,
+				unit_name: product.unit || 'pcs',
+				conversion_factor: 1,
+				price: product.price || product.selling_price || 0
+			};
+		}
+	}
+
+	if (!product || !unit) return null;
+	return {
+		unit_id: unit.id,
+		product_id: product.id,
+		unit_name: unit.unit_name || 'pcs',
+		conversion_factor: unit.conversion_factor || 1,
+		price: unit.price || product.price || 0,
+		prod_id: product.id,
+		product_name: product.name,
+		stock: product.stock,
+		base_hpp: product.cost_price || product.base_hpp || 0
+	};
+}
+
