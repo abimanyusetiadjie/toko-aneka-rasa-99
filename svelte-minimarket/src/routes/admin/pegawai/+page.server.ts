@@ -1,7 +1,6 @@
 import type { PageServerLoad, Actions } from './$types';
 import { query } from '$lib/server/db';
 import type { User } from '$lib/types';
-import crypto from 'crypto';
 import * as bcrypt from 'bcryptjs';
 
 export const load: PageServerLoad = async () => {

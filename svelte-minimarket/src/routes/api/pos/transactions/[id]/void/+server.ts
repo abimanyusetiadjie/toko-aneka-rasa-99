@@ -1,7 +1,6 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { pool } from '$lib/server/db';
-import crypto from 'crypto';
 
 export const POST: RequestHandler = async ({ params, locals }) => {
 	// 1. Verifikasi Akses: Hanya Manager / Owner yang boleh melakukan Void

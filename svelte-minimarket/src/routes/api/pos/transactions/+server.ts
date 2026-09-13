@@ -5,7 +5,6 @@ import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import { pushStockToShopee } from '$lib/server/shopee-service';
 import { CreateTransactionSchema } from '$lib/schemas/transaction.schema';
 import { calculatePointsEarned } from '$lib/services/points';
-import crypto from 'crypto';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	let rawBody: any;

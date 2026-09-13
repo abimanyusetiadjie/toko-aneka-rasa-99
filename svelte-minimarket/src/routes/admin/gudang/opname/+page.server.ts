@@ -2,7 +2,6 @@ import type { PageServerLoad, Actions } from './$types';
 import { query } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import type { Product } from '$lib/types';
-import crypto from 'crypto';
 
 export const load: PageServerLoad = async () => {
 	try {
