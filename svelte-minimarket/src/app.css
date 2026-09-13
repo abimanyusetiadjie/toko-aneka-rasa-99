@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+:root {
+	--color-canvas: #F1F5F9;
+	--color-surface: #FFFFFF;
+	--color-surface-hover: #F8FAFC;
+	--color-surface-border: #E2E8F0;
+	--color-surface-border-strong: #CBD5E1;
+	--color-action-primary: #2563EB;
+	--color-action-primary-hover: #1D4ED8;
+	--color-pos-success: #059669;
+	--color-pos-success-hover: #047857;
+	--color-pos-danger: #DC2626;
+	--color-pos-danger-hover: #B91C1C;
+	--color-pos-warning: #D97706;
+	--color-pos-accent: #0284C7;
+	--color-text-main: #0F172A;
+	--color-text-muted: #64748B;
+	--color-text-subtle: #94A3B8;
+	--font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	--font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+html {
+	max-width: 100%;
+	overflow-x: hidden;
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	max-width: 100%;
+	overflow-x: hidden;
+	background-color: var(--color-canvas);
+	color: var(--color-text-main);
+	font-family: var(--font-sans);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-tap-highlight-color: transparent;
+	touch-action: manipulation;
+}
+
+/* Tabular numbers for financial accuracy */
+.tabular-nums, input[type="number"], .font-mono {
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: 'tnum' 1;
+}
+
+/* Retail Clean Panels */
+.pos-panel {
+	background-color: var(--color-surface);
+	border: 1px solid var(--color-surface-border);
+	border-radius: 0.5rem;
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+.pos-panel-active {
+	background-color: #F8FAFC;
+	border-color: var(--color-action-primary);
+}
+
+/* Custom Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+	background: #F1F5F9;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background: #CBD5E1;
+	border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+	background: #94A3B8;
+}
+
+/* Visible Keyboard Focus States */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+	outline: 2px solid var(--color-action-primary);
+	outline-offset: 1px;
+}
+
+/* Tactical Keyboard Badges */
+.kbd-badge {
+	font-family: var(--font-mono);
+	font-size: 0.65rem;
+	font-weight: 700;
+	padding: 0.1rem 0.35rem;
+	border-radius: 0.25rem;
+	background-color: #F1F5F9;
+	border: 1px solid #CBD5E1;
+	color: #0F172A;
+}
+
+/* Thermal Printer 58mm Print Engine (HANYA AKTIF SAAT CETAK STRUK KASIR) */
+@media print {
+	body:has(#receipt-print-area) * {
+		visibility: hidden !important;
+	}
+	body:has(#receipt-print-area) #receipt-print-area,
+	body:has(#receipt-print-area) #receipt-print-area * {
+		visibility: visible !important;
+		color: #000000 !important;
+		background: #ffffff !important;
+	}
+	body:has(#receipt-print-area) #receipt-print-area {
+		display: block !important;
+		position: absolute !important;
+		left: 0 !important;
+		top: 0 !important;
+		width: 58mm !important;
+		max-width: 58mm !important;
+		padding: 4px !important;
+		margin: 0 auto !important;
+		font-family: monospace !important;
+		font-size: 10px !important;
+		line-height: 1.2 !important;
+	}
+}

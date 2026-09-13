@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart POS Minimarket</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Alpine.js & Tailwind (via Vite) -->
+    <script type="module" src="/main.js"></script>
+</head>
+<body class="text-slate-200 h-screen w-screen overflow-hidden flex flex-col selection:bg-pos-accent selection:text-white"
+      x-data="posApp()"
+      @keydown.window="handleGlobalKeys($event)">
+    
+    <!-- Top Navbar -->
+    <header class="glass-panel mx-4 mt-4 mb-2 px-6 py-4 flex justify-between items-center z-10">
+        <div class="flex items-center gap-4">
+            <div class="bg-gradient-to-br from-pos-accent to-blue-700 w-10 h-10 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/30">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">SmartPOS</h1>
+                <p class="text-xs text-slate-400 font-medium">Toko Pusat</p>
+            </div>
+        </div>
+        
+        <div class="flex gap-8 text-sm">
+            <div class="flex flex-col">
+                <span class="text-slate-500 text-xs">Kasir Aktif</span>
+                <span class="font-medium" x-text="cashierName"></span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-slate-500 text-xs">Shift</span>
+                <span class="font-medium text-emerald-400">Pagi (08:00 - 15:00)</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-slate-500 text-xs">Member</span>
+                <input type="text" x-model="memberId" @change="recalculate()" class="bg-slate-900/50 border border-slate-700 rounded px-2 py-1 text-sm outline-none focus:border-pos-accent transition-colors w-32" placeholder="ID / No HP">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex gap-4 p-4 pt-0 overflow-hidden z-10">
+        
+        <!-- Left Side: Scanner & Cart -->
+        <section class="flex-1 flex flex-col gap-4">
+            <!-- Scanner Input -->
+            <div class="glass-panel p-4 flex gap-4 items-center group relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-pos-accent/10 to-transparent translate-x-[-100%] group-focus-within:animate-[shimmer_2s_infinite]"></div>
+                
+                <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700">
+                    <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                </div>
+                <div class="flex-1">
+                    <label class="text-xs text-slate-400 font-medium mb-1 block">CARI / SCAN BARCODE <span class="bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded text-[10px] ml-2 font-mono">F2</span></label>
+                    <input type="text" x-ref="barcodeInput" x-model="barcode" @keyup.enter="scanBarcode()"
+                           class="w-full bg-transparent text-2xl font-semibold outline-none placeholder-slate-600 focus:text-white transition-colors"
+                           placeholder="|||||||||||||||||||||||||||||||" autofocus>
+                </div>
+                <button @click="scanBarcode()" class="bg-pos-accent hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-lg shadow-blue-500/20 active:scale-95">
+                    Tambah
+                </button>
+            </div>
+
+            <!-- Cart Table -->
+            <div class="glass-panel flex-1 flex flex-col overflow-hidden relative">
+                <!-- Bundling Notification Banner -->
+                <div x-show="notification" x-transition.opacity class="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border-b border-amber-500/30 px-6 py-3 flex items-center gap-3">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-amber-200 text-sm font-medium" x-text="notification"></p>
+                    <button @click="notification = ''" class="ml-auto text-amber-400/50 hover:text-amber-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+
+                <div class="flex-1 overflow-auto p-4 custom-scrollbar">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-xs text-slate-400 uppercase tracking-wider border-b border-slate-700/50">
+                                <th class="pb-3 font-medium">Nama Produk</th>
+                                <th class="pb-3 font-medium text-center w-20">Qty</th>
+                                <th class="pb-3 font-medium text-center w-32">Satuan</th>
+                                <th class="pb-3 font-medium text-right w-32">Subtotal</th>
+                                <th class="pb-3 font-medium text-center w-12"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <template x-for="(item, index) in cart" :key="item.id">
+                                <tr class="border-b border-slate-800/50 group hover:bg-slate-800/30 transition-colors"
+                                    x-transition:enter="transition ease-out duration-300"
+                                    x-transition:enter-start="opacity-0 -translate-y-4"
+                                    x-transition:enter-end="opacity-100 translate-y-0">
+                                    <td class="py-4 font-medium" x-text="item.name"></td>
+                                    <td class="py-4 text-center">
+                                        <input type="number" min="1" x-model.number="item.qty" @change="recalculate()" class="w-16 bg-slate-900 border border-slate-700 rounded p-1 text-center outline-none focus:border-pos-accent">
+                                    </td>
+                                    <td class="py-4 text-center">
+                                        <select x-model="item.unit_id" @change="updateItemUnit(index); recalculate()" class="w-24 bg-slate-900 border border-slate-700 rounded p-1 outline-none focus:border-pos-accent">
+                                            <template x-for="u in item.available_units" :key="u.id">
+                                                <option :value="u.id" x-text="u.unit_name"></option>
+                                            </template>
+                                        </select>
+                                    </td>
+                                    <td class="py-4 text-right font-mono" x-text="formatCurrency(item.qty * item.price)"></td>
+                                    <td class="py-4 text-center">
+                                        <button @click="removeItem(index)" class="text-red-400/50 hover:text-red-400 transition-colors">
+                                            <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                            
+                            <tr x-show="cart.length === 0">
+                                <td colspan="5" class="py-12 text-center text-slate-500">
+                                    Belum ada item belanjaan.<br>Silakan scan barcode produk.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Side: Summary & Payment -->
+        <aside class="w-96 flex flex-col gap-4">
+            
+            <div class="glass-panel p-6 flex flex-col gap-6 flex-1">
+                <h2 class="text-sm font-semibold tracking-wide text-slate-400 uppercase">Ringkasan Pembayaran</h2>
+                
+                <div class="flex-1 space-y-4">
+                    <div class="flex justify-between items-end">
+                        <span class="text-slate-400">Subtotal</span>
+                        <span class="font-mono text-lg" x-text="formatCurrency(subtotal)"></span>
+                    </div>
+                    <div class="flex justify-between items-end">
+                        <span class="text-slate-400">Diskon Member</span>
+                        <span class="font-mono text-emerald-400" x-text="'- ' + formatCurrency(discount)"></span>
+                    </div>
+                    
+                    <hr class="border-slate-700/50 my-6">
+                    
+                    <div class="flex justify-between items-end">
+                        <span class="text-xl font-medium">Total Akhir</span>
+                        <span class="font-mono text-4xl font-bold text-white tracking-tight" x-text="formatCurrency(total)"></span>
+                    </div>
+                </div>
+
+                <!-- Payment Method Selection -->
+                <div class="space-y-3">
+                    <label class="text-xs text-slate-400 uppercase font-medium">Metode Pembayaran</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button @click="setPayment('CASH')" :class="paymentMethod === 'CASH' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50' : 'bg-slate-900 border-slate-700 hover:border-slate-500'" class="border rounded-lg py-2 flex flex-col items-center justify-center gap-1 transition-all">
+                            <span class="text-xs font-semibold">TUNAI</span>
+                            <span class="text-[10px] bg-slate-800 px-1.5 rounded opacity-70 font-mono">F8</span>
+                        </button>
+                        <button @click="setPayment('DEBIT')" :class="paymentMethod === 'DEBIT' ? 'bg-blue-500/20 text-blue-400 border-blue-500/50' : 'bg-slate-900 border-slate-700 hover:border-slate-500'" class="border rounded-lg py-2 flex flex-col items-center justify-center gap-1 transition-all">
+                            <span class="text-xs font-semibold">DEBIT</span>
+                            <span class="text-[10px] bg-slate-800 px-1.5 rounded opacity-70 font-mono">F9</span>
+                        </button>
+                        <button @click="setPayment('QRIS')" :class="paymentMethod === 'QRIS' ? 'bg-purple-500/20 text-purple-400 border-purple-500/50' : 'bg-slate-900 border-slate-700 hover:border-slate-500'" class="border rounded-lg py-2 flex flex-col items-center justify-center gap-1 transition-all">
+                            <span class="text-xs font-semibold">QRIS</span>
+                            <span class="text-[10px] bg-slate-800 px-1.5 rounded opacity-70 font-mono">F10</span>
+                        </button>
+                    </div>
+
+                    <div x-show="paymentMethod === 'CASH'" x-collapse>
+                        <input type="number" x-model.number="amountPaid" placeholder="Nominal Uang Tunai" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-lg font-mono outline-none focus:border-emerald-500 mt-2">
+                        <div class="flex justify-between mt-2 text-sm px-1">
+                            <span class="text-slate-400">Kembalian:</span>
+                            <span class="font-mono text-emerald-400 font-bold text-lg" x-text="formatCurrency(Math.max(0, amountPaid - total))"></span>
+                        </div>
+                    </div>
+                    <div x-show="paymentMethod !== 'CASH'" x-collapse>
+                        <input type="text" x-model="paymentRef" placeholder="Nomor Referensi (Wajib)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 outline-none focus:border-pos-accent mt-2">
+                    </div>
+                </div>
+
+                <button @click="processTransaction()" :disabled="isProcessing || cart.length === 0" class="w-full mt-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white rounded-xl py-4 font-bold text-lg shadow-lg shadow-emerald-500/25 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group">
+                    <span x-show="!isProcessing">CETAK STRUK & BAYAR</span>
+                    <span x-show="isProcessing">MEMPROSES...</span>
+                    <span class="bg-white/20 text-white text-[11px] px-2 py-0.5 rounded ml-2 font-mono group-hover:bg-white/30 transition-colors">F12</span>
+                </button>
+            </div>
+            
+        </aside>
+    </main>
+
+    <!-- Thermal Receipt Print Template (Hidden unless printing) -->
+    <div id="receipt-print-area" class="hidden text-black font-mono text-sm max-w-[58mm] mx-auto p-2">
+        <div class="text-center mb-4">
+            <h2 class="font-bold text-lg" x-text="storeName"></h2>
+            <p class="text-xs" x-text="storeAddress"></p>
+            <p class="text-xs" x-text="'Telp: ' + storePhone"></p>
+            <p class="text-xs mt-2 border-b border-black border-dashed pb-1">
+                No: <span x-text="lastReceiptNumber"></span><br>
+                Kasir: <span x-text="cashierName"></span><br>
+                Waktu: <span x-text="new Date().toLocaleString('id-ID')"></span>
+            </p>
+        </div>
+        
+        <table class="w-full text-xs mb-2">
+            <tbody x-html="printCartHtml">
+            </tbody>
+        </table>
+        
+        <div class="border-t border-black border-dashed pt-2 text-xs">
+            <div class="flex justify-between">
+                <span>Subtotal:</span>
+                <span x-text="formatCurrency(subtotal)"></span>
+            </div>
+            <div class="flex justify-between" x-show="discount > 0">
+                <span>Diskon:</span>
+                <span x-text="'-' + formatCurrency(discount)"></span>
+            </div>
+            <div class="flex justify-between font-bold text-sm mt-1">
+                <span>TOTAL:</span>
+                <span x-text="formatCurrency(total)"></span>
+            </div>
+            
+            <div class="mt-2 flex justify-between">
+                <span x-text="'BAYAR (' + paymentMethod + '):'"></span>
+                <span x-text="paymentMethod === 'CASH' ? formatCurrency(amountPaid) : formatCurrency(total)"></span>
+            </div>
+            <div class="flex justify-between" x-show="paymentMethod === 'CASH'">
+                <span>KEMBALI:</span>
+                <span x-text="formatCurrency(Math.max(0, amountPaid - total))"></span>
+            </div>
+        </div>
+        
+        <div class="text-center mt-6 text-xs">
+            <p>Terima kasih atas kunjungan Anda!</p>
+            <p>Barang yang sudah dibeli tidak dapat ditukar/dikembalikan.</p>
+        </div>
+    </div>
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+
+        /* Thermal Printer Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            body {
+                background: white;
+                color: black;
+            }
+            #receipt-print-area, #receipt-print-area * {
+                visibility: visible;
+                display: block;
+            }
+            #receipt-print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            /* Hide page URL and date headers printed by browsers */
+            @page {
+                margin: 0;
+            }
+        }
+    </style>
+</body>
+</html>

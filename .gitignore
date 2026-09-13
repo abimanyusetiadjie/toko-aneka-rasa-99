@@ -1,0 +1,42 @@
+﻿# Dependencies
+node_modules/
+vendor/
+.pnp
+.pnp.js
+
+# SvelteKit & Build Outputs
+.svelte-kit/
+dist/
+build/
+.vercel/
+.cloudflare/
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Logs & Runtime
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+writable/cache/
+writable/logs/
+writable/session/
+writable/debugbar/
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+__pycache__/
+*.pyc
