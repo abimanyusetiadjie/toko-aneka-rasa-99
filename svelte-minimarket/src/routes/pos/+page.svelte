@@ -462,7 +462,7 @@
 			
 			showSuccessModal = true;
 			setTimeout(() => {
-				window.print();
+				try { window.print(); } catch {}
 			}, 100);
 		} catch (err: any) {
 			displayActionableError(
