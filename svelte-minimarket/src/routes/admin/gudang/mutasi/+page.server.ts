@@ -1,10 +1,11 @@
 import type { PageServerLoad } from './$types';
 import { query } from '$lib/server/db';
 
-export const load: PageServerLoad = async ({ url, setHeaders }) => {
+export const load: PageServerLoad = async ({ url, setHeaders, locals }) => {
 	setHeaders({
 		'cache-control': 'private, max-age=15, stale-while-revalidate=30'
 	});
+	const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
 	const filterType = url.searchParams.get('type') || 'ALL';
 
 	try {
@@ -24,10 +25,14 @@ export const load: PageServerLoad = async ({ url, setHeaders }) => {
 
 		sql += ` ORDER BY sm.created_at DESC LIMIT 50`;
 
-		const movements = await query(sql, params);
+		const rawMovements = await query(sql, params);
+		const movements = (rawMovements || []).map((m: any) => ({
+			...m,
+			unit_cost_snapshot: isOwner ? Number(m.unit_cost_snapshot || 0) : 0
+		}));
 
-		return { movements: movements || [], filterType };
+		return { movements, filterType, isOwner: !!isOwner };
 	} catch (e: any) {
-		return { movements: [], filterType, error: e.message };
+		return { movements: [], filterType, isOwner: !!isOwner, error: e.message };
 	}
 };

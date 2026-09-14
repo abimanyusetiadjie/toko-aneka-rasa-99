@@ -10,14 +10,15 @@ import {
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import type { Product } from '$lib/types';
 
-export const load: PageServerLoad = async ({ setHeaders }) => {
+export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 	setHeaders({
 		'cache-control': 'private, max-age=15, stale-while-revalidate=30'
 	});
+	const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
 	try {
-		const products = await query<Product>(`SELECT id, name, sku, stock, COALESCE(cost_price, 0) as base_hpp FROM products ORDER BY name ASC`);
+		const rawProducts = await query<Product>(`SELECT id, name, sku, stock, COALESCE(cost_price, 0) as base_hpp FROM products ORDER BY name ASC`);
 
-		const adjustments = await query(`
+		const rawAdjustments = await query(`
 			SELECT 
 				sm.id, sm.created_at, sm.qty_base_change, sm.balance_after, sm.unit_cost_snapshot,
 				sm.notes, p.name as product_name, p.sku
@@ -28,24 +29,41 @@ export const load: PageServerLoad = async ({ setHeaders }) => {
 			LIMIT 25
 		`);
 
+		const products = (rawProducts || []).map((p) => ({
+			...p,
+			base_hpp: isOwner ? Number(p.base_hpp || 0) : 0
+		}));
+
+		const adjustments = (rawAdjustments || []).map((a: any) => ({
+			...a,
+			unit_cost_snapshot: isOwner ? Number(a.unit_cost_snapshot || 0) : 0
+		}));
+
 		const pendingShortages = memoryShortages.filter(s => s.status === 'BELUM_DITAGIH');
 		const submittedShortages = memoryShortages.filter(s => s.status === 'SUDAH_DIKLAIM');
 		const resolvedShortages = memoryShortages.filter(s => s.status === 'SELESAI');
 
-		const totalPendingValue = pendingShortages.reduce((acc, curr) => acc + (curr.shortage_value || 0), 0);
+		const totalPendingValue = isOwner ? pendingShortages.reduce((acc, curr) => acc + (curr.shortage_value || 0), 0) : 0;
 		const totalPendingPcs = pendingShortages.reduce((acc, curr) => acc + (curr.shortage_qty || 0), 0);
 
+		const shortages = memoryShortages.map(s => ({
+			...s,
+			unit_cost: isOwner ? s.unit_cost : 0,
+			shortage_value: isOwner ? s.shortage_value : 0
+		}));
+
 		return {
-			products: products || [],
-			adjustments: adjustments || [],
-			shortages: [...memoryShortages],
+			products,
+			adjustments,
+			shortages,
 			summary: {
 				totalPendingCount: pendingShortages.length,
 				totalPendingPcs,
 				totalPendingValue,
 				totalSubmittedCount: submittedShortages.length,
 				totalResolvedCount: resolvedShortages.length
-			}
+			},
+			isOwner: !!isOwner
 		};
 	} catch (e: any) {
 		return {
@@ -59,6 +77,7 @@ export const load: PageServerLoad = async ({ setHeaders }) => {
 				totalSubmittedCount: 0,
 				totalResolvedCount: 0
 			},
+			isOwner: !!isOwner,
 			error: e.message
 		};
 	}

@@ -3,12 +3,14 @@ import { query } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import type { Product, Category } from '$lib/types';
 
-export const load: PageServerLoad = async ({ setHeaders }) => {
+export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 	setHeaders({
 		'cache-control': 'private, max-age=15, stale-while-revalidate=30'
 	});
+	const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
+
 	try {
-		const [products, categories, movements] = await Promise.all([
+		const [rawProducts, categories, rawMovements] = await Promise.all([
 			query<Product>(`
 				SELECT 
 					p.id, p.sku, p.name, p.category_id, 
@@ -35,18 +37,34 @@ export const load: PageServerLoad = async ({ setHeaders }) => {
 			`)
 		]);
 
-		return { products: products || [], categories: categories || [], movements: movements || [] };
+		const products = (rawProducts || []).map((p) => ({
+			...p,
+			base_hpp: isOwner ? Number(p.base_hpp || 0) : 0
+		}));
+
+		const movements = (rawMovements || []).map((m: any) => ({
+			...m,
+			unit_cost_snapshot: isOwner ? Number(m.unit_cost_snapshot || 0) : 0
+		}));
+
+		return { 
+			products, 
+			categories: categories || [], 
+			movements,
+			isOwner: !!isOwner 
+		};
 	} catch (e: any) {
-		return { products: [], categories: [], movements: [], error: e.message };
+		return { products: [], categories: [], movements: [], isOwner: !!isOwner, error: e.message };
 	}
 };
 
 export const actions: Actions = {
-	create: async ({ request }) => {
+	create: async ({ request, locals }) => {
+		const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
 		const data = await request.formData();
 		const name = String(data.get('name') || '').trim();
 		const category_id = Number(data.get('category_id') || 1);
-		const base_hpp = Number(data.get('base_hpp') || 0);
+		const base_hpp = isOwner ? Number(data.get('base_hpp') || 0) : 0;
 		const selling_price = Number(data.get('selling_price') || 0);
 		const stock = Number(data.get('stock') || 0);
 		let barcode = String(data.get('barcode') || '').trim();
@@ -75,8 +93,8 @@ export const actions: Actions = {
 			}
 
 			await query(
-				`INSERT INTO products (id, store_id, sku, name, category_id, base_unit, base_hpp, stock)
-				 VALUES ($1, $2, $3, $4, $5, 'Pcs', $6, $7)`,
+				`INSERT INTO products (id, store_id, sku, name, category_id, base_unit, base_hpp, cost_price, stock)
+				 VALUES ($1, $2, $3, $4, $5, 'Pcs', $6, $6, $7)`,
 				[productId, storeId, sku, name, category_id, base_hpp, stock]
 			);
 
@@ -110,7 +128,8 @@ export const actions: Actions = {
 		}
 	},
 
-	restock: async ({ request }) => {
+	restock: async ({ request, locals }) => {
+		const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
 		const data = await request.formData();
 		const id = String(data.get('id'));
 		const addQty = Number(data.get('qty'));
@@ -122,14 +141,15 @@ export const actions: Actions = {
 		}
 
 		try {
-			const prodList = await query<Product>(`SELECT id, stock, base_hpp, name FROM products WHERE id = $1`, [id]);
+			const prodList = await query<Product>(`SELECT id, stock, base_hpp, cost_price, name FROM products WHERE id = $1`, [id]);
 			const prod = prodList[0];
 			if (!prod) return { success: false, message: 'Produk tidak ditemukan.' };
 
 			const newBalance = Number(prod.stock) + addQty;
-			const unitCost = purchaseCost > 0 ? purchaseCost : prod.base_hpp;
+			const currentHpp = Number(prod.base_hpp || prod.cost_price || 0);
+			const unitCost = (isOwner && purchaseCost > 0) ? purchaseCost : currentHpp;
 
-			await query(`UPDATE products SET stock = $1, base_hpp = $2, updated_at = NOW() WHERE id = $3`, [
+			await query(`UPDATE products SET stock = $1, base_hpp = $2, cost_price = $2, updated_at = NOW() WHERE id = $3`, [
 				newBalance,
 				unitCost,
 				id
@@ -157,12 +177,13 @@ export const actions: Actions = {
 		}
 	},
 
-	update: async ({ request }) => {
+	update: async ({ request, locals }) => {
+		const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
 		const data = await request.formData();
 		const id = String(data.get('id'));
 		const name = String(data.get('name') || '').trim();
 		const category_id = Number(data.get('category_id') || 1);
-		const base_hpp = Number(data.get('base_hpp') || 0);
+		const base_hpp_form = Number(data.get('base_hpp') || 0);
 		const selling_price = Number(data.get('selling_price') || 0);
 		const stock = Number(data.get('stock') || 0);
 		const barcode = String(data.get('barcode') || '').trim();
@@ -180,9 +201,13 @@ export const actions: Actions = {
 				}
 			}
 
+			const existingProd = await query<Product>(`SELECT base_hpp, cost_price FROM products WHERE id = $1`, [id]);
+			const currentHpp = Number(existingProd[0]?.base_hpp || existingProd[0]?.cost_price || 0);
+			const base_hpp = isOwner ? base_hpp_form : currentHpp;
+
 			await query(
 				`UPDATE products 
-				 SET name = $1, category_id = $2, base_hpp = $3, stock = $4, updated_at = NOW()
+				 SET name = $1, category_id = $2, base_hpp = $3, cost_price = $3, stock = $4, updated_at = NOW()
 				 WHERE id = $5`,
 				[name, category_id, base_hpp, stock, id]
 			);

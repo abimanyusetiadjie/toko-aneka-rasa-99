@@ -77,7 +77,9 @@
 						<th class="py-3 px-4">TIPE MUTASI</th>
 						<th class="py-3 px-4 text-right">PERUBAHAN QTY</th>
 						<th class="py-3 px-4 text-right">SISA STOK AKHIR</th>
-						<th class="py-3 px-4 text-right">HPP MODAL</th>
+						{#if data.isOwner}
+							<th class="py-3 px-4 text-right">HPP MODAL</th>
+						{/if}
 						<th class="py-3 px-4">KETERANGAN & AUDIT TRAIL</th>
 					</tr>
 				</thead>
@@ -97,12 +99,14 @@
 								{m.qty_base_change > 0 ? `+${m.qty_base_change}` : m.qty_base_change} Pcs
 							</td>
 							<td class="py-3 px-4 text-right font-mono font-bold text-slate-800">{m.balance_after} Pcs</td>
-							<td class="py-3 px-4 text-right font-mono text-slate-600">{formatCurrency(m.unit_cost_snapshot)}</td>
+							{#if data.isOwner}
+								<td class="py-3 px-4 text-right font-mono text-slate-600">{formatCurrency(m.unit_cost_snapshot)}</td>
+							{/if}
 							<td class="py-3 px-4 text-slate-600 text-[11px]">{m.notes || '-'}</td>
 						</tr>
 					{:else}
 						<tr>
-							<td colspan="7" class="py-16 text-center text-slate-400">
+							<td colspan={data.isOwner ? 7 : 6} class="py-16 text-center text-slate-400">
 								Tidak ada catatan mutasi yang sesuai filter.
 							</td>
 						</tr>

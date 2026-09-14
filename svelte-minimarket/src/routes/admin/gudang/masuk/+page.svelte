@@ -81,7 +81,9 @@
 					<div class="p-2.5 bg-slate-50 border border-slate-200 rounded text-slate-700 space-y-1 font-mono text-[11px]">
 						<div class="flex justify-between"><span>SKU:</span><b>{selectedProduct.sku}</b></div>
 						<div class="flex justify-between"><span>Stok Gudang Sekarang:</span><b class="text-blue-600">{selectedProduct.stock} Pcs</b></div>
-						<div class="flex justify-between"><span>HPP Terakhir:</span><b>{formatCurrency(selectedProduct.base_hpp)}</b></div>
+						{#if data.isOwner}
+							<div class="flex justify-between"><span>HPP Terakhir:</span><b>{formatCurrency(selectedProduct.base_hpp)}</b></div>
+						{/if}
 					</div>
 				{/if}
 
@@ -96,16 +98,23 @@
 					</div>
 				</div>
 
-				<div class="grid grid-cols-2 gap-2">
+				{#if data.isOwner}
+					<div class="grid grid-cols-2 gap-2">
+						<div>
+							<label for="p-qty" class="block font-bold text-slate-700 mb-1">Jumlah Masuk (Pcs) *</label>
+							<input id="p-qty" type="number" name="qty" bind:value={qty} min="1" required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 outline-none focus:border-emerald-600 text-slate-900 font-mono font-bold text-sm" />
+						</div>
+						<div>
+							<label for="p-cost" class="block font-bold text-slate-700 mb-1">HPP Beli Baru / Pcs</label>
+							<input id="p-cost" type="number" name="purchase_cost" bind:value={purchaseCost} min="0" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
+						</div>
+					</div>
+				{:else}
 					<div>
 						<label for="p-qty" class="block font-bold text-slate-700 mb-1">Jumlah Masuk (Pcs) *</label>
 						<input id="p-qty" type="number" name="qty" bind:value={qty} min="1" required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 outline-none focus:border-emerald-600 text-slate-900 font-mono font-bold text-sm" />
 					</div>
-					<div>
-						<label for="p-cost" class="block font-bold text-slate-700 mb-1">HPP Beli Baru / Pcs</label>
-						<input id="p-cost" type="number" name="purchase_cost" bind:value={purchaseCost} min="0" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
-					</div>
-				</div>
+				{/if}
 
 				<div>
 					<label for="p-notes" class="block font-bold text-slate-700 mb-1">Catatan Tambahan</label>
@@ -140,7 +149,9 @@
 							<th class="py-2.5 px-3">PRODUK</th>
 							<th class="py-2.5 px-3 text-right">JUMLAH MASUK</th>
 							<th class="py-2.5 px-3 text-right">STOK AKHIR</th>
-							<th class="py-2.5 px-3 text-right">HPP MODAL</th>
+							{#if data.isOwner}
+								<th class="py-2.5 px-3 text-right">HPP MODAL</th>
+							{/if}
 							<th class="py-2.5 px-3">KETERANGAN / FAKTUR</th>
 						</tr>
 					</thead>
@@ -155,12 +166,14 @@
 									+{r.qty_base_change} Pcs
 								</td>
 								<td class="py-2.5 px-3 text-right font-mono font-semibold text-slate-800">{r.balance_after} Pcs</td>
-								<td class="py-2.5 px-3 text-right font-mono text-slate-600">{formatCurrency(r.unit_cost_snapshot)}</td>
+								{#if data.isOwner}
+									<td class="py-2.5 px-3 text-right font-mono text-slate-600">{formatCurrency(r.unit_cost_snapshot)}</td>
+								{/if}
 								<td class="py-2.5 px-3 text-slate-600 text-[11px]">{r.notes || '-'}</td>
 							</tr>
 						{:else}
 							<tr>
-								<td colspan="6" class="py-12 text-center text-slate-400">
+								<td colspan={data.isOwner ? 6 : 5} class="py-12 text-center text-slate-400">
 									Belum ada riwayat penerimaan barang masuk tersimpan.
 								</td>
 							</tr>

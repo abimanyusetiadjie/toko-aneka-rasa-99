@@ -180,9 +180,11 @@
 				<span class="text-2xl font-black text-slate-900 font-mono">{data.summary.totalPendingCount}</span>
 				<span class="text-xs text-slate-500 font-medium">kiriman ({data.summary.totalPendingPcs} pcs)</span>
 			</div>
-			<p class="text-xs font-bold text-red-600 mt-1">
-				{formatCurrency(data.summary.totalPendingValue)} <span class="text-[11px] font-normal text-slate-500">harus dipotong faktur</span>
-			</p>
+			{#if data.isOwner}
+				<p class="text-xs font-bold text-red-600 mt-1">
+					{formatCurrency(data.summary.totalPendingValue)} <span class="text-[11px] font-normal text-slate-500">harus dipotong faktur</span>
+				</p>
+			{/if}
 		</div>
 
 		<!-- Card 2: Sedang Diajukan -->
@@ -340,7 +342,7 @@
 								</span>
 							</div>
 
-							{#if shortageDiff > 0}
+							{#if data.isOwner && shortageDiff > 0}
 								<div class="flex justify-between font-mono text-xs pt-1 border-t border-red-200 text-red-700 font-bold">
 									<span>Estimasi Nilai Klaim (HPP):</span>
 									<span>{formatCurrency(shortageTotalLoss)}</span>
@@ -507,10 +509,12 @@
 										<div class="text-[10px] text-red-600 font-bold">Kekurangan</div>
 										<span class="font-black text-red-600 text-sm">-{s.shortage_qty} Pcs</span>
 									</div>
-									<div class="text-right">
-										<div class="text-[10px] text-slate-500">Nilai Kerugian</div>
-										<span class="font-bold text-slate-900">{formatCurrency(s.shortage_value)}</span>
-									</div>
+									{#if data.isOwner}
+										<div class="text-right">
+											<div class="text-[10px] text-slate-500">Nilai Kerugian</div>
+											<span class="font-bold text-slate-900">{formatCurrency(s.shortage_value)}</span>
+										</div>
+									{/if}
 								</div>
 							</div>
 
@@ -693,7 +697,7 @@
 									{shelfDiff > 0 ? `+${shelfDiff} Pcs (Lebih Fisik)` : shelfDiff < 0 ? `${shelfDiff} Pcs (Kurang Fisik)` : 'Sesuai (0 Pcs)'}
 								</span>
 							</div>
-							{#if shelfLossEstimate > 0}
+							{#if data.isOwner && shelfLossEstimate > 0}
 								<div class="flex justify-between font-mono text-[11px] text-red-700 pt-1 border-t border-red-200">
 									<span>Estimasi Nilai Selisih:</span>
 									<b>- {formatCurrency(shelfLossEstimate)}</b>

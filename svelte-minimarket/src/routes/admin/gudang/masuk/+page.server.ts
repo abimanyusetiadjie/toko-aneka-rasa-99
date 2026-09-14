@@ -3,14 +3,16 @@ import { query } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import type { Product } from '$lib/types';
 
-export const load: PageServerLoad = async ({ setHeaders }) => {
+export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 	setHeaders({
 		'cache-control': 'private, max-age=15, stale-while-revalidate=30'
 	});
-	try {
-		const products = await query<Product>(`SELECT id, name, sku, stock, COALESCE(cost_price, 0) as base_hpp FROM products ORDER BY name ASC`);
+	const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
 
-		const receipts = await query(`
+	try {
+		const rawProducts = await query<Product>(`SELECT id, name, sku, stock, COALESCE(cost_price, 0) as base_hpp FROM products ORDER BY name ASC`);
+
+		const rawReceipts = await query(`
 			SELECT 
 				sm.id, sm.created_at, sm.qty_base_change, sm.balance_after, sm.unit_cost_snapshot,
 				sm.notes, p.name as product_name, p.sku
@@ -21,14 +23,25 @@ export const load: PageServerLoad = async ({ setHeaders }) => {
 			LIMIT 20
 		`);
 
-		return { products: products || [], receipts: receipts || [] };
+		const products = (rawProducts || []).map((p) => ({
+			...p,
+			base_hpp: isOwner ? Number(p.base_hpp || 0) : 0
+		}));
+
+		const receipts = (rawReceipts || []).map((r: any) => ({
+			...r,
+			unit_cost_snapshot: isOwner ? Number(r.unit_cost_snapshot || 0) : 0
+		}));
+
+		return { products, receipts, isOwner: !!isOwner };
 	} catch (e: any) {
-		return { products: [], receipts: [], error: e.message };
+		return { products: [], receipts: [], isOwner: !!isOwner, error: e.message };
 	}
 };
 
 export const actions: Actions = {
-	receiveStock: async ({ request }) => {
+	receiveStock: async ({ request, locals }) => {
+		const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
 		const data = await request.formData();
 		const product_id = String(data.get('product_id'));
 		const qty = Number(data.get('qty'));
@@ -47,7 +60,7 @@ export const actions: Actions = {
 
 			const prod = prodRes[0];
 			const newBalance = Number(prod.stock) + qty;
-			const unitCost = purchaseCostVal(purchase_cost, prod.base_hpp);
+			const unitCost = isOwner && purchase_cost > 0 ? purchase_cost : Number(prod.base_hpp || 0);
 
 			await query(
 				`UPDATE products 

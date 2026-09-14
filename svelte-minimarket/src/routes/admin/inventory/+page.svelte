@@ -58,7 +58,7 @@
 				<Package class="w-6 h-6 text-blue-600" />
 				Katalog Master Produk & Stok
 			</h2>
-			<p class="text-xs text-slate-600">Kelola master data barang, pendaftaran barcode, HPP modal, dan batas stok minimum</p>
+			<p class="text-xs text-slate-600">Kelola master data barang, pendaftaran barcode, {data.isOwner ? 'HPP modal, ' : ''}dan batas stok minimum</p>
 		</div>
 
 		<div class="flex items-center gap-2 flex-wrap">
@@ -138,7 +138,9 @@
 						<th class="py-3 px-4">BARCODE</th>
 						<th class="py-3 px-4">NAMA PRODUK</th>
 						<th class="py-3 px-4">KATEGORI</th>
-						<th class="py-3 px-4 text-right">HPP (MODAL)</th>
+						{#if data.isOwner}
+							<th class="py-3 px-4 text-right">HPP (MODAL)</th>
+						{/if}
 						<th class="py-3 px-4 text-right">HARGA JUAL KASIR</th>
 						<th class="py-3 px-4 text-center">STOK GUDANG</th>
 						<th class="py-3 px-4 text-center w-36">AKSI</th>
@@ -154,7 +156,9 @@
 							</td>
 							<td class="py-3 px-4 font-bold text-slate-900">{p.name}</td>
 							<td class="py-3 px-4 text-slate-600">{p.category_name || 'Umum'}</td>
-							<td class="py-3 px-4 text-right font-mono text-slate-600">{formatCurrency(p.base_hpp)}</td>
+							{#if data.isOwner}
+								<td class="py-3 px-4 text-right font-mono text-slate-600">{formatCurrency(p.base_hpp)}</td>
+							{/if}
 							<td class="py-3 px-4 text-right font-mono font-bold text-emerald-700">
 								{formatCurrency(p.selling_price || p.base_hpp * 1.25)}
 							</td>
@@ -197,7 +201,7 @@
 						</tr>
 					{:else}
 						<tr>
-							<td colspan="7" class="py-16 text-center text-slate-400">
+							<td colspan={data.isOwner ? 7 : 6} class="py-16 text-center text-slate-400">
 								Tidak ada produk yang cocok dengan pencarian / filter.
 							</td>
 						</tr>
@@ -235,10 +239,12 @@
 					<input id="restock-qty-inv" type="number" name="qty" required placeholder="Contoh: 50" min="1" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-emerald-600 text-slate-900 font-mono font-bold text-base" />
 				</div>
 
-				<div>
-					<label for="restock-cost-inv" class="block font-bold text-slate-700 mb-1">HPP Beli Terbaru per Pcs</label>
-					<input id="restock-cost-inv" type="number" name="purchase_cost" value={restockItem.base_hpp} class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
-				</div>
+				{#if data.isOwner}
+					<div>
+						<label for="restock-cost-inv" class="block font-bold text-slate-700 mb-1">HPP Beli Terbaru per Pcs</label>
+						<input id="restock-cost-inv" type="number" name="purchase_cost" value={restockItem.base_hpp} class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
+					</div>
+				{/if}
 
 				<div>
 					<label for="restock-notes-inv" class="block font-bold text-slate-700 mb-1">Catatan / Supplier</label>
@@ -298,16 +304,23 @@
 					</div>
 				</div>
 
-				<div class="grid grid-cols-2 gap-3">
-					<div>
-						<label for="create-hpp-inv" class="block font-bold text-slate-700 mb-1">Harga Pokok (HPP Modal) *</label>
-						<input id="create-hpp-inv" type="number" name="base_hpp" required placeholder="2500" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
+				{#if data.isOwner}
+					<div class="grid grid-cols-2 gap-3">
+						<div>
+							<label for="create-hpp-inv" class="block font-bold text-slate-700 mb-1">Harga Pokok (HPP Modal) *</label>
+							<input id="create-hpp-inv" type="number" name="base_hpp" required placeholder="2500" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
+						</div>
+						<div>
+							<label for="create-price-inv" class="block font-bold text-slate-700 mb-1">Harga Jual Kasir *</label>
+							<input id="create-price-inv" type="number" name="selling_price" required placeholder="3500" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
+						</div>
 					</div>
+				{:else}
 					<div>
 						<label for="create-price-inv" class="block font-bold text-slate-700 mb-1">Harga Jual Kasir *</label>
 						<input id="create-price-inv" type="number" name="selling_price" required placeholder="3500" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
 					</div>
-				</div>
+				{/if}
 
 				<div>
 					<label for="create-stk-inv" class="block font-bold text-slate-700 mb-1">Stok Awal Fisik (Pcs) *</label>
@@ -368,16 +381,23 @@
 					</div>
 				</div>
 
-				<div class="grid grid-cols-2 gap-3">
-					<div>
-						<label for="edit-hpp-inv" class="block font-bold text-slate-700 mb-1">Harga Pokok (HPP)</label>
-						<input id="edit-hpp-inv" type="number" name="base_hpp" bind:value={editItem.base_hpp} required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
+				{#if data.isOwner}
+					<div class="grid grid-cols-2 gap-3">
+						<div>
+							<label for="edit-hpp-inv" class="block font-bold text-slate-700 mb-1">Harga Pokok (HPP)</label>
+							<input id="edit-hpp-inv" type="number" name="base_hpp" bind:value={editItem.base_hpp} required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
+						</div>
+						<div>
+							<label for="edit-price-inv" class="block font-bold text-slate-700 mb-1">Harga Jual Kasir</label>
+							<input id="edit-price-inv" type="number" name="selling_price" bind:value={editItem.selling_price} required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
+						</div>
 					</div>
+				{:else}
 					<div>
 						<label for="edit-price-inv" class="block font-bold text-slate-700 mb-1">Harga Jual Kasir</label>
 						<input id="edit-price-inv" type="number" name="selling_price" bind:value={editItem.selling_price} required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono font-bold" />
 					</div>
-				</div>
+				{/if}
 
 				<div>
 					<label for="edit-stk-inv" class="block font-bold text-slate-700 mb-1">Stok Fisik Gudang (Pcs)</label>
