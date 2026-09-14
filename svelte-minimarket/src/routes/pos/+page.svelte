@@ -628,6 +628,15 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 	}
 
 	let scannerDriver: BarcodeScannerListener | null = null;
+	let qrisPollInterval: any = null;
+
+	function closeQRISModal() {
+		showQRISModal = false;
+		if (qrisPollInterval) {
+			clearInterval(qrisPollInterval);
+			qrisPollInterval = null;
+		}
+	}
 
 
 	// Quick Pick Catalog State (Simulasi Tanpa Scanner Fisik / Demo)
@@ -836,6 +845,30 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 				qrisRefId = data.referenceId;
 				qrisQRString = data.qrString;
 				$paymentRef = data.referenceId;
+
+				// Mulai polling otomatis ke gateway Midtrans setiap 2 detik
+				if (qrisPollInterval) clearInterval(qrisPollInterval);
+				qrisPollInterval = setInterval(async () => {
+					if (!showQRISModal || isQrisSettled || !qrisRefId) {
+						if (qrisPollInterval) clearInterval(qrisPollInterval);
+						return;
+					}
+					try {
+						const checkRes = await fetch(`/api/pos/payment/qris?reference_id=${encodeURIComponent(qrisRefId)}`);
+						if (checkRes.ok) {
+							const statusData = await checkRes.json();
+							if (statusData.status === 'SETTLED') {
+								if (qrisPollInterval) clearInterval(qrisPollInterval);
+								isQrisSettled = true;
+								playSuccessRegisterSound();
+								setTimeout(() => {
+									closeQRISModal();
+									handleCheckout();
+								}, 700);
+							}
+						}
+					} catch {}
+				}, 2000);
 			}
 		} catch (e: any) {
 			displayActionableError('Gagal Generate QRIS Dinamis', 'Gunakan metode pembayaran Tunai atau Debit jika gateway sedang offline.');
@@ -1845,22 +1878,30 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 					<QrCode class="w-4 h-4 text-purple-600" />
 					Pembayaran QRIS
 				</h3>
-				<button onclick={() => (showQRISModal = false)} class="text-slate-400 hover:text-slate-700 text-base cursor-pointer">✕</button>
+				<button onclick={closeQRISModal} class="text-slate-400 hover:text-slate-700 text-base cursor-pointer">✕</button>
 			</div>
 
-			<!-- Kartu Standar QRIS Indonesia (Cocok untuk QRIS BCA / Merchant Bank / Xendit) -->
+			<!-- Kartu Standar QRIS Indonesia (Cocok untuk QRIS Midtrans / BCA / GoPay / ShopeePay) -->
 			<div class="p-3.5 bg-slate-50 border-2 border-dashed border-purple-200 rounded-xl inline-block shadow-xs mx-auto w-full max-w-[260px]">
 				<div class="flex items-center justify-between pb-1.5 border-b border-slate-200 mb-2">
 					<span class="text-[10px] font-black tracking-wider text-rose-600 font-mono">QRIS</span>
 					<span class="text-[9px] font-bold text-slate-700 truncate max-w-[150px]">{storeName}</span>
 				</div>
-				<div class="w-40 h-40 bg-white border border-slate-300 rounded-lg flex flex-col items-center justify-center mx-auto p-2 shadow-inner relative">
-					<QrCode class="w-24 h-24 text-slate-900" />
-					<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-						<div class="w-7 h-7 bg-white rounded shadow-xs border border-purple-300 flex items-center justify-center">
-							<span class="text-[9px] font-black text-purple-700">99</span>
+				<div class="w-48 h-48 bg-white border border-slate-300 rounded-lg flex flex-col items-center justify-center mx-auto p-2 shadow-inner relative overflow-hidden">
+					{#if qrisQRString}
+						<img
+							src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={encodeURIComponent(qrisQRString)}"
+							alt="Barcode QRIS {formatCurrency(finalPayTotal)}"
+							class="w-full h-full object-contain"
+						/>
+						<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+							<div class="w-7 h-7 bg-white rounded shadow-xs border border-purple-300 flex items-center justify-center">
+								<span class="text-[9px] font-black text-purple-700 font-mono">99</span>
+							</div>
 						</div>
-					</div>
+					{:else}
+						<QrCode class="w-24 h-24 text-slate-900 animate-pulse" />
+					{/if}
 				</div>
 				<p class="text-[9px] font-mono font-bold text-slate-600 mt-1.5">NMID: ID1020039201920</p>
 				<p class="text-[8px] font-mono text-slate-400 truncate">{qrisRefId}</p>
