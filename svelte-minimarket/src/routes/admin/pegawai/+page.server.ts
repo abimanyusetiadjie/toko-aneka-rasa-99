@@ -1,9 +1,20 @@
+import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { query } from '$lib/server/db';
 import type { User } from '$lib/types';
 import * as bcrypt from 'bcryptjs';
 
-export const load: PageServerLoad = async () => {
+// Helper pengecekan otoritas Owner (Principle of Least Privilege)
+function assertOwner(locals: App.Locals) {
+	if (!locals.user || locals.user.role_id !== 1) {
+		throw redirect(303, '/admin/dashboard');
+	}
+}
+
+export const load: PageServerLoad = async ({ locals }) => {
+	// Proteksi ketat: Hanya Pemilik Toko (Owner, role_id: 1) yang berhak mengakses menu Pegawai & Shift
+	assertOwner(locals);
+
 	try {
 		const [users, roles, shifts] = await Promise.all([
 			query<User & { is_active: boolean }>(`
@@ -32,9 +43,13 @@ export const load: PageServerLoad = async () => {
 
 export const actions: Actions = {
 	// ==========================================
-	// 👤 CRUD DATA PEGAWAI
+	// 👤 CRUD DATA PEGAWAI (Khusus Role Owner)
 	// ==========================================
-	createPegawai: async ({ request }) => {
+	createPegawai: async ({ request, locals }) => {
+		if (!locals.user || locals.user.role_id !== 1) {
+			return { success: false, message: 'Akses ditolak! Hanya Pemilik Toko (Owner) yang berwenang menambah pegawai.' };
+		}
+
 		const data = await request.formData();
 		const username = String(data.get('username') || '').trim().toLowerCase();
 		const full_name = String(data.get('full_name') || '').trim();
@@ -67,7 +82,11 @@ export const actions: Actions = {
 		}
 	},
 
-	updatePegawai: async ({ request }) => {
+	updatePegawai: async ({ request, locals }) => {
+		if (!locals.user || locals.user.role_id !== 1) {
+			return { success: false, message: 'Akses ditolak! Hanya Pemilik Toko (Owner) yang berwenang mengubah data pegawai.' };
+		}
+
 		const data = await request.formData();
 		const id = String(data.get('id') || '');
 		const username = String(data.get('username') || '').trim().toLowerCase();
@@ -78,6 +97,11 @@ export const actions: Actions = {
 
 		if (!id || !username || !full_name) {
 			return { success: false, message: 'Data pegawai tidak lengkap.' };
+		}
+
+		// Cegah Owner menonaktifkan atau mengubah rolenya sendiri menjadi non-owner
+		if (id === locals.user.id && (!is_active || role_id !== 1)) {
+			return { success: false, message: 'Tidak dapat menonaktifkan atau menurunkan hak akses akun Owner yang sedang aktif digunakan.' };
 		}
 
 		try {
@@ -110,10 +134,18 @@ export const actions: Actions = {
 		}
 	},
 
-	toggleStatusPegawai: async ({ request }) => {
+	toggleStatusPegawai: async ({ request, locals }) => {
+		if (!locals.user || locals.user.role_id !== 1) {
+			return { success: false, message: 'Akses ditolak! Hanya Pemilik Toko (Owner) yang berwenang mengubah status pegawai.' };
+		}
+
 		const data = await request.formData();
 		const id = String(data.get('id') || '');
 		if (!id) return { success: false, message: 'ID pegawai tidak valid.' };
+
+		if (id === locals.user.id) {
+			return { success: false, message: 'Tidak dapat menonaktifkan akun Anda sendiri yang sedang aktif digunakan.' };
+		}
 
 		try {
 			await query(`UPDATE users SET is_active = NOT COALESCE(is_active, true) WHERE id = $1`, [id]);
@@ -123,10 +155,18 @@ export const actions: Actions = {
 		}
 	},
 
-	deletePegawai: async ({ request }) => {
+	deletePegawai: async ({ request, locals }) => {
+		if (!locals.user || locals.user.role_id !== 1) {
+			return { success: false, message: 'Akses ditolak! Hanya Pemilik Toko (Owner) yang berwenang menghapus pegawai.' };
+		}
+
 		const data = await request.formData();
 		const id = String(data.get('id') || '');
 		if (!id) return { success: false, message: 'ID pegawai tidak valid.' };
+
+		if (id === locals.user.id) {
+			return { success: false, message: 'Tidak dapat menghapus akun Owner yang sedang aktif digunakan.' };
+		}
 
 		try {
 			// Periksa apakah pegawai memiliki relasi data riwayat transaksi atau shift
@@ -155,9 +195,13 @@ export const actions: Actions = {
 	},
 
 	// ==========================================
-	// ⏰ CRUD REKAP SHIFT KASIR
+	// ⏰ CRUD REKAP SHIFT KASIR (Khusus Role Owner)
 	// ==========================================
-	createShift: async ({ request }) => {
+	createShift: async ({ request, locals }) => {
+		if (!locals.user || locals.user.role_id !== 1) {
+			return { success: false, message: 'Akses ditolak! Hanya Pemilik Toko (Owner) yang berwenang membuka shift di panel admin.' };
+		}
+
 		const data = await request.formData();
 		const user_id = String(data.get('user_id') || '').trim();
 		const starting_cash = Math.max(0, Number(data.get('starting_cash') || 0));
@@ -179,7 +223,11 @@ export const actions: Actions = {
 		}
 	},
 
-	closeShift: async ({ request }) => {
+	closeShift: async ({ request, locals }) => {
+		if (!locals.user || locals.user.role_id !== 1) {
+			return { success: false, message: 'Akses ditolak! Hanya Pemilik Toko (Owner) yang berwenang merekonsiliasi kas shift di panel admin.' };
+		}
+
 		const data = await request.formData();
 		const shift_id = String(data.get('shift_id') || '');
 		const actual_cash = Number(data.get('actual_cash') || 0);
@@ -223,7 +271,11 @@ export const actions: Actions = {
 		}
 	},
 
-	updateShift: async ({ request }) => {
+	updateShift: async ({ request, locals }) => {
+		if (!locals.user || locals.user.role_id !== 1) {
+			return { success: false, message: 'Akses ditolak! Hanya Pemilik Toko (Owner) yang berwenang mengubah catatan shift.' };
+		}
+
 		const data = await request.formData();
 		const shift_id = String(data.get('shift_id') || '');
 		const starting_cash = Number(data.get('starting_cash') || 0);
@@ -258,7 +310,11 @@ export const actions: Actions = {
 		}
 	},
 
-	deleteShift: async ({ request }) => {
+	deleteShift: async ({ request, locals }) => {
+		if (!locals.user || locals.user.role_id !== 1) {
+			return { success: false, message: 'Akses ditolak! Hanya Pemilik Toko (Owner) yang berwenang menghapus riwayat shift.' };
+		}
+
 		const data = await request.formData();
 		const shift_id = String(data.get('shift_id') || '');
 		if (!shift_id) return { success: false, message: 'ID shift tidak valid.' };

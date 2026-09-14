@@ -241,22 +241,24 @@
 				</a>
 			</div>
 
-			<!-- Staff Section -->
-			<div class="space-y-1">
-				<span class="px-3 text-[10px] font-extrabold tracking-wider text-slate-400 uppercase font-mono block">
-					OPERASIONAL TOKO
-				</span>
-				<a
-					href="/admin/pegawai"
-					onclick={closeDrawer}
-					class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all {$page.url.pathname.startsWith('/admin/pegawai')
-						? 'bg-blue-50 text-blue-700 font-bold border border-blue-200'
-						: 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}"
-				>
-					<Users class="w-4 h-4 {$page.url.pathname.startsWith('/admin/pegawai') ? 'text-blue-600' : 'text-slate-400'}" />
-					<span>Pegawai & Shift Kasir</span>
-				</a>
-			</div>
+			<!-- Staff Section (Khusus Role Owner) -->
+			{#if data?.user?.role_id === 1}
+				<div class="space-y-1">
+					<span class="px-3 text-[10px] font-extrabold tracking-wider text-slate-400 uppercase font-mono block">
+						OPERASIONAL TOKO
+					</span>
+					<a
+						href="/admin/pegawai"
+						onclick={closeDrawer}
+						class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all {$page.url.pathname.startsWith('/admin/pegawai')
+							? 'bg-blue-50 text-blue-700 font-bold border border-blue-200'
+							: 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}"
+					>
+						<Users class="w-4 h-4 {$page.url.pathname.startsWith('/admin/pegawai') ? 'text-blue-600' : 'text-slate-400'}" />
+						<span>Pegawai & Shift Kasir</span>
+					</a>
+				</div>
+			{/if}
 
 			<div class="pt-2 border-t border-slate-200">
 				<a
