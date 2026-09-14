@@ -101,3 +101,28 @@ export interface ShopeeOrder {
 	created_at: string;
 	updated_at: string;
 }
+
+export interface PettyCashExpense {
+	id: string;
+	category: string;
+	amount: number;
+	notes: string;
+	cashier: string;
+	created_at: string;
+}
+
+export interface ShiftClosingSummary {
+	closed_at: string;
+	cashier_name: string;
+	starting_cash: number;
+	total_gross_sales: number;
+	total_cash_sales: number;
+	total_qris_sales: number;
+	total_transfer_sales: number;
+	transactions_count: number;
+	total_expenses: number;
+	expected_drawer_cash: number;
+	counted_physical_cash: number;
+	difference: number;
+	status: 'BALANCED' | 'SURPLUS' | 'SHORTAGE';
+}

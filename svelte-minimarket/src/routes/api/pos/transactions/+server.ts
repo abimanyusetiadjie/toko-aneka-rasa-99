@@ -1,10 +1,44 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { pool, updateMemoryProductStock, getProductForCheckout, recordMemoryTransaction } from '$lib/server/db';
+import { pool, updateMemoryProductStock, getProductForCheckout, recordMemoryTransaction, memoryTransactions } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import { pushStockToShopee } from '$lib/server/shopee-service';
 import { CreateTransactionSchema } from '$lib/schemas/transaction.schema';
 import { calculatePointsEarned } from '$lib/services/points';
+
+export const GET: RequestHandler = async () => {
+	let client: any = null;
+	try {
+		client = await pool.connect();
+	} catch {
+		client = null;
+	}
+
+	if (client) {
+		try {
+			const res = await client.query(
+				`SELECT id, receipt_number, total_amount, payment_method, created_at, status 
+				 FROM transactions 
+				 WHERE created_at >= CURRENT_DATE 
+				 ORDER BY created_at DESC 
+				 LIMIT 100`
+			);
+			return json({
+				status: 'success',
+				transactions: res.rows
+			});
+		} catch {
+			// fallback to memory
+		} finally {
+			try { client.release(); } catch {}
+		}
+	}
+
+	return json({
+		status: 'success',
+		transactions: memoryTransactions
+	});
+};
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	let rawBody: any;

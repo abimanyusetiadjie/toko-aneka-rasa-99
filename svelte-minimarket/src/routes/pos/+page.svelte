@@ -55,8 +55,17 @@
 		Search,
 		Video,
 		VideoOff,
-		RefreshCw
+		RefreshCw,
+		Wallet,
+		FileSpreadsheet,
+		Plus,
+		MessageCircle,
+		Coins,
+		Calendar,
+		AlertCircle
 	} from 'lucide-svelte';
+	import type { PettyCashExpense } from '$lib/types';
+
 
 	let barcodeInput: HTMLInputElement;
 	let barcode = $state('');
@@ -95,6 +104,254 @@
 	let qrisRefId = $state('');
 	let qrisQRString = $state('');
 	let isQrisSettled = $state(false);
+
+	// Petty Cash (Pengeluaran Kasir) State
+	let showExpenseModal = $state(false);
+	let expenseAmount = $state<number | null>(null);
+	let expenseCategory = $state('Kantong Kresek / Plastik');
+	let expenseNotes = $state('');
+	let isSubmittingExpense = $state(false);
+	let dailyExpenses = $state<PettyCashExpense[]>([]);
+
+	// Tutup Kasir / Rekap Harian (Z-Report Shift) State
+	let showClosingModal = $state(false);
+	let startingCash = $state(200000); // Default Modal Awal Laci Rp 200.000
+	let countedPhysicalCash = $state<number | null>(null);
+	let todayTransactions = $state<any[]>([]);
+	let ownerWhatsApp = $state('081234567890');
+	let isPrintingClosing = $state(false);
+
+	// Rekapitulasi Keuangan Shift
+	let totalExpenses = $derived(
+		dailyExpenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0)
+	);
+
+	let totalCashSales = $derived(
+		todayTransactions.reduce((sum, t) => {
+			const amt = Number(t.cash_amount ?? t.cashAmount);
+			if (!isNaN(amt) && amt > 0) return sum + amt;
+			if (t.payment_method === 'CASH' || t.paymentMethod === 'CASH') return sum + (Number(t.total_amount ?? t.total) || 0);
+			return sum;
+		}, 0)
+	);
+
+	let totalQrisSales = $derived(
+		todayTransactions.reduce((sum, t) => {
+			const amt = Number(t.qris_amount ?? t.qrisAmount);
+			if (!isNaN(amt) && amt > 0) return sum + amt;
+			if (t.payment_method === 'QRIS' || t.paymentMethod === 'QRIS') return sum + (Number(t.total_amount ?? t.total) || 0);
+			return sum;
+		}, 0)
+	);
+
+	let totalTransferSales = $derived(
+		todayTransactions.reduce((sum, t) => {
+			const amt = Number(t.transfer_amount ?? t.transferAmount);
+			if (!isNaN(amt) && amt > 0) return sum + amt;
+			if (t.payment_method === 'DEBIT' || t.paymentMethod === 'DEBIT') return sum + (Number(t.total_amount ?? t.total) || 0);
+			return sum;
+		}, 0)
+	);
+
+	let totalGrossSales = $derived(
+		todayTransactions.reduce((sum, t) => sum + (Number(t.total_amount ?? t.total) || 0), 0)
+	);
+
+	let expectedDrawerCash = $derived(
+		Math.max(0, startingCash + totalCashSales - totalExpenses)
+	);
+
+	let cashDifference = $derived(
+		countedPhysicalCash !== null ? countedPhysicalCash - expectedDrawerCash : null
+	);
+
+	async function handleAddExpense() {
+		if (!expenseAmount || expenseAmount <= 0) {
+			displayActionableError('Nominal Pengeluaran Tidak Valid', 'Silakan masukkan nominal pengeluaran kasir di atas Rp 0.');
+			return;
+		}
+
+		isSubmittingExpense = true;
+		const newExpense: PettyCashExpense = {
+			id: `exp-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`,
+			category: expenseCategory,
+			amount: expenseAmount,
+			notes: expenseNotes.trim() || expenseCategory,
+			cashier: cashierName,
+			created_at: new Date().toISOString()
+		};
+
+		dailyExpenses = [newExpense, ...dailyExpenses];
+		if (typeof window !== 'undefined') {
+			localStorage.setItem('aneka_pos_expenses', JSON.stringify(dailyExpenses));
+		}
+
+		try {
+			await fetch('/api/pos/expenses', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(newExpense)
+			});
+		} catch (e) {
+			console.warn('Expense saved locally', e);
+		} finally {
+			isSubmittingExpense = false;
+			expenseAmount = null;
+			expenseNotes = '';
+		}
+	}
+
+	async function handleDeleteExpense(id: string) {
+		if (!confirm('Hapus catatan pengeluaran kasir ini?')) return;
+		dailyExpenses = dailyExpenses.filter(e => e.id !== id);
+		if (typeof window !== 'undefined') {
+			localStorage.setItem('aneka_pos_expenses', JSON.stringify(dailyExpenses));
+		}
+		try {
+			await fetch(`/api/pos/expenses?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+		} catch {}
+	}
+
+	function recordCompletedTransaction(tx: {
+		receiptNumber: string;
+		total: number;
+		paymentMethod: string;
+		cashAmount?: number;
+		qrisAmount?: number;
+		transferAmount?: number;
+		itemsCount: number;
+	}) {
+		const newTx = {
+			receipt_number: tx.receiptNumber,
+			total_amount: tx.total,
+			payment_method: tx.paymentMethod,
+			cash_amount: tx.cashAmount ?? (tx.paymentMethod === 'CASH' ? tx.total : 0),
+			qris_amount: tx.qrisAmount ?? (tx.paymentMethod === 'QRIS' ? tx.total : 0),
+			transfer_amount: tx.transferAmount ?? (tx.paymentMethod === 'DEBIT' ? tx.total : 0),
+			items_count: tx.itemsCount,
+			created_at: new Date().toISOString()
+		};
+		todayTransactions = [newTx, ...todayTransactions];
+		if (typeof window !== 'undefined') {
+			localStorage.setItem('aneka_pos_today_tx', JSON.stringify(todayTransactions));
+		}
+	}
+
+	async function fetchTodayShiftData() {
+		try {
+			const [expRes, txRes] = await Promise.all([
+				fetch('/api/pos/expenses').then(r => r.ok ? r.json() : null).catch(() => null),
+				fetch('/api/pos/transactions').then(r => r.ok ? r.json() : null).catch(() => null)
+			]);
+
+			if (expRes?.expenses && Array.isArray(expRes.expenses)) {
+				const existingIds = new Set(dailyExpenses.map(e => e.id));
+				const merged = [...dailyExpenses];
+				for (const exp of expRes.expenses) {
+					if (!existingIds.has(exp.id)) {
+						merged.push(exp);
+					}
+				}
+				dailyExpenses = merged;
+				if (typeof window !== 'undefined') {
+					localStorage.setItem('aneka_pos_expenses', JSON.stringify(dailyExpenses));
+				}
+			}
+
+			if (txRes?.transactions && Array.isArray(txRes.transactions)) {
+				const existingRec = new Set(todayTransactions.map(t => t.receipt_number));
+				const merged = [...todayTransactions];
+				for (const tx of txRes.transactions) {
+					if (!existingRec.has(tx.receipt_number)) {
+						merged.push(tx);
+					}
+				}
+				todayTransactions = merged;
+				if (typeof window !== 'undefined') {
+					localStorage.setItem('aneka_pos_today_tx', JSON.stringify(todayTransactions));
+				}
+			}
+		} catch (e) {
+			console.error('Failed to sync shift data', e);
+		}
+	}
+
+	function printShiftReport() {
+		isPrintingClosing = true;
+		tick().then(() => {
+			setTimeout(() => {
+				window.print();
+				setTimeout(() => {
+					isPrintingClosing = false;
+				}, 1000);
+			}, 150);
+		});
+	}
+
+	function sendWhatsAppReport() {
+		const now = new Date();
+		const dateStr = now.toLocaleDateString('id-ID', {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric'
+		});
+		const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+		const diffText = cashDifference === null
+			? 'Belum dihitung fisik'
+			: cashDifference === 0
+				? '✅ PAS (Rp 0)'
+				: cashDifference > 0
+					? `🔵 SURPLUS (+Rp ${formatCurrency(cashDifference).replace('Rp', '').trim()})`
+					: `⚠️ TEKOR (-Rp ${formatCurrency(Math.abs(cashDifference)).replace('Rp', '').trim()})`;
+
+		const text = 
+`*LAPORAN TUTUP KASIR (Z-REPORT)*
+🏪 *${storeName.toUpperCase()}*
+📅 ${dateStr} • Pukul ${timeStr} WIB
+👤 Kasir: ${cashierName}
+----------------------------------------
+*1. RINGKASAN PENJUALAN:*
+• Total Omzet: ${formatCurrency(totalGrossSales)} (${todayTransactions.length} Struk)
+• Penjualan Tunai: ${formatCurrency(totalCashSales)}
+• Penjualan QRIS: ${formatCurrency(totalQrisSales)}
+• Penjualan Transfer/Debit: ${formatCurrency(totalTransferSales)}
+
+*2. PENGELUARAN KASIR (PETTY CASH):*
+• Total Pengeluaran: -${formatCurrency(totalExpenses)} (${dailyExpenses.length} Pengeluaran)
+${dailyExpenses.slice(0, 5).map(e => `  - ${e.category}: ${formatCurrency(e.amount)} (${e.notes || '-'})`).join('\n')}
+${dailyExpenses.length > 5 ? `  - ...dan ${dailyExpenses.length - 5} lainnya` : ''}
+
+*3. REKONSILIASI KAS LACI:*
+• Modal Awal Laci: ${formatCurrency(startingCash)}
+• Penjualan Tunai: +${formatCurrency(totalCashSales)}
+• Pengeluaran Kasir: -${formatCurrency(totalExpenses)}
+----------------------------------------
+*Wajib Ada di Laci: ${formatCurrency(expectedDrawerCash)}*
+*Uang Fisik Dihitung: ${countedPhysicalCash !== null ? formatCurrency(countedPhysicalCash) : 'Belum dihitung'}*
+*Status Selisih: ${diffText}*
+----------------------------------------
+_Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
+
+		const cleanPhone = ownerWhatsApp.replace(/\D/g, '').replace(/^0/, '62');
+		const url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(text)}`;
+		window.open(url, '_blank');
+	}
+
+	function handleResetShift() {
+		if (confirm('Apakah Anda yakin ingin menyelesaikan shift ini dan mereset catatan kasir untuk shift baru? Pastikan struk dan laporan WA sudah terkirim ke Owner.')) {
+			dailyExpenses = [];
+			todayTransactions = [];
+			countedPhysicalCash = null;
+			if (typeof window !== 'undefined') {
+				localStorage.removeItem('aneka_pos_expenses');
+				localStorage.removeItem('aneka_pos_today_tx');
+			}
+			showClosingModal = false;
+			alert('Shift berhasil diselesaikan! Catatan laci kasir telah bersih untuk kasir berikutnya.');
+		}
+	}
 
 	let scannerDriver: BarcodeScannerListener | null = null;
 
@@ -421,6 +678,15 @@
 					paidAmount: $paymentMethod === 'CASH' ? $amountPaid || finalPayTotal : finalPayTotal,
 					changeAmount: $paymentMethod === 'CASH' ? Math.max(0, ($amountPaid || 0) - finalPayTotal) : 0
 				};
+				recordCompletedTransaction({
+					receiptNumber: offlineReceipt,
+					total: finalPayTotal,
+					paymentMethod: $paymentMethod,
+					cashAmount: $paymentMethod === 'CASH' ? finalPayTotal : (showSplitModal ? splitCashAmount : 0),
+					qrisAmount: $paymentMethod === 'QRIS' ? finalPayTotal : (showSplitModal && splitNonCashMethod === 'QRIS' ? splitNonCashAmount : 0),
+					transferAmount: $paymentMethod === 'DEBIT' ? finalPayTotal : (showSplitModal && splitNonCashMethod === 'DEBIT' ? splitNonCashAmount : 0),
+					itemsCount: $cart.reduce((sum, item) => sum + item.qty, 0)
+				});
 				showSuccessModal = true;
 				setTimeout(() => {
 					window.print();
@@ -459,6 +725,15 @@
 				paidAmount: $paymentMethod === 'CASH' ? $amountPaid || finalPayTotal : finalPayTotal,
 				changeAmount: $paymentMethod === 'CASH' ? Math.max(0, ($amountPaid || 0) - finalPayTotal) : 0
 			};
+			recordCompletedTransaction({
+				receiptNumber: data.receipt_number,
+				total: finalPayTotal,
+				paymentMethod: $paymentMethod,
+				cashAmount: $paymentMethod === 'CASH' ? finalPayTotal : (showSplitModal ? splitCashAmount : 0),
+				qrisAmount: $paymentMethod === 'QRIS' ? finalPayTotal : (showSplitModal && splitNonCashMethod === 'QRIS' ? splitNonCashAmount : 0),
+				transferAmount: $paymentMethod === 'DEBIT' ? finalPayTotal : (showSplitModal && splitNonCashMethod === 'DEBIT' ? splitNonCashAmount : 0),
+				itemsCount: $cart.reduce((sum, item) => sum + item.qty, 0)
+			});
 			
 			showSuccessModal = true;
 			setTimeout(() => {
@@ -514,9 +789,15 @@
 		} else if (e.key === 'F8') {
 			e.preventDefault();
 			$paymentMethod = 'CASH';
+		} else if (e.key === 'F9') {
+			e.preventDefault();
+			showExpenseModal = !showExpenseModal;
 		} else if (e.key === 'F10') {
 			e.preventDefault();
 			openQRIS();
+		} else if (e.key === 'F11') {
+			e.preventDefault();
+			showClosingModal = !showClosingModal;
 		} else if (e.key === 'F12') {
 			e.preventDefault();
 			if ($cart.length > 0) handleCheckout();
@@ -539,6 +820,33 @@
 
 	onMount(() => {
 		barcodeInput?.focus();
+
+		// Muat data shift & pengeluaran dari localStorage kasir
+		if (typeof window !== 'undefined') {
+			try {
+				const savedExpenses = localStorage.getItem('aneka_pos_expenses');
+				if (savedExpenses) {
+					dailyExpenses = JSON.parse(savedExpenses);
+				}
+				const savedTodayTx = localStorage.getItem('aneka_pos_today_tx');
+				if (savedTodayTx) {
+					todayTransactions = JSON.parse(savedTodayTx);
+				}
+				const savedStartingCash = localStorage.getItem('aneka_pos_starting_cash');
+				if (savedStartingCash) {
+					startingCash = Number(savedStartingCash) || 200000;
+				}
+				const savedOwnerWa = localStorage.getItem('aneka_pos_owner_wa');
+				if (savedOwnerWa) {
+					ownerWhatsApp = savedOwnerWa;
+				}
+			} catch (e) {
+				console.error('Error reading localStorage shift data', e);
+			}
+
+			// Sinkronkan data shift hari ini dari server
+			fetchTodayShiftData();
+		}
 
 		// Bersihkan keranjang otomatis jika ada sisa data dummy / non-UUID dari sesi lama
 		const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -607,14 +915,36 @@
 		</div>
 
 		<!-- Right Shortcuts & Profile -->
-		<div class="flex items-center gap-1.5 sm:gap-3 text-xs shrink-0">
+		<div class="flex items-center gap-1.5 sm:gap-2.5 text-xs shrink-0">
+			<!-- Tombol 1: Catat Pengeluaran Toko (Petty Cash) -->
 			<button
-				onclick={() => (showHelpModal = true)}
-				class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 border border-slate-300 hover:bg-slate-100 rounded text-slate-700 transition-colors font-medium"
+				onclick={() => (showExpenseModal = true)}
+				class="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 transition-all font-semibold shadow-xs cursor-pointer active:scale-95"
+				title="Catat Pengeluaran Toko / Kasir Petty Cash (F9)"
 			>
-				<HelpCircle class="w-3.5 h-3.5 text-blue-600" />
-				<span class="kbd-badge">F1</span>
-				<span class="text-[11px]">Bantuan</span>
+				<Wallet class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600 shrink-0" />
+				<div class="text-left">
+					<span class="text-[8px] text-amber-700 font-mono block leading-none">KAS KELUAR</span>
+					<span class="text-[10px] sm:text-xs font-bold leading-tight block">Pengeluaran</span>
+				</div>
+				{#if dailyExpenses.length > 0}
+					<span class="ml-0.5 px-1.5 py-0.2 text-[9px] sm:text-[10px] bg-amber-600 text-white rounded-full font-bold">
+						{dailyExpenses.length}
+					</span>
+				{/if}
+			</button>
+
+			<!-- Tombol 2: Tutup Kasir / Rekap Harian (Z-Report Shift) -->
+			<button
+				onclick={() => (showClosingModal = true)}
+				class="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded border border-blue-300 bg-blue-50 hover:bg-blue-100 text-blue-900 transition-all font-semibold shadow-xs cursor-pointer active:scale-95"
+				title="Tutup Kasir / Rekap Harian Shift Z-Report (F11)"
+			>
+				<FileSpreadsheet class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 shrink-0" />
+				<div class="text-left">
+					<span class="text-[8px] text-blue-700 font-mono block leading-none">Z-REPORT</span>
+					<span class="text-[10px] sm:text-xs font-bold leading-tight block">Tutup Kasir</span>
+				</div>
 			</button>
 
 			<button
@@ -637,6 +967,15 @@
 					<span class="font-bold text-[11px] sm:text-xs text-slate-800 max-w-[65px] sm:max-w-none truncate block">{cashierName}</span>
 				</div>
 			</div>
+
+			<button
+				onclick={() => (showHelpModal = true)}
+				class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 border border-slate-300 hover:bg-slate-100 rounded text-slate-700 transition-colors font-medium cursor-pointer"
+				title="Bantuan POS (F1)"
+			>
+				<HelpCircle class="w-3.5 h-3.5 text-blue-600" />
+				<span class="kbd-badge">F1</span>
+			</button>
 		</div>
 	</header>
 
@@ -1323,6 +1662,496 @@
 		</div>
 	</div>
 {/if}
+
+<!-- Modal Catat Pengeluaran Toko (Petty Cash) -->
+{#if showExpenseModal}
+	<div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+		<div class="pos-panel bg-white border-slate-300 w-full max-w-lg max-h-[92vh] overflow-y-auto p-4 sm:p-5 space-y-4 shadow-2xl">
+			<!-- Modal Header -->
+			<div class="flex justify-between items-center pb-2 border-b border-slate-200">
+				<div class="flex items-center gap-2">
+					<div class="p-2 bg-amber-100 text-amber-800 rounded-lg border border-amber-300">
+						<Wallet class="w-5 h-5" />
+					</div>
+					<div>
+						<h3 class="font-bold text-slate-900 text-sm sm:text-base">Catat Pengeluaran Toko (Petty Cash)</h3>
+						<p class="text-[11px] text-slate-500 font-mono">Uang keluar laci kasir untuk kebutuhan toko hari ini</p>
+					</div>
+				</div>
+				<button onclick={() => (showExpenseModal = false)} class="p-1 text-slate-400 hover:text-slate-700 rounded text-base cursor-pointer">✕</button>
+			</div>
+
+			<!-- Input Form -->
+			<div class="space-y-3 bg-amber-50/50 p-3.5 rounded-xl border border-amber-200">
+				<!-- Kategori Cepat -->
+				<div>
+					<label class="block text-slate-700 font-bold mb-1.5 text-xs">PILIH KATEGORI PENGELUARAN:</label>
+					<div class="flex flex-wrap gap-1.5">
+						{#each [
+							'Kantong Kresek / Plastik',
+							'Galon Air / Minum',
+							'Lakban / Solasi Packing',
+							'Token Listrik Toko',
+							'Konsumsi / Makan Kasir',
+							'Bensin / Antar Barang',
+							'Lain-lain'
+						] as cat}
+							<button
+								type="button"
+								onclick={() => (expenseCategory = cat)}
+								class="px-2.5 py-1 text-xs rounded-lg border transition-all cursor-pointer {expenseCategory === cat
+									? 'bg-amber-600 text-white border-amber-700 font-bold shadow-xs'
+									: 'bg-white text-slate-700 border-slate-300 hover:bg-amber-100/50'}"
+							>
+								{cat}
+							</button>
+						{/each}
+					</div>
+				</div>
+
+				<!-- Nominal Pengeluaran -->
+				<div>
+					<div class="flex justify-between items-center mb-1">
+						<label for="pos-expense-amount" class="text-slate-700 font-bold text-xs">NOMINAL UANG KELUAR (RP):</label>
+						{#if expenseAmount}
+							<span class="text-xs font-mono font-bold text-amber-900 bg-amber-200/60 px-2 py-0.5 rounded">
+								{formatCurrency(expenseAmount)}
+							</span>
+						{/if}
+					</div>
+					<input
+						id="pos-expense-amount"
+						type="number"
+						min="500"
+						step="500"
+						bind:value={expenseAmount}
+						placeholder="Ketik nominal, misal: 25000"
+						class="w-full bg-white border border-slate-300 rounded-lg p-2.5 outline-none focus:border-amber-600 text-slate-900 font-mono text-base font-bold"
+					/>
+					<!-- Quick Nominal Chips -->
+					<div class="flex flex-wrap gap-1.5 mt-2">
+						{#each [5000, 10000, 20000, 50000, 100000] as chip}
+							<button
+								type="button"
+								onclick={() => (expenseAmount = (expenseAmount || 0) + chip)}
+								class="px-2 py-0.5 text-[11px] bg-white hover:bg-amber-100 border border-slate-300 text-slate-800 rounded font-mono font-semibold transition-colors cursor-pointer"
+							>
+								+{formatCurrency(chip).replace('Rp', '').trim()}
+							</button>
+						{/each}
+						<button
+							type="button"
+							onclick={() => (expenseAmount = null)}
+							class="px-2 py-0.5 text-[11px] bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-600 rounded font-mono transition-colors cursor-pointer"
+						>
+							Reset
+						</button>
+					</div>
+				</div>
+
+				<!-- Keterangan -->
+				<div>
+					<label for="pos-expense-notes" class="block text-slate-700 font-bold mb-1 text-xs">KETERANGAN / CATATAN (OPSIONAL):</label>
+					<input
+						id="pos-expense-notes"
+						type="text"
+						bind:value={expenseNotes}
+						placeholder="Contoh: Beli 2 pack kresek tebal di agen sebelah"
+						class="w-full bg-white border border-slate-300 rounded-lg p-2 outline-none focus:border-amber-600 text-slate-900 text-xs"
+					/>
+				</div>
+
+				<!-- Submit Button -->
+				<button
+					onclick={handleAddExpense}
+					disabled={isSubmittingExpense || !expenseAmount || expenseAmount <= 0}
+					class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white rounded-lg font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-colors cursor-pointer"
+				>
+					<Plus class="w-4 h-4" /> Simpan Pengeluaran Kasir
+				</button>
+			</div>
+
+			<!-- Riwayat Pengeluaran Hari Ini -->
+			<div class="space-y-2 pt-1">
+				<div class="flex justify-between items-center">
+					<h4 class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
+						<span>Riwayat Pengeluaran Hari Ini</span>
+						<span class="px-2 py-0.2 text-[10px] bg-slate-100 text-slate-700 border border-slate-300 rounded-full font-bold">
+							{dailyExpenses.length} catatan
+						</span>
+					</h4>
+					<span class="font-mono text-xs font-bold text-red-700">
+						Total: -{formatCurrency(totalExpenses)}
+					</span>
+				</div>
+
+				{#if dailyExpenses.length === 0}
+					<div class="p-4 bg-slate-50 border border-slate-200 rounded-lg text-center text-slate-500 text-xs">
+						Belum ada pengeluaran kasir yang dicatat hari ini. Uang laci masih utuh.
+					</div>
+				{:else}
+					<div class="max-h-44 overflow-y-auto space-y-1.5 custom-scrollbar pr-1">
+						{#each dailyExpenses as exp}
+							<div class="p-2.5 bg-white border border-slate-200 rounded-lg flex items-center justify-between text-xs hover:border-slate-300 transition-colors">
+								<div class="min-w-0 flex-1 pr-2">
+									<div class="flex items-center gap-2">
+										<span class="font-bold text-slate-900 truncate">{exp.category}</span>
+										<span class="text-[10px] text-slate-400 font-mono shrink-0">
+											{new Date(exp.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+										</span>
+									</div>
+									<p class="text-[11px] text-slate-500 truncate mt-0.5">{exp.notes || '-'}</p>
+								</div>
+								<div class="flex items-center gap-2 shrink-0">
+									<span class="font-mono font-bold text-red-600">-{formatCurrency(exp.amount)}</span>
+									<button
+										onclick={() => handleDeleteExpense(exp.id)}
+										class="p-1 text-slate-400 hover:text-red-600 transition-colors rounded cursor-pointer"
+										title="Hapus pengeluaran ini"
+									>
+										<Trash2 class="w-3.5 h-3.5" />
+									</button>
+								</div>
+							</div>
+						{/each}
+					</div>
+				{/if}
+			</div>
+
+			<!-- Footer -->
+			<div class="pt-2 border-t border-slate-200 flex justify-end">
+				<button
+					onclick={() => (showExpenseModal = false)}
+					class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition-colors cursor-pointer"
+				>
+					Tutup
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+
+<!-- Modal Tutup Kasir / Rekap Harian Shift (Z-Report) -->
+{#if showClosingModal}
+	<div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+		<div class="pos-panel bg-white border-slate-300 w-full max-w-2xl max-h-[92vh] overflow-y-auto p-4 sm:p-6 space-y-4 shadow-2xl">
+			<!-- Modal Header -->
+			<div class="flex justify-between items-center pb-3 border-b border-slate-200">
+				<div class="flex items-center gap-2.5">
+					<div class="p-2 bg-blue-100 text-blue-800 rounded-lg border border-blue-300">
+						<FileSpreadsheet class="w-5 h-5" />
+					</div>
+					<div>
+						<h3 class="font-bold text-slate-900 text-sm sm:text-base">Rekap Harian & Tutup Kasir (Z-Report)</h3>
+						<p class="text-[11px] text-slate-500 font-mono">
+							{storeName} • {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })} • Kasir: {cashierName}
+						</p>
+					</div>
+				</div>
+				<button onclick={() => (showClosingModal = false)} class="p-1 text-slate-400 hover:text-slate-700 rounded text-base cursor-pointer">✕</button>
+			</div>
+
+			<!-- 4 KPI Summary Cards -->
+			<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+				<div class="p-2.5 bg-blue-50 border border-blue-200 rounded-lg">
+					<span class="text-[10px] text-blue-700 font-mono uppercase block font-bold">Total Omzet</span>
+					<span class="text-sm sm:text-base font-bold text-blue-950 font-mono block mt-0.5">{formatCurrency(totalGrossSales)}</span>
+					<span class="text-[10px] text-blue-600 block mt-0.5">{todayTransactions.length} Struk Selesai</span>
+				</div>
+
+				<div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg">
+					<span class="text-[10px] text-emerald-700 font-mono uppercase block font-bold">Penjualan Tunai</span>
+					<span class="text-sm sm:text-base font-bold text-emerald-950 font-mono block mt-0.5">{formatCurrency(totalCashSales)}</span>
+					<span class="text-[10px] text-emerald-600 block mt-0.5">Uang Masuk Laci</span>
+				</div>
+
+				<div class="p-2.5 bg-purple-50 border border-purple-200 rounded-lg">
+					<span class="text-[10px] text-purple-700 font-mono uppercase block font-bold">Non-Tunai (QRIS/Bank)</span>
+					<span class="text-sm sm:text-base font-bold text-purple-950 font-mono block mt-0.5">{formatCurrency(totalQrisSales + totalTransferSales)}</span>
+					<span class="text-[10px] text-purple-600 block mt-0.5">Masuk Rekening/QRIS</span>
+				</div>
+
+				<div class="p-2.5 bg-amber-50 border border-amber-200 rounded-lg">
+					<span class="text-[10px] text-amber-700 font-mono uppercase block font-bold">Pengeluaran Toko</span>
+					<span class="text-sm sm:text-base font-bold text-red-600 font-mono block mt-0.5">-{formatCurrency(totalExpenses)}</span>
+					<span class="text-[10px] text-amber-700 block mt-0.5">{dailyExpenses.length} Kas Keluar</span>
+				</div>
+			</div>
+
+			<!-- Drawer Cash Breakdown Calculation Box -->
+			<div class="p-3.5 bg-slate-50 border border-slate-300 rounded-xl space-y-2 text-xs">
+				<div class="flex items-center gap-1.5 font-bold text-slate-800 text-xs">
+					<Coins class="w-4 h-4 text-amber-600" />
+					<span>Rekonsiliasi Uang Kas Laci Fisik (Cash Drawer)</span>
+				</div>
+
+				<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 border-t border-slate-200 text-slate-700 font-mono text-[11px]">
+					<!-- Modal Awal -->
+					<div class="p-2 bg-white rounded border border-slate-200">
+						<span class="text-[10px] text-slate-500 block">MODAL AWAL KASIR</span>
+						<div class="flex items-center gap-1 mt-1">
+							<span class="font-bold">Rp</span>
+							<input
+								type="number"
+								step="10000"
+								bind:value={startingCash}
+								oninput={(e) => {
+									const val = Number((e.target as HTMLInputElement).value) || 0;
+									if (typeof window !== 'undefined') localStorage.setItem('aneka_pos_starting_cash', String(val));
+								}}
+								class="w-full bg-slate-50 border border-slate-300 rounded px-1.5 py-0.5 font-bold text-slate-900 outline-none focus:border-blue-600 text-xs"
+							/>
+						</div>
+					</div>
+
+					<!-- Tambah Kas Masuk Tunai -->
+					<div class="p-2 bg-white rounded border border-slate-200">
+						<span class="text-[10px] text-emerald-700 block">(+) PENJUALAN TUNAI</span>
+						<span class="font-bold text-emerald-700 text-xs block mt-1">+{formatCurrency(totalCashSales)}</span>
+					</div>
+
+					<!-- Kurang Kas Keluar -->
+					<div class="p-2 bg-white rounded border border-slate-200">
+						<span class="text-[10px] text-red-700 block">(-) PENGELUARAN TOKO</span>
+						<span class="font-bold text-red-700 text-xs block mt-1">-{formatCurrency(totalExpenses)}</span>
+					</div>
+				</div>
+
+				<!-- Target Wajib di Laci -->
+				<div class="p-3 bg-blue-900 text-white rounded-lg flex justify-between items-center font-mono">
+					<div>
+						<span class="text-[10px] text-blue-200 block font-sans font-bold">UANG TUNAI WAJIB ADA DI LACI:</span>
+						<span class="text-xs text-blue-200/80">Modal Awal + Tunai Masuk - Pengeluaran</span>
+					</div>
+					<span class="text-base sm:text-lg font-black text-amber-300">{formatCurrency(expectedDrawerCash)}</span>
+				</div>
+			</div>
+
+			<!-- Input Hitungan Kasir & Realtime Status Selisih -->
+			<div class="space-y-2 bg-white p-3.5 border border-slate-200 rounded-xl">
+				<div class="flex justify-between items-center">
+					<label for="pos-physical-cash" class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+						<Calculator class="w-4 h-4 text-blue-600" />
+						<span>Hitung & Masukkan Uang Fisik Kasir (Di Laci):</span>
+					</label>
+					{#if countedPhysicalCash !== null}
+						<button
+							onclick={() => (countedPhysicalCash = null)}
+							class="text-[10px] text-slate-500 hover:text-red-600 underline cursor-pointer"
+						>
+							Kosongkan
+						</button>
+					{/if}
+				</div>
+
+				<div class="flex gap-2 items-center">
+					<div class="relative flex-1">
+						<span class="absolute left-3 top-2.5 text-slate-400 font-mono font-bold text-sm">Rp</span>
+						<input
+							id="pos-physical-cash"
+							type="number"
+							min="0"
+							step="1000"
+							bind:value={countedPhysicalCash}
+							placeholder="Masukkan total uang kertas & koin hasil hitungan kasir..."
+							class="w-full pl-10 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-lg outline-none focus:border-blue-600 text-slate-900 font-mono font-bold text-base"
+						/>
+					</div>
+					<button
+						type="button"
+						onclick={() => (countedPhysicalCash = expectedDrawerCash)}
+						class="px-3 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-semibold rounded-lg shrink-0 cursor-pointer"
+						title="Samakan dengan total seharusnya"
+					>
+						Set Sesuai
+					</button>
+				</div>
+
+				<!-- Variance Badge -->
+				{#if countedPhysicalCash === null}
+					<div class="p-2.5 bg-slate-100 border border-slate-200 rounded-lg text-slate-600 text-[11px] flex items-center gap-2">
+						<AlertCircle class="w-4 h-4 text-slate-400 shrink-0" />
+						<span>Ketikkan total uang tunai yang sudah dihitung dari laci kasir untuk melihat status selisih kas.</span>
+					</div>
+				{:else if cashDifference === 0}
+					<div class="p-3 bg-emerald-50 border border-emerald-300 rounded-lg text-emerald-900 flex items-center justify-between text-xs">
+						<div class="flex items-center gap-2">
+							<CheckCircle2 class="w-5 h-5 text-emerald-600 shrink-0" />
+							<div>
+								<span class="font-bold block">UANG KAS PAS / SEIMBANG (Rp 0)</span>
+								<span class="text-[10px] text-emerald-700 font-mono">Uang fisik laci kasir tepat sesuai dengan rekapitulasi sistem.</span>
+							</div>
+						</div>
+						<span class="px-2.5 py-1 bg-emerald-600 text-white rounded font-bold font-mono text-xs">PAS</span>
+					</div>
+				{:else if cashDifference && cashDifference > 0}
+					<div class="p-3 bg-amber-50 border border-amber-300 rounded-lg text-amber-900 flex items-center justify-between text-xs">
+						<div class="flex items-center gap-2">
+							<AlertTriangle class="w-5 h-5 text-amber-600 shrink-0" />
+							<div>
+								<span class="font-bold block">KAS LEBIH / SURPLUS (+{formatCurrency(cashDifference)})</span>
+								<span class="text-[10px] text-amber-800 font-mono">Uang fisik di laci lebih banyak daripada catatan penjualan.</span>
+							</div>
+						</div>
+						<span class="px-2.5 py-1 bg-amber-600 text-white rounded font-bold font-mono text-xs">LEBIH</span>
+					</div>
+				{:else if cashDifference && cashDifference < 0}
+					<div class="p-3 bg-red-50 border border-red-300 rounded-lg text-red-900 flex items-center justify-between text-xs">
+						<div class="flex items-center gap-2">
+							<AlertTriangle class="w-5 h-5 text-red-600 shrink-0" />
+							<div>
+								<span class="font-bold block">KAS TEKOR / SELISIH KURANG (-{formatCurrency(Math.abs(cashDifference))})</span>
+								<span class="text-[10px] text-red-800 font-mono">Uang fisik kurang dari yang seharusnya. Harap periksa uang kembalian.</span>
+							</div>
+						</div>
+						<span class="px-2.5 py-1 bg-red-600 text-white rounded font-bold font-mono text-xs">TEKOR</span>
+					</div>
+				{/if}
+			</div>
+
+			<!-- No WA Owner Input (Bisa diatur) -->
+			<div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+				<div class="flex items-center gap-1.5">
+					<MessageCircle class="w-4 h-4 text-emerald-600 shrink-0" />
+					<span class="text-slate-700 font-medium">Nomor WhatsApp Owner (Tujuan Rekap):</span>
+				</div>
+				<input
+					type="text"
+					bind:value={ownerWhatsApp}
+					oninput={(e) => {
+						const val = (e.target as HTMLInputElement).value;
+						if (typeof window !== 'undefined') localStorage.setItem('aneka_pos_owner_wa', val);
+					}}
+					placeholder="081234567890"
+					class="w-36 bg-white border border-slate-300 rounded px-2 py-1 font-mono text-xs text-slate-800 outline-none focus:border-emerald-600 text-right"
+				/>
+			</div>
+
+			<!-- Action Buttons -->
+			<div class="pt-2 border-t border-slate-200 flex flex-wrap gap-2">
+				<!-- Cetak Struk Rekap 58mm -->
+				<button
+					type="button"
+					onclick={printShiftReport}
+					class="flex-1 min-w-[140px] py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+				>
+					<Printer class="w-4 h-4 text-slate-600" /> Cetak Struk Rekap (58mm)
+				</button>
+
+				<!-- Kirim WA ke Owner -->
+				<button
+					type="button"
+					onclick={sendWhatsAppReport}
+					class="flex-1 min-w-[140px] py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors"
+				>
+					<MessageCircle class="w-4 h-4" /> Kirim Rekap ke WA Owner
+				</button>
+
+				<!-- Selesaikan Shift -->
+				<button
+					type="button"
+					onclick={handleResetShift}
+					class="py-2.5 px-3 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 rounded-lg font-bold text-xs flex items-center justify-center gap-1 cursor-pointer transition-colors"
+					title="Selesaikan shift dan bersihkan rekapan untuk shift berikutnya"
+				>
+					Selesaikan Shift
+				</button>
+
+				<button
+					type="button"
+					onclick={() => (showClosingModal = false)}
+					class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg cursor-pointer"
+				>
+					Tutup
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+
+<!-- Thermal Shift Closing Report 58mm Print Component (Hidden from screen view) -->
+<div id="closing-print-area" class="{isPrintingClosing ? 'is-printing' : 'hidden'} text-black font-mono text-xs max-w-[58mm] mx-auto p-1">
+	<div class="text-center mb-2">
+		<h2 class="font-bold text-sm uppercase">{storeName}</h2>
+		<p class="text-[10px]">{storeAddress}</p>
+		<p class="text-[10px]">Telp: {storePhone}</p>
+		<div class="border-b border-black border-dashed my-1 pb-1 text-[10px]">
+			=== REKAP TUTUP KASIR (Z-REPORT) ===<br />
+			Waktu: {new Date().toLocaleString('id-ID')}<br />
+			Kasir: {cashierName}
+		</div>
+	</div>
+
+	<div class="text-[10px] space-y-0.5 border-b border-black border-dashed pb-1">
+		<div class="flex justify-between font-bold"><span>RINGKASAN PENJUALAN</span></div>
+		<div class="flex justify-between"><span>Jumlah Transaksi:</span><span>{todayTransactions.length} struk</span></div>
+		<div class="flex justify-between"><span>Total Omzet Kotor:</span><span>{formatCurrency(totalGrossSales)}</span></div>
+		<div class="flex justify-between"><span>• Penjualan Tunai:</span><span>{formatCurrency(totalCashSales)}</span></div>
+		<div class="flex justify-between"><span>• Penjualan QRIS:</span><span>{formatCurrency(totalQrisSales)}</span></div>
+		<div class="flex justify-between"><span>• Penjualan Transfer:</span><span>{formatCurrency(totalTransferSales)}</span></div>
+	</div>
+
+	{#if dailyExpenses.length > 0}
+		<div class="text-[10px] space-y-0.5 border-b border-black border-dashed py-1">
+			<div class="flex justify-between font-bold"><span>PENGELUARAN TOKO ({dailyExpenses.length})</span></div>
+			{#each dailyExpenses as exp}
+				<div class="flex justify-between text-[9px]">
+					<span class="truncate max-w-[120px]">{exp.category}</span>
+					<span>-{formatCurrency(exp.amount)}</span>
+				</div>
+			{/each}
+			<div class="flex justify-between font-bold pt-0.5">
+				<span>Total Kas Keluar:</span>
+				<span>-{formatCurrency(totalExpenses)}</span>
+			</div>
+		</div>
+	{/if}
+
+	<div class="text-[10px] space-y-0.5 border-b border-black border-dashed py-1">
+		<div class="flex justify-between font-bold"><span>REKONSILIASI KAS LACI</span></div>
+		<div class="flex justify-between"><span>Modal Awal:</span><span>{formatCurrency(startingCash)}</span></div>
+		<div class="flex justify-between"><span>(+) Tunai Masuk:</span><span>+{formatCurrency(totalCashSales)}</span></div>
+		<div class="flex justify-between"><span>(-) Pengeluaran:</span><span>-{formatCurrency(totalExpenses)}</span></div>
+		<div class="flex justify-between font-bold text-xs pt-0.5 border-t border-black border-dotted">
+			<span>WAJIB DI LACI:</span>
+			<span>{formatCurrency(expectedDrawerCash)}</span>
+		</div>
+		<div class="flex justify-between pt-0.5">
+			<span>FISIK DIHITUNG:</span>
+			<span>{countedPhysicalCash !== null ? formatCurrency(countedPhysicalCash) : '-'}</span>
+		</div>
+		<div class="flex justify-between font-bold pt-0.5">
+			<span>SELISIH KAS:</span>
+			<span>
+				{#if cashDifference === null}
+					Belum dihitung
+				{:else if cashDifference === 0}
+					PAS (Rp 0)
+				{:else if cashDifference > 0}
+					LEBIH (+{formatCurrency(cashDifference)})
+				{:else}
+					TEKOR (-{formatCurrency(Math.abs(cashDifference))})
+				{/if}
+			</span>
+		</div>
+	</div>
+
+	<div class="text-center mt-3 text-[9px] space-y-6">
+		<div class="flex justify-between text-[9px] pt-2">
+			<div>
+				<p>Kasir,</p>
+				<div class="h-8"></div>
+				<p>({cashierName})</p>
+			</div>
+			<div>
+				<p>Owner / Supervisor,</p>
+				<div class="h-8"></div>
+				<p>(....................)</p>
+			</div>
+		</div>
+		<p class="text-[8px] text-slate-600">Dicetak dari POS Toko Aneka Rasa 99</p>
+	</div>
+</div>
 
 <!-- Thermal Receipt Print Component 58mm (Hidden from screen view) -->
 <div id="receipt-print-area" class="hidden text-black font-mono text-xs max-w-[58mm] mx-auto p-1">

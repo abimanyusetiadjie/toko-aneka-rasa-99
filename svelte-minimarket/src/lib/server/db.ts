@@ -394,6 +394,34 @@ export function voidMemoryTransaction(txId: string) {
 	}
 }
 
+export let memoryExpenses: any[] = [
+	{
+		id: 'exp-001',
+		category: 'Kantong Kresek / Plastik',
+		amount: 25000,
+		notes: 'Kresek tebal 2 pack ukuran 35 (Warung Sebelah)',
+		cashier: 'Siti Aminah',
+		created_at: new Date(Date.now() - 7200000).toISOString()
+	},
+	{
+		id: 'exp-002',
+		category: 'Galon Air / Minum',
+		amount: 10000,
+		notes: 'Isi ulang galon Aqua kasir & toko',
+		cashier: 'Siti Aminah',
+		created_at: new Date(Date.now() - 3600000).toISOString()
+	}
+];
+
+export function recordMemoryExpense(expense: any) {
+	memoryExpenses.unshift(expense);
+}
+
+export function deleteMemoryExpense(expenseId: string) {
+	memoryExpenses = memoryExpenses.filter(e => e.id !== expenseId);
+}
+
+
 export function getProductForCheckout(unitId: string) {
 	const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(unitId);
 	let unit: any = null;
