@@ -69,7 +69,7 @@ let memoryUsers = [
 ];
 
 let memoryShifts = [
-	{ id: 'sh-001', cashier_name: 'Siti Aminah', opened_at: new Date(Date.now() - 14400000).toISOString(), closed_at: null, starting_cash: 200000, expected_cash: 850000, status: 'OPEN' }
+	{ id: 'sh-001', user_id: '932ba9fe-2627-463b-898a-62a4c2b5ae41', cashier_name: 'Siti Aminah (Kasir)', opened_at: new Date(Date.now() - 14400000).toISOString(), closed_at: null, starting_cash: 200000, expected_cash: 850000, actual_cash: null, cash_difference: null, status: 'OPEN' }
 ];
 
 let memoryMembers = [
@@ -213,7 +213,14 @@ function executeInMemoryFallback<T>(text: string, params: any[] = []): T[] {
 
 	// 6. SELECT cashier_shifts
 	if (sql.includes('FROM cashier_shifts')) {
-		return memoryShifts as any;
+		return memoryShifts.map(s => {
+			const cashier = memoryUsers.find(u => u.id === s.user_id);
+			return {
+				...s,
+				cashier_name: cashier?.full_name || s.cashier_name || 'Kasir',
+				cashier_username: cashier?.username || 'kasir'
+			};
+		}) as any;
 	}
 
 	// 7. SELECT members
@@ -387,6 +394,107 @@ function executeInMemoryFallback<T>(text: string, params: any[] = []): T[] {
 			return found ? ([found] as any) : [];
 		}
 		return memoryTransactions as any;
+	}
+
+	// 17. INSERT INTO users
+	if (sql.includes('INSERT INTO users')) {
+		const newUser = {
+			id: params[0] || `usr-${Date.now()}`,
+			store_id: params[1] || '11111111-1111-1111-1111-111111111111',
+			username: params[2],
+			full_name: params[3],
+			password_hash: params[4],
+			role_id: Number(params[5] || 2),
+			role_name: Number(params[5]) === 1 ? 'Owner' : 'Kasir',
+			is_active: params[6] !== undefined ? Boolean(params[6]) : true,
+			created_at: new Date().toISOString()
+		};
+		memoryUsers.unshift(newUser);
+		return [] as any;
+	}
+
+	// 18. UPDATE users
+	if (sql.includes('UPDATE users')) {
+		const targetId = params[params.length - 1];
+		const found = memoryUsers.find(u => u.id === targetId);
+		if (found) {
+			if (sql.includes('is_active = NOT is_active')) {
+				found.is_active = !found.is_active;
+			} else if (sql.includes('is_active = $1')) {
+				found.is_active = Boolean(params[0]);
+			} else {
+				found.username = params[0] || found.username;
+				found.full_name = params[1] || found.full_name;
+				found.role_id = Number(params[2] || found.role_id);
+				found.role_name = found.role_id === 1 ? 'Owner' : 'Kasir';
+				if (sql.includes('password_hash = $4')) {
+					found.password_hash = params[3];
+					if (params.length >= 6) found.is_active = Boolean(params[4]);
+				} else if (params.length >= 5) {
+					found.is_active = Boolean(params[3]);
+				}
+			}
+		}
+		return [] as any;
+	}
+
+	// 19. DELETE FROM users
+	if (sql.includes('DELETE FROM users')) {
+		const targetId = params[0];
+		memoryUsers = memoryUsers.filter(u => u.id !== targetId);
+		return [] as any;
+	}
+
+	// 20. INSERT INTO cashier_shifts
+	if (sql.includes('INSERT INTO cashier_shifts')) {
+		const cashier = memoryUsers.find(u => u.id === params[1]);
+		const newShift = {
+			id: params[0] || `sh-${Date.now()}`,
+			store_id: '11111111-1111-1111-1111-111111111111',
+			user_id: params[1],
+			cashier_name: cashier?.full_name || 'Kasir',
+			starting_cash: Number(params[2] || 0),
+			expected_cash: Number(params[3] || params[2] || 0),
+			actual_cash: null,
+			cash_difference: null,
+			opened_at: new Date().toISOString(),
+			closed_at: null,
+			status: 'OPEN'
+		};
+		memoryShifts.unshift(newShift);
+		return [] as any;
+	}
+
+	// 21. UPDATE cashier_shifts
+	if (sql.includes('UPDATE cashier_shifts')) {
+		const targetId = params[params.length - 1];
+		const found = memoryShifts.find(s => s.id === targetId);
+		if (found) {
+			if (sql.includes('closed_at = NOW()')) {
+				found.actual_cash = Number(params[0]);
+				found.expected_cash = Number(params[1]);
+				found.cash_difference = Number(params[2]);
+				found.closed_at = new Date().toISOString();
+				found.status = 'CLOSED';
+			} else {
+				if (params.length >= 2) {
+					found.starting_cash = Number(params[0] ?? found.starting_cash);
+					if (params[1] !== null && params[1] !== undefined) {
+						found.actual_cash = Number(params[1]);
+						found.cash_difference = found.actual_cash - (found.expected_cash || found.starting_cash);
+					}
+					if (params[2]) found.status = params[2];
+				}
+			}
+		}
+		return [] as any;
+	}
+
+	// 22. DELETE FROM cashier_shifts
+	if (sql.includes('DELETE FROM cashier_shifts')) {
+		const targetId = params[0];
+		memoryShifts = memoryShifts.filter(s => s.id !== targetId);
+		return [] as any;
 	}
 
 	return [] as any;
