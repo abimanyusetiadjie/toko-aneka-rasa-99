@@ -86,9 +86,9 @@
 			</form>
 			
 			<div class="mt-6 text-center text-xs text-slate-500">
-				Hint (In-Memory Data):<br/>
-				- kasir_siti / minimarket123*<br/>
-				- manager_budi / minimarket123*
+				Hint Kredensial Login:<br/>
+				- <b>owner_revaldo</b> / 12345678 (Owner)<br/>
+				- <b>kasir_siti</b> / minimarket123* (Kasir)
 			</div>
 		</div>
 	</div>

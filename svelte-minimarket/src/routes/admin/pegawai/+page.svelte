@@ -103,6 +103,17 @@
 	}
 
 	let closeDifference = $derived(rawActualCash - Number(selectedShift?.expected_cash || selectedShift?.starting_cash || 0));
+
+	let userFilter = $state<'ALL' | 'ACTIVE' | 'INACTIVE'>('ALL');
+	let activeUsersCount = $derived(data.users.filter((u: any) => u.is_active !== false).length);
+	let inactiveUsersCount = $derived(data.users.filter((u: any) => u.is_active === false).length);
+	let filteredUsers = $derived(
+		data.users.filter((u: any) => {
+			if (userFilter === 'ACTIVE') return u.is_active !== false;
+			if (userFilter === 'INACTIVE') return u.is_active === false;
+			return true;
+		})
+	);
 </script>
 
 <div class="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
@@ -153,12 +164,37 @@
 
 	<!-- 1. TABEL DATA PEGAWAI -->
 	<section class="pos-panel bg-white overflow-hidden shadow-sm border border-slate-200 rounded-xl">
-		<div class="p-3.5 border-b border-slate-200 bg-slate-50 flex justify-between items-center text-xs">
+		<div class="p-3.5 border-b border-slate-200 bg-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
 			<div class="flex items-center gap-2">
 				<Users class="w-4 h-4 text-blue-600" />
 				<h3 class="font-bold text-slate-900">Daftar Akun Pegawai & Hak Akses</h3>
 			</div>
-			<span class="text-slate-500 font-mono">Total: {data.users.length} Pegawai</span>
+
+			<div class="flex items-center gap-1 bg-slate-200/70 p-0.5 rounded-lg text-[11px] font-semibold">
+				<button 
+					type="button" 
+					onclick={() => (userFilter = 'ALL')}
+					class="px-2.5 py-1 rounded-md transition-all {userFilter === 'ALL' ? 'bg-white text-slate-900 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'}"
+				>
+					Semua ({data.users.length})
+				</button>
+				<button 
+					type="button" 
+					onclick={() => (userFilter = 'ACTIVE')}
+					class="px-2.5 py-1 rounded-md transition-all {userFilter === 'ACTIVE' ? 'bg-white text-emerald-700 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'}"
+				>
+					Aktif ({activeUsersCount})
+				</button>
+				{#if inactiveUsersCount > 0}
+					<button 
+						type="button" 
+						onclick={() => (userFilter = 'INACTIVE')}
+						class="px-2.5 py-1 rounded-md transition-all {userFilter === 'INACTIVE' ? 'bg-white text-slate-700 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'}"
+					>
+						Non-Aktif ({inactiveUsersCount})
+					</button>
+				{/if}
+			</div>
 		</div>
 
 		<div class="overflow-x-auto">
@@ -174,7 +210,7 @@
 					</tr>
 				</thead>
 				<tbody class="divide-y divide-slate-100">
-					{#each data.users as u}
+					{#each filteredUsers as u}
 						<tr class="hover:bg-slate-50/80 transition-colors">
 							<td class="py-3 px-4 font-bold text-slate-900">
 								<div class="flex items-center gap-2.5">
@@ -233,7 +269,7 @@
 										action="?/deletePegawai"
 										use:enhance
 										onsubmit={(e) => {
-											if (!confirm(`Hapus pegawai "${u.full_name}"? Jika memiliki riwayat transaksi/shift kasir, akun akan otomatis dinonaktifkan.`)) e.preventDefault();
+											if (!confirm(`Hapus pegawai "${u.full_name}" (@${u.username}) secara permanen? Data pegawai akan dihapus dari daftar dan riwayat transaksi dialihkan ke Owner.`)) e.preventDefault();
 										}}
 									>
 										<input type="hidden" name="id" value={u.id} />

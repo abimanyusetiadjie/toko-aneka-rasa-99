@@ -64,8 +64,7 @@ let memoryUsers = [
 	{ id: '46030803-a7e6-4827-b93e-0cafcf148ac7', store_id: '11111111-1111-1111-1111-111111111111', username: 'owner_revaldo', full_name: 'Revaldo Julian (Owner)', role_id: 1, role_name: 'Owner', is_active: true, password_hash: DEFAULT_PASSWORD_HASH, created_at: new Date().toISOString() },
 	{ id: '11111111-2222-3333-4444-555555555555', store_id: '11111111-1111-1111-1111-111111111111', username: 'owner', full_name: 'Owner Toko', role_id: 1, role_name: 'Owner', is_active: true, password_hash: DEFAULT_PASSWORD_HASH, created_at: new Date().toISOString() },
 	{ id: '932ba9fe-2627-463b-898a-62a4c2b5ae41', store_id: '11111111-1111-1111-1111-111111111111', username: 'kasir_siti', full_name: 'Siti Aminah (Kasir)', role_id: 2, role_name: 'Kasir', is_active: true, password_hash: DEFAULT_PASSWORD_HASH, created_at: new Date().toISOString() },
-	{ id: '33333333-4444-5555-6666-777777777777', store_id: '11111111-1111-1111-1111-111111111111', username: 'kasir', full_name: 'Kasir Toko', role_id: 2, role_name: 'Kasir', is_active: true, password_hash: DEFAULT_PASSWORD_HASH, created_at: new Date().toISOString() },
-	{ id: 'e91ed3f2-284f-4db8-a0a3-f0da106d0a33', store_id: '11111111-1111-1111-1111-111111111111', username: 'manager_budi', full_name: 'Budi Santoso (Admin)', role_id: 2, role_name: 'Kasir', is_active: true, password_hash: DEFAULT_PASSWORD_HASH, created_at: new Date().toISOString() }
+	{ id: '33333333-4444-5555-6666-777777777777', store_id: '11111111-1111-1111-1111-111111111111', username: 'kasir', full_name: 'Kasir Toko', role_id: 2, role_name: 'Kasir', is_active: true, password_hash: DEFAULT_PASSWORD_HASH, created_at: new Date().toISOString() }
 ];
 
 let memoryShifts = [
@@ -396,6 +395,28 @@ function executeInMemoryFallback<T>(text: string, params: any[] = []): T[] {
 		return memoryTransactions as any;
 	}
 
+	// 16.5 UPDATE transactions (reassign user_id)
+	if (sql.includes('UPDATE transactions')) {
+		if (sql.includes('user_id = $1 WHERE user_id = $2')) {
+			const newUserId = params[0];
+			const oldUserId = params[1];
+			memoryTransactions.forEach(t => {
+				if (t.user_id === oldUserId) t.user_id = newUserId;
+			});
+			return [] as any;
+		}
+	}
+
+	// 16.6 UPDATE cashier_shifts (reassign user_id)
+	if (sql.includes('UPDATE cashier_shifts') && sql.includes('user_id = $1 WHERE user_id = $2')) {
+		const newUserId = params[0];
+		const oldUserId = params[1];
+		memoryShifts.forEach(s => {
+			if (s.user_id === oldUserId) s.user_id = newUserId;
+		});
+		return [] as any;
+	}
+
 	// 17. INSERT INTO users
 	if (sql.includes('INSERT INTO users')) {
 		const newUser = {
@@ -418,8 +439,12 @@ function executeInMemoryFallback<T>(text: string, params: any[] = []): T[] {
 		const targetId = params[params.length - 1];
 		const found = memoryUsers.find(u => u.id === targetId);
 		if (found) {
-			if (sql.includes('is_active = NOT is_active')) {
+			if (sql.includes('is_active = NOT COALESCE(is_active, true)') || sql.includes('is_active = NOT is_active')) {
 				found.is_active = !found.is_active;
+			} else if (sql.includes('is_active = false')) {
+				found.is_active = false;
+			} else if (sql.includes('is_active = true')) {
+				found.is_active = true;
 			} else if (sql.includes('is_active = $1')) {
 				found.is_active = Boolean(params[0]);
 			} else {

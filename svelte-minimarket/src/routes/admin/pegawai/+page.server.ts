@@ -169,26 +169,20 @@ export const actions: Actions = {
 		}
 
 		try {
-			// Periksa apakah pegawai memiliki relasi data riwayat transaksi atau shift
-			const [txCheck, shiftCheck] = await Promise.all([
-				query(`SELECT count(*)::int as count FROM transactions WHERE user_id = $1`, [id]),
-				query(`SELECT count(*)::int as count FROM cashier_shifts WHERE user_id = $1`, [id])
-			]);
+			// Ambil nama pegawai sebelum dihapus untuk pesan notifikasi
+			const userRes = await query(`SELECT full_name, username FROM users WHERE id = $1 LIMIT 1`, [id]);
+			const name = userRes?.[0]?.full_name || (userRes?.[0]?.username ? `@${userRes[0].username}` : 'Pegawai');
 
-			const totalRelasi = (Number(txCheck?.[0]?.count) || 0) + (Number(shiftCheck?.[0]?.count) || 0);
+			// 1. Alihkan relasi data transaksi kasir ke akun Owner aktif agar tidak terjadi foreign key violation
+			await query(`UPDATE transactions SET user_id = $1 WHERE user_id = $2`, [locals.user.id, id]);
 
-			if (totalRelasi > 0) {
-				// Cegah foreign key violation: Nonaktifkan akun
-				await query(`UPDATE users SET is_active = false WHERE id = $1`, [id]);
-				return { 
-					success: true, 
-					message: `Pegawai memiliki riwayat transaksi/shift kasir. Akun dinonaktifkan (status Non-Aktif) demi integritas data audit.` 
-				};
-			}
+			// 2. Alihkan catatan shift kasir ke akun Owner aktif
+			await query(`UPDATE cashier_shifts SET user_id = $1 WHERE user_id = $2`, [locals.user.id, id]);
 
-			// Jika bersih dari riwayat, hapus secara permanen
+			// 3. Hapus data pegawai secara permanen dari database
 			await query(`DELETE FROM users WHERE id = $1`, [id]);
-			return { success: true, message: 'Pegawai berhasil dihapus secara permanen.' };
+
+			return { success: true, message: `Pegawai "${name}" berhasil dihapus secara permanen dari sistem.` };
 		} catch (err: any) {
 			return { success: false, message: 'Gagal memproses penghapusan pegawai: ' + err.message };
 		}
