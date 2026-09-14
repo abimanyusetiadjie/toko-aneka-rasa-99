@@ -3,7 +3,10 @@ import { query } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import type { Product, Category } from '$lib/types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ setHeaders }) => {
+	setHeaders({
+		'cache-control': 'private, max-age=15, stale-while-revalidate=30'
+	});
 	try {
 		const [products, categories, movements] = await Promise.all([
 			query<Product>(`

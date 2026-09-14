@@ -8,9 +8,9 @@ export const pool = new pg.Pool({
 	ssl: {
 		rejectUnauthorized: false
 	},
-	max: 10,
-	idleTimeoutMillis: 30000,
-	connectionTimeoutMillis: 10000 // 10s connection timeout for reliable cloud connectivity
+	max: 5,
+	idleTimeoutMillis: 15000,
+	connectionTimeoutMillis: 2500 // 2.5s connection timeout for ultra-responsive failover
 });
 
 // ==========================================
@@ -101,13 +101,24 @@ export async function query<T = any>(text: string, params: any[] = []): Promise<
 	}
 
 	try {
-		const client = await pool.connect();
-		try {
-			const res = await client.query(text, params);
-			return res.rows;
-		} finally {
-			client.release();
-		}
+		const queryTask = (async () => {
+			const client = await pool.connect();
+			try {
+				const res = await client.query(text, params);
+				return res.rows;
+			} finally {
+				client.release();
+			}
+		})();
+
+		let timer: any;
+		const timeoutTask = new Promise<never>((_, reject) => {
+			timer = setTimeout(() => reject(new Error('Query timeout (2500ms)')), 2500);
+		});
+
+		const result = await Promise.race([queryTask, timeoutTask]);
+		clearTimeout(timer);
+		return result;
 	} catch (dbErr: any) {
 		// Trip circuit breaker agar request berikutnya langsung instan tanpa delay timeout
 		tripCircuit();

@@ -2,7 +2,10 @@ import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { query } from '$lib/server/db';
 
-export const load: PageServerLoad = async ({ locals, url }) => {
+export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
+	setHeaders({
+		'cache-control': 'private, max-age=15, stale-while-revalidate=30'
+	});
 	// Role RBAC: Khusus Owner (role_id === 1)
 	if (!locals.user || locals.user.role_id !== 1) {
 		throw redirect(303, '/admin/inventory');

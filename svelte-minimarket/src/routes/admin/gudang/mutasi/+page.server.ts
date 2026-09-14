@@ -1,7 +1,10 @@
 import type { PageServerLoad } from './$types';
 import { query } from '$lib/server/db';
 
-export const load: PageServerLoad = async ({ url }) => {
+export const load: PageServerLoad = async ({ url, setHeaders }) => {
+	setHeaders({
+		'cache-control': 'private, max-age=15, stale-while-revalidate=30'
+	});
 	const filterType = url.searchParams.get('type') || 'ALL';
 
 	try {

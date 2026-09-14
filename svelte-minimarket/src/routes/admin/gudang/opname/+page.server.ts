@@ -10,7 +10,10 @@ import {
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import type { Product } from '$lib/types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ setHeaders }) => {
+	setHeaders({
+		'cache-control': 'private, max-age=15, stale-while-revalidate=30'
+	});
 	try {
 		const products = await query<Product>(`SELECT id, name, sku, stock, COALESCE(cost_price, 0) as base_hpp FROM products ORDER BY name ASC`);
 

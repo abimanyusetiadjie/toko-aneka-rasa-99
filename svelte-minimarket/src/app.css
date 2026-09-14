@@ -127,3 +127,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 		line-height: 1.2 !important;
 	}
 }
+
+@keyframes topProgress {
+	0% {
+		transform: translateX(-100%);
+	}
+	50% {
+		transform: translateX(0%);
+	}
+	100% {
+		transform: translateX(100%);
+	}
+}
+
+.animate-top-progress {
+	animation: topProgress 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
