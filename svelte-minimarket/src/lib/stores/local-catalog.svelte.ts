@@ -149,6 +149,8 @@ if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
 		syncChannel.onmessage = (event) => {
 			if (event.data?.type === 'TRANSACTION_COMPLETED' && event.data?.items) {
 				applyLocalStockDeduction(event.data.items);
+			} else if (event.data?.type === 'STOCK_CHANGED' && event.data?.items) {
+				updateLocalStockBalance(event.data.items);
 			}
 		};
 	} catch {}
@@ -178,6 +180,35 @@ function applyLocalStockDeduction(items: { productId: string; baseQty: number }[
 			for (const [key, catalogEntry] of map.entries()) {
 				if (catalogEntry.product.id === item.productId) {
 					catalogEntry.product.stock = Math.max(0, Number(catalogEntry.product.stock || 0) - item.baseQty);
+				}
+			}
+		}
+		if (typeof window !== 'undefined') {
+			try {
+				const obj: Record<string, LocalCatalogItem> = {};
+				map.forEach((v, k) => {
+					obj[k] = v;
+				});
+				localStorage.setItem(LOCAL_STORAGE_CATALOG_KEY, JSON.stringify(obj));
+			} catch {}
+		}
+		return map;
+	});
+}
+
+/**
+ * Update saldo stok barang di katalog lokal saat ada barang masuk / restock / opname
+ */
+export function updateLocalStockBalance(items: { productId: string; newBalance?: number; qty?: number }[]) {
+	localCatalog.update((map) => {
+		for (const item of items) {
+			for (const [key, catalogEntry] of map.entries()) {
+				if (catalogEntry.product.id === item.productId) {
+					if (typeof item.newBalance === 'number') {
+						catalogEntry.product.stock = item.newBalance;
+					} else if (typeof item.qty === 'number') {
+						catalogEntry.product.stock = Number(catalogEntry.product.stock || 0) + item.qty;
+					}
 				}
 			}
 		}

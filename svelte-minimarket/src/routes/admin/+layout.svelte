@@ -35,7 +35,7 @@
 		{ href: '/admin/inventory', label: 'Katalog Produk & Satuan', icon: Package },
 		{ href: '/admin/barcodes', label: 'Cetak Label Barcode (Stiker)', icon: Barcode },
 		{ href: '/admin/gudang/masuk', label: 'Penerimaan Barang Masuk', icon: Truck },
-		{ href: '/admin/gudang/opname', label: 'Stock Opname & Selisih', icon: ClipboardCheck },
+		{ href: '/admin/gudang/opname', label: 'Cek Kiriman & Selisih Rak', icon: ClipboardCheck },
 		{ href: '/admin/gudang/mutasi', label: 'Buku Besar Mutasi Stok', icon: History }
 	];
 

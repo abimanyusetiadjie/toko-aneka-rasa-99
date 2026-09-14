@@ -421,6 +421,76 @@ export function deleteMemoryExpense(expenseId: string) {
 	memoryExpenses = memoryExpenses.filter(e => e.id !== expenseId);
 }
 
+export interface IncomingShortage {
+	id: string;
+	invoice_number: string;
+	supplier_name: string;
+	product_id: string;
+	product_name: string;
+	sku: string;
+	expected_qty: number;
+	received_qty: number;
+	shortage_qty: number;
+	unit_cost: number;
+	shortage_value: number;
+	status: 'BELUM_DITAGIH' | 'SUDAH_DIKLAIM' | 'SELESAI';
+	notes: string;
+	created_at: string;
+	updated_at?: string;
+}
+
+export let memoryShortages: IncomingShortage[] = [
+	{
+		id: 'sht-001',
+		invoice_number: 'SJ-BKA-2026/09/11-04',
+		supplier_name: 'Ekspedisi Laut Bangka Express / MM Pangkalpinang',
+		product_id: 'prod-033',
+		product_name: 'Kemplang Panggang Cap MM Asli Bangka',
+		sku: 'KMP-PANG-MM-BLT',
+		expected_qty: 50,
+		received_qty: 46,
+		shortage_qty: 4,
+		unit_cost: 35625,
+		shortage_value: 142500,
+		status: 'BELUM_DITAGIH',
+		notes: 'Kardus nomor 2 sobek di kapal, isi kurang 4 bungkus. Perlu potong faktur supplier.',
+		created_at: new Date(Date.now() - 172800000).toISOString()
+	},
+	{
+		id: 'sht-002',
+		invoice_number: 'SJ-MNT-2026/09/08-12',
+		supplier_name: 'Agen Muntok Jaya',
+		product_id: 'prod-001',
+		product_name: 'Getas Bulat Obor Merah Cap Tiga Roda',
+		sku: 'GTS-BLT-OBOR-MERAH',
+		expected_qty: 30,
+		received_qty: 28,
+		shortage_qty: 2,
+		unit_cost: 32625,
+		shortage_value: 65250,
+		status: 'SUDAH_DIKLAIM',
+		notes: 'Sudah konfirmasi via WA ke Agen Muntok, janji dipotong saat penagihan faktur akhir bulan.',
+		created_at: new Date(Date.now() - 432000000).toISOString()
+	}
+];
+
+export function recordMemoryShortage(shortage: IncomingShortage) {
+	memoryShortages.unshift(shortage);
+}
+
+export function updateMemoryShortageStatus(id: string, status: 'BELUM_DITAGIH' | 'SUDAH_DIKLAIM' | 'SELESAI', notes?: string) {
+	const found = memoryShortages.find(s => s.id === id);
+	if (found) {
+		found.status = status;
+		if (notes !== undefined && notes !== '') found.notes = notes;
+		found.updated_at = new Date().toISOString();
+	}
+}
+
+export function deleteMemoryShortage(id: string) {
+	memoryShortages = memoryShortages.filter(s => s.id !== id);
+}
+
 
 export function getProductForCheckout(unitId: string) {
 	const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(unitId);

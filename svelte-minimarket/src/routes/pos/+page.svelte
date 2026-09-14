@@ -26,7 +26,8 @@
 		findLocalProduct,
 		cacheProductItem,
 		enqueueOfflineTransaction,
-		deductLocalStock
+		deductLocalStock,
+		updateLocalStockBalance
 	} from '$lib/stores/local-catalog.svelte';
 	import { BarcodeScannerListener } from '$lib/scanner/usb-hid';
 	import { calculatePointDiscount } from '$lib/services/points';
@@ -62,7 +63,17 @@
 		MessageCircle,
 		Coins,
 		Calendar,
-		AlertCircle
+		AlertCircle,
+		Bell,
+		BellRing,
+		BellOff,
+		Volume2,
+		VolumeX,
+		ShoppingBag,
+		Settings,
+		ExternalLink,
+		Sparkles,
+		Check
 	} from 'lucide-svelte';
 	import type { PettyCashExpense } from '$lib/types';
 
@@ -353,7 +364,271 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 		}
 	}
 
+	// ==========================================
+	// 🔔 NOTIFIKASI POS & SHOPEE REAL-TIME ENGINE
+	// ==========================================
+	interface PosNotificationSettings {
+		soundEnabled: boolean;
+		volume: number; // 10 - 100
+		notifyTransaction: boolean;
+		notifyShopee: boolean;
+		autoDismissSeconds: number; // 3, 6, 10, or 0 (manual)
+	}
+
+	interface PosAppNotification {
+		id: string;
+		type: 'TRANSACTION' | 'SHOPEE';
+		title: string;
+		message: string;
+		orderSn?: string;
+		receiptNumber?: string;
+		amount?: number;
+		shippingCarrier?: string;
+		buyerUsername?: string;
+		time: string;
+		read: boolean;
+	}
+
+	let showNotificationModal = $state(false);
+	let notificationSettings = $state<PosNotificationSettings>({
+		soundEnabled: true,
+		volume: 80,
+		notifyTransaction: true,
+		notifyShopee: true,
+		autoDismissSeconds: 6
+	});
+
+	let activeToasts = $state<PosAppNotification[]>([]);
+	let notificationHistory = $state<PosAppNotification[]>([
+		{
+			id: 'notif-initial-shopee',
+			type: 'SHOPEE',
+			title: '🛒 Pesanan Shopee Masuk!',
+			message: 'Pesanan #240914SP99281 oleh budi_hartono',
+			orderSn: '240914SP99281',
+			buyerUsername: 'budi_hartono',
+			shippingCarrier: 'SPX Express',
+			amount: 85000,
+			time: '10:30',
+			read: true
+		}
+	]);
+
+	let unreadNotifCount = $derived(
+		notificationHistory.filter(n => !n.read).length
+	);
+
+	let shopeePollingInterval: any = null;
+	let audioCtx: AudioContext | null = null;
+
+	function getAudioContext(): AudioContext | null {
+		if (typeof window === 'undefined') return null;
+		if (!audioCtx) {
+			const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+			if (AudioContextClass) {
+				audioCtx = new AudioContextClass();
+			}
+		}
+		if (audioCtx && audioCtx.state === 'suspended') {
+			audioCtx.resume();
+		}
+		return audioCtx;
+	}
+
+	function playTransactionSuccessSound() {
+		if (!notificationSettings.soundEnabled) return;
+		try {
+			const ctx = getAudioContext();
+			if (!ctx) return;
+			const now = ctx.currentTime;
+			const masterGain = ctx.createGain();
+			masterGain.gain.setValueAtTime((notificationSettings.volume / 100) * 0.25, now);
+			masterGain.connect(ctx.destination);
+
+			// Note 1: E5 (659.25 Hz)
+			const osc1 = ctx.createOscillator();
+			osc1.type = 'sine';
+			osc1.frequency.setValueAtTime(659.25, now);
+			osc1.connect(masterGain);
+			osc1.start(now);
+			osc1.stop(now + 0.12);
+
+			// Note 2: G5 (783.99 Hz)
+			const osc2 = ctx.createOscillator();
+			osc2.type = 'sine';
+			osc2.frequency.setValueAtTime(783.99, now + 0.1);
+			osc2.connect(masterGain);
+			osc2.start(now + 0.1);
+			osc2.stop(now + 0.22);
+
+			// Note 3: C6 (1046.50 Hz) - Crisp finish
+			const osc3 = ctx.createOscillator();
+			osc3.type = 'triangle';
+			osc3.frequency.setValueAtTime(1046.5, now + 0.2);
+			osc3.connect(masterGain);
+			osc3.start(now + 0.2);
+			osc3.stop(now + 0.45);
+		} catch (e) {
+			console.warn('Audio playback error', e);
+		}
+	}
+
+	function playShopeeOrderSound() {
+		if (!notificationSettings.soundEnabled) return;
+		try {
+			const ctx = getAudioContext();
+			if (!ctx) return;
+			const now = ctx.currentTime;
+			const masterGain = ctx.createGain();
+			masterGain.gain.setValueAtTime((notificationSettings.volume / 100) * 0.35, now);
+			masterGain.connect(ctx.destination);
+
+			// Shopee Alert Chime: Double frequency tone
+			// Tone 1: 880 Hz (A5)
+			const osc1 = ctx.createOscillator();
+			osc1.type = 'sine';
+			osc1.frequency.setValueAtTime(880, now);
+			osc1.connect(masterGain);
+			osc1.start(now);
+			osc1.stop(now + 0.16);
+
+			// Tone 2: 1318.51 Hz (E6)
+			const osc2 = ctx.createOscillator();
+			osc2.type = 'sine';
+			osc2.frequency.setValueAtTime(1318.51, now + 0.16);
+			osc2.connect(masterGain);
+			osc2.start(now + 0.16);
+			osc2.stop(now + 0.45);
+
+			masterGain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+		} catch (e) {
+			console.warn('Shopee audio error', e);
+		}
+	}
+
+	function addAppNotification(notif: {
+		type: 'TRANSACTION' | 'SHOPEE';
+		title: string;
+		message: string;
+		orderSn?: string;
+		receiptNumber?: string;
+		amount?: number;
+		shippingCarrier?: string;
+		buyerUsername?: string;
+	}) {
+		const newNotif: PosAppNotification = {
+			...notif,
+			id: `notif-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+			time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+			read: false
+		};
+
+		notificationHistory = [newNotif, ...notificationHistory.slice(0, 49)];
+		if (typeof window !== 'undefined') {
+			try {
+				localStorage.setItem('aneka_pos_notifications', JSON.stringify(notificationHistory));
+			} catch {}
+		}
+
+		if (
+			(notif.type === 'TRANSACTION' && notificationSettings.notifyTransaction) ||
+			(notif.type === 'SHOPEE' && notificationSettings.notifyShopee)
+		) {
+			activeToasts = [newNotif, ...activeToasts.slice(0, 2)];
+
+			if (notif.type === 'TRANSACTION') {
+				playTransactionSuccessSound();
+			} else if (notif.type === 'SHOPEE') {
+				playShopeeOrderSound();
+			}
+
+			if (notificationSettings.autoDismissSeconds > 0) {
+				const autoId = newNotif.id;
+				setTimeout(() => {
+					dismissToast(autoId);
+				}, notificationSettings.autoDismissSeconds * 1000);
+			}
+		}
+	}
+
+	function dismissToast(id: string) {
+		activeToasts = activeToasts.filter(t => t.id !== id);
+	}
+
+	function markAllNotificationsRead() {
+		notificationHistory = notificationHistory.map(n => ({ ...n, read: true }));
+		if (typeof window !== 'undefined') {
+			try {
+				localStorage.setItem('aneka_pos_notifications', JSON.stringify(notificationHistory));
+			} catch {}
+		}
+	}
+
+	function clearNotificationHistory() {
+		notificationHistory = [];
+		if (typeof window !== 'undefined') {
+			localStorage.removeItem('aneka_pos_notifications');
+		}
+	}
+
+	function saveNotificationSettings() {
+		if (typeof window !== 'undefined') {
+			try {
+				localStorage.setItem('aneka_pos_notification_settings', JSON.stringify(notificationSettings));
+			} catch {}
+		}
+	}
+
+	let isSimulatingShopee = $state(false);
+	async function simulateShopeeOrderDirectly() {
+		isSimulatingShopee = true;
+		try {
+			const res = await fetch('/api/shopee/orders', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ action: 'simulate' })
+			});
+			const data = await res.json();
+			if (data.success && data.order) {
+				addAppNotification({
+					type: 'SHOPEE',
+					title: '🛒 Pesanan Shopee Masuk!',
+					message: `Pesanan #${data.order.order_sn} oleh ${data.order.buyer_username}`,
+					orderSn: data.order.order_sn,
+					buyerUsername: data.order.buyer_username,
+					shippingCarrier: data.order.shipping_carrier,
+					amount: data.order.total_amount
+				});
+			} else {
+				const mockSn = `240914SP${Math.floor(100000 + Math.random() * 900000)}`;
+				addAppNotification({
+					type: 'SHOPEE',
+					title: '🛒 Pesanan Shopee Masuk!',
+					message: `Pesanan #${mockSn} oleh aneka_lover_bangka`,
+					orderSn: mockSn,
+					buyerUsername: 'aneka_lover_bangka',
+					shippingCarrier: 'SPX Express',
+					amount: 112500
+				});
+			}
+		} catch {
+			const mockSn = `240914SP${Math.floor(100000 + Math.random() * 900000)}`;
+			addAppNotification({
+				type: 'SHOPEE',
+				title: '🛒 Pesanan Shopee Masuk!',
+				message: `Pesanan #${mockSn} oleh aneka_lover_bangka`,
+				orderSn: mockSn,
+				buyerUsername: 'aneka_lover_bangka',
+				shippingCarrier: 'SPX Express',
+				amount: 112500
+			});
+		} finally {
+			isSimulatingShopee = false;
+		}
+	}
+
 	let scannerDriver: BarcodeScannerListener | null = null;
+
 
 	// Quick Pick Catalog State (Simulasi Tanpa Scanner Fisik / Demo)
 	let showCatalogModal = $state(false);
@@ -687,6 +962,13 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 					transferAmount: $paymentMethod === 'DEBIT' ? finalPayTotal : (showSplitModal && splitNonCashMethod === 'DEBIT' ? splitNonCashAmount : 0),
 					itemsCount: $cart.reduce((sum, item) => sum + item.qty, 0)
 				});
+				addAppNotification({
+					type: 'TRANSACTION',
+					title: 'Transaksi Kasir Berhasil',
+					message: `No: ${offlineReceipt} sebesar ${formatCurrency(finalPayTotal)} (${$paymentMethod})`,
+					receiptNumber: offlineReceipt,
+					amount: finalPayTotal
+				});
 				showSuccessModal = true;
 				setTimeout(() => {
 					window.print();
@@ -733,6 +1015,13 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 				qrisAmount: $paymentMethod === 'QRIS' ? finalPayTotal : (showSplitModal && splitNonCashMethod === 'QRIS' ? splitNonCashAmount : 0),
 				transferAmount: $paymentMethod === 'DEBIT' ? finalPayTotal : (showSplitModal && splitNonCashMethod === 'DEBIT' ? splitNonCashAmount : 0),
 				itemsCount: $cart.reduce((sum, item) => sum + item.qty, 0)
+			});
+			addAppNotification({
+				type: 'TRANSACTION',
+				title: 'Transaksi Kasir Berhasil',
+				message: `No: ${data.receipt_number} sebesar ${formatCurrency(finalPayTotal)} (${$paymentMethod})`,
+				receiptNumber: data.receipt_number,
+				amount: finalPayTotal
 			});
 			
 			showSuccessModal = true;
@@ -840,6 +1129,14 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 				if (savedOwnerWa) {
 					ownerWhatsApp = savedOwnerWa;
 				}
+				const savedSettings = localStorage.getItem('aneka_pos_notification_settings');
+				if (savedSettings) {
+					try { notificationSettings = { ...notificationSettings, ...JSON.parse(savedSettings) }; } catch {}
+				}
+				const savedNotifs = localStorage.getItem('aneka_pos_notifications');
+				if (savedNotifs) {
+					try { notificationHistory = JSON.parse(savedNotifs); } catch {}
+				}
 			} catch (e) {
 				console.error('Error reading localStorage shift data', e);
 			}
@@ -864,15 +1161,77 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 		// Initialize idle timer
 		resetIdleTimer();
 
-		// Sinkronisasi Real-Time SSE: Segarkan katalog ketika ada produk/stok baru
+		// Sinkronisasi Real-Time SSE: Segarkan katalog ketika ada produk/stok baru & dengarkan notifikasi
 		if (typeof window !== 'undefined' && 'EventSource' in window) {
 			try {
 				posSseSource = new EventSource('/api/realtime/events');
-				posSseSource.addEventListener('STOCK_CHANGED', () => {
+				posSseSource.addEventListener('STOCK_CHANGED', (event: MessageEvent) => {
 					fetchCatalog();
+					try {
+						const payload = JSON.parse(event.data);
+						if (payload?.items) {
+							updateLocalStockBalance(payload.items);
+						}
+					} catch {}
+				});
+
+				// Transaksi Berhasil dari SSE (Terminal lain atau background sync)
+				posSseSource.addEventListener('TRANSACTION_COMPLETED', (event: MessageEvent) => {
+					try {
+						const payload = JSON.parse(event.data);
+						if (completedTxData?.receiptNumber === payload.receiptNumber) return;
+						addAppNotification({
+							type: 'TRANSACTION',
+							title: 'Transaksi Kasir Berhasil',
+							message: payload.message || `No: ${payload.receiptNumber} sebesar ${formatCurrency(payload.totalAmount)}`,
+							receiptNumber: payload.receiptNumber,
+							amount: payload.totalAmount
+						});
+					} catch {}
+				});
+
+				// Pesanan Shopee Masuk dari SSE
+				posSseSource.addEventListener('SHOPEE_ORDER_RECEIVED', (event: MessageEvent) => {
+					try {
+						const payload = JSON.parse(event.data);
+						addAppNotification({
+							type: 'SHOPEE',
+							title: '🛒 Pesanan Shopee Masuk!',
+							message: payload.message || `Pesanan #${payload.orderSn} oleh ${payload.buyerUsername}`,
+							orderSn: payload.orderSn,
+							buyerUsername: payload.buyerUsername,
+							shippingCarrier: payload.shippingCarrier,
+							amount: payload.totalAmount
+						});
+					} catch {}
 				});
 			} catch {}
 		}
+
+		// Fallback Poller untuk mendeteksi pesanan Shopee baru (jika koneksi SSE sempat drop)
+		let lastKnownShopeeSn = '';
+		shopeePollingInterval = setInterval(async () => {
+			try {
+				const res = await fetch('/api/shopee/orders?status=READY_TO_SHIP');
+				if (!res.ok) return;
+				const data = await res.json();
+				if (data.success && data.orders && data.orders.length > 0) {
+					const latest = data.orders[0];
+					if (lastKnownShopeeSn && latest.order_sn !== lastKnownShopeeSn) {
+						addAppNotification({
+							type: 'SHOPEE',
+							title: '🛒 Pesanan Shopee Masuk!',
+							message: `Pesanan #${latest.order_sn} (${latest.buyer_username}) • ${latest.shipping_carrier || 'SPX'}`,
+							orderSn: latest.order_sn,
+							buyerUsername: latest.buyer_username,
+							shippingCarrier: latest.shipping_carrier,
+							amount: latest.total_amount
+						});
+					}
+					lastKnownShopeeSn = latest.order_sn;
+				}
+			} catch {}
+		}, 15000);
 	});
 
 	onDestroy(() => {
@@ -880,6 +1239,7 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 		stopCameraScan();
 		if (idleTimeout) clearTimeout(idleTimeout);
 		if (posSseSource) posSseSource.close();
+		if (shopeePollingInterval) clearInterval(shopeePollingInterval);
 	});
 </script>
 
@@ -946,6 +1306,34 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 					<span class="text-[10px] sm:text-xs font-bold leading-tight block">Tutup Kasir</span>
 				</div>
 			</button>
+
+			<!-- Tombol 3: Pengaturan Notifikasi & Suara Bel (Shopee & POS) -->
+			<button
+				onclick={() => {
+					showNotificationModal = true;
+					markAllNotificationsRead();
+				}}
+				class="relative flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded border transition-all font-semibold shadow-xs cursor-pointer active:scale-95 {unreadNotifCount > 0
+					? 'border-orange-400 bg-orange-50 hover:bg-orange-100 text-orange-900 ring-2 ring-orange-300'
+					: 'border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700'}"
+				title="Pengaturan Notifikasi Suara Bel & Pop-up POS & Shopee"
+			>
+				{#if notificationSettings.soundEnabled}
+					<BellRing class="w-3.5 h-3.5 sm:w-4 sm:h-4 {unreadNotifCount > 0 ? 'text-orange-600 animate-bounce' : 'text-blue-600'} shrink-0" />
+				{:else}
+					<BellOff class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" />
+				{/if}
+				<div class="text-left hidden sm:block">
+					<span class="text-[8px] text-slate-500 font-mono block leading-none">SUARA & BEL</span>
+					<span class="text-[10px] sm:text-xs font-bold leading-tight block">Notifikasi</span>
+				</div>
+				{#if unreadNotifCount > 0}
+					<span class="ml-0.5 px-1.5 py-0.2 text-[9px] sm:text-[10px] bg-red-600 text-white rounded-full font-bold animate-pulse">
+						{unreadNotifCount}
+					</span>
+				{/if}
+			</button>
+
 
 			<button
 				onclick={() => (showMemberModal = true)}
@@ -2152,6 +2540,322 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 		<p class="text-[8px] text-slate-600">Dicetak dari POS Toko Aneka Rasa 99</p>
 	</div>
 </div>
+
+<!-- Modal Pengaturan Notifikasi & Riwayat (Shopee & POS) -->
+{#if showNotificationModal}
+	<div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+		<div class="pos-panel bg-white border-slate-300 w-full max-w-lg max-h-[92vh] overflow-y-auto p-4 sm:p-5 space-y-4 shadow-2xl">
+			<!-- Header -->
+			<div class="flex justify-between items-center pb-2.5 border-b border-slate-200">
+				<div class="flex items-center gap-2">
+					<div class="p-2 bg-blue-100 text-blue-800 rounded-lg border border-blue-300">
+						<BellRing class="w-5 h-5 text-blue-600" />
+					</div>
+					<div>
+						<h3 class="font-bold text-slate-900 text-sm sm:text-base">Pengaturan Notifikasi POS & Shopee</h3>
+						<p class="text-[11px] text-slate-500 font-mono">Suara bel & pop-up transaksi serta orderan online masuk</p>
+					</div>
+				</div>
+				<button onclick={() => (showNotificationModal = false)} class="p-1 text-slate-400 hover:text-slate-700 rounded text-base cursor-pointer">✕</button>
+			</div>
+
+			<!-- Section 1: Pengaturan Suara Bel Audio -->
+			<div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3 text-xs">
+				<div class="flex items-center justify-between">
+					<div class="flex items-center gap-2">
+						{#if notificationSettings.soundEnabled}
+							<Volume2 class="w-4 h-4 text-emerald-600" />
+						{:else}
+							<VolumeX class="w-4 h-4 text-slate-400" />
+						{/if}
+						<div>
+							<span class="font-bold text-slate-800 block">Suara Bel Alarm (Audio Chimes)</span>
+							<span class="text-[11px] text-slate-500">Bunyikan nada instan saat ada transaksi atau order Shopee</span>
+						</div>
+					</div>
+					<label class="relative inline-flex items-center cursor-pointer">
+						<input
+							type="checkbox"
+							bind:checked={notificationSettings.soundEnabled}
+							onchange={saveNotificationSettings}
+							class="sr-only peer"
+						/>
+						<div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
+					</label>
+				</div>
+
+				{#if notificationSettings.soundEnabled}
+					<div class="space-y-1.5 pt-2 border-t border-slate-200">
+						<div class="flex justify-between items-center text-[11px]">
+							<span class="text-slate-600 font-medium">Volume Suara Bel:</span>
+							<span class="font-bold font-mono text-slate-800">{notificationSettings.volume}%</span>
+						</div>
+						<input
+							type="range"
+							min="10"
+							max="100"
+							step="5"
+							bind:value={notificationSettings.volume}
+							onchange={saveNotificationSettings}
+							class="w-full accent-emerald-600 cursor-pointer h-1.5 bg-slate-200 rounded-lg"
+						/>
+					</div>
+
+					<!-- Tombol Tes Suara -->
+					<div class="flex gap-2 pt-1">
+						<button
+							type="button"
+							onclick={playTransactionSuccessSound}
+							class="flex-1 py-1.5 px-2 bg-white hover:bg-emerald-50 border border-slate-300 hover:border-emerald-400 text-slate-700 hover:text-emerald-800 rounded-lg font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+						>
+							<Bell class="w-3.5 h-3.5 text-emerald-600" /> Tes Bel Kasir
+						</button>
+						<button
+							type="button"
+							onclick={playShopeeOrderSound}
+							class="flex-1 py-1.5 px-2 bg-white hover:bg-orange-50 border border-slate-300 hover:border-orange-400 text-slate-700 hover:text-orange-800 rounded-lg font-semibold text-[11px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+						>
+							<ShoppingBag class="w-3.5 h-3.5 text-orange-600" /> Tes Bel Shopee
+						</button>
+					</div>
+				{/if}
+			</div>
+
+			<!-- Section 2: Pengaturan Pop-up Layar Kasir -->
+			<div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3 text-xs">
+				<h4 class="font-bold text-slate-800 text-xs">Tampilan Pop-up di Layar Kasir:</h4>
+
+				<!-- Toggle Transaksi Kasir -->
+				<div class="flex items-center justify-between pt-1">
+					<div>
+						<span class="font-bold text-slate-800 block">Pop-up Transaksi Berhasil</span>
+						<span class="text-[11px] text-slate-500">Munculkan kartu notifikasi saat pembayaran kasir sukses</span>
+					</div>
+					<label class="relative inline-flex items-center cursor-pointer">
+						<input
+							type="checkbox"
+							bind:checked={notificationSettings.notifyTransaction}
+							onchange={saveNotificationSettings}
+							class="sr-only peer"
+						/>
+						<div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+					</label>
+				</div>
+
+				<!-- Toggle Orderan Shopee -->
+				<div class="flex items-center justify-between pt-2 border-t border-slate-200">
+					<div>
+						<span class="font-bold text-slate-800 block">Pop-up Pesanan Shopee Masuk</span>
+						<span class="text-[11px] text-slate-500">Munculkan banner oranye Shopee saat ada orderan baru</span>
+					</div>
+					<label class="relative inline-flex items-center cursor-pointer">
+						<input
+							type="checkbox"
+							bind:checked={notificationSettings.notifyShopee}
+							onchange={saveNotificationSettings}
+							class="sr-only peer"
+						/>
+						<div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange-500"></div>
+					</label>
+				</div>
+
+				<!-- Durasi Tampil Pop-up -->
+				<div class="pt-2 border-t border-slate-200 space-y-1.5">
+					<label class="block text-slate-600 font-medium text-[11px]">Durasi Pop-up Tampil Otomatis:</label>
+					<div class="grid grid-cols-4 gap-1.5">
+						{#each [
+							{ sec: 3, label: '3 Detik' },
+							{ sec: 6, label: '6 Detik' },
+							{ sec: 10, label: '10 Detik' },
+							{ sec: 0, label: 'Manual' }
+						] as dur}
+							<button
+								type="button"
+								onclick={() => {
+									notificationSettings.autoDismissSeconds = dur.sec;
+									saveNotificationSettings();
+								}}
+								class="py-1 px-2 rounded-lg border text-center font-bold text-[11px] transition-colors cursor-pointer {notificationSettings.autoDismissSeconds === dur.sec
+									? 'bg-blue-600 text-white border-blue-700'
+									: 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}"
+							>
+								{dur.label}
+							</button>
+						{/each}
+					</div>
+				</div>
+			</div>
+
+			<!-- Section 3: Uji Coba Simulasi Order Shopee -->
+			<div class="p-3.5 bg-orange-50 border border-orange-200 rounded-xl text-xs space-y-2">
+				<div class="flex items-center justify-between">
+					<div class="flex items-center gap-1.5 font-bold text-orange-900">
+						<Sparkles class="w-4 h-4 text-orange-600" />
+						<span>Uji Coba Langsung Notifikasi Shopee</span>
+					</div>
+					<span class="text-[10px] bg-orange-200 text-orange-900 px-2 py-0.5 rounded font-mono font-bold">Simulasi Live</span>
+				</div>
+				<p class="text-[11px] text-orange-800">
+					Klik tombol di bawah ini untuk mensimulasikan orderan Shopee masuk secara nyata: nada bel Shopee akan berbunyi dan pop-up banner otomatis tampil di layar kasir.
+				</p>
+				<button
+					type="button"
+					onclick={simulateShopeeOrderDirectly}
+					disabled={isSimulatingShopee}
+					class="w-full py-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+				>
+					<ShoppingBag class="w-3.5 h-3.5" />
+					{isSimulatingShopee ? 'Memproses Simulasi...' : '⚡ Kirim Simulasi Pesanan Shopee Masuk Sekarang'}
+				</button>
+			</div>
+
+			<!-- Section 4: Riwayat Notifikasi Hari Ini -->
+			<div class="space-y-2 text-xs pt-1">
+				<div class="flex justify-between items-center">
+					<span class="font-bold text-slate-800">Riwayat Notifikasi Hari Ini ({notificationHistory.length})</span>
+					{#if notificationHistory.length > 0}
+						<button
+							type="button"
+							onclick={clearNotificationHistory}
+							class="text-[11px] text-red-600 hover:underline cursor-pointer"
+						>
+							Hapus Riwayat
+						</button>
+					{/if}
+				</div>
+
+				{#if notificationHistory.length === 0}
+					<div class="p-4 bg-slate-50 border border-slate-200 rounded-lg text-center text-slate-500 text-xs">
+						Belum ada notifikasi baru hari ini.
+					</div>
+				{:else}
+					<div class="max-h-40 overflow-y-auto space-y-1.5 custom-scrollbar pr-1">
+						{#each notificationHistory as item}
+							<div class="p-2.5 rounded-lg border flex items-center justify-between text-xs {item.type === 'SHOPEE' ? 'bg-orange-50/60 border-orange-200' : 'bg-slate-50 border-slate-200'}">
+								<div class="min-w-0 flex-1 pr-2">
+									<div class="flex items-center gap-1.5">
+										{#if item.type === 'SHOPEE'}
+											<span class="px-1.5 py-0.2 bg-orange-500 text-white text-[9px] font-bold rounded">SHOPEE</span>
+										{:else}
+											<span class="px-1.5 py-0.2 bg-emerald-600 text-white text-[9px] font-bold rounded">KASIR</span>
+										{/if}
+										<span class="font-bold text-slate-900 truncate">{item.title}</span>
+										<span class="text-[10px] text-slate-400 font-mono shrink-0">{item.time}</span>
+									</div>
+									<p class="text-[11px] text-slate-600 truncate mt-0.5">{item.message}</p>
+								</div>
+								{#if item.amount}
+									<span class="font-mono font-bold text-slate-800 shrink-0">{formatCurrency(item.amount)}</span>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				{/if}
+			</div>
+
+			<!-- Footer -->
+			<div class="pt-2 border-t border-slate-200 flex justify-end">
+				<button
+					onclick={() => (showNotificationModal = false)}
+					class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition-colors cursor-pointer"
+				>
+					Selesai
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+
+<!-- Floating Real-Time Notifications (Toasts) Pojok Kanan Layar Kasir -->
+<aside class="fixed bottom-4 right-4 z-50 flex flex-col gap-2.5 max-w-sm w-[92vw] sm:w-[380px] pointer-events-none" aria-live="polite" aria-atomic="true">
+	{#each activeToasts as toast (toast.id)}
+		<div
+			class="pointer-events-auto shadow-2xl rounded-xl border p-3.5 transition-all duration-300 transform animate-in slide-in-from-bottom-5 {toast.type === 'SHOPEE'
+				? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white border-orange-300'
+				: 'bg-white border-emerald-500 border-l-4 text-slate-900'}"
+		>
+			<div class="flex items-start justify-between gap-2">
+				<div class="flex items-center gap-2">
+					{#if toast.type === 'SHOPEE'}
+						<div class="p-1.5 bg-white/20 rounded-lg text-white shrink-0">
+							<ShoppingBag class="w-4 h-4 text-white" />
+						</div>
+					{:else}
+						<div class="p-1.5 bg-emerald-100 rounded-lg text-emerald-700 shrink-0">
+							<CheckCircle2 class="w-4 h-4 text-emerald-600" />
+						</div>
+					{/if}
+					<div>
+						<h4 class="font-black text-xs tracking-wide uppercase {toast.type === 'SHOPEE' ? 'text-white' : 'text-slate-900'}">
+							{toast.title}
+						</h4>
+						<span class="text-[10px] font-mono {toast.type === 'SHOPEE' ? 'text-orange-100' : 'text-slate-500'}">
+							Waktu: {toast.time} WIB
+						</span>
+					</div>
+				</div>
+				<button
+					onclick={() => dismissToast(toast.id)}
+					class="p-1 rounded hover:bg-black/10 text-xs {toast.type === 'SHOPEE' ? 'text-white' : 'text-slate-400 hover:text-slate-700'} cursor-pointer"
+					title="Tutup notifikasi"
+				>
+					✕
+				</button>
+			</div>
+
+			<div class="mt-2 text-xs space-y-1">
+				{#if toast.type === 'SHOPEE'}
+					<div class="p-2 bg-black/15 rounded-lg space-y-0.5 font-mono text-[11px]">
+						<div class="flex justify-between">
+							<span class="text-orange-100">No. Order:</span>
+							<span class="font-bold">#{toast.orderSn}</span>
+						</div>
+						{#if toast.buyerUsername}
+							<div class="flex justify-between">
+								<span class="text-orange-100">Pembeli:</span>
+								<span class="font-bold">{toast.buyerUsername}</span>
+							</div>
+						{/if}
+						{#if toast.shippingCarrier}
+							<div class="flex justify-between">
+								<span class="text-orange-100">Kurir:</span>
+								<span>{toast.shippingCarrier}</span>
+							</div>
+						{/if}
+						{#if toast.amount}
+							<div class="flex justify-between pt-1 border-t border-white/20 font-bold text-xs text-amber-200">
+								<span>Total Pesanan:</span>
+								<span>{formatCurrency(toast.amount)}</span>
+							</div>
+						{/if}
+					</div>
+					<div class="flex gap-2 pt-1">
+						<a
+							href="/admin/shopee"
+							class="flex-1 py-1.5 bg-white text-orange-600 hover:bg-orange-50 rounded font-bold text-center text-xs shadow-xs transition-colors flex items-center justify-center gap-1 cursor-pointer"
+						>
+							<ExternalLink class="w-3 h-3" /> Buka Tab Shopee
+						</a>
+						<button
+							onclick={() => dismissToast(toast.id)}
+							class="px-3 py-1.5 bg-black/20 hover:bg-black/30 text-white rounded font-bold text-xs transition-colors cursor-pointer"
+						>
+							Tutup
+						</button>
+					</div>
+				{:else}
+					<p class="text-slate-600 text-xs">{toast.message}</p>
+					{#if toast.amount}
+						<div class="flex justify-between items-center pt-1 font-mono font-bold text-slate-800 text-xs">
+							<span class="text-slate-500 font-sans text-[11px]">Total Transaksi:</span>
+							<span class="text-emerald-700">{formatCurrency(toast.amount)}</span>
+						</div>
+					{/if}
+				{/if}
+			</div>
+		</div>
+	{/each}
+</aside>
 
 <!-- Thermal Receipt Print Component 58mm (Hidden from screen view) -->
 <div id="receipt-print-area" class="hidden text-black font-mono text-xs max-w-[58mm] mx-auto p-1">

@@ -1,5 +1,5 @@
 export interface RealtimeEvent {
-	type: 'TRANSACTION_COMPLETED' | 'STOCK_CHANGED' | 'SYNC_PULSE';
+	type: 'TRANSACTION_COMPLETED' | 'STOCK_CHANGED' | 'SYNC_PULSE' | 'SHOPEE_ORDER_RECEIVED';
 	data: {
 		receiptNumber?: string;
 		orderSn?: string;

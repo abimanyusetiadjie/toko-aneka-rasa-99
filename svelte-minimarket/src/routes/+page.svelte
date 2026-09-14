@@ -135,8 +135,8 @@
 							<span class="text-slate-400 font-mono text-[10px]">Restock PO</span>
 						</a>
 						<a href="/admin/gudang/opname" class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 text-slate-700 font-semibold transition-colors">
-							<span class="flex items-center gap-1.5"><ClipboardCheck class="w-3.5 h-3.5 text-amber-600" /> Stock Opname & Selisih</span>
-							<span class="text-slate-400 font-mono text-[10px]">Audit Fisik</span>
+							<span class="flex items-center gap-1.5"><ClipboardCheck class="w-3.5 h-3.5 text-amber-600" /> Cek Kiriman & Selisih Rak</span>
+							<span class="text-slate-400 font-mono text-[10px]">Audit Fisik & SJ</span>
 						</a>
 						<a href="/admin/gudang/mutasi" class="flex items-center justify-between p-1.5 rounded hover:bg-slate-50 text-slate-700 font-semibold transition-colors">
 							<span class="flex items-center gap-1.5"><History class="w-3.5 h-3.5 text-purple-600" /> Buku Besar Mutasi Stok</span>

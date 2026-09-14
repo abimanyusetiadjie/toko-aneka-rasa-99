@@ -5,7 +5,8 @@ import {
 	createShopeeOrder,
 	updateShopeeOrderStatus,
 	cancelShopeeOrder,
-	simulateRandomShopeeOrder
+	simulateRandomShopeeOrder,
+	memoryShopeeOrders
 } from '$lib/server/shopee-service';
 import type { ShopeeOrder } from '$lib/types';
 
@@ -44,7 +45,15 @@ export const GET: RequestHandler = async ({ url }) => {
 		const orders = await query<ShopeeOrder>(sql, params);
 		return json({ success: true, orders: orders || [] });
 	} catch (err: any) {
-		return json({ success: false, orders: [], error: err.message }, { status: 500 });
+		let fallback = [...memoryShopeeOrders];
+		if (status && status !== 'ALL') {
+			fallback = fallback.filter(o => o.order_status === status);
+		}
+		if (q) {
+			const lower = q.toLowerCase();
+			fallback = fallback.filter(o => o.order_sn.toLowerCase().includes(lower) || o.buyer_username.toLowerCase().includes(lower));
+		}
+		return json({ success: true, orders: fallback });
 	}
 };
 
