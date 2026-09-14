@@ -756,6 +756,120 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 		showErrorModal = true;
 	}
 
+	// State & Handler Format Otomatis Rp dan Titik untuk Nominal Uang Kasir
+	let cashInputElement: HTMLInputElement | undefined = $state();
+	let cashInputDisplay = $state('');
+
+	// Sinkronisasi otomatis tampilan nominal uang saat $amountPaid berubah (misal dari Pecahan Cepat / Uang Pas)
+	$effect(() => {
+		if ($amountPaid !== null && $amountPaid !== undefined && $amountPaid > 0) {
+			const expected = 'Rp ' + new Intl.NumberFormat('id-ID').format($amountPaid);
+			if (cashInputDisplay !== expected) {
+				cashInputDisplay = expected;
+			}
+		} else if (cashInputDisplay !== '') {
+			cashInputDisplay = '';
+		}
+	});
+
+	function handleCashInput(e: Event) {
+		const input = e.target as HTMLInputElement;
+		const raw = input.value;
+		const digits = raw.replace(/\D/g, '');
+
+		if (!digits || digits === '0') {
+			$amountPaid = null;
+			cashInputDisplay = '';
+			input.value = '';
+			return;
+		}
+
+		const num = parseInt(digits, 10);
+		if (num > 999999999) return; // Batasi maksimal 999 juta untuk keamanan
+
+		$amountPaid = num;
+		const formatted = 'Rp ' + new Intl.NumberFormat('id-ID').format(num);
+		cashInputDisplay = formatted;
+		input.value = formatted;
+	}
+
+	function handleCashKeyDown(e: KeyboardEvent) {
+		if (e.key === 'Backspace') {
+			const input = e.target as HTMLInputElement;
+			const selStart = input.selectionStart;
+			const selEnd = input.selectionEnd;
+
+			// Jika kursor tepat setelah titik/spasi/karakter format, hapus angka sebelum pemisah
+			if (selStart !== null && selStart === selEnd && selStart > 0) {
+				const charBefore = input.value[selStart - 1];
+				if (charBefore === '.' || charBefore === ' ' || charBefore === 'p' || charBefore === 'R') {
+					e.preventDefault();
+					let targetIdx = selStart - 1;
+					while (targetIdx >= 0 && /\D/.test(input.value[targetIdx])) {
+						targetIdx--;
+					}
+					if (targetIdx >= 0) {
+						const nextVal = input.value.slice(0, targetIdx) + input.value.slice(targetIdx + 1);
+						const digits = nextVal.replace(/\D/g, '');
+						if (!digits || digits === '0') {
+							$amountPaid = null;
+							cashInputDisplay = '';
+							input.value = '';
+						} else {
+							const num = parseInt(digits, 10);
+							$amountPaid = num;
+							const formatted = 'Rp ' + new Intl.NumberFormat('id-ID').format(num);
+							cashInputDisplay = formatted;
+							input.value = formatted;
+						}
+					} else {
+						$amountPaid = null;
+						cashInputDisplay = '';
+						input.value = '';
+					}
+				}
+			}
+		}
+	}
+
+	function clearCashInput() {
+		$amountPaid = null;
+		cashInputDisplay = '';
+		cashInputElement?.focus();
+	}
+
+	// State & Handler Format Otomatis untuk Split Payment Modal
+	let splitCashDisplay = $state('');
+	let splitNonCashDisplay = $state('');
+
+	$effect(() => {
+		if (splitCashAmount > 0) {
+			const exp = 'Rp ' + new Intl.NumberFormat('id-ID').format(splitCashAmount);
+			if (splitCashDisplay !== exp) splitCashDisplay = exp;
+		} else if (splitCashDisplay !== '') {
+			splitCashDisplay = '';
+		}
+	});
+
+	$effect(() => {
+		if (splitNonCashAmount > 0) {
+			const exp = 'Rp ' + new Intl.NumberFormat('id-ID').format(splitNonCashAmount);
+			if (splitNonCashDisplay !== exp) splitNonCashDisplay = exp;
+		} else if (splitNonCashDisplay !== '') {
+			splitNonCashDisplay = '';
+		}
+	});
+
+	function handleSplitCashInput(e: Event) {
+		const digits = (e.target as HTMLInputElement).value.replace(/\D/g, '');
+		splitCashAmount = digits ? parseInt(digits, 10) : 0;
+	}
+
+	function handleSplitNonCashInput(e: Event) {
+		const digits = (e.target as HTMLInputElement).value.replace(/\D/g, '');
+		splitNonCashAmount = digits ? parseInt(digits, 10) : 0;
+	}
+
 	// Preset Uang Tunai Cepat
 	function setCashAmount(val: number) {
 		$paymentMethod = 'CASH';
@@ -1111,6 +1225,7 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 		} else if (e.key === 'F8') {
 			e.preventDefault();
 			$paymentMethod = 'CASH';
+			setTimeout(() => cashInputElement?.focus(), 50);
 		} else if (e.key === 'F9') {
 			e.preventDefault();
 			showExpenseModal = !showExpenseModal;
@@ -1594,7 +1709,10 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 
 					<div class="grid grid-cols-2 gap-2">
 						<button
-							onclick={() => ($paymentMethod = 'CASH')}
+							onclick={() => {
+								$paymentMethod = 'CASH';
+								setTimeout(() => cashInputElement?.focus(), 50);
+							}}
 							class="border rounded-lg py-2.5 flex flex-col items-center gap-1 transition-all cursor-pointer {$paymentMethod === 'CASH'
 								? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
 								: 'bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100'}"
@@ -1633,12 +1751,28 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 								<button onclick={() => setCashAmount(200000)} class="py-1.5 bg-slate-100 border border-slate-300 hover:bg-slate-200 rounded text-[11px] font-mono text-slate-800 font-bold">200k</button>
 							</div>
 
-							<input
-								type="number"
-								bind:value={$amountPaid}
-								placeholder="Ketik nominal uang..."
-								class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-lg font-mono font-bold outline-none focus:border-emerald-600 text-slate-900"
-							/>
+							<div class="relative">
+								<input
+									bind:this={cashInputElement}
+									type="text"
+									inputmode="numeric"
+									value={cashInputDisplay}
+									oninput={handleCashInput}
+									onkeydown={handleCashKeyDown}
+									placeholder="Ketik nominal uang..."
+									class="w-full bg-slate-50 border border-slate-300 rounded-lg py-2.5 pl-3 pr-9 text-lg font-mono font-bold outline-none focus:border-emerald-600 focus:bg-white text-slate-900 transition-colors"
+								/>
+								{#if cashInputDisplay}
+									<button
+										type="button"
+										onclick={clearCashInput}
+										class="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-200 text-xs transition-colors"
+										title="Hapus nominal"
+									>
+										✕
+									</button>
+								{/if}
+							</div>
 
 							<div class="flex justify-between items-center p-2.5 bg-emerald-50 rounded-lg border border-emerald-200">
 								<span class="text-xs text-emerald-800 font-bold">UANG KEMBALIAN:</span>
@@ -1842,7 +1976,7 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 
 				<div class="space-y-1">
 					<label for="split-modal-cash" class="block text-slate-600 text-[11px] font-mono">NOMINAL TUNAI (CASH):</label>
-					<input id="split-modal-cash" type="number" bind:value={splitCashAmount} class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900 font-mono font-bold" />
+					<input id="split-modal-cash" type="text" inputmode="numeric" value={splitCashDisplay} oninput={handleSplitCashInput} placeholder="Rp 0" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900 font-mono font-bold" />
 				</div>
 
 				<div class="space-y-1">
@@ -1852,7 +1986,7 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 							<option value="QRIS">QRIS</option>
 							<option value="DEBIT">Debit EDC</option>
 						</select>
-						<input id="split-modal-noncash" type="number" bind:value={splitNonCashAmount} class="flex-1 bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900 font-mono font-bold" />
+						<input id="split-modal-noncash" type="text" inputmode="numeric" value={splitNonCashDisplay} oninput={handleSplitNonCashInput} placeholder="Rp 0" class="flex-1 bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900 font-mono font-bold" />
 					</div>
 				</div>
 
