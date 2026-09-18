@@ -342,15 +342,45 @@ function executeInMemoryFallback<T>(text: string, params: any[] = []): T[] {
 
 	// 14. UPDATE products
 	if (sql.includes('UPDATE products')) {
-		if (sql.includes('stock = $1')) {
-			const newStock = Number(params[0]);
-			const prodId = params[2] || params[1];
-			const target = memoryProducts.find(p => p.id === prodId);
-			if (target) {
-				target.stock = newStock;
+		const targetId = params[params.length - 1];
+		const target = memoryProducts.find(p => p.id === targetId);
+		if (target) {
+			if (sql.includes('stock = $1')) {
+				target.stock = Number(params[0]);
 				if (params.length >= 3 && typeof params[1] === 'number') {
 					target.base_hpp = params[1];
+					target.cost_price = params[1];
 				}
+			} else {
+				// name = $1, category_id = $2, base_hpp = $3, cost_price = $3, price = $4, stock = $5
+				target.name = params[0] || target.name;
+				target.category_id = String(params[1] || target.category_id);
+				target.base_hpp = Number(params[2] ?? target.base_hpp);
+				target.cost_price = Number(params[2] ?? target.cost_price);
+				if (params.length >= 6) {
+					target.price = Number(params[3] ?? target.price);
+					target.selling_price = Number(params[3] ?? target.selling_price);
+					target.stock = Number(params[4] ?? target.stock);
+				} else if (params.length >= 5) {
+					target.stock = Number(params[3] ?? target.stock);
+				}
+			}
+		}
+		return [] as any;
+	}
+
+	// 14.5 UPDATE product_units
+	if (sql.includes('UPDATE product_units')) {
+		const targetId = params[params.length - 1];
+		const unit = memoryProductUnits.find(u => u.id === targetId || u.product_id === targetId);
+		if (unit) {
+			unit.price = Number(params[0] ?? unit.price);
+			if (params[1]) unit.barcode = params[1];
+			// Also sync with parent product price
+			const prod = memoryProducts.find(p => p.id === unit.product_id);
+			if (prod) {
+				prod.price = unit.price;
+				prod.selling_price = unit.price;
 			}
 		}
 		return [] as any;

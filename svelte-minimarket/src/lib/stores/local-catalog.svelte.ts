@@ -199,7 +199,7 @@ function applyLocalStockDeduction(items: { productId: string; baseQty: number }[
 /**
  * Update saldo stok barang di katalog lokal saat ada barang masuk / restock / opname
  */
-export function updateLocalStockBalance(items: { productId: string; newBalance?: number; qty?: number }[]) {
+export function updateLocalStockBalance(items: { productId: string; newBalance?: number; qty?: number; price?: number }[]) {
 	localCatalog.update((map) => {
 		for (const item of items) {
 			for (const [key, catalogEntry] of map.entries()) {
@@ -208,6 +208,16 @@ export function updateLocalStockBalance(items: { productId: string; newBalance?:
 						catalogEntry.product.stock = item.newBalance;
 					} else if (typeof item.qty === 'number') {
 						catalogEntry.product.stock = Number(catalogEntry.product.stock || 0) + item.qty;
+					}
+					if (typeof item.price === 'number') {
+						catalogEntry.product.price = item.price;
+						catalogEntry.product.selling_price = item.price;
+						if (catalogEntry.scanned_unit) catalogEntry.scanned_unit.price = item.price;
+						if (catalogEntry.all_units) {
+							for (const u of catalogEntry.all_units) {
+								if (u.conversion_factor === 1) u.price = item.price;
+							}
+						}
 					}
 				}
 			}

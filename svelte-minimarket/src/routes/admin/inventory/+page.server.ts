@@ -5,7 +5,7 @@ import type { Product, Category } from '$lib/types';
 
 export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 	setHeaders({
-		'cache-control': 'private, max-age=15, stale-while-revalidate=30'
+		'cache-control': 'no-cache, no-store, must-revalidate'
 	});
 	const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
 
@@ -207,12 +207,12 @@ export const actions: Actions = {
 
 			await query(
 				`UPDATE products 
-				 SET name = $1, category_id = $2, base_hpp = $3, cost_price = $3, stock = $4, updated_at = NOW()
-				 WHERE id = $5`,
-				[name, category_id, base_hpp, stock, id]
+				 SET name = $1, category_id = $2, base_hpp = $3, cost_price = $3, price = $4, stock = $5, updated_at = NOW()
+				 WHERE id = $6`,
+				[name, category_id, base_hpp, selling_price, stock, id]
 			);
 
-			const existingUnits = await query(`SELECT id FROM product_units WHERE product_id = $1 AND conversion_factor = 1`, [id]);
+			const existingUnits = await query(`SELECT id FROM product_units WHERE product_id = $1 AND conversion_factor = 1 LIMIT 1`, [id]);
 			if (existingUnits.length > 0) {
 				await query(
 					`UPDATE product_units 
@@ -220,18 +220,24 @@ export const actions: Actions = {
 					 WHERE id = $3`,
 					[selling_price, barcode, existingUnits[0].id]
 				);
+			} else {
+				await query(
+					`INSERT INTO product_units (id, product_id, unit_name, conversion_factor, price, barcode)
+					 VALUES ($1, $2, 'Pcs', 1, $3, $4)`,
+					[crypto.randomUUID(), id, selling_price, barcode || `899${Math.floor(10000000 + Math.random() * 90000000)}`]
+				);
 			}
 
 			broadcastRealtimeEvent({
 				type: 'STOCK_CHANGED',
 				data: {
-					items: [{ productId: id, qty: 0, baseQty: 0, newBalance: stock }],
+					items: [{ productId: id, qty: 0, baseQty: 0, newBalance: stock, price: selling_price }],
 					timestamp: new Date().toISOString(),
-					message: `Produk diperbarui: ${name}`
+					message: `Produk diperbarui: ${name} (Harga: Rp ${selling_price.toLocaleString('id-ID')})`
 				}
 			});
 
-			return { success: true, message: `Produk "${name}" berhasil diperbarui.` };
+			return { success: true, message: `Produk "${name}" berhasil diperbarui (Harga: Rp ${selling_price.toLocaleString('id-ID')}).` };
 		} catch (err: any) {
 			return { success: false, message: 'Gagal memperbarui produk: ' + err.message };
 		}
