@@ -73,6 +73,7 @@
 		Settings,
 		ExternalLink,
 		Sparkles,
+		Calculator,
 		Check
 	} from 'lucide-svelte';
 	import type { PettyCashExpense } from '$lib/types';
@@ -974,7 +975,7 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 							if (statusData.status === 'SETTLED') {
 								if (qrisPollInterval) clearInterval(qrisPollInterval);
 								isQrisSettled = true;
-								playSuccessRegisterSound();
+								playTransactionSuccessSound();
 								setTimeout(() => {
 									closeQRISModal();
 									handleCheckout();
@@ -2248,7 +2249,7 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 			<div class="space-y-3 bg-amber-50/50 p-3.5 rounded-xl border border-amber-200">
 				<!-- Kategori Cepat -->
 				<div>
-					<label class="block text-slate-700 font-bold mb-1.5 text-xs">PILIH KATEGORI PENGELUARAN:</label>
+					<span class="block text-slate-700 font-bold mb-1.5 text-xs">PILIH KATEGORI PENGELUARAN:</span>
 					<div class="flex flex-wrap gap-1.5">
 						{#each [
 							'Kantong Kresek / Plastik',
@@ -2836,7 +2837,7 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 
 				<!-- Durasi Tampil Pop-up -->
 				<div class="pt-2 border-t border-slate-200 space-y-1.5">
-					<label class="block text-slate-600 font-medium text-[11px]">Durasi Pop-up Tampil Otomatis:</label>
+					<span class="block text-slate-600 font-medium text-[11px]">Durasi Pop-up Tampil Otomatis:</span>
 					<div class="grid grid-cols-4 gap-1.5">
 						{#each [
 							{ sec: 3, label: '3 Detik' },

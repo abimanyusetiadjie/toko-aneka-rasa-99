@@ -7,11 +7,17 @@ export interface RealtimeEvent {
 		newStatus?: string;
 		totalAmount?: number;
 		items?: Array<{
-			productId: string;
+			productId?: string;
+			product_id?: string | null;
 			productName?: string;
-			qty: number;
-			baseQty: number;
+			name?: string;
+			sku?: string;
+			qty?: number;
+			baseQty?: number;
 			newBalance?: number;
+			price?: number;
+			subtotal?: number;
+			[key: string]: any;
 		}>;
 		timestamp: string;
 		message?: string;

@@ -67,7 +67,21 @@ let memoryUsers = [
 	{ id: '33333333-4444-5555-6666-777777777777', store_id: '11111111-1111-1111-1111-111111111111', username: 'kasir', full_name: 'Kasir Toko', role_id: 2, role_name: 'Kasir', is_active: true, password_hash: DEFAULT_PASSWORD_HASH, created_at: new Date().toISOString() }
 ];
 
-let memoryShifts = [
+interface MemoryShift {
+	id: string;
+	store_id?: string;
+	user_id: string;
+	cashier_name: string;
+	starting_cash: number;
+	expected_cash: number;
+	actual_cash: number | null;
+	cash_difference: number | null;
+	opened_at: string;
+	closed_at: string | null;
+	status: string;
+}
+
+let memoryShifts: MemoryShift[] = [
 	{ id: 'sh-001', user_id: '932ba9fe-2627-463b-898a-62a4c2b5ae41', cashier_name: 'Siti Aminah (Kasir)', opened_at: new Date(Date.now() - 14400000).toISOString(), closed_at: null, starting_cash: 200000, expected_cash: 850000, actual_cash: null, cash_difference: null, status: 'OPEN' }
 ];
 
@@ -535,8 +549,9 @@ function executeInMemoryFallback<T>(text: string, params: any[] = []): T[] {
 				if (params.length >= 2) {
 					found.starting_cash = Number(params[0] ?? found.starting_cash);
 					if (params[1] !== null && params[1] !== undefined) {
-						found.actual_cash = Number(params[1]);
-						found.cash_difference = found.actual_cash - (found.expected_cash || found.starting_cash);
+						const cash = Number(params[1]);
+						found.actual_cash = cash;
+						found.cash_difference = cash - (found.expected_cash || found.starting_cash);
 					}
 					if (params[2]) found.status = params[2];
 				}
