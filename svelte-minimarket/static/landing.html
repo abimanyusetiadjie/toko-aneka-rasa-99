@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toko Aneka Rasa • Oleh-Oleh Khas Bangka Asli & Terlengkap</title>
+  <meta name="description" content="Pusat oleh-oleh khas Bangka Belitung asli & terlengkap. Kemplang, Getas, Kericu, Lempok Cempedak & Camilan Renyah Autentik dari Bumi Timah." />
+  
+  <!-- Google Fonts: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandRed: '#C8102E',
+            brandRedDark: '#A00C24',
+            brandRedLight: '#FBE8EB',
+            brandYellow: '#FFC107',
+            brandYellowDark: '#FFA000',
+            brandYellowLight: '#FFF8E1',
+            brandYellowAccent: '#FFF3CD',
+            warmWhite: '#FFFDF9'
+          },
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif']
+          },
+          boxShadow: {
+            'warm': '0 10px 30px -5px rgba(200, 16, 46, 0.1), 0 8px 10px -6px rgba(255, 193, 7, 0.1)',
+            'card-hover': '0 20px 35px -5px rgba(200, 16, 46, 0.15), 0 10px 15px -5px rgba(255, 193, 7, 0.1)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #FFFDF9;
+      color: #1F2937;
+    }
+    ::selection {
+      background-color: #C8102E;
+      color: #FFFFFF;
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, #C8102E 0%, #FF8F00 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .bg-hero-pattern {
+      background: radial-gradient(circle at top right, rgba(255, 193, 7, 0.25), transparent 45%),
+                  radial-gradient(circle at bottom left, rgba(200, 16, 46, 0.12), transparent 40%),
+                  #FFFDF9;
+    }
+    .custom-badge {
+      background: linear-gradient(90deg, #FFC107 0%, #FFA000 100%);
+    }
+  </style>
+</head>
+<body class="bg-warmWhite text-gray-800 antialiased selection:bg-brandRed selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- 1. STICKY HEADER -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-amber-100 shadow-sm transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo & Nama Toko -->
+        <a href="#beranda" class="flex items-center gap-3 group">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brandRed to-brandRedDark text-brandYellow flex items-center justify-center font-black text-xl shadow-md border-2 border-brandYellow group-hover:scale-105 transition-transform duration-300">
+            99
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-extrabold text-xl sm:text-2xl text-brandRed tracking-tight">Toko Aneka Rasa</span>
+              <span class="bg-brandYellow text-gray-900 text-[10px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider font-mono">BANGKA</span>
+            </div>
+            <p class="text-[11px] text-gray-500 font-medium">Oleh-Oleh Khas Bangka Belitung Asli</p>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Menu -->
+        <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-gray-700">
+          <a href="#beranda" class="hover:text-brandRed transition-colors">Beranda</a>
+          <a href="#keunggulan" class="hover:text-brandRed transition-colors">Keunggulan</a>
+          <a href="#produk" class="hover:text-brandRed transition-colors">Produk</a>
+          <a href="#tentang" class="hover:text-brandRed transition-colors">Tentang</a>
+          <a href="#kontak" class="hover:text-brandRed transition-colors">Kontak</a>
+        </nav>
+
+        <!-- CTA Button: Belanja di Shopee (Warna Merah) -->
+        <div class="hidden sm:flex items-center gap-3">
+          <a 
+            href="https://shopee.co.id/tokoanekarasa99" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-brandRed hover:bg-brandRedDark text-white font-bold text-sm px-5 py-2.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200"
+          >
+            <!-- Shopee Bag Icon SVG -->
+            <svg class="w-4 h-4 fill-current text-brandYellow" viewBox="0 0 24 24">
+              <path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/>
+            </svg>
+            <span>Belanja di Shopee</span>
+          </a>
+        </div>
+
+        <!-- Mobile Hamburger Button -->
+        <div class="flex items-center md:hidden">
+          <button 
+            type="button" 
+            id="mobile-menu-btn"
+            class="p-2.5 rounded-xl text-gray-700 hover:text-brandRed hover:bg-brandYellowLight focus:outline-none transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            <svg id="hamburger-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-amber-200 px-6 pt-3 pb-6 space-y-3 shadow-lg">
+      <a href="#beranda" class="mobile-link block py-2 text-base font-semibold text-gray-800 hover:text-brandRed border-b border-gray-100">Beranda</a>
+      <a href="#keunggulan" class="mobile-link block py-2 text-base font-semibold text-gray-800 hover:text-brandRed border-b border-gray-100">Keunggulan</a>
+      <a href="#produk" class="mobile-link block py-2 text-base font-semibold text-gray-800 hover:text-brandRed border-b border-gray-100">Produk Unggulan</a>
+      <a href="#tentang" class="mobile-link block py-2 text-base font-semibold text-gray-800 hover:text-brandRed border-b border-gray-100">Tentang Kami</a>
+      <a href="#kontak" class="mobile-link block py-2 text-base font-semibold text-gray-800 hover:text-brandRed border-b border-gray-100">Kontak</a>
+      
+      <div class="pt-3">
+        <a 
+          href="https://shopee.co.id/tokoanekarasa99" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="w-full flex items-center justify-center gap-2 bg-brandRed hover:bg-brandRedDark text-white font-bold py-3 rounded-full shadow-md text-sm"
+        >
+          <svg class="w-4 h-4 fill-current text-brandYellow" viewBox="0 0 24 24">
+            <path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/>
+          </svg>
+          <span>Belanja di Shopee</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ========================================================================= -->
+  <!-- 2. HERO SECTION -->
+  <!-- ========================================================================= -->
+  <section id="beranda" class="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-28 lg:pt-24 lg:pb-32 bg-hero-pattern">
+    
+    <!-- Ornamen Lingkaran Aksen Merah & Kuning -->
+    <div class="absolute -top-16 -right-16 w-80 h-80 bg-brandYellow/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 -left-16 w-72 h-72 bg-brandRed/10 rounded-full blur-2xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Kolom Teks Hero -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          
+          <!-- Badge: Pengiriman ke Seluruh Indonesia -->
+          <div class="inline-flex items-center gap-2.5 bg-brandYellowWarm border border-brandYellow/60 text-gray-900 text-xs sm:text-sm font-bold px-4 py-1.5 rounded-full shadow-sm">
+            <span class="flex h-2.5 w-2.5 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brandRed opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brandRed"></span>
+            </span>
+            <span>📦 Pengiriman ke Seluruh Indonesia</span>
+          </div>
+
+          <!-- Headline Utama -->
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight leading-tight">
+            Oleh-Oleh Khas Bangka <span class="text-gradient">Asli & Terlengkap</span>
+          </h1>
+
+          <!-- Subheadline -->
+          <p class="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-normal">
+            Kemplang, Getas, Kericu, Lempok Cempedak & Camilan Renyah Autentik dari Bumi Timah. Dibuat dengan resep tradisional keluarga berbahan 100% daging ikan tenggiri segar pilihan.
+          </p>
+
+          <!-- Tombol Besar: Shopee + WhatsApp -->
+          <div class="pt-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            
+            <!-- Tombol Pesan Sekarang di Shopee -->
+            <a 
+              href="https://shopee.co.id/tokoanekarasa99" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-brandRed hover:bg-brandRedDark text-white font-bold text-base px-8 py-4 rounded-full shadow-lg shadow-brandRed/25 hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 group"
+            >
+              <svg class="w-5 h-5 fill-current text-brandYellow group-hover:rotate-12 transition-transform" viewBox="0 0 24 24">
+                <path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/>
+              </svg>
+              <span>Pesan Sekarang di Shopee</span>
+            </a>
+
+            <!-- Tombol Chat WhatsApp -->
+            <a 
+              href="https://wa.me/6281299887766?text=Halo%20Toko%20Aneka%20Rasa,%20saya%20tertarik%20memesan%20oleh-oleh%20khas%20Bangka." 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-base px-7 py-4 rounded-full shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-300"
+            >
+              <!-- WhatsApp Icon SVG -->
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.072-2.196-.549-1.849-.766-3.036-2.656-3.128-2.778-.093-.122-.746-.992-.746-1.892 0-.9.472-1.343.64-1.528.17-.184.372-.23.496-.23.125 0 .25.002.359.006.115.006.269-.044.421.323.157.38.536 1.306.582 1.401.047.094.078.204.016.327-.062.124-.094.202-.187.311-.094.11-.197.245-.281.33-.094.094-.192.197-.082.385.11.189.489.807 1.05 1.306.721.642 1.328.841 1.517.934.188.094.298.079.408-.047.11-.125.472-.549.597-.736.126-.188.252-.157.424-.094.173.063 1.096.517 1.284.611.188.094.313.141.36.22.046.078.046.453-.098.858zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.306C8.423 21.549 10.155 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+              </svg>
+              <span>Chat WhatsApp</span>
+            </a>
+
+          </div>
+
+          <!-- Rating & Jaminan -->
+          <div class="pt-6 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-gray-500 font-medium">
+            <div class="flex items-center gap-1.5">
+              <span class="text-brandYellow font-black text-sm">★★★★★</span>
+              <span class="font-bold text-gray-800">4.9/5.0</span>
+              <span>(Ribuan Pelanggan Puas)</span>
+            </div>
+            <div class="flex items-center gap-1 text-emerald-700">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span class="font-bold">100% Ikan Tenggiri Asli</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Kolom Gambar Hero Menarik -->
+        <div class="lg:col-span-5">
+          <div class="relative mx-auto max-w-md">
+            
+            <!-- Frame Kartu Produk Unggulan Hero -->
+            <div class="bg-white rounded-3xl p-4 sm:p-5 shadow-2xl border-4 border-brandYellow/40 transform hover:scale-[1.02] transition-transform duration-300">
+              
+              <div class="relative rounded-2xl overflow-hidden aspect-4/3 bg-gray-100 shadow-inner">
+                <img 
+                  src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=800&auto=format&fit=crop&q=80" 
+                  alt="Kemplang dan Oleh-Oleh Khas Bangka Aneka Rasa" 
+                  class="w-full h-full object-cover"
+                />
+                <div class="absolute top-3 left-3 bg-brandRed text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                  🔥 Best Seller No. 1
+                </div>
+                <div class="absolute bottom-3 right-3 bg-brandYellow text-gray-950 text-xs font-black px-3 py-1 rounded-full shadow">
+                  Renyah & Gurih
+                </div>
+              </div>
+
+              <div class="pt-4 px-2">
+                <div class="flex items-center justify-between">
+                  <h3 class="font-bold text-gray-900 text-base sm:text-lg">Kemplang Panggang & Getas Super</h3>
+                  <span class="text-brandRed font-black text-base">Rp 25.000+</span>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Lengkap dengan sambal terasi manis pedas khas Bangka Belitung.</p>
+                
+                <a 
+                  href="https://shopee.co.id/tokoanekarasa99" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="mt-3.5 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-brandRed to-brandRedDark hover:from-brandRedDark hover:to-brandRed text-white text-xs font-bold py-2.5 rounded-xl shadow transition-all duration-200"
+                >
+                  <span>Beli Paket Hemat di Shopee</span>
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                </a>
+              </div>
+
+            </div>
+
+            <!-- Floating Stamp Label -->
+            <div class="absolute -bottom-5 -left-5 bg-brandYellow text-gray-900 font-black text-xs p-3 rounded-2xl shadow-lg border-2 border-white transform -rotate-6">
+              ⭐ Cita Rasa Asli Bumi Timah
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 3. SECTION KEUNGGULAN (4 Kolom) -->
+  <!-- ========================================================================= -->
+  <section id="keunggulan" class="py-16 sm:py-20 bg-white border-y border-amber-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-xs font-bold uppercase tracking-wider text-brandRed bg-brandRedLight px-3 py-1 rounded-full">
+          Keunggulan Kami
+        </span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-gray-900 mt-2 tracking-tight">
+          Kenapa Belanja di Toko Aneka Rasa?
+        </h2>
+        <p class="text-sm text-gray-500 mt-2">
+          Kami mengutamakan mutu, kemurnian rasa ikan tenggiri, dan kepuasan setiap pelanggan.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Keunggulan 1 -->
+        <div class="bg-warmWhite border border-amber-200/70 p-6 rounded-2xl hover:border-brandRed hover:shadow-card-hover hover:-translate-y-1.5 transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-2xl bg-brandRedLight text-brandRed flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brandRed group-hover:text-white transition-all duration-300">
+            <!-- Fish / Authentic Icon -->
+            <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">100% Asli Bangka</h3>
+          <p class="text-xs text-gray-600 leading-relaxed">
+            Dibuat langsung oleh pengrajin lokal Bangka dengan komposisi daging ikan tenggiri segar melimpah tanpa campuran pengawet.
+          </p>
+        </div>
+
+        <!-- Keunggulan 2 -->
+        <div class="bg-warmWhite border border-amber-200/70 p-6 rounded-2xl hover:border-brandYellowDark hover:shadow-card-hover hover:-translate-y-1.5 transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-2xl bg-brandYellowWarm text-brandYellowDark flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brandYellow group-hover:text-gray-900 transition-all duration-300">
+            <!-- Sparkles / Crispy Icon -->
+            <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Renyah & Gurih Autentik</h3>
+          <p class="text-xs text-gray-600 leading-relaxed">
+            Tekstur renyah empuk yang tidak keras di gigi, dipanggang di atas arang atau digoreng dengan minyak kelapa berkualitas.
+          </p>
+        </div>
+
+        <!-- Keunggulan 3 -->
+        <div class="bg-warmWhite border border-amber-200/70 p-6 rounded-2xl hover:border-brandRed hover:shadow-card-hover hover:-translate-y-1.5 transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-2xl bg-brandRedLight text-brandRed flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brandRed group-hover:text-white transition-all duration-300">
+            <!-- Box / Safe Packaging Icon -->
+            <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 17H5V5h14v14zM12 7l-5 5h3v4h4v-4h3z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Kemasan Aman & Rapi</h3>
+          <p class="text-xs text-gray-600 leading-relaxed">
+            Dilengkapi kardus tebal dan double bubble wrap ekstra gratis untuk menjamin camilan kemplang Anda tiba tanpa remuk.
+          </p>
+        </div>
+
+        <!-- Keunggulan 4 -->
+        <div class="bg-warmWhite border border-amber-200/70 p-6 rounded-2xl hover:border-brandYellowDark hover:shadow-card-hover hover:-translate-y-1.5 transition-all duration-300 group">
+          <div class="w-14 h-14 rounded-2xl bg-brandYellowWarm text-brandYellowDark flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-brandYellow group-hover:text-gray-900 transition-all duration-300">
+            <!-- Price Tag Icon -->
+            <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+              <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Harga Terjangkau</h3>
+          <p class="text-xs text-gray-600 leading-relaxed">
+            Harga tangan pertama langsung dari pusat produksi, sangat cocok untuk konsumsi harian, oleh-oleh kerabat, maupun reseller.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 4. SECTION PRODUK UNGGULAN -->
+  <!-- ========================================================================= -->
+  <section id="produk" class="py-16 sm:py-24 bg-hero-pattern">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-brandRed bg-brandRedLight px-3 py-1 rounded-full">
+            Katalog Favorit
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-gray-900 mt-2 tracking-tight">
+            Produk Favorit Pelanggan
+          </h2>
+          <p class="text-sm text-gray-600 mt-1">
+            Pilihan oleh-oleh paling laris yang wajib dicoba saat rindu cita rasa khas Bangka Belitung.
+          </p>
+        </div>
+
+        <a 
+          href="https://shopee.co.id/tokoanekarasa99" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 text-brandRed font-bold text-sm hover:text-brandRedDark transition-colors group"
+        >
+          <span>Lihat Semua di Shopee</span>
+          <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Grid 6 Produk Unggulan -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Produk 1: Kemplang Ikan -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-amber-200/80 shadow-md hover:shadow-card-hover hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group">
+          <div>
+            <div class="relative aspect-4/3 overflow-hidden bg-amber-50">
+              <img 
+                src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=600&auto=format&fit=crop&q=80" 
+                alt="Kemplang Ikan Khas Bangka" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <span class="absolute top-3 left-3 bg-brandRed text-white text-[11px] font-black px-3 py-1 rounded-full shadow">
+                Terlaris
+              </span>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-brandYellowDark uppercase tracking-wider">Camilan Gurih</span>
+              <h3 class="text-lg font-bold text-gray-900 mt-1 group-hover:text-brandRed transition-colors">
+                Kemplang Ikan Panggang & Goreng
+              </h3>
+              <p class="text-xs text-gray-500 mt-2 line-clamp-2">
+                Kemplang bulat panggang arang harum dengan sambal terasi manis pedas khas Bangka yang melegenda.
+              </p>
+            </div>
+          </div>
+
+          <div class="px-6 pb-6 pt-2 border-t border-gray-100 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] text-gray-400 block font-medium">Harga mulai:</span>
+              <span class="text-lg font-extrabold text-brandRed font-mono">Rp 35.000</span>
+            </div>
+            <a 
+              href="https://shopee.co.id/tokoanekarasa99" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 bg-brandRed hover:bg-brandRedDark text-white text-xs font-bold px-4 py-2.5 rounded-full shadow hover:scale-105 active:scale-95 transition-all"
+            >
+              <span>Lihat di Shopee</span>
+              <svg class="w-3.5 h-3.5 fill-current text-brandYellow" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Produk 2: Getas / Keretek -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-amber-200/80 shadow-md hover:shadow-card-hover hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group">
+          <div>
+            <div class="relative aspect-4/3 overflow-hidden bg-amber-50">
+              <img 
+                src="https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=600&auto=format&fit=crop&q=80" 
+                alt="Getas Keretek Ikan Tenggiri Bangka" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <span class="absolute top-3 left-3 bg-brandYellow text-gray-900 text-[11px] font-black px-3 py-1 rounded-full shadow">
+                Favorit Keluarga
+              </span>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-brandYellowDark uppercase tracking-wider">Ikan Tenggiri Asli</span>
+              <h3 class="text-lg font-bold text-gray-900 mt-1 group-hover:text-brandRed transition-colors">
+                Getas / Keretek Ikan Tenggiri
+              </h3>
+              <p class="text-xs text-gray-500 mt-2 line-clamp-2">
+                Getas bulat renyah gurih empuk. Dibuat dengan resep asli tanpa pemutih, nikmat disantap sebagai camilan santai.
+              </p>
+            </div>
+          </div>
+
+          <div class="px-6 pb-6 pt-2 border-t border-gray-100 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] text-gray-400 block font-medium">Harga mulai:</span>
+              <span class="text-lg font-extrabold text-brandRed font-mono">Rp 25.000</span>
+            </div>
+            <a 
+              href="https://shopee.co.id/tokoanekarasa99" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 bg-brandRed hover:bg-brandRedDark text-white text-xs font-bold px-4 py-2.5 rounded-full shadow hover:scale-105 active:scale-95 transition-all"
+            >
+              <span>Lihat di Shopee</span>
+              <svg class="w-3.5 h-3.5 fill-current text-brandYellow" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Produk 3: Kericu Telur Cumi -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-amber-200/80 shadow-md hover:shadow-card-hover hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group">
+          <div>
+            <div class="relative aspect-4/3 overflow-hidden bg-amber-50">
+              <img 
+                src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&auto=format&fit=crop&q=80" 
+                alt="Kericu Telur Cumi Bangka" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <span class="absolute top-3 left-3 bg-brandRed text-white text-[11px] font-black px-3 py-1 rounded-full shadow">
+                Premium
+              </span>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-brandYellowDark uppercase tracking-wider">Khas Bangka</span>
+              <h3 class="text-lg font-bold text-gray-900 mt-1 group-hover:text-brandRed transition-colors">
+                Kericu Telur Cumi Khas Bangka
+              </h3>
+              <p class="text-xs text-gray-500 mt-2 line-clamp-2">
+                Camilan telur cumi gurih dengan tekstur krispi unik. Sangat langka dan menjadi primadona oleh-oleh Pulau Bangka.
+              </p>
+            </div>
+          </div>
+
+          <div class="px-6 pb-6 pt-2 border-t border-gray-100 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] text-gray-400 block font-medium">Harga mulai:</span>
+              <span class="text-lg font-extrabold text-brandRed font-mono">Rp 40.000</span>
+            </div>
+            <a 
+              href="https://shopee.co.id/tokoanekarasa99" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 bg-brandRed hover:bg-brandRedDark text-white text-xs font-bold px-4 py-2.5 rounded-full shadow hover:scale-105 active:scale-95 transition-all"
+            >
+              <span>Lihat di Shopee</span>
+              <svg class="w-3.5 h-3.5 fill-current text-brandYellow" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Produk 4: Lempok Cempedak -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-amber-200/80 shadow-md hover:shadow-card-hover hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group">
+          <div>
+            <div class="relative aspect-4/3 overflow-hidden bg-amber-50">
+              <img 
+                src="https://images.unsplash.com/photo-1587314168485-3236d6710814?w=600&auto=format&fit=crop&q=80" 
+                alt="Lempok Cempedak Asli Bangka" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <span class="absolute top-3 left-3 bg-brandYellow text-gray-900 text-[11px] font-black px-3 py-1 rounded-full shadow">
+                Manis Alami
+              </span>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-brandYellowDark uppercase tracking-wider">Tradisional Dodol</span>
+              <h3 class="text-lg font-bold text-gray-900 mt-1 group-hover:text-brandRed transition-colors">
+                Lempok Cempedak Asli
+              </h3>
+              <p class="text-xs text-gray-500 mt-2 line-clamp-2">
+                Dodol cempedak murni tanpa campuran tepung berlebih. Manis legit, kenyal lembut, dan aroma cempedak yang menggoda.
+              </p>
+            </div>
+          </div>
+
+          <div class="px-6 pb-6 pt-2 border-t border-gray-100 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] text-gray-400 block font-medium">Harga mulai:</span>
+              <span class="text-lg font-extrabold text-brandRed font-mono">Rp 45.000</span>
+            </div>
+            <a 
+              href="https://shopee.co.id/tokoanekarasa99" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 bg-brandRed hover:bg-brandRedDark text-white text-xs font-bold px-4 py-2.5 rounded-full shadow hover:scale-105 active:scale-95 transition-all"
+            >
+              <span>Lihat di Shopee</span>
+              <svg class="w-3.5 h-3.5 fill-current text-brandYellow" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Produk 5: Terasi Bangka Super -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-amber-200/80 shadow-md hover:shadow-card-hover hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group">
+          <div>
+            <div class="relative aspect-4/3 overflow-hidden bg-amber-50">
+              <img 
+                src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=600&auto=format&fit=crop&q=80" 
+                alt="Terasi Bangka Super Toboali" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <span class="absolute top-3 left-3 bg-brandRed text-white text-[11px] font-black px-3 py-1 rounded-full shadow">
+                Bumbu Legendaris
+              </span>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-brandYellowDark uppercase tracking-wider">Udang Rebon Super</span>
+              <h3 class="text-lg font-bold text-gray-900 mt-1 group-hover:text-brandRed transition-colors">
+                Terasi Bangka Super (AB No. 1)
+              </h3>
+              <p class="text-xs text-gray-500 mt-2 line-clamp-2">
+                Terasi udang rebon asli Bangka tanpa pewarna sintetis. Sangat harum dan gurih untuk sambal dan aneka masakan nusantara.
+              </p>
+            </div>
+          </div>
+
+          <div class="px-6 pb-6 pt-2 border-t border-gray-100 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] text-gray-400 block font-medium">Harga mulai:</span>
+              <span class="text-lg font-extrabold text-brandRed font-mono">Rp 30.000</span>
+            </div>
+            <a 
+              href="https://shopee.co.id/tokoanekarasa99" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 bg-brandRed hover:bg-brandRedDark text-white text-xs font-bold px-4 py-2.5 rounded-full shadow hover:scale-105 active:scale-95 transition-all"
+            >
+              <span>Lihat di Shopee</span>
+              <svg class="w-3.5 h-3.5 fill-current text-brandYellow" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Produk 6: Kue Rintak Sagu -->
+        <div class="bg-white rounded-3xl overflow-hidden border border-amber-200/80 shadow-md hover:shadow-card-hover hover:-translate-y-2 transition-all duration-300 flex flex-col justify-between group">
+          <div>
+            <div class="relative aspect-4/3 overflow-hidden bg-amber-50">
+              <img 
+                src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop&q=80" 
+                alt="Kue Rintak Sagu Tradisional Bangka" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <span class="absolute top-3 left-3 bg-brandYellow text-gray-900 text-[11px] font-black px-3 py-1 rounded-full shadow">
+                Kue Tradisional
+              </span>
+            </div>
+            <div class="p-6">
+              <span class="text-[11px] font-bold text-brandYellowDark uppercase tracking-wider">Camilan Teh/Kopi</span>
+              <h3 class="text-lg font-bold text-gray-900 mt-1 group-hover:text-brandRed transition-colors">
+                Kue Rintak Sagu Tradisional
+              </h3>
+              <p class="text-xs text-gray-500 mt-2 line-clamp-2">
+                Kue kering berbahan sagu asli dan gula aren. Meleleh lembut di mulut, sangat pas dinikmati bersama kopi atau teh hangat.
+              </p>
+            </div>
+          </div>
+
+          <div class="px-6 pb-6 pt-2 border-t border-gray-100 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] text-gray-400 block font-medium">Harga mulai:</span>
+              <span class="text-lg font-extrabold text-brandRed font-mono">Rp 20.000</span>
+            </div>
+            <a 
+              href="https://shopee.co.id/tokoanekarasa99" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 bg-brandRed hover:bg-brandRedDark text-white text-xs font-bold px-4 py-2.5 rounded-full shadow hover:scale-105 active:scale-95 transition-all"
+            >
+              <span>Lihat di Shopee</span>
+              <svg class="w-3.5 h-3.5 fill-current text-brandYellow" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 5. SECTION TENTANG KAMI -->
+  <!-- ========================================================================= -->
+  <section id="tentang" class="py-16 sm:py-24 bg-white border-y border-amber-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Gambar Ilustrasi Tradisi -->
+        <div class="lg:col-span-5 order-2 lg:order-1">
+          <div class="relative">
+            <div class="rounded-3xl overflow-hidden shadow-2xl border-4 border-brandYellow/50">
+              <img 
+                src="https://images.unsplash.com/photo-1621996346565-e3d5d6281691?w=800&auto=format&fit=crop&q=80" 
+                alt="Tradisi Pembuatan Kemplang Bangka" 
+                class="w-full h-96 object-cover"
+              />
+            </div>
+            <div class="absolute -bottom-6 -right-6 bg-brandRed text-white p-5 rounded-2xl shadow-xl border-2 border-brandYellow hidden sm:block">
+              <span class="block text-2xl font-black font-mono">100%</span>
+              <span class="text-xs font-semibold">Resep Asli Warisan Bangka</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Konten Teks Tentang Kami -->
+        <div class="lg:col-span-7 order-1 lg:order-2 space-y-6">
+          <span class="text-xs font-bold uppercase tracking-wider text-brandRed bg-brandRedLight px-3 py-1 rounded-full">
+            Tentang Kami
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight leading-snug">
+            Dedikasi Melestarikan Rasa Tradisional dari Bumi Bangka
+          </h2>
+          <p class="text-sm sm:text-base text-gray-600 leading-relaxed font-normal">
+            <strong>Toko Aneka Rasa</strong> (tokoanekarasa99) hadir untuk menjawab kerinduan Anda akan kelezatan sejati kuliner khas Pulau Bangka Belitung. Berawal dari kecintaan keluarga terhadap olahan hasil laut yang melimpah, kami berkomitmen menghadirkan produk camilan berkualitas terbaik langsung ke meja Anda.
+          </p>
+          <p class="text-sm sm:text-base text-gray-600 leading-relaxed font-normal">
+            Kami hanya memilih ikan tenggiri segar berkualitas tanpa mengorbankan resep tradisional turun-temurun. Setiap keping kemplang dipanggang dengan cermat, getas digoreng hingga renyah keemasan, dan terasi diolah dari udang rebon asli tanpa bahan pewarna sintetis.
+          </p>
+
+          <!-- List Highlight -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+            <div class="flex items-center gap-3">
+              <div class="w-6 h-6 rounded-full bg-brandYellow flex items-center justify-center text-gray-950 font-black text-xs">✓</div>
+              <span class="text-xs sm:text-sm font-semibold text-gray-800">Bebas Pemutih & Bahan Pengawet</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-6 h-6 rounded-full bg-brandYellow flex items-center justify-center text-gray-950 font-black text-xs">✓</div>
+              <span class="text-xs sm:text-sm font-semibold text-gray-800">Ikan Tenggiri Segar Pilihan</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-6 h-6 rounded-full bg-brandYellow flex items-center justify-center text-gray-950 font-black text-xs">✓</div>
+              <span class="text-xs sm:text-sm font-semibold text-gray-800">Sambal Terasi Spesial Khas Bangka</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-6 h-6 rounded-full bg-brandYellow flex items-center justify-center text-gray-950 font-black text-xs">✓</div>
+              <span class="text-xs sm:text-sm font-semibold text-gray-800">Packing Kardus + Bubble Wrap Tebal</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 6. SECTION CTA AKHIR -->
+  <!-- ========================================================================= -->
+  <section id="kontak" class="relative overflow-hidden py-16 sm:py-24 bg-gradient-to-r from-brandRed via-brandRedDark to-brandRed text-white">
+    
+    <!-- Ornamen Aksen Kuning -->
+    <div class="absolute -top-20 -left-20 w-80 h-80 bg-brandYellow/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-20 -right-20 w-80 h-80 bg-brandYellow/25 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-6">
+      
+      <span class="inline-block bg-brandYellow text-gray-950 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider shadow">
+        Belanja Praktis & Cepat
+      </span>
+
+      <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+        Siap Bawa Pulang Rasa Bangka?
+      </h2>
+
+      <p class="text-sm sm:text-base text-amber-100 max-w-2xl mx-auto leading-relaxed font-normal">
+        Nikmati gurihnya kemplang panggang, renyahnya getas, dan legitnya lempok cempedak langsung dari rumah Anda. Pesan sekarang melalui Shopee Official atau konsultasi pesanan lewat WhatsApp.
+      </p>
+
+      <!-- Tombol CTA Besar Ganda -->
+      <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+        
+        <!-- Tombol Shopee (Kuning Cerah) -->
+        <a 
+          href="https://shopee.co.id/tokoanekarasa99" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-brandYellow hover:bg-brandYellowDark text-gray-950 font-black text-base px-8 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-all duration-300"
+        >
+          <svg class="w-5 h-5 fill-current text-brandRed" viewBox="0 0 24 24">
+            <path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12z"/>
+          </svg>
+          <span>Pesan via Shopee Sekarang</span>
+        </a>
+
+        <!-- Tombol WhatsApp -->
+        <a 
+          href="https://wa.me/6281299887766?text=Halo%20Toko%20Aneka%20Rasa,%20saya%20ingin%20tanya%20stok%20dan%20pesan%20oleh-oleh%20Bangka." 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-base px-8 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-all duration-300"
+        >
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.072-2.196-.549-1.849-.766-3.036-2.656-3.128-2.778-.093-.122-.746-.992-.746-1.892 0-.9.472-1.343.64-1.528.17-.184.372-.23.496-.23.125 0 .25.002.359.006.115.006.269-.044.421.323.157.38.536 1.306.582 1.401.047.094.078.204.016.327-.062.124-.094.202-.187.311-.094.11-.197.245-.281.33-.094.094-.192.197-.082.385.11.189.489.807 1.05 1.306.721.642 1.328.841 1.517.934.188.094.298.079.408-.047.11-.125.472-.549.597-.736.126-.188.252-.157.424-.094.173.063 1.096.517 1.284.611.188.094.313.141.36.22.046.078.046.453-.098.858zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.436 5.176L2 22l4.981-1.306C8.423 21.549 10.155 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+          </svg>
+          <span>Chat WhatsApp Admin</span>
+        </a>
+
+      </div>
+
+      <p class="text-xs text-amber-200/80 pt-3">
+        Menerima pesanan eceran, paket hampers, dan pesanan partai besar / grosir.
+      </p>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 7. FOOTER SEDERHANA -->
+  <!-- ========================================================================= -->
+  <footer class="bg-gray-900 text-gray-300 py-12 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-gray-800">
+        
+        <!-- Brand Info -->
+        <div class="flex items-center gap-3 text-center md:text-left">
+          <div class="w-10 h-10 rounded-xl bg-brandRed text-brandYellow flex items-center justify-center font-black text-base border border-brandYellow">
+            99
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-base">Toko Aneka Rasa</h3>
+            <p class="text-xs text-gray-400">Pusat Oleh-Oleh Khas Bangka Asli & Terlengkap</p>
+          </div>
+        </div>
+
+        <!-- Links Shopee & WA -->
+        <div class="flex flex-wrap items-center justify-center gap-6 text-xs">
+          <a 
+            href="https://shopee.co.id/tokoanekarasa99" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-brandYellow hover:text-white transition-colors font-semibold flex items-center gap-1.5"
+          >
+            <span>Shopee: shopee.co.id/tokoanekarasa99</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </a>
+          <a 
+            href="https://wa.me/6281299887766" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-emerald-400 hover:text-white transition-colors font-semibold flex items-center gap-1.5"
+          >
+            <span>WhatsApp: +62 812-9988-7766</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Copyright -->
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500 text-center sm:text-left">
+        <p>© 2026 Toko Aneka Rasa (tokoanekarasa99). Seluruh Hak Cipta Dilindungi.</p>
+        <p class="text-[11px] text-gray-400">Authentic Bangka Belitung Snacks & Souvenirs</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT: Mobile Menu Toggle -->
+  <!-- ========================================================================= -->
+  <script>
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const hamburgerIcon = document.getElementById('hamburger-icon');
+    const closeIcon = document.getElementById('close-icon');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', () => {
+        const isHidden = mobileMenu.classList.contains('hidden');
+        if (isHidden) {
+          mobileMenu.classList.remove('hidden');
+          hamburgerIcon.classList.add('hidden');
+          closeIcon.classList.remove('hidden');
+        } else {
+          mobileMenu.classList.add('hidden');
+          hamburgerIcon.classList.remove('hidden');
+          closeIcon.classList.add('hidden');
+        }
+      });
+
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          hamburgerIcon.classList.remove('hidden');
+          closeIcon.classList.add('hidden');
+        });
+      });
+    }
+  </script>
+
+</body>
+</html>
