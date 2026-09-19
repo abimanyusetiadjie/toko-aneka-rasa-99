@@ -98,7 +98,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 39,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "ABN-IKN-TGR-SMB",
+    "barcode": "8999900000017",
     "is_taxable": false,
     "is_active": true
   },
@@ -115,7 +115,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "AMP-IKA-TEN",
+    "barcode": "8999900000024",
     "is_taxable": false,
     "is_active": true
   },
@@ -132,7 +132,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "ASA-KUN-BAN-SPE-500GRAM",
+    "barcode": "8999900000031",
     "is_taxable": false,
     "is_active": true
   },
@@ -149,7 +149,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "ASE-KUN-BAN-SPE-250GRAM",
+    "barcode": "8999900000048",
     "is_taxable": false,
     "is_active": true
   },
@@ -166,7 +166,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "ASI-BUA-KEL",
+    "barcode": "8999900000055",
     "is_taxable": false,
     "is_active": true
   },
@@ -183,7 +183,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "CML-EMP-KCL-MNIS-250G",
+    "barcode": "8999900000062",
     "is_taxable": false,
     "is_active": true
   },
@@ -200,7 +200,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 96,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "GTS-BLT-CAP-99",
+    "barcode": "8999900000079",
     "is_taxable": false,
     "is_active": true
   },
@@ -217,7 +217,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "GTS-BLT-OBOR-MERAH",
+    "barcode": "8999900000086",
     "is_taxable": false,
     "is_active": true
   },
@@ -234,7 +234,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "GTS-LCG-PJG",
+    "barcode": "8999900000093",
     "is_taxable": false,
     "is_active": true
   },
@@ -251,7 +251,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "GTS-SUP-TGR-100G",
+    "barcode": "8999900000109",
     "is_taxable": false,
     "is_active": true
   },
@@ -268,7 +268,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "GTS-SUP-BLT-BIRU-250G",
+    "barcode": "8999900000116",
     "is_taxable": false,
     "is_active": true
   },
@@ -285,7 +285,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "GTS-SUP-PJG-BIRU-250G",
+    "barcode": "8999900000123",
     "is_taxable": false,
     "is_active": true
   },
@@ -302,7 +302,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "GET-TEN-CAP-SUM",
+    "barcode": "8999900000130",
     "is_taxable": false,
     "is_active": true
   },
@@ -319,7 +319,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 30,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "BMB-GLA-ARN-BGK-1T",
+    "barcode": "8999900000147",
     "is_taxable": false,
     "is_active": true
   },
@@ -336,7 +336,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "IND-GOR-BAN",
+    "barcode": "8999900000154",
     "is_taxable": false,
     "is_active": true
   },
@@ -353,7 +353,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 200,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "CML-IDM-UDG-BGK",
+    "barcode": "8999900000161",
     "is_taxable": false,
     "is_active": true
   },
@@ -370,7 +370,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "CML-KCG-ATM-SAT-250G",
+    "barcode": "8999900000178",
     "is_taxable": false,
     "is_active": true
   },
@@ -387,7 +387,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KAC-BAW-SUP-ORI-500GRAM",
+    "barcode": "8999900000185",
     "is_taxable": false,
     "is_active": true
   },
@@ -404,7 +404,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KAC-KOR-BER-BER-250GRAM",
+    "barcode": "8999900000192",
     "is_taxable": false,
     "is_active": true
   },
@@ -421,7 +421,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KAC-KOR-BER-BER-500GRAM",
+    "barcode": "8999900000208",
     "is_taxable": false,
     "is_active": true
   },
@@ -438,7 +438,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KAC-KOR-KUP-250-250GRAM",
+    "barcode": "8999900000215",
     "is_taxable": false,
     "is_active": true
   },
@@ -455,7 +455,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KAC-KOR-KUP-500-500GRAM",
+    "barcode": "8999900000222",
     "is_taxable": false,
     "is_active": true
   },
@@ -472,7 +472,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KAC-MED-GOR-SUP-250GRAM",
+    "barcode": "8999900000239",
     "is_taxable": false,
     "is_active": true
   },
@@ -489,7 +489,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KAC-MED-GOR-SUP-500GRAM",
+    "barcode": "8999900000246",
     "is_taxable": false,
     "is_active": true
   },
@@ -506,7 +506,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "CML-KCG-TLR-2P-200G",
+    "barcode": "8999900000253",
     "is_taxable": false,
     "is_active": true
   },
@@ -523,7 +523,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KAC-TEL-MED-CAP-250GRAM",
+    "barcode": "8999900000260",
     "is_taxable": false,
     "is_active": true
   },
@@ -540,7 +540,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KAC-TEL-MED-CAP-500GRAM",
+    "barcode": "8999900000277",
     "is_taxable": false,
     "is_active": true
   },
@@ -557,7 +557,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 40,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "BMB-CALO-UDG-REBON",
+    "barcode": "8999900000284",
     "is_taxable": false,
     "is_active": true
   },
@@ -574,7 +574,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KEC-UDA-REB-CAP-300GRAM",
+    "barcode": "8999900000291",
     "is_taxable": false,
     "is_active": true
   },
@@ -591,7 +591,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "KCP-ASN-KTB-300ML",
+    "barcode": "8999900000307",
     "is_taxable": false,
     "is_active": true
   },
@@ -608,7 +608,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "KCP-ASN-ROSE-300ML",
+    "barcode": "8999900000314",
     "is_taxable": false,
     "is_active": true
   },
@@ -625,7 +625,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "KCP-ASN-ROSE-600ML",
+    "barcode": "8999900000321",
     "is_taxable": false,
     "is_active": true
   },
@@ -642,7 +642,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "KCP-ASN-SIONG-620ML",
+    "barcode": "8999900000338",
     "is_taxable": false,
     "is_active": true
   },
@@ -659,7 +659,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "KCP-ASN-SS-BESAR",
+    "barcode": "8999900000345",
     "is_taxable": false,
     "is_active": true
   },
@@ -676,7 +676,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "KCP-ASN-SS-KECIL",
+    "barcode": "8999900000352",
     "is_taxable": false,
     "is_active": true
   },
@@ -693,7 +693,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "KEC-IST-CAP-SIO",
+    "barcode": "8999900000369",
     "is_taxable": false,
     "is_active": true
   },
@@ -710,7 +710,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-GRG-IKN-SLN-250G",
+    "barcode": "8999900000376",
     "is_taxable": false,
     "is_active": true
   },
@@ -727,7 +727,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KEM-GOR-IKA-TEN",
+    "barcode": "8999900000383",
     "is_taxable": false,
     "is_active": true
   },
@@ -744,7 +744,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KEM-GOR-PAS-LEB",
+    "barcode": "8999900000390",
     "is_taxable": false,
     "is_active": true
   },
@@ -761,7 +761,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-GRG-PSR-ACH",
+    "barcode": "8999900000406",
     "is_taxable": false,
     "is_active": true
   },
@@ -778,7 +778,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KEM-GOR-PAS-MIN",
+    "barcode": "8999900000413",
     "is_taxable": false,
     "is_active": true
   },
@@ -795,7 +795,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-GRG-PSR-MINI-SNK",
+    "barcode": "8999900000420",
     "is_taxable": false,
     "is_active": true
   },
@@ -812,7 +812,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KEM-GOR-PAS-TJO",
+    "barcode": "8999900000437",
     "is_taxable": false,
     "is_active": true
   },
@@ -829,7 +829,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-GRG-PSR-TJKR",
+    "barcode": "8999900000444",
     "is_taxable": false,
     "is_active": true
   },
@@ -846,7 +846,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-GRG-UDG-BGK",
+    "barcode": "8999900000451",
     "is_taxable": false,
     "is_active": true
   },
@@ -863,7 +863,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-KOIN-CMI-SAN",
+    "barcode": "8999900000468",
     "is_taxable": false,
     "is_active": true
   },
@@ -880,7 +880,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-MTH-IKN-BGK-500G",
+    "barcode": "8999900000475",
     "is_taxable": false,
     "is_active": true
   },
@@ -897,7 +897,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-OVN-IKN-TRSI",
+    "barcode": "8999900000482",
     "is_taxable": false,
     "is_active": true
   },
@@ -914,7 +914,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-OVN-CMI",
+    "barcode": "8999900000499",
     "is_taxable": false,
     "is_active": true
   },
@@ -931,7 +931,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-PANG-323-10P",
+    "barcode": "8999900000505",
     "is_taxable": false,
     "is_active": true
   },
@@ -948,7 +948,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KEM-PAN-33",
+    "barcode": "8999900000512",
     "is_taxable": false,
     "is_active": true
   },
@@ -965,7 +965,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-PANG-323-KCL",
+    "barcode": "8999900000529",
     "is_taxable": false,
     "is_active": true
   },
@@ -982,7 +982,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KEM-PAN-BAN-CAP",
+    "barcode": "8999900000536",
     "is_taxable": false,
     "is_active": true
   },
@@ -999,7 +999,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-PANG-MM-BLT",
+    "barcode": "8999900000543",
     "is_taxable": false,
     "is_active": true
   },
@@ -1016,7 +1016,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KEM-PAN-CAP-MMC",
+    "barcode": "8999900000550",
     "is_taxable": false,
     "is_active": true
   },
@@ -1033,7 +1033,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KMP-PANG-MM-KTK",
+    "barcode": "8999900000567",
     "is_taxable": false,
     "is_active": true
   },
@@ -1050,7 +1050,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KEM-PAN-MMC-MM",
+    "barcode": "8999900000574",
     "is_taxable": false,
     "is_active": true
   },
@@ -1067,7 +1067,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KEM-OVE-IKA-TEN",
+    "barcode": "8999900000581",
     "is_taxable": false,
     "is_active": true
   },
@@ -1084,7 +1084,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-STE-TEL-CUM-250GRAM",
+    "barcode": "8999900000598",
     "is_taxable": false,
     "is_active": true
   },
@@ -1101,7 +1101,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-STI-TEL-CUM",
+    "barcode": "8999900000604",
     "is_taxable": false,
     "is_active": true
   },
@@ -1118,7 +1118,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-STI-TEL-CUM-250GRAM",
+    "barcode": "8999900000611",
     "is_taxable": false,
     "is_active": true
   },
@@ -1135,7 +1135,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-BAW-GOR-BER-200GRAM",
+    "barcode": "8999900000628",
     "is_taxable": false,
     "is_active": true
   },
@@ -1152,7 +1152,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-PIS-KEP-ASI-180GRAM",
+    "barcode": "8999900000635",
     "is_taxable": false,
     "is_active": true
   },
@@ -1169,7 +1169,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-PIS-KEP-MAN",
+    "barcode": "8999900000642",
     "is_taxable": false,
     "is_active": true
   },
@@ -1186,7 +1186,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-SIN-BAL-BER-200GRAM",
+    "barcode": "8999900000659",
     "is_taxable": false,
     "is_active": true
   },
@@ -1203,7 +1203,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-SIN-ORI-BER-200GRAM",
+    "barcode": "8999900000666",
     "is_taxable": false,
     "is_active": true
   },
@@ -1220,7 +1220,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-TEM-BER-150-150GRAM",
+    "barcode": "8999900000673",
     "is_taxable": false,
     "is_active": true
   },
@@ -1237,7 +1237,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-IKN-AMP-500G",
+    "barcode": "8999900000680",
     "is_taxable": false,
     "is_active": true
   },
@@ -1254,7 +1254,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-BWG-KCG-5KG",
+    "barcode": "8999900000697",
     "is_taxable": false,
     "is_active": true
   },
@@ -1271,7 +1271,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-BWG-KCG-500G",
+    "barcode": "8999900000703",
     "is_taxable": false,
     "is_active": true
   },
@@ -1288,7 +1288,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-BWG-BBR-1KG",
+    "barcode": "8999900000710",
     "is_taxable": false,
     "is_active": true
   },
@@ -1305,7 +1305,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-BWG-BBR-3KG",
+    "barcode": "8999900000727",
     "is_taxable": false,
     "is_active": true
   },
@@ -1322,7 +1322,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-BWG-BBR-500G",
+    "barcode": "8999900000734",
     "is_taxable": false,
     "is_active": true
   },
@@ -1339,7 +1339,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "ball",
     "base_unit": "BALL",
-    "barcode": "KER-BAW-MEN-BEN-5KG",
+    "barcode": "8999900000741",
     "is_taxable": false,
     "is_active": true
   },
@@ -1356,7 +1356,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-BAW-MEN-BEN-500GRAM",
+    "barcode": "8999900000758",
     "is_taxable": false,
     "is_active": true
   },
@@ -1373,7 +1373,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 40,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-BWG-PLS-3KG",
+    "barcode": "8999900000765",
     "is_taxable": false,
     "is_active": true
   },
@@ -1390,7 +1390,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-BWG-PLS-1KG",
+    "barcode": "8999900000772",
     "is_taxable": false,
     "is_active": true
   },
@@ -1407,7 +1407,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-BWG-PLS-200G",
+    "barcode": "8999900000789",
     "is_taxable": false,
     "is_active": true
   },
@@ -1424,7 +1424,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-IKA-ITE-BAN",
+    "barcode": "8999900000796",
     "is_taxable": false,
     "is_active": true
   },
@@ -1441,7 +1441,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-IKN-TGR-BELINYU",
+    "barcode": "8999900000802",
     "is_taxable": false,
     "is_active": true
   },
@@ -1458,7 +1458,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-IKA-YAN-PUT",
+    "barcode": "8999900000819",
     "is_taxable": false,
     "is_active": true
   },
@@ -1475,7 +1475,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 30,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-JGK-BLT-5KG",
+    "barcode": "8999900000826",
     "is_taxable": false,
     "is_active": true
   },
@@ -1492,7 +1492,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-JGK-BLT-1KG",
+    "barcode": "8999900000833",
     "is_taxable": false,
     "is_active": true
   },
@@ -1509,7 +1509,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-JGK-BLT-500G",
+    "barcode": "8999900000840",
     "is_taxable": false,
     "is_active": true
   },
@@ -1526,7 +1526,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 30,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-JGK-SSR-5KG",
+    "barcode": "8999900000857",
     "is_taxable": false,
     "is_active": true
   },
@@ -1543,7 +1543,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-JGK-SSR-500G",
+    "barcode": "8999900000864",
     "is_taxable": false,
     "is_active": true
   },
@@ -1560,7 +1560,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-JEN-SIS-BER-250GRAM",
+    "barcode": "8999900000871",
     "is_taxable": false,
     "is_active": true
   },
@@ -1577,7 +1577,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-JGK-SSR-1KG",
+    "barcode": "8999900000888",
     "is_taxable": false,
     "is_active": true
   },
@@ -1594,7 +1594,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-KER-IKA-TEN",
+    "barcode": "8999900000895",
     "is_taxable": false,
     "is_active": true
   },
@@ -1611,7 +1611,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-IKN-TGR-SNJ-100G",
+    "barcode": "8999900000901",
     "is_taxable": false,
     "is_active": true
   },
@@ -1628,7 +1628,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-IKN-TGR-SNJ-230G",
+    "barcode": "8999900000918",
     "is_taxable": false,
     "is_active": true
   },
@@ -1645,7 +1645,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "ball",
     "base_unit": "BALL",
-    "barcode": "KER-KER-MAW-BIA-5KG",
+    "barcode": "8999900000925",
     "is_taxable": false,
     "is_active": true
   },
@@ -1662,7 +1662,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-MWR-PTH-1KG",
+    "barcode": "8999900000932",
     "is_taxable": false,
     "is_active": true
   },
@@ -1679,7 +1679,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 40,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-MWR-5KG",
+    "barcode": "8999900000949",
     "is_taxable": false,
     "is_active": true
   },
@@ -1696,7 +1696,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-MWR-1KG",
+    "barcode": "8999900000956",
     "is_taxable": false,
     "is_active": true
   },
@@ -1713,7 +1713,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-MWR-500G",
+    "barcode": "8999900000963",
     "is_taxable": false,
     "is_active": true
   },
@@ -1730,7 +1730,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-KRT-MINI-1KG",
+    "barcode": "8999900000970",
     "is_taxable": false,
     "is_active": true
   },
@@ -1747,7 +1747,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-KRT-MINI-500G",
+    "barcode": "8999900000987",
     "is_taxable": false,
     "is_active": true
   },
@@ -1764,7 +1764,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-MAW-PUT-BER-250GRAM",
+    "barcode": "8999900000994",
     "is_taxable": false,
     "is_active": true
   },
@@ -1781,7 +1781,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-MAW-WAR-WAR-250GRAM",
+    "barcode": "8999900001007",
     "is_taxable": false,
     "is_active": true
   },
@@ -1798,7 +1798,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "ball",
     "base_unit": "BALL",
-    "barcode": "KER-MAW-WAR-WAR-5KG",
+    "barcode": "8999900001014",
     "is_taxable": false,
     "is_active": true
   },
@@ -1815,7 +1815,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-IKN-TGR-YOYO",
+    "barcode": "8999900001021",
     "is_taxable": false,
     "is_active": true
   },
@@ -1832,7 +1832,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-IKN-TGR-500G",
+    "barcode": "8999900001038",
     "is_taxable": false,
     "is_active": true
   },
@@ -1849,7 +1849,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-IKN-TGR-1KG",
+    "barcode": "8999900001045",
     "is_taxable": false,
     "is_active": true
   },
@@ -1866,7 +1866,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-BWG-BBR-5KG",
+    "barcode": "8999900001052",
     "is_taxable": false,
     "is_active": true
   },
@@ -1883,7 +1883,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-BWG-PLS-5KG",
+    "barcode": "8999900001069",
     "is_taxable": false,
     "is_active": true
   },
@@ -1900,7 +1900,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-MEN-BEN-KEP-250GRAM",
+    "barcode": "8999900001076",
     "is_taxable": false,
     "is_active": true
   },
@@ -1917,7 +1917,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-IKN-AMP-5KG",
+    "barcode": "8999900001083",
     "is_taxable": false,
     "is_active": true
   },
@@ -1934,7 +1934,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "ball",
     "base_unit": "BALL",
-    "barcode": "KER-MEN-PUT-BEN-5KG",
+    "barcode": "8999900001090",
     "is_taxable": false,
     "is_active": true
   },
@@ -1951,7 +1951,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-MEN-PUT-BEN-1KG",
+    "barcode": "8999900001106",
     "is_taxable": false,
     "is_active": true
   },
@@ -1968,7 +1968,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-MEN-PUT-BEN-500GRAM",
+    "barcode": "8999900001113",
     "is_taxable": false,
     "is_active": true
   },
@@ -1985,7 +1985,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-BWG-KCG-1KG",
+    "barcode": "8999900001120",
     "is_taxable": false,
     "is_active": true
   },
@@ -2002,7 +2002,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-MEN-SAR-UDA-1KG",
+    "barcode": "8999900001137",
     "is_taxable": false,
     "is_active": true
   },
@@ -2019,7 +2019,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-MEN-SAR-UDA-500GRAM",
+    "barcode": "8999900001144",
     "is_taxable": false,
     "is_active": true
   },
@@ -2036,7 +2036,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-SRI-UDG-5KG",
+    "barcode": "8999900001151",
     "is_taxable": false,
     "is_active": true
   },
@@ -2053,7 +2053,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 40,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-SRI-UDG-TUA-5KG",
+    "barcode": "8999900001168",
     "is_taxable": false,
     "is_active": true
   },
@@ -2070,7 +2070,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-TRSJ-500G",
+    "barcode": "8999900001175",
     "is_taxable": false,
     "is_active": true
   },
@@ -2087,7 +2087,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-MEN-TER-BER-250GRAM",
+    "barcode": "8999900001182",
     "is_taxable": false,
     "is_active": true
   },
@@ -2104,7 +2104,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-MIE-MINI-500G",
+    "barcode": "8999900001199",
     "is_taxable": false,
     "is_active": true
   },
@@ -2121,7 +2121,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-MIE-MDG-1KG",
+    "barcode": "8999900001205",
     "is_taxable": false,
     "is_active": true
   },
@@ -2138,7 +2138,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-MIE-MDG-500G",
+    "barcode": "8999900001212",
     "is_taxable": false,
     "is_active": true
   },
@@ -2155,7 +2155,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-MIE-MINI-1KG",
+    "barcode": "8999900001229",
     "is_taxable": false,
     "is_active": true
   },
@@ -2172,7 +2172,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-SAN-LEB-IKA",
+    "barcode": "8999900001236",
     "is_taxable": false,
     "is_active": true
   },
@@ -2189,7 +2189,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-SRI-UDG-AMP-1KG",
+    "barcode": "8999900001243",
     "is_taxable": false,
     "is_active": true
   },
@@ -2206,7 +2206,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-SRI-UDG-AMP-500G",
+    "barcode": "8999900001250",
     "is_taxable": false,
     "is_active": true
   },
@@ -2223,7 +2223,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 40,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-SRI-UDG-AMP-5KG",
+    "barcode": "8999900001267",
     "is_taxable": false,
     "is_active": true
   },
@@ -2240,7 +2240,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-SRI-UDG-1KG",
+    "barcode": "8999900001274",
     "is_taxable": false,
     "is_active": true
   },
@@ -2257,7 +2257,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-SRI-UDG-500G",
+    "barcode": "8999900001281",
     "is_taxable": false,
     "is_active": true
   },
@@ -2274,7 +2274,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-SIS-WAR-DI-1KG",
+    "barcode": "8999900001298",
     "is_taxable": false,
     "is_active": true
   },
@@ -2291,7 +2291,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-SIS-WAR-DI-500GRAM",
+    "barcode": "8999900001304",
     "is_taxable": false,
     "is_active": true
   },
@@ -2308,7 +2308,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-TMP-250G",
+    "barcode": "8999900001311",
     "is_taxable": false,
     "is_active": true
   },
@@ -2325,7 +2325,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-TER-PUT-BER-500GRAM",
+    "barcode": "8999900001328",
     "is_taxable": false,
     "is_active": true
   },
@@ -2342,7 +2342,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-UDA-UKU-BES-500GRAM",
+    "barcode": "8999900001335",
     "is_taxable": false,
     "is_active": true
   },
@@ -2359,7 +2359,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KRP-MTH-WRN-KPNG-500G",
+    "barcode": "8999900001342",
     "is_taxable": false,
     "is_active": true
   },
@@ -2376,7 +2376,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-CUM-MEN-BAN-1KG",
+    "barcode": "8999900001359",
     "is_taxable": false,
     "is_active": true
   },
@@ -2393,7 +2393,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KER-UDA-MEN-BAN-1KG",
+    "barcode": "8999900001366",
     "is_taxable": false,
     "is_active": true
   },
@@ -2410,7 +2410,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "CML-KMB-PTH-60G",
+    "barcode": "8999900001373",
     "is_taxable": false,
     "is_active": true
   },
@@ -2427,7 +2427,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KOP-KK-MRH-200G",
+    "barcode": "8999900001380",
     "is_taxable": false,
     "is_active": true
   },
@@ -2444,7 +2444,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KOP-KK-MRH-70G",
+    "barcode": "8999900001397",
     "is_taxable": false,
     "is_active": true
   },
@@ -2461,7 +2461,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KOP-CAP1-BIRU-500G",
+    "barcode": "8999900001403",
     "is_taxable": false,
     "is_active": true
   },
@@ -2478,7 +2478,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KOP-CAP1-BIRU-BKG",
+    "barcode": "8999900001410",
     "is_taxable": false,
     "is_active": true
   },
@@ -2495,7 +2495,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KOP-CAP1-SLV-250G",
+    "barcode": "8999900001427",
     "is_taxable": false,
     "is_active": true
   },
@@ -2512,7 +2512,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KOP-BUB-CAP-KIN",
+    "barcode": "8999900001434",
     "is_taxable": false,
     "is_active": true
   },
@@ -2529,7 +2529,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KOP-CAP1-PRM-250G",
+    "barcode": "8999900001441",
     "is_taxable": false,
     "is_active": true
   },
@@ -2546,7 +2546,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-ANG-CAP-ANU-200GRAM",
+    "barcode": "8999900001458",
     "is_taxable": false,
     "is_active": true
   },
@@ -2563,7 +2563,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-BNGKT-RNTA",
+    "barcode": "8999900001465",
     "is_taxable": false,
     "is_active": true
   },
@@ -2580,7 +2580,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-BLN-KD-SE",
+    "barcode": "8999900001472",
     "is_taxable": false,
     "is_active": true
   },
@@ -2597,7 +2597,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-GAM-MIN",
+    "barcode": "8999900001489",
     "is_taxable": false,
     "is_active": true
   },
@@ -2614,7 +2614,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 30,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-LPS-LGT-BGK",
+    "barcode": "8999900001496",
     "is_taxable": false,
     "is_active": true
   },
@@ -2631,7 +2631,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-MAS-89-BER-250GRAM",
+    "barcode": "8999900001502",
     "is_taxable": false,
     "is_active": true
   },
@@ -2648,7 +2648,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-RNTK-SAGU-LM",
+    "barcode": "8999900001519",
     "is_taxable": false,
     "is_active": true
   },
@@ -2665,7 +2665,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-SGN-MR-JO",
+    "barcode": "8999900001526",
     "is_taxable": false,
     "is_active": true
   },
@@ -2682,7 +2682,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-SMPRT-ED",
+    "barcode": "8999900001533",
     "is_taxable": false,
     "is_active": true
   },
@@ -2699,7 +2699,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "LAD-PUT-ASL-BAN-100GRAM",
+    "barcode": "8999900001540",
     "is_taxable": false,
     "is_active": true
   },
@@ -2716,7 +2716,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "LAD-PUT-BUB-HAL-100GRAM",
+    "barcode": "8999900001557",
     "is_taxable": false,
     "is_active": true
   },
@@ -2733,7 +2733,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "LAD-PUT-BUB-HAL-70GRAM",
+    "barcode": "8999900001564",
     "is_taxable": false,
     "is_active": true
   },
@@ -2750,7 +2750,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 30,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "BMB-MDU-BGK-1KG",
+    "barcode": "8999900001571",
     "is_taxable": false,
     "is_active": true
   },
@@ -2767,7 +2767,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "MAK-BAN-PED-200-200GRAM",
+    "barcode": "8999900001588",
     "is_taxable": false,
     "is_active": true
   },
@@ -2784,7 +2784,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-MCH-BPG-BGK",
+    "barcode": "8999900001595",
     "is_taxable": false,
     "is_active": true
   },
@@ -2801,7 +2801,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "PAN-PAN-BER-500-500GRAM",
+    "barcode": "8999900001601",
     "is_taxable": false,
     "is_active": true
   },
@@ -2818,7 +2818,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "PAN-PAN-BER-250-250GRAM",
+    "barcode": "8999900001618",
     "is_taxable": false,
     "is_active": true
   },
@@ -2835,7 +2835,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "PER-GUL-ARE-BAN-65GRAM",
+    "barcode": "8999900001625",
     "is_taxable": false,
     "is_active": true
   },
@@ -2852,7 +2852,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "CML-PRM-HCK-14P",
+    "barcode": "8999900001632",
     "is_taxable": false,
     "is_active": true
   },
@@ -2869,7 +2869,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "ball",
     "base_unit": "BALL",
-    "barcode": "PES-KHU-KER-BAW-5BALL",
+    "barcode": "8999900001649",
     "is_taxable": false,
     "is_active": true
   },
@@ -2886,7 +2886,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "ROT-KER-GUL-MR",
+    "barcode": "8999900001656",
     "is_taxable": false,
     "is_active": true
   },
@@ -2903,7 +2903,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-RTI-KRG-GULA",
+    "barcode": "8999900001663",
     "is_taxable": false,
     "is_active": true
   },
@@ -2920,7 +2920,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 40,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "BMB-RSP-AM3-TERI",
+    "barcode": "8999900001670",
     "is_taxable": false,
     "is_active": true
   },
@@ -2937,7 +2937,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "RUS-AMS-KHA-BAN",
+    "barcode": "8999900001687",
     "is_taxable": false,
     "is_active": true
   },
@@ -2954,7 +2954,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "TPG-SAGU-RAKRUT",
+    "barcode": "8999900001694",
     "is_taxable": false,
     "is_active": true
   },
@@ -2971,7 +2971,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 30,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "NFD-SKT-CKL-BGK",
+    "barcode": "8999900001700",
     "is_taxable": false,
     "is_active": true
   },
@@ -2988,7 +2988,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 30,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "NFD-SKT-IJK-HTM",
+    "barcode": "8999900001717",
     "is_taxable": false,
     "is_active": true
   },
@@ -3005,7 +3005,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SNA-KUP-GAJ-BER-200GRAM",
+    "barcode": "8999900001724",
     "is_taxable": false,
     "is_active": true
   },
@@ -3022,7 +3022,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "CML-SMP-UDG-250G",
+    "barcode": "8999900001731",
     "is_taxable": false,
     "is_active": true
   },
@@ -3039,7 +3039,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "CML-SMP-UDG-500G",
+    "barcode": "8999900001748",
     "is_taxable": false,
     "is_active": true
   },
@@ -3056,7 +3056,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "STE-TEL-CUM-CAP-250GRAM",
+    "barcode": "8999900001755",
     "is_taxable": false,
     "is_active": true
   },
@@ -3073,7 +3073,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "STI-KEJ-GAB-160-160GRAM",
+    "barcode": "8999900001762",
     "is_taxable": false,
     "is_active": true
   },
@@ -3090,7 +3090,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "STI-KEN-BAL-RAS-200GRAM",
+    "barcode": "8999900001779",
     "is_taxable": false,
     "is_active": true
   },
@@ -3107,7 +3107,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "STI-RAS-SAM-BAL-160GRAM",
+    "barcode": "8999900001786",
     "is_taxable": false,
     "is_active": true
   },
@@ -3124,7 +3124,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 40,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "BMB-TAUCO-BGK-250G",
+    "barcode": "8999900001793",
     "is_taxable": false,
     "is_active": true
   },
@@ -3141,7 +3141,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "KUE-TNG-TNG-KCG",
+    "barcode": "8999900001809",
     "is_taxable": false,
     "is_active": true
   },
@@ -3158,7 +3158,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "TPG-SAGU-TANI-1KG",
+    "barcode": "8999900001816",
     "is_taxable": false,
     "is_active": true
   },
@@ -3175,7 +3175,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "TEP-TAP-TAN-KWA-1KG",
+    "barcode": "8999900001823",
     "is_taxable": false,
     "is_active": true
   },
@@ -3192,7 +3192,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "BMB-TRSI-AB-100G",
+    "barcode": "8999900001830",
     "is_taxable": false,
     "is_active": true
   },
@@ -3209,7 +3209,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "BMB-TRSI-AB-500G",
+    "barcode": "8999900001847",
     "is_taxable": false,
     "is_active": true
   },
@@ -3226,7 +3226,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "TER-BAN-TOB-AMS-480GRAM",
+    "barcode": "8999900001854",
     "is_taxable": false,
     "is_active": true
   },
@@ -3243,7 +3243,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "BMB-TRSI-BBK-TOBOALI",
+    "barcode": "8999900001861",
     "is_taxable": false,
     "is_active": true
   },
@@ -3260,7 +3260,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "BMB-TRSI-PGG-PRG",
+    "barcode": "8999900001878",
     "is_taxable": false,
     "is_active": true
   },
@@ -3277,7 +3277,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "BMB-TRSI-UDG-KCL",
+    "barcode": "8999900001885",
     "is_taxable": false,
     "is_active": true
   },
@@ -3294,7 +3294,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "BMB-TRSI-UDG-ASLI",
+    "barcode": "8999900001892",
     "is_taxable": false,
     "is_active": true
   }
@@ -3307,7 +3307,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 6200,
-    "barcode": "CML-IDM-UDG-BGK"
+    "barcode": "8999900001908"
   },
   {
     "id": "4b88a410-0b31-43c4-97db-357081bde9e5",
@@ -3315,7 +3315,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17000,
-    "barcode": "KMP-PANG-323-KCL"
+    "barcode": "8999900001915"
   },
   {
     "id": "ef9023d2-3fba-48c6-817f-6e27207f35e8",
@@ -3323,7 +3323,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17500,
-    "barcode": "KRP-MTH-BWG-KCG-500G"
+    "barcode": "8999900001922"
   },
   {
     "id": "2ba6d300-aeef-4acb-90bb-bf5453b68f2d",
@@ -3331,7 +3331,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 31500,
-    "barcode": "TPG-SAGU-TANI-1KG"
+    "barcode": "8999900001939"
   },
   {
     "id": "382fc9c0-5d8f-4ce2-82f3-1941ffb1f7e3",
@@ -3339,7 +3339,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17000,
-    "barcode": "KOP-KK-MRH-70G"
+    "barcode": "8999900001946"
   },
   {
     "id": "2243b9d7-0766-4a5a-bf4a-0fd53470d149",
@@ -3347,7 +3347,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "MAK-BAN-PED-200-200GRAM"
+    "barcode": "8999900001953"
   },
   {
     "id": "c544c7eb-2f33-444d-a939-247b85550a8d",
@@ -3355,7 +3355,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KER-IKA-ITE-BAN"
+    "barcode": "8999900001960"
   },
   {
     "id": "258dbec8-d85f-4fa8-8e63-7a1b1f9239d6",
@@ -3363,7 +3363,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "LAD-PUT-ASL-BAN-100GRAM"
+    "barcode": "8999900001977"
   },
   {
     "id": "e9fa70f8-34b9-4ecb-9169-40383cf2b6fe",
@@ -3371,7 +3371,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "ball",
     "conversion_factor": 1,
     "price": 120000,
-    "barcode": "KER-MEN-PUT-BEN-5KG"
+    "barcode": "8999900001984"
   },
   {
     "id": "264c5db3-fe42-4386-bc05-a55e9c4f8813",
@@ -3379,7 +3379,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17000,
-    "barcode": "KER-MEN-PUT-BEN-500GRAM"
+    "barcode": "8999900001991"
   },
   {
     "id": "c45ca440-57b4-466a-bc6d-6c95ef922f9f",
@@ -3387,7 +3387,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "IND-GOR-BAN"
+    "barcode": "8999900002004"
   },
   {
     "id": "bf932aff-53cf-4c3f-9d32-26bbe416bdf9",
@@ -3395,7 +3395,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 26000,
-    "barcode": "KUE-SMPRT-ED"
+    "barcode": "8999900002011"
   },
   {
     "id": "e2b45018-6be4-4a1d-ab6b-ded865677dee",
@@ -3403,7 +3403,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 21000,
-    "barcode": "KRP-MTH-MIE-MDG-500G"
+    "barcode": "8999900002028"
   },
   {
     "id": "a3c722dc-f71f-4bd1-b271-14c0278be604",
@@ -3411,7 +3411,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 35000,
-    "barcode": "KER-TER-PUT-BER-500GRAM"
+    "barcode": "8999900002035"
   },
   {
     "id": "c79cd2c2-02de-4f62-aeb1-499c8c165973",
@@ -3419,7 +3419,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 42500,
-    "barcode": "KOP-KK-MRH-200G"
+    "barcode": "8999900002042"
   },
   {
     "id": "7d26372c-8d41-449f-8291-87674cfe8d76",
@@ -3427,7 +3427,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "STI-RAS-SAM-BAL-160GRAM"
+    "barcode": "8999900002059"
   },
   {
     "id": "bead096e-5f14-4cc4-bd88-6a73a14efad3",
@@ -3435,7 +3435,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "ROT-KER-GUL-MR"
+    "barcode": "8999900002066"
   },
   {
     "id": "f733e86c-8b20-422b-a04e-03ae3bdcd40b",
@@ -3443,7 +3443,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 85000,
-    "barcode": "KAC-MED-GOR-SUP-500GRAM"
+    "barcode": "8999900002073"
   },
   {
     "id": "b913d3c4-8096-4478-b083-de81bd647574",
@@ -3451,7 +3451,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 30500,
-    "barcode": "KRP-MTH-MIE-MINI-1KG"
+    "barcode": "8999900002080"
   },
   {
     "id": "2b10f951-3717-4b32-b16b-578b5b834442",
@@ -3459,7 +3459,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "KEM-GOR-IKA-TEN"
+    "barcode": "8999900002097"
   },
   {
     "id": "7060acca-f81a-4be1-8a1d-203a4f587fc6",
@@ -3467,7 +3467,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 35000,
-    "barcode": "KMP-GRG-UDG-BGK"
+    "barcode": "8999900002103"
   },
   {
     "id": "d5b20b6c-b47a-43f2-bcc4-95b7c78b2477",
@@ -3475,7 +3475,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 108500,
-    "barcode": "KRP-MTH-BWG-BBR-5KG"
+    "barcode": "8999900002110"
   },
   {
     "id": "11ce1e61-819f-4a02-82c3-e0cf5794026a",
@@ -3483,7 +3483,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KUE-MAS-89-BER-250GRAM"
+    "barcode": "8999900002127"
   },
   {
     "id": "b6d94c00-4f2f-4661-8009-8d626cd32139",
@@ -3491,7 +3491,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "KER-PIS-KEP-ASI-180GRAM"
+    "barcode": "8999900002134"
   },
   {
     "id": "adc11cdb-2839-4440-9bc5-4d3f7a9260d1",
@@ -3499,7 +3499,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "botol",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KEC-IST-CAP-SIO"
+    "barcode": "8999900002141"
   },
   {
     "id": "671a1803-829d-41a1-8073-a2b4522dd0ac",
@@ -3507,7 +3507,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KAC-KOR-KUP-500-500GRAM"
+    "barcode": "8999900002158"
   },
   {
     "id": "f589e87b-8cc4-4d0e-8aa9-3336f1d9f328",
@@ -3515,7 +3515,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "PAN-PAN-BER-250-250GRAM"
+    "barcode": "8999900002165"
   },
   {
     "id": "daad6524-38df-4b96-aa7e-cfecfa3720dc",
@@ -3523,7 +3523,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "TER-BAN-TOB-AMS-480GRAM"
+    "barcode": "8999900002172"
   },
   {
     "id": "5646ece6-5459-49cd-8458-dac607bde9f8",
@@ -3531,7 +3531,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17000,
-    "barcode": "BMB-TRSI-UDG-KCL"
+    "barcode": "8999900002189"
   },
   {
     "id": "8cb19600-aee6-4ac0-8a5f-3ea7b8e1fe4c",
@@ -3539,7 +3539,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 45000,
-    "barcode": "KER-STI-TEL-CUM-250GRAM"
+    "barcode": "8999900002196"
   },
   {
     "id": "b724442c-e401-46df-9cf7-3148fbc5f4f5",
@@ -3547,7 +3547,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 75000,
-    "barcode": "GTS-LCG-PJG"
+    "barcode": "8999900002202"
   },
   {
     "id": "193b3e9e-f319-4e11-b8bd-f5ba512c3933",
@@ -3555,7 +3555,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KEM-PAN-BAN-CAP"
+    "barcode": "8999900002219"
   },
   {
     "id": "de2621df-f7f7-45f8-b0cf-7dc0a7c940b4",
@@ -3563,7 +3563,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 108500,
-    "barcode": "KRP-MTH-BWG-PLS-5KG"
+    "barcode": "8999900002226"
   },
   {
     "id": "2578a3a6-cabf-450e-9a63-ad54acc29d9e",
@@ -3571,7 +3571,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 35000,
-    "barcode": "KMP-OVN-CMI"
+    "barcode": "8999900002233"
   },
   {
     "id": "158c586c-093f-45c5-91db-b004b512af93",
@@ -3579,7 +3579,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17000,
-    "barcode": "ASA-KUN-BAN-SPE-500GRAM"
+    "barcode": "8999900002240"
   },
   {
     "id": "cf0f2ef9-2242-4a7f-b956-6831e75b9380",
@@ -3587,7 +3587,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KRP-MTH-IKN-TGR-BELINYU"
+    "barcode": "8999900002257"
   },
   {
     "id": "d2213216-22b1-42f4-8bf9-48c8440da3f3",
@@ -3595,7 +3595,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KUE-GAM-MIN"
+    "barcode": "8999900002264"
   },
   {
     "id": "270b2f2d-98d1-445f-a0cc-aa9b7ecdd125",
@@ -3603,7 +3603,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 70000,
-    "barcode": "KRP-MTH-BWG-BBR-3KG"
+    "barcode": "8999900002271"
   },
   {
     "id": "55886897-61fd-4402-9c67-db07e5ba8cae",
@@ -3611,7 +3611,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 31000,
-    "barcode": "KRP-MTH-JGK-BLT-1KG"
+    "barcode": "8999900002288"
   },
   {
     "id": "3c565a90-ab95-4844-bcbf-17c9fb7d009d",
@@ -3619,7 +3619,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KUE-BNGKT-RNTA"
+    "barcode": "8999900002295"
   },
   {
     "id": "56641342-e960-4f28-9349-a66f941c8953",
@@ -3627,7 +3627,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KER-MAW-WAR-WAR-250GRAM"
+    "barcode": "8999900002301"
   },
   {
     "id": "abde7ba6-34ab-49ab-ac8a-727fd3944255",
@@ -3635,7 +3635,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 19500,
-    "barcode": "KUE-SGN-MR-JO"
+    "barcode": "8999900002318"
   },
   {
     "id": "061cff99-d473-42ae-9e44-2e2feae349eb",
@@ -3643,7 +3643,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "KER-SIS-WAR-DI-1KG"
+    "barcode": "8999900002325"
   },
   {
     "id": "18d6adf1-8d5b-4f5b-8dba-fcbee68a17dc",
@@ -3651,7 +3651,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "TEP-TAP-TAN-KWA-1KG"
+    "barcode": "8999900002332"
   },
   {
     "id": "172f3323-be23-4734-b925-93819cdf8ef1",
@@ -3659,7 +3659,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 67000,
-    "barcode": "ABN-IKN-TGR-SMB"
+    "barcode": "8999900002349"
   },
   {
     "id": "30583f09-b70b-412b-985e-77b8e392bfc5",
@@ -3667,7 +3667,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KEM-GOR-PAS-MIN"
+    "barcode": "8999900002356"
   },
   {
     "id": "85692bc9-b84d-4531-94a3-6a40a94109e1",
@@ -3675,7 +3675,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KER-MEN-TER-BER-250GRAM"
+    "barcode": "8999900002363"
   },
   {
     "id": "87265b5e-4551-4245-9302-bf61180b6b4b",
@@ -3683,7 +3683,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 43500,
-    "barcode": "CML-SMP-UDG-500G"
+    "barcode": "8999900002370"
   },
   {
     "id": "99cb73eb-de9e-4789-9776-5ef1032ee10f",
@@ -3691,7 +3691,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KER-SIN-BAL-BER-200GRAM"
+    "barcode": "8999900002387"
   },
   {
     "id": "0c28e5ad-fad9-41e5-9c0e-c450fa72b3d3",
@@ -3699,7 +3699,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15500,
-    "barcode": "KRP-MTH-JGK-BLT-500G"
+    "barcode": "8999900002394"
   },
   {
     "id": "fd3c13f0-1096-4d81-abcf-05a87963d24b",
@@ -3707,7 +3707,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 70000,
-    "barcode": "KRP-MTH-BWG-PLS-3KG"
+    "barcode": "8999900002400"
   },
   {
     "id": "d85ab666-47e2-4efa-891a-47172bf97eeb",
@@ -3715,7 +3715,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "LAD-PUT-BUB-HAL-70GRAM"
+    "barcode": "8999900002417"
   },
   {
     "id": "608cf1bf-4c18-49a6-9c65-21e0294967d3",
@@ -3723,7 +3723,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 10000,
-    "barcode": "NFD-SKT-CKL-BGK"
+    "barcode": "8999900002424"
   },
   {
     "id": "4b4e0247-764d-4108-9a7d-e20b2c443226",
@@ -3731,7 +3731,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 45500,
-    "barcode": "KOP-CAP1-BIRU-BKG"
+    "barcode": "8999900002431"
   },
   {
     "id": "ae3b16f1-b46d-48b6-aa47-31e4468cf169",
@@ -3739,7 +3739,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17000,
-    "barcode": "KRP-MTH-WRN-KPNG-500G"
+    "barcode": "8999900002448"
   },
   {
     "id": "c3801eb9-2100-4188-9057-a1997886aff5",
@@ -3747,7 +3747,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 49500,
-    "barcode": "GTS-SUP-BLT-BIRU-250G"
+    "barcode": "8999900002455"
   },
   {
     "id": "ae44aa79-3933-4de9-b3c4-0edff699ac74",
@@ -3755,7 +3755,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 12000,
-    "barcode": "CML-PRM-HCK-14P"
+    "barcode": "8999900002462"
   },
   {
     "id": "3afb7a48-3a7d-4d9f-b28d-dd55a4cc30e6",
@@ -3763,7 +3763,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "botol",
     "conversion_factor": 1,
     "price": 21000,
-    "barcode": "KCP-ASN-ROSE-300ML"
+    "barcode": "8999900002479"
   },
   {
     "id": "c0ac1ca9-cd06-4ae5-ab55-7ea38dd23204",
@@ -3771,7 +3771,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 51000,
-    "barcode": "KOP-CAP1-PRM-250G"
+    "barcode": "8999900002486"
   },
   {
     "id": "9dfe71f4-7f6d-4254-81aa-a9c1728f1016",
@@ -3779,7 +3779,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KEM-GOR-PAS-TJO"
+    "barcode": "8999900002493"
   },
   {
     "id": "7f529008-4df0-4387-9a18-f945a9e588c0",
@@ -3787,7 +3787,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 35000,
-    "barcode": "BMB-TRSI-BBK-TOBOALI"
+    "barcode": "8999900002509"
   },
   {
     "id": "2983d264-04cc-4b0b-bac2-ceff78888ded",
@@ -3795,7 +3795,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KRP-MTH-IKN-AMP-500G"
+    "barcode": "8999900002516"
   },
   {
     "id": "e49bdbfa-74d5-4473-806d-793ebeff1f31",
@@ -3803,7 +3803,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 19000,
-    "barcode": "KMP-KOIN-CMI-SAN"
+    "barcode": "8999900002523"
   },
   {
     "id": "cfcfa80e-679e-4bc3-9197-a9dd8d35bfca",
@@ -3811,7 +3811,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KEC-UDA-REB-CAP-300GRAM"
+    "barcode": "8999900002530"
   },
   {
     "id": "b37054e7-9403-41e1-9841-b692c8fa4854",
@@ -3819,7 +3819,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15500,
-    "barcode": "KRP-MTH-KRT-MINI-500G"
+    "barcode": "8999900002547"
   },
   {
     "id": "1f10ffe3-4ef4-4d64-974f-38d79f5acde1",
@@ -3827,7 +3827,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "KMP-PANG-MM-KTK"
+    "barcode": "8999900002554"
   },
   {
     "id": "8c0fb505-c8ab-41ac-8a81-271b83acdf44",
@@ -3835,7 +3835,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17000,
-    "barcode": "KER-BAW-MEN-BEN-500GRAM"
+    "barcode": "8999900002561"
   },
   {
     "id": "efa759f3-6984-4d24-90dc-9892a1c33080",
@@ -3843,7 +3843,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 14500,
-    "barcode": "KRP-MTH-BWG-PLS-200G"
+    "barcode": "8999900002578"
   },
   {
     "id": "96fbae65-6b0b-45b5-adb6-42664f85fb7a",
@@ -3851,7 +3851,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 55000,
-    "barcode": "KER-UDA-UKU-BES-500GRAM"
+    "barcode": "8999900002585"
   },
   {
     "id": "62ed4881-49c9-48b0-a288-1b39853acec8",
@@ -3859,7 +3859,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 108500,
-    "barcode": "KRP-MTH-SRI-UDG-TUA-5KG"
+    "barcode": "8999900002592"
   },
   {
     "id": "d3a34030-ccc4-45c1-83e7-0f6aec804bfb",
@@ -3867,7 +3867,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 22000,
-    "barcode": "GTS-SUP-TGR-100G"
+    "barcode": "8999900002608"
   },
   {
     "id": "62a47647-cc5b-4e01-8e97-2dcc3471cddc",
@@ -3875,7 +3875,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 45000,
-    "barcode": "KRP-MTH-IKN-TGR-YOYO"
+    "barcode": "8999900002615"
   },
   {
     "id": "5aadb2cd-42f6-4d97-a625-c70a57ede133",
@@ -3883,7 +3883,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 35000,
-    "barcode": "KRP-MTH-MIE-MDG-1KG"
+    "barcode": "8999900002622"
   },
   {
     "id": "138409a6-13f2-43e3-bde2-901030ad5a84",
@@ -3891,7 +3891,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17000,
-    "barcode": "KAC-TEL-MED-CAP-500GRAM"
+    "barcode": "8999900002639"
   },
   {
     "id": "dbc4037e-8725-410b-8a6b-81e6be96f34b",
@@ -3899,7 +3899,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 90000,
-    "barcode": "KER-MEN-SAR-UDA-1KG"
+    "barcode": "8999900002646"
   },
   {
     "id": "3bbe61ed-6fff-43ec-b11f-692eb3bbea87",
@@ -3907,7 +3907,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "STI-KEN-BAL-RAS-200GRAM"
+    "barcode": "8999900002653"
   },
   {
     "id": "9ec3ddda-50ee-44e2-bef2-3658d7d76983",
@@ -3915,7 +3915,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 47500,
-    "barcode": "KRP-MTH-IKN-TGR-SNJ-230G"
+    "barcode": "8999900002660"
   },
   {
     "id": "da6cec52-6cb3-41c8-9b6d-0a408d033351",
@@ -3923,7 +3923,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 22000,
-    "barcode": "KRP-MTH-IKN-TGR-SNJ-100G"
+    "barcode": "8999900002677"
   },
   {
     "id": "bd70f0b3-b406-4a64-aca9-340e0e798991",
@@ -3931,7 +3931,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "PER-GUL-ARE-BAN-65GRAM"
+    "barcode": "8999900002684"
   },
   {
     "id": "f86b9219-ac58-430a-ac0d-300487b5fb37",
@@ -3939,7 +3939,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KMP-PANG-323-10P"
+    "barcode": "8999900002691"
   },
   {
     "id": "31e7cf93-a600-4ff6-8f3f-22e50c386635",
@@ -3947,7 +3947,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KEM-PAN-CAP-MMC"
+    "barcode": "8999900002707"
   },
   {
     "id": "5ef962be-8fee-4532-90aa-68567fe2e305",
@@ -3955,7 +3955,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 55000,
-    "barcode": "KER-MEN-SAR-UDA-500GRAM"
+    "barcode": "8999900002714"
   },
   {
     "id": "e3caa6ce-499e-4ac7-9fa6-6946896da215",
@@ -3963,7 +3963,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KUE-ANG-CAP-ANU-200GRAM"
+    "barcode": "8999900002721"
   },
   {
     "id": "c047ced6-71c2-4b33-a14a-159371b7412f",
@@ -3971,7 +3971,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 47500,
-    "barcode": "KMP-PANG-MM-BLT"
+    "barcode": "8999900002738"
   },
   {
     "id": "1076bc7e-5845-4d26-8f1b-6d109309f490",
@@ -3979,7 +3979,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KAC-KOR-KUP-250-250GRAM"
+    "barcode": "8999900002745"
   },
   {
     "id": "dfa2c868-64fd-4e06-b676-204d8e5280e5",
@@ -3987,7 +3987,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "ASE-KUN-BAN-SPE-250GRAM"
+    "barcode": "8999900002752"
   },
   {
     "id": "63d70114-2e4c-4a6c-8655-92f28f44f1e8",
@@ -3995,7 +3995,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 19500,
-    "barcode": "KMP-GRG-PSR-TJKR"
+    "barcode": "8999900002769"
   },
   {
     "id": "0a363317-0dd4-41ad-916c-fec8ec50d85f",
@@ -4003,7 +4003,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 107500,
-    "barcode": "KRP-MTH-BWG-BBR-1KG"
+    "barcode": "8999900002776"
   },
   {
     "id": "d73b58dd-8aea-4cef-bc21-818fdaa4a088",
@@ -4011,7 +4011,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 45000,
-    "barcode": "KER-STE-TEL-CUM-250GRAM"
+    "barcode": "8999900002783"
   },
   {
     "id": "7e7ef7a4-ad7e-431e-9572-acf9a1923233",
@@ -4019,7 +4019,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "botol",
     "conversion_factor": 1,
     "price": 150000,
-    "barcode": "BMB-MDU-BGK-1KG"
+    "barcode": "8999900002790"
   },
   {
     "id": "24c5167f-6cb7-4dcc-a9ce-98e9b3d4f7d6",
@@ -4027,7 +4027,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15500,
-    "barcode": "BMB-TRSI-AB-100G"
+    "barcode": "8999900002806"
   },
   {
     "id": "295ca7fd-9667-424c-9c28-8c75bf6a34b5",
@@ -4035,7 +4035,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 32500,
-    "barcode": "KUE-TNG-TNG-KCG"
+    "barcode": "8999900002813"
   },
   {
     "id": "45890a51-cc59-4f47-87d0-dd5839f640cb",
@@ -4043,7 +4043,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "botol",
     "conversion_factor": 1,
     "price": 21000,
-    "barcode": "KCP-ASN-ROSE-600ML"
+    "barcode": "8999900002820"
   },
   {
     "id": "275e9062-992c-4a1c-946d-8ce3a8e8c2be",
@@ -4051,7 +4051,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 33500,
-    "barcode": "KRP-MTH-JGK-SSR-1KG"
+    "barcode": "8999900002837"
   },
   {
     "id": "f0964575-e677-43f1-b566-11f3293fe0bf",
@@ -4059,7 +4059,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 57500,
-    "barcode": "KRP-MTH-IKN-TGR-500G"
+    "barcode": "8999900002844"
   },
   {
     "id": "2aa5f518-8307-4483-8f41-69e6aa4a1aa1",
@@ -4067,7 +4067,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "BMB-TAUCO-BGK-250G"
+    "barcode": "8999900002851"
   },
   {
     "id": "a02e88c8-cef2-4734-b48f-ae1c1fadd452",
@@ -4075,7 +4075,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 22000,
-    "barcode": "CML-EMP-KCL-MNIS-250G"
+    "barcode": "8999900002868"
   },
   {
     "id": "fb0d0d94-4642-4d03-b004-8cea21de453c",
@@ -4083,7 +4083,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 14500,
-    "barcode": "KRP-MTH-BWG-BBR-500G"
+    "barcode": "8999900002875"
   },
   {
     "id": "b1f340e4-ea36-4bcc-a5ce-e728b51852d7",
@@ -4091,7 +4091,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "LAD-PUT-BUB-HAL-100GRAM"
+    "barcode": "8999900002882"
   },
   {
     "id": "8c25ddea-a9e3-4f0a-b988-50f37f9015fb",
@@ -4099,7 +4099,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 28000,
-    "barcode": "KRP-MTH-KRT-MINI-1KG"
+    "barcode": "8999900002899"
   },
   {
     "id": "83a242fb-7fbb-4efa-a6e9-3ebe30682532",
@@ -4107,7 +4107,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KAC-TEL-MED-CAP-250GRAM"
+    "barcode": "8999900002905"
   },
   {
     "id": "006aed33-5888-4126-8c9f-7b0da8614e43",
@@ -4115,7 +4115,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KER-MAW-PUT-BER-250GRAM"
+    "barcode": "8999900002912"
   },
   {
     "id": "a7221d5f-48c6-4c23-909c-306790356f1e",
@@ -4123,7 +4123,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "KMP-OVN-IKN-TRSI"
+    "barcode": "8999900002929"
   },
   {
     "id": "9d91690e-f546-435f-a7e9-75bf1c2b9a94",
@@ -4131,7 +4131,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "CML-KCG-ATM-SAT-250G"
+    "barcode": "8999900002936"
   },
   {
     "id": "aa910b54-65ec-4b27-961e-a341561bf8c8",
@@ -4139,7 +4139,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "KER-STI-TEL-CUM"
+    "barcode": "8999900002943"
   },
   {
     "id": "64c74962-a84d-4459-98f0-be469843909c",
@@ -4147,7 +4147,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 45000,
-    "barcode": "STE-TEL-CUM-CAP-250GRAM"
+    "barcode": "8999900002950"
   },
   {
     "id": "ca75a449-4180-47e9-ad31-84dfbc2ed5ba",
@@ -4155,7 +4155,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 48500,
-    "barcode": "GTS-SUP-PJG-BIRU-250G"
+    "barcode": "8999900002967"
   },
   {
     "id": "c04e3609-2a14-4a5b-a581-1290ba62e9b7",
@@ -4163,7 +4163,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "STI-KEJ-GAB-160-160GRAM"
+    "barcode": "8999900002974"
   },
   {
     "id": "717e0d0d-70d7-497c-86a5-efcb41aa1c46",
@@ -4171,7 +4171,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 32500,
-    "barcode": "KRP-MTH-MWR-PTH-1KG"
+    "barcode": "8999900002981"
   },
   {
     "id": "82cb8a06-01e4-4c3f-890c-ccbbe4eea99c",
@@ -4179,7 +4179,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 37000,
-    "barcode": "CML-KCG-TLR-2P-200G"
+    "barcode": "8999900002998"
   },
   {
     "id": "f4953cb5-21a0-4aba-b7c4-8e519f185624",
@@ -4187,7 +4187,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 10000,
-    "barcode": "NFD-SKT-IJK-HTM"
+    "barcode": "8999900003001"
   },
   {
     "id": "3247a4f1-93a6-4efc-a17a-8dce1b4ba2a1",
@@ -4195,7 +4195,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17000,
-    "barcode": "KER-SIS-WAR-DI-500GRAM"
+    "barcode": "8999900003018"
   },
   {
     "id": "47b722d9-90eb-47e4-8895-af69c19bb52b",
@@ -4203,7 +4203,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 14000,
-    "barcode": "KRP-MTH-SRI-UDG-500G"
+    "barcode": "8999900003025"
   },
   {
     "id": "900d37e9-3e76-4d84-b388-62b006626171",
@@ -4211,7 +4211,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 57000,
-    "barcode": "BMB-GLA-ARN-BGK-1T"
+    "barcode": "8999900003032"
   },
   {
     "id": "1aab906d-f819-4967-aba6-1e528d927490",
@@ -4219,7 +4219,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KEM-PAN-MMC-MM"
+    "barcode": "8999900003049"
   },
   {
     "id": "2152032c-87b5-48a3-9d1c-aeea7ead4bad",
@@ -4227,7 +4227,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KRP-MTH-SRI-UDG-AMP-500G"
+    "barcode": "8999900003056"
   },
   {
     "id": "36c11a33-2ec6-4020-bd85-e8184304eb3b",
@@ -4235,7 +4235,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "GET-TEN-CAP-SUM"
+    "barcode": "8999900003063"
   },
   {
     "id": "6c2576eb-3881-457f-96da-c6b3c5539d88",
@@ -4243,7 +4243,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17000,
-    "barcode": "PAN-PAN-BER-500-500GRAM"
+    "barcode": "8999900003070"
   },
   {
     "id": "64fe22ed-0180-4756-951e-54eefa15bfd8",
@@ -4251,7 +4251,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 65000,
-    "barcode": "BMB-TRSI-AB-500G"
+    "barcode": "8999900003087"
   },
   {
     "id": "8016cd38-3b3d-46ac-bbab-d410f3c5bd41",
@@ -4259,7 +4259,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "AMP-IKA-TEN"
+    "barcode": "8999900003094"
   },
   {
     "id": "53b477f0-b477-4d7b-b08e-3a88e9b3f056",
@@ -4267,7 +4267,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "ball",
     "conversion_factor": 1,
     "price": 120000,
-    "barcode": "KER-MAW-WAR-WAR-5KG"
+    "barcode": "8999900003100"
   },
   {
     "id": "55a34bf7-37f7-4620-bf7d-90051e020087",
@@ -4275,7 +4275,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KER-KER-IKA-TEN"
+    "barcode": "8999900003117"
   },
   {
     "id": "2fe7d7d5-2ede-443f-8873-3074d6415eb5",
@@ -4283,7 +4283,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25500,
-    "barcode": "KRP-MTH-SRI-UDG-1KG"
+    "barcode": "8999900003124"
   },
   {
     "id": "0e69efa1-bf75-4f29-a204-7c20f8d1cda2",
@@ -4291,7 +4291,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "KMP-GRG-PSR-ACH"
+    "barcode": "8999900003131"
   },
   {
     "id": "67619322-f1f2-4907-a9a7-55c699cff7b6",
@@ -4299,7 +4299,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25500,
-    "barcode": "KRP-MTH-BWG-PLS-1KG"
+    "barcode": "8999900003148"
   },
   {
     "id": "e3f6a94a-d435-42a8-a563-9b3da820943f",
@@ -4307,7 +4307,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 45000,
-    "barcode": "KAC-MED-GOR-SUP-250GRAM"
+    "barcode": "8999900003155"
   },
   {
     "id": "59ac60b9-25b1-4102-9ef2-ec251b3ff1db",
@@ -4315,7 +4315,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 16500,
-    "barcode": "KRP-MTH-MIE-MINI-500G"
+    "barcode": "8999900003162"
   },
   {
     "id": "8ca2198e-c981-43ab-9cba-25d6ab328cf3",
@@ -4323,7 +4323,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KAC-BAW-SUP-ORI-500GRAM"
+    "barcode": "8999900003179"
   },
   {
     "id": "cd45498a-9a64-4a6e-9458-27cad8f6f097",
@@ -4331,7 +4331,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KMP-GRG-PSR-MINI-SNK"
+    "barcode": "8999900003186"
   },
   {
     "id": "52d15266-1179-4cd4-85a5-fc04f3c4697f",
@@ -4339,7 +4339,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 27500,
-    "barcode": "KUE-RNTK-SAGU-LM"
+    "barcode": "8999900003193"
   },
   {
     "id": "342a40b9-51ab-4171-a903-34a427154eed",
@@ -4347,7 +4347,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 129500,
-    "barcode": "KRP-MTH-BWG-KCG-5KG"
+    "barcode": "8999900003209"
   },
   {
     "id": "c4b4851f-4318-4c87-9ebc-21bc3ccb5ade",
@@ -4355,7 +4355,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 60000,
-    "barcode": "KOP-CAP1-BIRU-500G"
+    "barcode": "8999900003216"
   },
   {
     "id": "708d8013-c7fa-4c9b-b525-df701bce6df1",
@@ -4363,7 +4363,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 140000,
-    "barcode": "KRP-MTH-IKN-AMP-5KG"
+    "barcode": "8999900003223"
   },
   {
     "id": "5d8b68e6-c2db-43c8-af86-9a2143e884ed",
@@ -4371,7 +4371,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KEM-OVE-IKA-TEN"
+    "barcode": "8999900003230"
   },
   {
     "id": "42289636-f3e0-49bf-8186-89925a1ee7e4",
@@ -4379,7 +4379,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 50999,
-    "barcode": "KUE-LPS-LGT-BGK"
+    "barcode": "8999900003247"
   },
   {
     "id": "964e9a0f-19ed-42fc-8d47-32b156bdde89",
@@ -4387,7 +4387,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 90000,
-    "barcode": "KER-CUM-MEN-BAN-1KG"
+    "barcode": "8999900003254"
   },
   {
     "id": "f40d725a-d546-42e2-a5bf-997fbdf99520",
@@ -4395,7 +4395,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KAC-KOR-BER-BER-250GRAM"
+    "barcode": "8999900003261"
   },
   {
     "id": "ae412f74-f236-4ee8-a10a-545e80f130b2",
@@ -4403,7 +4403,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 45000,
-    "barcode": "KMP-GRG-IKN-SLN-250G"
+    "barcode": "8999900003278"
   },
   {
     "id": "cfa96bfe-09d2-4af0-9ce1-aad2e8a76399",
@@ -4411,7 +4411,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 31000,
-    "barcode": "KRP-MTH-BWG-KCG-1KG"
+    "barcode": "8999900003285"
   },
   {
     "id": "f9601f77-63d0-4c3b-b713-5ccec61481fa",
@@ -4419,7 +4419,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "botol",
     "conversion_factor": 1,
     "price": 19000,
-    "barcode": "KCP-ASN-KTB-300ML"
+    "barcode": "8999900003292"
   },
   {
     "id": "5e0ca0c5-095a-4e6b-8755-30e8235b5473",
@@ -4427,7 +4427,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 99500,
-    "barcode": "KRP-MTH-SRI-UDG-5KG"
+    "barcode": "8999900003308"
   },
   {
     "id": "9a34dd7d-5837-4b28-964a-85a42c9d0b5e",
@@ -4435,7 +4435,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KEM-PAN-33"
+    "barcode": "8999900003315"
   },
   {
     "id": "65ba28cf-d96f-471d-8f0a-58aeeb085a79",
@@ -4443,7 +4443,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 35000,
-    "barcode": "TPG-SAGU-RAKRUT"
+    "barcode": "8999900003322"
   },
   {
     "id": "185b3835-e485-45c2-b5e1-6341d5047e5b",
@@ -4451,7 +4451,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 125000,
-    "barcode": "KRP-MTH-MWR-5KG"
+    "barcode": "8999900003339"
   },
   {
     "id": "2ef6e619-6e28-425a-9d6f-cda7aedd4a87",
@@ -4459,7 +4459,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "SNA-KUP-GAJ-BER-200GRAM"
+    "barcode": "8999900003346"
   },
   {
     "id": "b72bfbde-c1d9-4c31-8dcf-9296bacbb549",
@@ -4467,7 +4467,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "botol",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "BMB-CALO-UDG-REBON"
+    "barcode": "8999900003353"
   },
   {
     "id": "e43137f7-40de-4862-a04d-64160fff2d5c",
@@ -4475,7 +4475,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "KER-PIS-KEP-MAN"
+    "barcode": "8999900003360"
   },
   {
     "id": "20a5e6b1-e8be-4e0d-aa89-bee823694d81",
@@ -4483,7 +4483,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "ASI-BUA-KEL"
+    "barcode": "8999900003377"
   },
   {
     "id": "b06e87f5-3424-4855-a360-5b75c7df441a",
@@ -4491,7 +4491,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "CML-SMP-UDG-250G"
+    "barcode": "8999900003384"
   },
   {
     "id": "478fcd14-e93f-4694-85e4-1a6bd7170e42",
@@ -4499,7 +4499,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 127000,
-    "barcode": "KRP-MTH-JGK-BLT-5KG"
+    "barcode": "8999900003391"
   },
   {
     "id": "4e76345d-9eca-43bd-9b56-1e398b116222",
@@ -4507,7 +4507,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 62000,
-    "barcode": "KMP-MTH-IKN-BGK-500G"
+    "barcode": "8999900003407"
   },
   {
     "id": "d133a744-0af8-4a5d-83c5-1044cad76daa",
@@ -4515,7 +4515,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KUE-RTI-KRG-GULA"
+    "barcode": "8999900003414"
   },
   {
     "id": "6e112224-98d7-455b-893f-1b2fa85ae3fb",
@@ -4523,7 +4523,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 125000,
-    "barcode": "KRP-MTH-SRI-UDG-AMP-5KG"
+    "barcode": "8999900003421"
   },
   {
     "id": "177b24cd-494f-493e-9718-54fa2be742d4",
@@ -4531,7 +4531,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "RUS-AMS-KHA-BAN"
+    "barcode": "8999900003438"
   },
   {
     "id": "f91bc6de-29d3-4f6b-a4c8-4e2693eb4999",
@@ -4539,7 +4539,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 45500,
-    "barcode": "KOP-CAP1-SLV-250G"
+    "barcode": "8999900003445"
   },
   {
     "id": "edf54dec-9fd5-46b6-a6d3-53fe870c361b",
@@ -4547,7 +4547,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 90000,
-    "barcode": "KER-UDA-MEN-BAN-1KG"
+    "barcode": "8999900003452"
   },
   {
     "id": "4cdf5dab-c029-413d-ae66-1f7db3478b63",
@@ -4555,7 +4555,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 8500,
-    "barcode": "KRP-MTH-TMP-250G"
+    "barcode": "8999900003469"
   },
   {
     "id": "a23ddf0f-f9f5-47dc-81e9-17c06086be8d",
@@ -4563,7 +4563,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "KUE-MCH-BPG-BGK"
+    "barcode": "8999900003476"
   },
   {
     "id": "b3b7e93c-6ed0-43b4-b45e-c64c801b92b4",
@@ -4571,7 +4571,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 31500,
-    "barcode": "BMB-TRSI-UDG-ASLI"
+    "barcode": "8999900003483"
   },
   {
     "id": "0bad4005-a09e-49c8-bfc8-b6441f0dbd0f",
@@ -4579,7 +4579,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KER-JEN-SIS-BER-250GRAM"
+    "barcode": "8999900003490"
   },
   {
     "id": "920975a4-3a81-40c7-a20f-e5b010c19317",
@@ -4587,7 +4587,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "KRP-MTH-MWR-1KG"
+    "barcode": "8999900003506"
   },
   {
     "id": "96b790a0-aa35-47e9-8b79-a5aaa06cb561",
@@ -4595,7 +4595,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "ball",
     "conversion_factor": 1,
     "price": 110000,
-    "barcode": "KER-BAW-MEN-BEN-5KG"
+    "barcode": "8999900003513"
   },
   {
     "id": "d5201c4d-ba98-4fce-b033-d4293a39149b",
@@ -4603,7 +4603,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 22500,
-    "barcode": "CML-KMB-PTH-60G"
+    "barcode": "8999900003520"
   },
   {
     "id": "499e3bfc-ae6f-4f34-a9d2-3272c2babf71",
@@ -4611,7 +4611,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "ball",
     "conversion_factor": 1,
     "price": 110000,
-    "barcode": "PES-KHU-KER-BAW-5BALL"
+    "barcode": "8999900003537"
   },
   {
     "id": "59fb4b21-1dd7-4410-93b9-7b1c8fa7890c",
@@ -4619,7 +4619,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "KUE-BLN-KD-SE"
+    "barcode": "8999900003544"
   },
   {
     "id": "f68a8587-a832-4de3-b94d-47c27d3f2544",
@@ -4627,7 +4627,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 90000,
-    "barcode": "KRP-MTH-IKN-TGR-1KG"
+    "barcode": "8999900003551"
   },
   {
     "id": "53f0b847-a992-452a-8f8b-3e2bc3fdad03",
@@ -4635,7 +4635,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KOP-BUB-CAP-KIN"
+    "barcode": "8999900003568"
   },
   {
     "id": "7b823c94-6a38-45db-844c-c6aa239d4a56",
@@ -4643,7 +4643,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "ball",
     "conversion_factor": 1,
     "price": 120000,
-    "barcode": "KER-KER-MAW-BIA-5KG"
+    "barcode": "8999900003575"
   },
   {
     "id": "6bfe09cf-788a-46a4-9e60-dfd307ec5c09",
@@ -4651,7 +4651,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KAC-KOR-BER-BER-500GRAM"
+    "barcode": "8999900003582"
   },
   {
     "id": "71d2b5ad-db67-470c-9bfb-6f0548726e8c",
@@ -4659,7 +4659,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "botol",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "KCP-ASN-SS-KECIL"
+    "barcode": "8999900003599"
   },
   {
     "id": "2b7b14d0-70d9-4472-8708-40230a30957c",
@@ -4667,7 +4667,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "KRP-MTH-SRI-UDG-AMP-1KG"
+    "barcode": "8999900003605"
   },
   {
     "id": "5e4026ed-b9e9-4465-b6b4-2b4b1e415e22",
@@ -4675,7 +4675,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17500,
-    "barcode": "KRP-MTH-JGK-SSR-500G"
+    "barcode": "8999900003612"
   },
   {
     "id": "872ac257-5028-4142-98f4-78262e20dc2f",
@@ -4683,7 +4683,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 36000,
-    "barcode": "BMB-TRSI-PGG-PRG"
+    "barcode": "8999900003629"
   },
   {
     "id": "520ceb88-676d-4e03-8633-f0fad67d8f3a",
@@ -4691,7 +4691,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 132000,
-    "barcode": "KRP-MTH-JGK-SSR-5KG"
+    "barcode": "8999900003636"
   },
   {
     "id": "c3b8ed6c-91de-4ccb-8d3f-1b5a0ab9b54d",
@@ -4699,7 +4699,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 37500,
-    "barcode": "GTS-BLT-CAP-99"
+    "barcode": "8999900003643"
   },
   {
     "id": "f2be2ec7-f9e6-41f8-be1c-7f21c11083e9",
@@ -4707,7 +4707,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KER-SIN-ORI-BER-200GRAM"
+    "barcode": "8999900003650"
   },
   {
     "id": "7300db66-b58c-496d-8fe2-cd764499ff75",
@@ -4715,7 +4715,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 14000,
-    "barcode": "KRP-MTH-TRSJ-500G"
+    "barcode": "8999900003667"
   },
   {
     "id": "3201dcbe-09e5-464d-9e8a-4895ca5d9255",
@@ -4723,7 +4723,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "botol",
     "conversion_factor": 1,
     "price": 30500,
-    "barcode": "KCP-ASN-SS-BESAR"
+    "barcode": "8999900003674"
   },
   {
     "id": "a94b0da0-6747-429c-89c6-5000fda73a1e",
@@ -4731,7 +4731,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KER-MEN-BEN-KEP-250GRAM"
+    "barcode": "8999900003681"
   },
   {
     "id": "3ec44bf5-5db4-4182-bf11-539648c75593",
@@ -4739,7 +4739,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "botol",
     "conversion_factor": 1,
     "price": 26500,
-    "barcode": "BMB-RSP-AM3-TERI"
+    "barcode": "8999900003698"
   },
   {
     "id": "912bbf64-2769-4818-8584-6636c2cf5427",
@@ -4747,7 +4747,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 17500,
-    "barcode": "KRP-MTH-MWR-500G"
+    "barcode": "8999900003704"
   },
   {
     "id": "2a0774f9-deae-4512-8634-b4d41bed83fc",
@@ -4755,7 +4755,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "botol",
     "conversion_factor": 1,
     "price": 32500,
-    "barcode": "KCP-ASN-SIONG-620ML"
+    "barcode": "8999900003711"
   },
   {
     "id": "5cf0ef18-1a82-400c-95ae-7e2f30fe9c10",
@@ -4763,7 +4763,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "KER-MEN-PUT-BEN-1KG"
+    "barcode": "8999900003728"
   },
   {
     "id": "0bd24ea1-e095-4cbd-a729-4a1982b33d84",
@@ -4771,7 +4771,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KER-SAN-LEB-IKA"
+    "barcode": "8999900003735"
   },
   {
     "id": "3d6ef4c3-67d4-4d4b-bb91-4bdfe37ac836",
@@ -4779,7 +4779,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 43500,
-    "barcode": "GTS-BLT-OBOR-MERAH"
+    "barcode": "8999900003742"
   },
   {
     "id": "e2da82b9-afeb-45c1-8fd9-642121296272",
@@ -4787,7 +4787,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KER-BAW-GOR-BER-200GRAM"
+    "barcode": "8999900003759"
   },
   {
     "id": "8e0de5c2-960c-40cf-a62b-e43622905519",
@@ -4795,7 +4795,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "KER-TEM-BER-150-150GRAM"
+    "barcode": "8999900003766"
   },
   {
     "id": "9e8b2f90-3c67-4083-b7fd-d6ff0fe7d46c",
@@ -4803,7 +4803,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KER-IKA-YAN-PUT"
+    "barcode": "8999900003773"
   },
   {
     "id": "71cea43b-f4ab-4839-895c-9a4d6accd333",
@@ -4811,6 +4811,6 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "pcs",
     "conversion_factor": 1,
     "price": 25000,
-    "barcode": "KEM-GOR-PAS-LEB"
+    "barcode": "8999900003780"
   }
 ];

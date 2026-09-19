@@ -20,24 +20,25 @@ export const load: PageServerLoad = async () => {
 			ORDER BY c.name ASC, p.name ASC
 		`);
 
-		// Self-healing: jika nama produk terisi angka acak barcode (akibat bug sebelumnya),
-		// otomatis pulihkan ke Nama Produk Asli dan Harga Asli dari katalog master!
+		// Self-healing & Sinkronisasi Barcode 13-Digit Ritel Otomatis
 		for (const prod of (products || [])) {
-			if (/^\d+$/.test(prod.name) || !prod.name) {
-				const original = PRODUCTS.find((x) => x.sku === prod.sku || x.id === prod.id);
-				if (original) {
+			const original = PRODUCTS.find((x) => x.sku === prod.sku || x.id === prod.id);
+			if (original) {
+				// 1. Pastikan nama barang selalu nama asli toko (bukan angka barcode)
+				if (/^\d+$/.test(prod.name) || !prod.name) {
 					prod.name = original.name;
-					prod.selling_price = original.selling_price || original.price || 25000;
-					prod.price = prod.selling_price;
-					query(
-						`UPDATE products SET name = $1, price = $2, selling_price = $2 WHERE id = $3`,
-						[original.name, prod.selling_price, prod.id]
-					).catch(() => {});
+					query(`UPDATE products SET name = $1 WHERE id = $2`, [original.name, prod.id]).catch(() => {});
 				}
-			}
-			if (!prod.selling_price || isNaN(prod.selling_price) || prod.selling_price === 0) {
-				const original = PRODUCTS.find((x) => x.sku === prod.sku || x.id === prod.id);
-				if (original) {
+
+				// 2. Pastikan barcode selalu menggunakan 13-digit EAN tebal yang mudah di-scan
+				if (!prod.barcode || prod.barcode.length !== 13 || !/^\d+$/.test(prod.barcode)) {
+					prod.barcode = original.barcode;
+					query(`UPDATE products SET barcode = $1 WHERE id = $2`, [original.barcode, prod.id]).catch(() => {});
+					query(`UPDATE product_units SET barcode = $1 WHERE product_id = $2`, [original.barcode, prod.id]).catch(() => {});
+				}
+
+				// 3. Pastikan harga kasir selalu terisi dan akurat
+				if (!prod.selling_price || isNaN(prod.selling_price) || prod.selling_price === 0) {
 					prod.selling_price = original.selling_price || original.price || 25000;
 					prod.price = prod.selling_price;
 				}

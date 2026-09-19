@@ -468,35 +468,20 @@
 	/* Dimensi On-Screen Preview & Print */
 	.barcode-card-40x20 {
 		width: 40mm;
-		height: 20mm;
-		min-width: 40mm;
-		max-width: 40mm;
 		min-height: 20mm;
-		max-height: 20mm;
 		box-sizing: border-box;
-		overflow: hidden;
 	}
 
 	.barcode-card-38x18 {
 		width: 38mm;
-		height: 18mm;
-		min-width: 38mm;
-		max-width: 38mm;
 		min-height: 18mm;
-		max-height: 18mm;
 		box-sizing: border-box;
-		overflow: hidden;
 	}
 
 	.barcode-card-35x15 {
 		width: 35mm;
-		height: 15mm;
-		min-width: 35mm;
-		max-width: 35mm;
 		min-height: 15mm;
-		max-height: 15mm;
 		box-sizing: border-box;
-		overflow: hidden;
 	}
 
 	@media print {
