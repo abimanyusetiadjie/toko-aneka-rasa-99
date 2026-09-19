@@ -68,18 +68,18 @@
 		}, 1500);
 	}
 
-	// Konfigurasi barcode berdasarkan ukuran stiker
+	// Konfigurasi barcode berdasarkan ukuran stiker agar pas dan tidak terpotong
 	function getSizeConfig(size: LabelSize) {
 		switch (size) {
 			case '35x15':
-				return { width: 1.1, height: 19, margin: 2 };
+				return { width: 1.05, height: 14, margin: 1 };
 			case '38x18':
-				return { width: 1.25, height: 23, margin: 3 };
+				return { width: 1.15, height: 16, margin: 1 };
 			case '40x20':
-				return { width: 1.35, height: 26, margin: 3 };
+				return { width: 1.25, height: 18, margin: 1 };
 			case 'a4':
 			default:
-				return { width: 1.6, height: 38, margin: 6 };
+				return { width: 1.6, height: 36, margin: 4 };
 		}
 	}
 
@@ -182,37 +182,12 @@
 				</div>
 			</div>
 
-			<!-- Tombol Standardisasi Barcode (EAN-13 Toko) -->
 			<div class="flex items-center gap-2 w-full md:w-auto">
-				<form
-					method="POST"
-					action="?/standardize"
-					use:enhance={() => {
-						isStandardizing = true;
-						return async ({ update }) => {
-							await update();
-							isStandardizing = false;
-							renderBarcodes();
-						};
-					}}
-					class="w-full md:w-auto"
-				>
-					<button
-						type="submit"
-						disabled={isStandardizing}
-						class="w-full md:w-auto bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-3 py-2 rounded-lg text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs disabled:opacity-50 cursor-pointer"
-						title="Ubah barcode teks panjang menjadi format angka 13-digit standar (899...) yang sangat mudah dibaca scanner"
-					>
-						<Sparkles class="w-3.5 h-3.5 text-slate-900" />
-						<span>{isStandardizing ? 'Memproses...' : 'Standardisasi ke 13-Digit (899...)'}</span>
-					</button>
-				</form>
-
 				<button
 					onclick={handlePrint}
-					class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-xs shrink-0 cursor-pointer"
+					class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-xs shrink-0 cursor-pointer active:scale-95"
 				>
-					<Printer class="w-4 h-4" /> <span>Cetak Label ({labelSize}mm)</span>
+					<Printer class="w-4 h-4" /> <span>Cetak Label Barcode ({labelSize}mm)</span>
 				</button>
 			</div>
 		</div>
@@ -308,8 +283,8 @@
 		<!-- Info Tips Scanning -->
 		<div class="bg-amber-50 border border-amber-200 p-2.5 rounded-lg flex items-center justify-between gap-2 text-xs text-amber-900">
 			<div class="flex items-center gap-2">
-				<span class="font-bold">💡 Tips Barcode Scanner:</span>
-				<span>Barcode dengan garis hitam tajam & margin putih samping kini sudah aktif. Sangat disarankan klik tombol <b>"Standardisasi ke 13-Digit"</b> jika barcode Anda masih menggunakan huruf panjang.</span>
+				<span class="font-bold">💡 Informasi Label Barcode:</span>
+				<span>Stiker label otomatis memuat <b>Nama Toko</b>, <b>Nama Produk Asli</b>, <b>Garis Barcode Tebal</b>, dan <b>Harga Jual Kasir (Rp)</b>. Pilih ukuran kertas di atas lalu klik tombol Cetak!</span>
 			</div>
 		</div>
 	</header>

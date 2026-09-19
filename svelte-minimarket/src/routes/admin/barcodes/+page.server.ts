@@ -1,14 +1,16 @@
 import type { PageServerLoad, Actions } from './$types';
 import { query } from '$lib/server/db';
 import type { Product } from '$lib/types';
+import { PRODUCTS } from '$lib/server/seeds/tokoanekarasa99';
 
 export const load: PageServerLoad = async () => {
 	try {
-		const products = await query<Product>(`
+		const products = await query<any>(`
 			SELECT 
 				p.id, p.sku, p.name, p.category_id, 
 				COALESCE(p.unit, 'pcs') as base_unit, 
-				COALESCE(pu.price, p.price) as selling_price, 
+				COALESCE(pu.price, p.price, p.selling_price, 0) as price,
+				COALESCE(pu.price, p.selling_price, p.price, 0) as selling_price, 
 				p.stock,
 				c.name as category_name,
 				COALESCE(pu.barcode, p.barcode, p.sku) as barcode
@@ -17,6 +19,31 @@ export const load: PageServerLoad = async () => {
 			LEFT JOIN product_units pu ON p.id = pu.product_id AND pu.conversion_factor = 1
 			ORDER BY c.name ASC, p.name ASC
 		`);
+
+		// Self-healing: jika nama produk terisi angka acak barcode (akibat bug sebelumnya),
+		// otomatis pulihkan ke Nama Produk Asli dan Harga Asli dari katalog master!
+		for (const prod of (products || [])) {
+			if (/^\d+$/.test(prod.name) || !prod.name) {
+				const original = PRODUCTS.find((x) => x.sku === prod.sku || x.id === prod.id);
+				if (original) {
+					prod.name = original.name;
+					prod.selling_price = original.selling_price || original.price || 25000;
+					prod.price = prod.selling_price;
+					query(
+						`UPDATE products SET name = $1, price = $2, selling_price = $2 WHERE id = $3`,
+						[original.name, prod.selling_price, prod.id]
+					).catch(() => {});
+				}
+			}
+			if (!prod.selling_price || isNaN(prod.selling_price) || prod.selling_price === 0) {
+				const original = PRODUCTS.find((x) => x.sku === prod.sku || x.id === prod.id);
+				if (original) {
+					prod.selling_price = original.selling_price || original.price || 25000;
+					prod.price = prod.selling_price;
+				}
+			}
+		}
+
 		return { products: products || [] };
 	} catch (e: any) {
 		return { products: [] };
