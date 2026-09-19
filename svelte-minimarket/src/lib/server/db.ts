@@ -359,7 +359,9 @@ function executeInMemoryFallback<T>(text: string, params: any[] = []): T[] {
 		const targetId = params[params.length - 1];
 		const target = memoryProducts.find(p => p.id === targetId);
 		if (target) {
-			if (sql.includes('stock = $1')) {
+			if (sql.includes('barcode = $1')) {
+				target.barcode = String(params[0]);
+			} else if (sql.includes('stock = $1')) {
 				target.stock = Number(params[0]);
 				if (params.length >= 3 && typeof params[1] === 'number') {
 					target.base_hpp = params[1];
@@ -388,13 +390,17 @@ function executeInMemoryFallback<T>(text: string, params: any[] = []): T[] {
 		const targetId = params[params.length - 1];
 		const unit = memoryProductUnits.find(u => u.id === targetId || u.product_id === targetId);
 		if (unit) {
-			unit.price = Number(params[0] ?? unit.price);
-			if (params[1]) unit.barcode = params[1];
-			// Also sync with parent product price
-			const prod = memoryProducts.find(p => p.id === unit.product_id);
-			if (prod) {
-				prod.price = unit.price;
-				prod.selling_price = unit.price;
+			if (sql.includes('barcode = $1')) {
+				unit.barcode = String(params[0]);
+			} else {
+				unit.price = Number(params[0] ?? unit.price);
+				if (params[1]) unit.barcode = params[1];
+				// Also sync with parent product price
+				const prod = memoryProducts.find(p => p.id === unit.product_id);
+				if (prod) {
+					prod.price = unit.price;
+					prod.selling_price = unit.price;
+				}
 			}
 		}
 		return [] as any;
