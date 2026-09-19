@@ -1,0 +1,8 @@
+﻿User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /pos/
+Disallow: /login/
+
+Sitemap: https://tokoanekarasa99.my.id/sitemap.xml

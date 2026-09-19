@@ -125,11 +125,89 @@
 </script>
 
 <svelte:head>
-	<title>Toko Aneka Rasa 99 • Pusat Kemplang & Oleh-Oleh Khas Bangka Asli</title>
+	<title>Toko Aneka Rasa 99 | Pusat Kemplang & Oleh-Oleh Khas Bangka di Poris Tangerang</title>
 	<meta
 		name="description"
-		content="Pusat Kemplang Panggang, Getas Ikan Tenggiri Asli, Kerupuk, Terasi, dan Oleh-Oleh Khas Bangka Belitung. Renyah, gurih, halal, kirim ke seluruh Indonesia."
+		content="Toko Aneka Rasa 99: Pusat Kemplang Panggang, Getas Ikan Tenggiri Asli Bangka, Kerupuk Pasir, Terasi AB, dan Oleh-Oleh Khas Bangka Belitung di Poris Indah Tangerang. Renyah, gurih, halal, siap kirim ke seluruh Indonesia."
 	/>
+	<meta
+		name="keywords"
+		content="toko aneka rasa 99, aneka rasa 99 poris, kemplang bangka tangerang, getas tenggiri poris indah, oleh oleh khas bangka tangerang, kemplang panggang cipondoh, kerupuk bangka poris, terasi bangka asli"
+	/>
+	<meta name="author" content="Toko Aneka Rasa 99" />
+	<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://tokoanekarasa99.my.id/" />
+
+	<!-- Open Graph / Facebook / WhatsApp -->
+	<meta property="og:locale" content="id_ID" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Toko Aneka Rasa 99 | Pusat Kemplang & Oleh-Oleh Khas Bangka di Poris Tangerang" />
+	<meta property="og:description" content="Pusat Kemplang Panggang, Getas Ikan Tenggiri Asli Bangka, Terasi & Aneka Cemilan Khas Bangka di Poris Indah Tangerang. Pesan mudah via WhatsApp." />
+	<meta property="og:url" content="https://tokoanekarasa99.my.id/" />
+	<meta property="og:site_name" content="Toko Aneka Rasa 99" />
+	<meta property="og:image" content="https://tokoanekarasa99.my.id/logo.png" />
+	<meta property="og:image:width" content="800" />
+	<meta property="og:image:height" content="800" />
+	<meta property="og:image:alt" content="Logo Toko Aneka Rasa 99" />
+
+	<!-- Twitter Cards -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Toko Aneka Rasa 99 | Pusat Kemplang & Oleh-Oleh Khas Bangka" />
+	<meta name="twitter:description" content="Pusat Kemplang Panggang, Getas Ikan Tenggiri Asli Bangka, & Oleh-Oleh Khas Bangka Belitung di Poris Indah Tangerang." />
+	<meta name="twitter:image" content="https://tokoanekarasa99.my.id/logo.png" />
+
+	<!-- Local SEO Geo Meta Tags (Poris Indah, Tangerang) -->
+	<meta name="geo.region" content="ID-BT" />
+	<meta name="geo.placename" content="Kota Tangerang" />
+	<meta name="geo.position" content="-6.1783;106.6713" />
+	<meta name="ICBM" content="-6.1783, 106.6713" />
+
+	<!-- Structured Data (JSON-LD) LocalBusiness / Store -->
+	{@html `<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": ["Store", "LocalBusiness"],
+		"name": "Toko Aneka Rasa 99",
+		"alternateName": ["Aneka Rasa 99 Poris", "Toko Aneka Rasa 99 Tangerang"],
+		"url": "https://tokoanekarasa99.my.id",
+		"logo": "https://tokoanekarasa99.my.id/logo.png",
+		"image": "https://tokoanekarasa99.my.id/logo.png",
+		"description": "Pusat Kemplang Panggang, Getas Ikan Tenggiri Asli Bangka, Kerupuk Pasir, Terasi AB, dan Oleh-Oleh Khas Bangka Belitung di Poris Indah Tangerang.",
+		"telephone": "+6281299887766",
+		"priceRange": "Rp 15.000 - Rp 150.000",
+		"currenciesAccepted": "IDR",
+		"paymentAccepted": "Cash, QRIS, Transfer Bank",
+		"address": {
+			"@type": "PostalAddress",
+			"streetAddress": "Perumahan Poris Indah Blok B 11 No. 1, RT 001 / RW 005, Kel. Cipondoh Indah, Kec. Cipondoh",
+			"addressLocality": "Kota Tangerang",
+			"addressRegion": "Banten",
+			"postalCode": "15148",
+			"addressCountry": "ID"
+		},
+		"geo": {
+			"@type": "GeoCoordinates",
+			"latitude": -6.1783,
+			"longitude": 106.6713
+		},
+		"openingHoursSpecification": [
+			{
+				"@type": "OpeningHoursSpecification",
+				"dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+				"opens": "07:30",
+				"closes": "21:30"
+			}
+		],
+		"aggregateRating": {
+			"@type": "AggregateRating",
+			"ratingValue": "4.9",
+			"reviewCount": "128"
+		}
+	}
+	</script>`}
+
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link
