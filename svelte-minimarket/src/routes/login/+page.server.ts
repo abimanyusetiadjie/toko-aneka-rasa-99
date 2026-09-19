@@ -86,12 +86,12 @@ export const actions: Actions = {
 				full_name: user.full_name
 			});
 
-			// Set Cookie (HttpOnly, Secure, Strict)
+			// Set Cookie (HttpOnly, SameSite=Lax, secure=false for HTTP IP access)
 			cookies.set('session_token', token, {
 				path: '/',
 				httpOnly: true,
-				sameSite: 'strict',
-				secure: process.env.NODE_ENV === 'production',
+				sameSite: 'lax',
+				secure: false,
 				maxAge: 60 * 60 * 12 // 12 jam
 			});
 			

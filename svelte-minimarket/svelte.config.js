@@ -8,7 +8,10 @@ const isCloudflare = process.env.CF_PAGES === '1' || process.env.ADAPTER === 'cl
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
-		adapter: isCloudflare ? adapterCloudflare() : adapterNode()
+		adapter: isCloudflare ? adapterCloudflare() : adapterNode(),
+		csrf: {
+			checkOrigin: false
+		}
 	}
 };
 
