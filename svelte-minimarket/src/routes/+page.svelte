@@ -110,11 +110,12 @@
 <div class="min-h-screen font-['Plus_Jakarta_Sans',sans-serif] bg-[#FFFDF9] text-gray-800">
 
 	<!-- ===== FLOATING WHATSAPP BUTTON (ROUND FLOATING / MENGGANTUNG UNTUK SEMUA LAYAR) ===== -->
+	{#if !cartOpen}
 	<a
 		href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin tanya dan pesan oleh-oleh khas Bangka.')}"
 		target="_blank"
 		rel="noopener noreferrer"
-		class="fixed bottom-6 right-6 z-50 group flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 ring-4 ring-white/90"
+		class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 group flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 ring-4 ring-white/90"
 		aria-label="Hubungi WhatsApp Toko Aneka Rasa 99"
 	>
 		<!-- Pulse Ping Animation Effect -->
@@ -130,10 +131,11 @@
 			Chat WhatsApp Kami
 		</span>
 	</a>
+	{/if}
 
 	<!-- ===== MINI CART PANEL ===== -->
 	{#if cartOpen && cart.length > 0}
-	<div class="fixed bottom-0 right-0 left-0 md:left-auto md:right-6 md:bottom-6 md:w-96 z-40 bg-white rounded-t-2xl md:rounded-2xl shadow-2xl border border-gray-200 flex flex-col max-h-[80vh]">
+	<div class="fixed inset-x-0 bottom-0 md:left-auto md:right-6 md:bottom-6 md:w-96 z-50 bg-white rounded-t-3xl md:rounded-2xl shadow-2xl border border-gray-200 flex flex-col max-h-[85vh]">
 		<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-red-600 rounded-t-2xl text-white">
 			<div class="flex items-center gap-2 font-bold">
 				<ShoppingCart class="w-5 h-5" />
@@ -198,18 +200,31 @@
 				</div>
 
 				<!-- Right CTAs -->
-				<div class="flex items-center gap-2">
-					<!-- Cart button (desktop) -->
+				<div class="flex items-center gap-1.5 sm:gap-2">
+					<!-- Cart button (visible on BOTH mobile & desktop when items > 0) -->
+					{#if cartCount > 0}
+					<button
+						onclick={() => cartOpen = !cartOpen}
+						class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition cursor-pointer"
+						aria-label="Keranjang Belanja"
+					>
+						<ShoppingCart class="w-5 h-5" />
+						<span class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-white">{cartCount}</span>
+					</button>
+					{/if}
+
+					<!-- Desktop Cart button when empty -->
+					{#if cartCount === 0}
 					<button
 						onclick={() => cartOpen = !cartOpen}
 						class="relative hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition text-sm font-semibold text-gray-700 cursor-pointer"
 					>
 						<ShoppingCart class="w-4 h-4" />
 						<span>Keranjang</span>
-						{#if cartCount > 0}
-						<span class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-xs font-black w-5 h-5 rounded-full flex items-center justify-center">{cartCount}</span>
-						{/if}
 					</button>
+					{/if}
+
+					<!-- Desktop WA button -->
 					<a
 						href="https://wa.me/{WA_PHONE}"
 						target="_blank"
@@ -217,112 +232,130 @@
 						class="hidden md:flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20ba5a] text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm"
 					>
 						<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-						Pesan via WhatsApp
+						<span>Pesan via WhatsApp</span>
 					</a>
+
 					<!-- Mobile hamburger -->
-					<button onclick={() => mobileMenuOpen = !mobileMenuOpen} class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition text-gray-600" aria-label="Menu">
-						{#if mobileMenuOpen}<X class="w-5 h-5" />{:else}<Menu class="w-5 h-5" />{/if}
+					<button onclick={() => mobileMenuOpen = !mobileMenuOpen} class="md:hidden p-2 rounded-xl hover:bg-gray-100 transition text-gray-600 cursor-pointer" aria-label="Menu">
+						{#if mobileMenuOpen}<X class="w-6 h-6" />{:else}<Menu class="w-6 h-6" />{/if}
 					</button>
 				</div>
 			</div>
 
-			<!-- Mobile Menu -->
+			<!-- Mobile Menu Dropdown -->
 			{#if mobileMenuOpen}
-			<div class="md:hidden pb-4 border-t border-gray-100 pt-3 flex flex-col gap-1">
-				<a href="#produk" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm">Produk</a>
-				<a href="#testimoni" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm">Testimoni</a>
-				<a href="#kontak" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm">Kontak</a>
-				<a href="https://wa.me/{WA_PHONE}" target="_blank" rel="noopener noreferrer" class="mt-2 bg-[#25D366] text-white font-bold text-sm px-4 py-3 rounded-xl flex items-center justify-center gap-2">
-					<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-					<span>Pesan via WhatsApp</span>
+			<div class="md:hidden pb-5 border-t border-gray-100 pt-3 flex flex-col gap-1.5 animate-in slide-in-from-top-2 duration-150">
+				<a href="#produk" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
+					<span>Produk Unggulan</span>
+					<ChevronRight class="w-4 h-4 text-gray-400" />
 				</a>
-				{#if cartCount > 0}
-				<button onclick={() => { cartOpen = true; mobileMenuOpen = false; }} class="mt-1 bg-red-600 text-white font-bold text-sm px-4 py-3 rounded-xl flex items-center justify-center gap-2">
-					<ShoppingCart class="w-4 h-4" /> Keranjang ({cartCount})
-				</button>
-				{/if}
+				<a href="#keunggulan" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
+					<span>Keunggulan Kami</span>
+					<ChevronRight class="w-4 h-4 text-gray-400" />
+				</a>
+				<a href="#testimoni" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
+					<span>Testimoni Pelanggan</span>
+					<ChevronRight class="w-4 h-4 text-gray-400" />
+				</a>
+				<a href="#kontak" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
+					<span>Lokasi & Kontak Toko</span>
+					<ChevronRight class="w-4 h-4 text-gray-400" />
+				</a>
+				<a href="/pos" class="px-3 py-2.5 rounded-xl font-semibold text-gray-500 hover:bg-gray-50 transition text-xs flex items-center gap-1.5">
+					<User class="w-4 h-4 text-gray-400" />
+					<span>Portal Staf / Kasir</span>
+				</a>
+				<div class="pt-2 flex flex-col gap-2">
+					<a href="https://wa.me/{WA_PHONE}" target="_blank" rel="noopener noreferrer" class="bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-sm px-4 py-3 rounded-xl flex items-center justify-center gap-2 shadow-sm">
+						<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+						<span>Pesan via WhatsApp</span>
+					</a>
+					<a href="https://shopee.co.id/tokoanekarasa99" target="_blank" rel="noopener noreferrer" class="bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-4 py-3 rounded-xl flex items-center justify-center gap-2 shadow-sm">
+						<ShoppingBag class="w-4 h-4" />
+						<span>Buka Toko di Shopee</span>
+					</a>
+				</div>
 			</div>
 			{/if}
 		</nav>
 	</header>
 
 	<!-- ===== HERO SECTION ===== -->
-	<section class="relative overflow-hidden bg-gradient-to-br from-[#FFF8F0] via-[#FFFDF9] to-[#FFF1E6] pt-14 pb-20 md:pt-20 md:pb-28">
+	<section class="relative overflow-hidden bg-gradient-to-br from-[#FFF8F0] via-[#FFFDF9] to-[#FFF1E6] pt-8 pb-14 sm:pt-14 sm:pb-20 md:pt-20 md:pb-28">
 		<!-- Decorative blobs -->
 		<div class="absolute -top-20 -left-20 w-80 h-80 bg-red-100 rounded-full mix-blend-multiply blur-3xl opacity-40 pointer-events-none"></div>
 		<div class="absolute -bottom-20 -right-20 w-96 h-96 bg-amber-100 rounded-full mix-blend-multiply blur-3xl opacity-40 pointer-events-none"></div>
 
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-			<div class="grid lg:grid-cols-2 gap-12 items-center">
+			<div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 				<!-- Left: copy -->
-				<div>
-					<h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mb-5">
+				<div class="text-center lg:text-left">
+					<h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mb-4 sm:mb-5">
 						Kemplang & Oleh-Oleh<br />
 						<span class="text-red-600">Khas Bangka</span><br />
 						<span class="text-amber-500">Renyah & Asli</span>
 					</h1>
-					<p class="text-base sm:text-lg text-gray-600 mb-8 leading-relaxed max-w-lg">
+					<p class="text-sm sm:text-base lg:text-lg text-gray-600 mb-6 sm:mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0">
 						Pusat Kemplang Panggang, Getas Ikan Tenggiri, Terasi Asli, dan ratusan oleh-oleh khas Bangka Belitung terbaik. Tersedia di Poris Indah, Tangerang — siap kirim ke seluruh Indonesia.
 					</p>
 					<!-- CTA buttons -->
-					<div class="flex flex-wrap gap-3 mb-8">
+					<div class="flex flex-col sm:flex-row gap-3 mb-6 sm:mb-8 justify-center lg:justify-start">
 						<a
 							href="https://wa.me/{WA_PHONE}"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all text-sm"
+							class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all text-sm active:scale-98"
 						>
 							<svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
 							<span>Pesan via WhatsApp</span>
 						</a>
 						<a
 							href="#produk"
-							class="inline-flex items-center gap-2 bg-white border-2 border-red-200 hover:border-red-400 text-red-600 font-bold px-6 py-3.5 rounded-xl transition text-sm"
+							class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white border-2 border-red-200 hover:border-red-400 text-red-600 font-bold px-6 py-3.5 rounded-xl transition text-sm active:scale-98"
 						>
-							Lihat Produk
+							<span>Lihat Produk</span>
 							<ChevronRight class="w-4 h-4" />
 						</a>
 					</div>
 					<!-- Trust strip -->
-					<div class="flex flex-wrap gap-4 text-xs font-semibold text-gray-500">
-						<span class="flex items-center gap-1.5"><ShieldCheck class="w-4 h-4 text-green-500" />Produk Halal</span>
-						<span class="flex items-center gap-1.5"><Truck class="w-4 h-4 text-blue-500" />Kirim Seluruh Indonesia</span>
-						<span class="flex items-center gap-1.5"><Award class="w-4 h-4 text-amber-500" />Kualitas Terjamin</span>
-						<span class="flex items-center gap-1.5"><Star class="w-4 h-4 text-yellow-400" />4.9★ (128 ulasan)</span>
+					<div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2.5 sm:gap-4 text-xs font-semibold text-gray-600 text-left">
+						<span class="flex items-center gap-1.5 bg-white/80 p-2 sm:p-0 rounded-lg border sm:border-0 border-gray-100"><ShieldCheck class="w-4 h-4 text-green-500 shrink-0" />Produk Halal</span>
+						<span class="flex items-center gap-1.5 bg-white/80 p-2 sm:p-0 rounded-lg border sm:border-0 border-gray-100"><Truck class="w-4 h-4 text-blue-500 shrink-0" />Kirim Nasional</span>
+						<span class="flex items-center gap-1.5 bg-white/80 p-2 sm:p-0 rounded-lg border sm:border-0 border-gray-100"><Award class="w-4 h-4 text-amber-500 shrink-0" />Mutu Terjamin</span>
+						<span class="flex items-center gap-1.5 bg-white/80 p-2 sm:p-0 rounded-lg border sm:border-0 border-gray-100"><Star class="w-4 h-4 text-yellow-400 fill-yellow-400 shrink-0" />4.9★ (128 ulasan)</span>
 					</div>
 				</div>
 
 				<!-- Right: hero card with 3 best sellers -->
-				<div class="relative">
-					<div class="bg-white rounded-3xl shadow-2xl border border-gray-100 p-6">
-						<div class="flex items-center gap-2 mb-4">
-							<span class="text-xl">🏆</span>
-							<h2 class="font-black text-gray-800 text-lg">3 Produk Terlaris</h2>
+				<div class="relative mt-4 lg:mt-0">
+					<div class="bg-white rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl border border-gray-100 p-4 sm:p-6">
+						<div class="flex items-center justify-between gap-2 mb-3.5">
+							<div class="flex items-center gap-2">
+								<span class="text-xl">🏆</span>
+								<h2 class="font-black text-gray-800 text-base sm:text-lg">3 Produk Terlaris</h2>
+							</div>
+							<span class="bg-amber-100 text-amber-900 text-[10px] font-black px-2 py-0.5 rounded-full">Favorit</span>
 						</div>
-						<div class="space-y-3">
+						<div class="space-y-2.5 sm:space-y-3">
 							{#each FEATURED.slice(0, 3) as item, i}
-							<div class="flex items-center gap-4 p-3 rounded-xl {i === 0 ? 'bg-red-50 border border-red-100' : 'bg-gray-50'}">
-								<span class="text-3xl">{item.emoji}</span>
+							<div class="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-xl {i === 0 ? 'bg-red-50/80 border border-red-100' : 'bg-gray-50'}">
+								<span class="text-2xl sm:text-3xl shrink-0">{item.emoji}</span>
 								<div class="flex-1 min-w-0">
-									<p class="font-bold text-sm text-gray-800 truncate">{item.name}</p>
-									<p class="text-xs text-gray-500">Rp {formatCurrency(item.price)} / bks</p>
+									<p class="font-bold text-xs sm:text-sm text-gray-800 truncate">{item.name}</p>
+									<p class="text-[11px] sm:text-xs text-gray-500">Rp {formatCurrency(item.price)}</p>
 								</div>
 								<button
 									onclick={() => addToCart(item)}
-									class="shrink-0 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1"
+									class="shrink-0 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-2.5 sm:px-3 py-1.5 rounded-lg transition flex items-center gap-1 active:scale-95 cursor-pointer"
 								>
 									<Plus class="w-3 h-3" />Tambah
 								</button>
 							</div>
 							{/each}
 						</div>
-						<a href="#produk" class="mt-4 flex items-center justify-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700 transition">
+						<a href="#produk" class="mt-3.5 flex items-center justify-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700 transition">
 							Lihat Semua Produk <ArrowRight class="w-3.5 h-3.5" />
 						</a>
-					</div>
-					<!-- Floating badge -->
-					<div class="absolute -top-3 -right-3 bg-amber-400 text-amber-900 text-xs font-black px-3 py-1.5 rounded-full shadow-lg rotate-3">
-						✨ Stok Terbatas!
 					</div>
 				</div>
 			</div>
@@ -574,12 +607,12 @@
 				</div>
 
 				<!-- Right: Quick order form -->
-				<div class="bg-gradient-to-br from-red-600 to-red-700 rounded-3xl p-7 text-white shadow-xl">
-					<div class="flex items-center gap-2 mb-6">
+				<div class="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl sm:rounded-3xl p-5 sm:p-7 text-white shadow-xl">
+					<div class="flex items-center gap-2 mb-5 sm:mb-6">
 						<ShoppingBag class="w-6 h-6" />
-						<h3 class="font-black text-xl">Form Pesan Cepat</h3>
+						<h3 class="font-black text-lg sm:text-xl">Form Pesan Cepat</h3>
 					</div>
-					<form onsubmit={handleQuickOrderSubmit} class="space-y-4">
+					<form onsubmit={handleQuickOrderSubmit} class="space-y-3.5 sm:space-y-4">
 						<div>
 							<label for="cname" class="block text-xs font-bold text-red-100 mb-1.5">Nama Anda</label>
 							<input
@@ -587,7 +620,7 @@
 								type="text"
 								bind:value={customerName}
 								placeholder="Contoh: Ibu Sari"
-								class="w-full px-4 py-3 rounded-xl bg-white/15 border border-white/20 text-white placeholder-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-white/40 transition"
+								class="w-full px-4 py-3 rounded-xl bg-white/15 border border-white/20 text-white placeholder-white/50 text-base focus:outline-none focus:ring-2 focus:ring-white/40 transition"
 							/>
 						</div>
 						<div>
@@ -597,7 +630,7 @@
 								type="text"
 								bind:value={customerCity}
 								placeholder="Contoh: Jakarta Selatan"
-								class="w-full px-4 py-3 rounded-xl bg-white/15 border border-white/20 text-white placeholder-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-white/40 transition"
+								class="w-full px-4 py-3 rounded-xl bg-white/15 border border-white/20 text-white placeholder-white/50 text-base focus:outline-none focus:ring-2 focus:ring-white/40 transition"
 							/>
 						</div>
 						<div>
@@ -605,7 +638,7 @@
 							<select
 								id="cprod"
 								bind:value={selectedQuickProduct}
-								class="w-full px-4 py-3 rounded-xl bg-white/15 border border-white/20 text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/40 transition appearance-none"
+								class="w-full px-4 py-3 rounded-xl bg-white/15 border border-white/20 text-white text-base focus:outline-none focus:ring-2 focus:ring-white/40 transition appearance-none"
 							>
 								<option value="" class="text-gray-800">-- Pilih Produk --</option>
 								{#each FEATURED as p}
@@ -622,7 +655,7 @@
 								bind:value={orderNotes}
 								rows={2}
 								placeholder="Jumlah, variasi, atau permintaan khusus..."
-								class="w-full px-4 py-3 rounded-xl bg-white/15 border border-white/20 text-white placeholder-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-white/40 transition resize-none"
+								class="w-full px-4 py-3 rounded-xl bg-white/15 border border-white/20 text-white placeholder-white/50 text-base focus:outline-none focus:ring-2 focus:ring-white/40 transition resize-none"
 							></textarea>
 						</div>
 						<button
