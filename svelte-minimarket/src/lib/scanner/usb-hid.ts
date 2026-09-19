@@ -20,7 +20,7 @@ export class BarcodeScannerListener {
 
 	constructor(options: ScannerOptions) {
 		this.minChars = options.minChars || 3;
-		this.maxIntervalMs = options.maxIntervalMs || 45;
+		this.maxIntervalMs = options.maxIntervalMs || 75;
 		this.onScan = options.onScan;
 
 		this.handler = this.handleKeyDown.bind(this);
