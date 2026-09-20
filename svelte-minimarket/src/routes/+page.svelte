@@ -4,7 +4,7 @@
 		Phone, MapPin, Clock, Star, ShoppingBag, ShieldCheck,
 		ChevronRight, Menu, X, ArrowRight, Truck, Award, Sparkles,
 		MessageCircle, ExternalLink, User, ShoppingCart,
-		Plus, Minus, Trash2, CheckCircle2, ThumbsUp, Package
+		Plus, Minus, Trash2, CheckCircle2, ThumbsUp
 	} from 'lucide-svelte';
 
 	let { data }: { data: PageData } = $props();
@@ -182,9 +182,7 @@
 			<div class="flex items-center justify-between h-16">
 				<!-- Brand -->
 				<a href="/" class="flex items-center gap-2 sm:gap-2.5 group min-w-0">
-					<div class="w-9 h-9 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform shrink-0">
-						<ShoppingBag class="w-5 h-5 text-white" />
-					</div>
+					<img src="/logo.png" alt="Toko Aneka Rasa 99" class="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-xs group-hover:scale-105 transition-transform shrink-0" />
 					<div class="min-w-0">
 						<p class="font-black text-gray-900 text-sm leading-tight truncate">Toko Aneka Rasa 99</p>
 						<p class="text-[11px] text-red-600 font-semibold truncate hidden xs:block">Kemplang & Oleh-Oleh Bangka</p>
@@ -483,13 +481,13 @@
 
 			<div class="mt-8 sm:mt-10 flex justify-center">
 				<a
-					href="https://wa.me/{WA_PHONE}?text=Halo%20Toko%20Aneka%20Rasa%2099%2C%20saya%20mau%20lihat%20katalog%20lengkap%20produk%20tersedia."
+					href="https://shopee.co.id/tokoanekarasa99"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white border-2 border-red-200 hover:border-red-400 text-red-600 font-bold px-4 sm:px-8 py-3.5 rounded-xl transition shadow-sm text-xs sm:text-sm text-center"
+					class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold px-5 sm:px-8 py-3.5 rounded-xl transition shadow-md hover:shadow-lg text-xs sm:text-sm text-center active:scale-98"
 				>
-					<Package class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-					<span>Lihat Katalog Lengkap via WhatsApp</span>
+					<ShoppingBag class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+					<span>Lihat Semua Produk di Shopee</span>
 					<ExternalLink class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
 				</a>
 			</div>
@@ -702,9 +700,7 @@
 				<!-- Brand -->
 				<div class="min-w-0">
 					<div class="flex items-center gap-2.5 mb-3 sm:mb-4">
-						<div class="w-9 h-9 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center shadow-md shrink-0">
-							<ShoppingBag class="w-5 h-5 text-white" />
-						</div>
+						<img src="/logo.png" alt="Toko Aneka Rasa 99" class="w-10 h-10 rounded-full object-cover border border-slate-700 shadow-md shrink-0" />
 						<div class="min-w-0">
 							<p class="font-black text-white text-sm truncate">Toko Aneka Rasa 99</p>
 							<p class="text-xs text-red-400 truncate">Kemplang & Oleh-Oleh Bangka</p>
