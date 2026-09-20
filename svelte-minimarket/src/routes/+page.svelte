@@ -11,23 +11,23 @@
 
 	const WA_PHONE = '6281387109586';
 	const STORE_NAME = 'Toko Aneka Rasa 99';
-	const STORE_ADDRESS = 'Perumahan Poris Indah Blok B 11 No. 1, RT 001/RW 005, Kel. Cipondoh Indah, Kec. Cipondoh, Kota Tangerang, Banten 15148';
+	const STORE_ADDRESS = 'Jl. Raya Poris Indah, RT.007/RW.010, Cipondoh Indah, Kec. Cipondoh, Kota Tangerang, Banten 15122';
 	const STORE_HOURS = 'Buka Setiap Hari: 07.30 – 21.30 WIB';
 
 	let mobileMenuOpen = $state(false);
 	let cartOpen = $state(false);
 
-	interface FeaturedProduct { id: string; name: string; desc: string; price: number; emoji: string; badge: string; }
+	interface FeaturedProduct { id: string; name: string; desc: string; price: number; image: string; badge: string; }
 
 	const FEATURED: FeaturedProduct[] = [
-		{ id: 'fp1', name: 'Kemplang Panggang Cap MM', desc: 'Dipanggang di atas bara arang. Aroma asap harum, tekstur renyah di luar dan empuk di dalam. Disertai sambal terasi khas. Tanpa pengawet.', price: 37500, emoji: '🔥', badge: 'Terlaris' },
-		{ id: 'fp2', name: 'Getas Bulat Cap Tiga Roda', desc: 'Getas bulat dari ikan tenggiri pilihan. Renyah, gurih, dan tidak terlalu asin. Cocok untuk camilan sehari-hari atau oleh-oleh.', price: 42500, emoji: '🐟', badge: 'Favorit' },
-		{ id: 'fp3', name: 'Terasi AB No.1 Asli Bangka', desc: 'Terasi udang rebon super. Wangi khas, warna natural, tanpa pewarna. Langsung dari pengolahan tradisional Bangka.', price: 55000, emoji: '🌶️', badge: 'Original' },
-		{ id: 'fp4', name: 'Kemplang Goreng Pasir Tjokro', desc: 'Kemplang goreng pasir dengan tekstur ekstra renyah. Rasa gurih ikan tenggiri yang kuat. Cocok dimakan langsung atau lauk.', price: 32000, emoji: '🟡', badge: 'Crispy' },
-		{ id: 'fp5', name: 'Getas Amplang Ikan Tenggiri', desc: 'Camilan khas Bangka berbahan ikan tenggiri. Bentuk bulat, renyah, dan tahan lama. Favorit untuk dibawa pulang.', price: 25000, emoji: '🫙', badge: 'Hemat' },
-		{ id: 'fp6', name: 'Kericu Keripik Telur Cumi', desc: 'Keripik dari telur cumi segar. Gurih, renyah, dan aroma cumi yang khas. Camilan premium khas Bangka.', price: 30000, emoji: '🦑', badge: 'Premium' },
-		{ id: 'fp7', name: 'Lempok Cempedak', desc: 'Manisan cempedak tradisional. Manis legit, tekstur lembut, dibuat dengan resep turun-temurun.', price: 35000, emoji: '🍬', badge: 'Manis' },
-		{ id: 'fp8', name: 'Kecap Asin Bangka Cap Siong', desc: 'Kecap asin khas Bangka. Rasa gurih dan pas untuk masakan sehari-hari maupun oleh-oleh.', price: 18000, emoji: '🫗', badge: 'Bumbu' }
+		{ id: 'fp1', name: 'Kemplang Panggang Cap MM', desc: 'Dipanggang di atas bara arang. Aroma asap harum, tekstur renyah di luar dan empuk di dalam. Disertai sambal terasi khas. Tanpa pengawet.', price: 37500, image: '/images/products/kemplang.png', badge: 'Terlaris' },
+		{ id: 'fp2', name: 'Getas Bulat Cap Tiga Roda', desc: 'Getas bulat dari ikan tenggiri pilihan. Renyah, gurih, dan tidak terlalu asin. Cocok untuk camilan sehari-hari atau oleh-oleh.', price: 42500, image: '/images/products/getas.png', badge: 'Favorit' },
+		{ id: 'fp3', name: 'Terasi AB No.1 Asli Bangka', desc: 'Terasi udang rebon super asli Bangka. Wangi khas, warna natural tanpa pewarna, diolah secara higienis dan tradisional.', price: 55000, image: '/images/products/terasi.png', badge: 'Original' },
+		{ id: 'fp4', name: 'Kemplang Goreng Pasir Tjokro', desc: 'Kemplang goreng pasir dengan tekstur ekstra renyah. Rasa gurih ikan tenggiri yang kuat. Cocok dimakan langsung atau lauk.', price: 32000, image: '/images/products/kemplang.png', badge: 'Crispy' },
+		{ id: 'fp5', name: 'Getas Amplang Ikan Tenggiri', desc: 'Camilan khas Bangka berbahan ikan tenggiri asli. Bentuk bulat renyah, gurih tahan lama, oleh-oleh favorit keluarga.', price: 25000, image: '/images/products/getas.png', badge: 'Hemat' },
+		{ id: 'fp6', name: 'Kericu Keripik Telur Cumi', desc: 'Keripik gurih dari telur cumi segar pilihan khas Bangka. Tekstur renyah krispi dengan cita rasa seafood istimewa.', price: 30000, image: '/images/products/snack-kericu.png', badge: 'Premium' },
+		{ id: 'fp7', name: 'Kerupuk Mentah Khas Bangka', desc: 'Kerupuk mentah kualitas istimewa khas Bangka. Mudah digoreng, mekar sempurna, renyah dan gurih alami.', price: 35000, image: '/images/products/kerupuk-mentah.png', badge: 'Siap Goreng' },
+		{ id: 'fp8', name: 'Aneka Kue Tradisional Bangka', desc: 'Kue tradisional khas Bangka dibuat dengan resep turun-temurun. Manis, gurih, legit, cocok untuk teman santai dan oleh-oleh.', price: 28000, image: '/images/products/kue.png', badge: 'Tradisional' }
 	];
 
 	interface CartItem extends FeaturedProduct { qty: number; }
@@ -101,7 +101,7 @@
 	<meta name="geo.placename" content="Kota Tangerang" />
 	<meta name="geo.position" content="-6.1783;106.6713" />
 	<meta name="ICBM" content="-6.1783, 106.6713" />
-	{@html `<script type="application/ld+json">{"@context":"https://schema.org","@type":["Store","LocalBusiness"],"name":"Toko Aneka Rasa 99","url":"https://tokoanekarasa99.my.id","telephone":"+6281387109586","address":{"@type":"PostalAddress","streetAddress":"Perumahan Poris Indah Blok B 11 No. 1, RT 001/RW 005, Kel. Cipondoh Indah","addressLocality":"Kota Tangerang","addressRegion":"Banten","postalCode":"15148","addressCountry":"ID"},"geo":{"@type":"GeoCoordinates","latitude":-6.1783,"longitude":106.6713},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"07:30","closes":"21:30"}],"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"128"}}<\/script>`}
+	{@html `<script type="application/ld+json">{"@context":"https://schema.org","@type":["Store","LocalBusiness"],"name":"Toko Aneka Rasa 99","url":"https://tokoanekarasa99.my.id","telephone":"+6281387109586","address":{"@type":"PostalAddress","streetAddress":"Jl. Raya Poris Indah, RT.007/RW.010, Kel. Cipondoh Indah","addressLocality":"Kota Tangerang","addressRegion":"Banten","postalCode":"15122","addressCountry":"ID"},"geo":{"@type":"GeoCoordinates","latitude":-6.1783,"longitude":106.6713},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"07:30","closes":"21:30"}],"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"128"}}<\/script>`}
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -146,7 +146,7 @@
 		<div class="overflow-y-auto flex-1 px-3 sm:px-4 py-2 divide-y divide-gray-100">
 			{#each cart as item}
 			<div class="flex items-center gap-2.5 sm:gap-3 py-3 min-w-0">
-				<span class="text-2xl shrink-0">{item.emoji}</span>
+				<img src={item.image} alt={item.name} class="w-11 h-11 rounded-lg object-cover border border-amber-100 shadow-2xs shrink-0" />
 				<div class="flex-1 min-w-0">
 					<p class="font-semibold text-xs sm:text-sm text-gray-800 truncate">{item.name}</p>
 					<p class="text-[11px] sm:text-xs text-gray-500">Rp {formatCurrency(item.price)} / bks</p>
@@ -355,7 +355,7 @@
 						<div class="space-y-2 sm:space-y-3">
 							{#each FEATURED.slice(0, 3) as item, i}
 							<div class="flex items-center gap-2.5 sm:gap-4 p-2 sm:p-3 rounded-xl {i === 0 ? 'bg-red-50/80 border border-red-100' : 'bg-gray-50'} min-w-0">
-								<span class="text-2xl sm:text-3xl shrink-0">{item.emoji}</span>
+								<img src={item.image} alt={item.name} class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl object-cover border border-amber-100 shadow-xs shrink-0" />
 								<div class="flex-1 min-w-0">
 									<p class="font-bold text-xs sm:text-sm text-gray-800 truncate">{item.name}</p>
 									<p class="text-[10px] sm:text-xs text-gray-500">Rp {formatCurrency(item.price)}</p>
@@ -442,10 +442,15 @@
 			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
 				{#each FEATURED as product}
 				<div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all group overflow-hidden flex flex-col min-w-0">
-					<!-- Emoji illustration area -->
-					<div class="bg-gradient-to-br from-amber-50 to-red-50 h-32 flex items-center justify-center relative">
-						<span class="text-6xl group-hover:scale-110 transition-transform duration-300">{product.emoji}</span>
-						<span class="absolute top-2 right-2 bg-red-600 text-white text-[11px] font-black px-2 py-0.5 rounded-full">{product.badge}</span>
+					<!-- Product Image Area -->
+					<div class="h-44 sm:h-48 bg-gradient-to-br from-amber-50/60 to-red-50/60 overflow-hidden relative group/img">
+						<img
+							src={product.image}
+							alt={product.name}
+							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+							loading="lazy"
+						/>
+						<span class="absolute top-2.5 right-2.5 bg-red-600 text-white text-[11px] font-black px-2.5 py-0.5 rounded-full shadow-xs">{product.badge}</span>
 					</div>
 					<!-- Content -->
 					<div class="p-3.5 sm:p-4 flex flex-col flex-1 min-w-0">
@@ -592,6 +597,16 @@
 						<div class="flex-1 min-w-0">
 							<p class="font-bold text-gray-800 text-xs sm:text-sm mb-0.5">Alamat Toko</p>
 							<p class="text-xs sm:text-sm text-gray-600 leading-relaxed break-words">{STORE_ADDRESS}</p>
+							<a
+								href="https://www.google.com/maps/search/?api=1&query=TOKO+ANEKA+RASA+99,+Jl.+Raya+Poris+Indah,+RT.007/RW.010,+Cipondoh+Indah,+Cipondoh,+Tangerang+City,+Banten+15122"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg border border-red-200 transition mt-2.5"
+							>
+								<MapPin class="w-3.5 h-3.5" />
+								<span>Buka Petunjuk Arah di Google Maps</span>
+								<ExternalLink class="w-3 h-3 ml-0.5" />
+							</a>
 						</div>
 					</div>
 					<div class="flex items-start gap-3 sm:gap-4 p-3.5 sm:p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-xs transition min-w-0">
@@ -608,10 +623,26 @@
 							<p class="text-xs sm:text-sm text-gray-600">{STORE_HOURS}</p>
 						</div>
 					</div>
+					<!-- Banner Toko Fisik -->
+					<div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group bg-white">
+						<img
+							src="/images/banner-toko.png"
+							alt="Spanduk Toko Aneka Rasa 99"
+							class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-300"
+							loading="lazy"
+						/>
+						<div class="p-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs">
+							<span class="font-bold text-gray-800 flex items-center gap-1.5">
+								<MapPin class="w-3.5 h-3.5 text-red-600 shrink-0" />
+								Kios Toko Aneka Rasa 99 - Poris Indah
+							</span>
+							<span class="text-gray-400 text-[11px] shrink-0">Kios Resmi</span>
+						</div>
+					</div>
 					<!-- Google Maps embed -->
 					<div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm w-full max-w-full aspect-video sm:aspect-auto sm:h-[220px]">
 						<iframe
-							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d247.5!2d106.6713!3d-6.1783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTAnNDIuMCJTIDEwNsKwNDAnMTYuNyJF!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
+							src="https://maps.google.com/maps?q=TOKO+ANEKA+RASA+99,+Jl.+Raya+Poris+Indah,+RT.007/RW.010,+Cipondoh+Indah,+Cipondoh,+Tangerang+City,+Banten+15122&t=&z=16&ie=UTF8&iwloc=&output=embed"
 							width="100%"
 							height="100%"
 							style="border:0;"
