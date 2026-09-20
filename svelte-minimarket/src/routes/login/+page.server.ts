@@ -4,8 +4,15 @@ import { query } from '$lib/server/db';
 import * as bcrypt from 'bcryptjs';
 import { createSessionToken } from '$lib/server/auth';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
 	if (locals.user) {
+		const redirectTo = url.searchParams.get('redirect');
+		if (redirectTo) {
+			if (redirectTo.startsWith('/admin') && locals.user.role_id !== 1) {
+				throw redirect(303, '/pos');
+			}
+			throw redirect(303, redirectTo);
+		}
 		if (locals.user.role_id === 1) throw redirect(303, '/admin/dashboard');
 		throw redirect(303, '/pos');
 	}
@@ -104,6 +111,9 @@ export const actions: Actions = {
 
 		// Jika berhasil login, redirect sesuai param atau role
 		if (redirectTo) {
+			if (redirectTo.startsWith('/admin') && targetUser.role_id !== 1) {
+				throw redirect(303, '/pos');
+			}
 			throw redirect(303, redirectTo);
 		}
 

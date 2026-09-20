@@ -196,7 +196,6 @@
 					<a href="#cara-pesan" class="hover:text-red-600 transition">Cara Pesan</a>
 					<a href="#testimoni" class="hover:text-red-600 transition">Testimoni</a>
 					<a href="#kontak" class="hover:text-red-600 transition">Kontak</a>
-					<a href="/pos" class="text-gray-400 hover:text-gray-600 flex items-center gap-1 text-xs transition"><User class="w-3.5 h-3.5" />Kasir</a>
 				</div>
 
 				<!-- Right CTAs -->
@@ -264,10 +263,6 @@
 				<a href="#kontak" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
 					<span>Lokasi & Kontak Toko</span>
 					<ChevronRight class="w-4 h-4 text-gray-400 shrink-0" />
-				</a>
-				<a href="/pos" class="px-3 py-2.5 rounded-xl font-semibold text-gray-500 hover:bg-gray-50 transition text-xs flex items-center gap-1.5">
-					<User class="w-4 h-4 text-gray-400 shrink-0" />
-					<span>Portal Staf / Kasir</span>
 				</a>
 				<div class="pt-2 flex flex-col gap-2 w-full">
 					<a href="https://wa.me/{WA_PHONE}" target="_blank" rel="noopener noreferrer" class="bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-sm px-4 py-3 rounded-xl flex items-center justify-center gap-2 shadow-xs text-center w-full">
@@ -757,10 +752,10 @@
 						<li><a href="#cara-pesan" class="hover:text-white transition flex items-center gap-1.5"><ChevronRight class="w-3.5 h-3.5 text-red-400 shrink-0" />Cara Pesan</a></li>
 						<li><a href="#testimoni" class="hover:text-white transition flex items-center gap-1.5"><ChevronRight class="w-3.5 h-3.5 text-red-400 shrink-0" />Testimoni</a></li>
 						<li><a href="#kontak" class="hover:text-white transition flex items-center gap-1.5"><ChevronRight class="w-3.5 h-3.5 text-red-400 shrink-0" />Kontak & Lokasi</a></li>
-						<li>
-							<a href="/pos" class="hover:text-white transition flex items-center gap-1.5 opacity-50">
-								<ChevronRight class="w-3.5 h-3.5 text-gray-500 shrink-0" />
-								<User class="w-3 h-3 shrink-0" />Portal Kasir
+						<li class="pt-2 border-t border-gray-800/80">
+							<a href="/login" class="text-gray-400 hover:text-white transition flex items-center gap-1.5 font-medium">
+								<ChevronRight class="w-3.5 h-3.5 text-amber-400 shrink-0" />
+								<User class="w-3.5 h-3.5 shrink-0 text-amber-400" />Login Sistem (Owner & Kasir)
 							</a>
 						</li>
 					</ul>
@@ -781,7 +776,7 @@
 				<p>© {new Date().getFullYear()} Toko Aneka Rasa 99. Semua Hak Dilindungi.</p>
 				<div class="flex items-center gap-4">
 					<a href="https://tokoanekarasa99.my.id/" class="hover:text-white transition">tokoanekarasa99.my.id</a>
-					<a href="/pos" class="hover:text-white transition flex items-center gap-1 opacity-40"><ExternalLink class="w-3 h-3" />Kasir Portal</a>
+					<a href="/login" class="text-gray-500 hover:text-gray-300 transition flex items-center gap-1"><User class="w-3 h-3" />Login Sistem</a>
 				</div>
 			</div>
 		</div>
