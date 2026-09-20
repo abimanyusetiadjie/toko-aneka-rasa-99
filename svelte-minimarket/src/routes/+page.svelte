@@ -107,7 +107,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 </svelte:head>
 
-<div class="min-h-screen font-['Plus_Jakarta_Sans',sans-serif] bg-[#FFFDF9] text-gray-800 w-full max-w-full overflow-x-hidden">
+<div class="min-h-screen font-['Plus_Jakarta_Sans',sans-serif] bg-[#FFFDF9] text-gray-800 w-full max-w-full overflow-x-hidden overflow-x-clip">
 
 	<!-- ===== FLOATING WHATSAPP BUTTON (ROUND FLOATING / MENGGANTUNG UNTUK SEMUA LAYAR) ===== -->
 	{#if !cartOpen}
@@ -288,15 +288,15 @@
 	</header>
 
 	<!-- ===== HERO SECTION ===== -->
-	<section class="relative overflow-hidden w-full max-w-full isolate bg-gradient-to-br from-[#FFF8F0] via-[#FFFDF9] to-[#FFF1E6] pt-6 pb-12 sm:pt-14 sm:pb-20 md:pt-20 md:pb-28">
-		<!-- Decorative blobs (strictly contained) -->
-		<div class="absolute -top-16 -left-16 w-64 h-64 sm:w-80 sm:h-80 bg-red-100/70 rounded-full mix-blend-multiply blur-3xl opacity-40 pointer-events-none"></div>
-		<div class="absolute -bottom-16 -right-16 w-64 h-64 sm:w-96 sm:h-96 bg-amber-100/70 rounded-full mix-blend-multiply blur-3xl opacity-40 pointer-events-none"></div>
+	<section class="relative overflow-hidden overflow-x-clip w-full max-w-full isolate bg-gradient-to-br from-[#FFF8F0] via-[#FFFDF9] to-[#FFF1E6] pt-6 pb-12 sm:pt-14 sm:pb-20 md:pt-20 md:pb-28">
+		<!-- Decorative blobs (hidden on mobile to guarantee zero overflow) -->
+		<div class="hidden sm:block absolute top-0 left-0 w-72 h-72 bg-red-100/60 rounded-full mix-blend-multiply blur-3xl opacity-40 pointer-events-none"></div>
+		<div class="hidden sm:block absolute bottom-0 right-0 w-72 h-72 bg-amber-100/60 rounded-full mix-blend-multiply blur-3xl opacity-40 pointer-events-none"></div>
 
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-			<div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+		<div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10 w-full max-w-full">
+			<div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full max-w-full">
 				<!-- Left: copy -->
-				<div class="text-center lg:text-left min-w-0">
+				<div class="text-center lg:text-left min-w-0 w-full max-w-full">
 					<h1 class="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-gray-900 leading-[1.15] sm:leading-tight mb-3 sm:mb-5 tracking-tight break-words">
 						Kemplang & Oleh-Oleh<br />
 						<span class="text-red-600">Khas Bangka</span><br />
@@ -306,41 +306,41 @@
 						Pusat Kemplang Panggang, Getas Ikan Tenggiri, Terasi Asli, dan ratusan oleh-oleh khas Bangka Belitung terbaik. Tersedia di Poris Indah, Tangerang — siap kirim ke seluruh Indonesia.
 					</p>
 					<!-- CTA buttons -->
-					<div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mb-5 sm:mb-8 justify-center lg:justify-start w-full">
+					<div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mb-5 sm:mb-8 justify-center lg:justify-start w-full max-w-full">
 						<a
 							href="https://wa.me/{WA_PHONE}"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold px-5 sm:px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all text-sm active:scale-98 text-center"
+							class="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold px-4 sm:px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all text-sm active:scale-98 text-center box-border"
 						>
 							<svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-							<span>Pesan via WhatsApp</span>
+							<span class="truncate">Pesan via WhatsApp</span>
 						</a>
 						<a
 							href="#produk"
-							class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white border-2 border-red-200 hover:border-red-400 text-red-600 font-bold px-5 sm:px-6 py-3.5 rounded-xl transition text-sm active:scale-98 text-center"
+							class="w-full sm:w-auto flex items-center justify-center gap-2 bg-white border-2 border-red-200 hover:border-red-400 text-red-600 font-bold px-4 sm:px-6 py-3.5 rounded-xl transition text-sm active:scale-98 text-center box-border"
 						>
 							<span>Lihat Produk</span>
 							<ChevronRight class="w-4 h-4 shrink-0" />
 						</a>
 					</div>
 					<!-- Trust strip -->
-					<div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3 text-xs font-semibold text-gray-600 text-left">
-						<div class="flex items-center gap-1.5 bg-white/90 px-2.5 py-2 sm:p-0 rounded-lg border sm:border-0 border-gray-100 shadow-xs sm:shadow-none min-w-0">
+					<div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3 text-xs font-semibold text-gray-600 text-left w-full max-w-full">
+						<div class="flex items-center gap-1 sm:gap-1.5 bg-white/90 px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-lg border border-gray-100 shadow-xs sm:shadow-none min-w-0">
 							<ShieldCheck class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-500 shrink-0" />
-							<span class="text-[11px] sm:text-xs font-bold text-gray-700 truncate">Produk Halal</span>
+							<span class="text-[10px] sm:text-xs font-bold text-gray-700 truncate">Produk Halal</span>
 						</div>
-						<div class="flex items-center gap-1.5 bg-white/90 px-2.5 py-2 sm:p-0 rounded-lg border sm:border-0 border-gray-100 shadow-xs sm:shadow-none min-w-0">
+						<div class="flex items-center gap-1 sm:gap-1.5 bg-white/90 px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-lg border border-gray-100 shadow-xs sm:shadow-none min-w-0">
 							<Truck class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500 shrink-0" />
-							<span class="text-[11px] sm:text-xs font-bold text-gray-700 truncate">Kirim Nasional</span>
+							<span class="text-[10px] sm:text-xs font-bold text-gray-700 truncate">Kirim Nasional</span>
 						</div>
-						<div class="flex items-center gap-1.5 bg-white/90 px-2.5 py-2 sm:p-0 rounded-lg border sm:border-0 border-gray-100 shadow-xs sm:shadow-none min-w-0">
+						<div class="flex items-center gap-1 sm:gap-1.5 bg-white/90 px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-lg border border-gray-100 shadow-xs sm:shadow-none min-w-0">
 							<Award class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
-							<span class="text-[11px] sm:text-xs font-bold text-gray-700 truncate">Mutu Terjamin</span>
+							<span class="text-[10px] sm:text-xs font-bold text-gray-700 truncate">Mutu Terjamin</span>
 						</div>
-						<div class="flex items-center gap-1.5 bg-white/90 px-2.5 py-2 sm:p-0 rounded-lg border sm:border-0 border-gray-100 shadow-xs sm:shadow-none min-w-0">
+						<div class="flex items-center gap-1 sm:gap-1.5 bg-white/90 px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-lg border border-gray-100 shadow-xs sm:shadow-none min-w-0">
 							<Star class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-yellow-400 shrink-0" />
-							<span class="text-[11px] sm:text-xs font-bold text-gray-700 truncate">4.9★ (128 ulasan)</span>
+							<span class="text-[10px] sm:text-xs font-bold text-gray-700 truncate">4.9★ (128 ulasan)</span>
 						</div>
 					</div>
 				</div>
@@ -492,10 +492,10 @@
 					href="https://shopee.co.id/tokoanekarasa99"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold px-5 sm:px-8 py-3.5 rounded-xl transition shadow-md hover:shadow-lg text-xs sm:text-sm text-center active:scale-98"
+					class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold px-4 sm:px-8 py-3.5 rounded-xl transition shadow-md hover:shadow-lg text-xs sm:text-sm text-center active:scale-98 max-w-full box-border"
 				>
 					<ShoppingBag class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-					<span>Lihat Semua Produk di Shopee</span>
+					<span class="truncate">Lihat Semua Produk di Shopee</span>
 					<ExternalLink class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
 				</a>
 			</div>
@@ -643,17 +643,15 @@
 						</div>
 					</div>
 					<!-- Google Maps embed -->
-					<div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm w-full max-w-full aspect-video sm:aspect-auto sm:h-[220px]">
+					<div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm w-full max-w-full h-48 sm:h-56 relative">
 						<iframe
 							src="https://maps.google.com/maps?q=TOKO+ANEKA+RASA+99,+Jl.+Raya+Poris+Indah,+RT.007/RW.010,+Cipondoh+Indah,+Cipondoh,+Tangerang+City,+Banten+15122&t=&z=16&ie=UTF8&iwloc=&output=embed"
-							width="100%"
-							height="100%"
-							style="border:0;"
+							style="border:0; width:100%; height:100%; min-width:0; max-width:100%; display:block;"
 							allowfullscreen={true}
 							loading="lazy"
 							referrerpolicy="no-referrer-when-downgrade"
 							title="Lokasi Toko Aneka Rasa 99"
-							class="w-full h-full min-h-[200px]"
+							class="w-full h-full"
 						></iframe>
 					</div>
 				</div>
@@ -715,10 +713,10 @@
 						</div>
 						<button
 							type="submit"
-							class="w-full bg-white hover:bg-gray-50 text-emerald-700 font-black py-3.5 sm:py-4 rounded-xl flex items-center justify-center gap-2 transition shadow-lg text-sm cursor-pointer active:scale-98"
+							class="w-full bg-white hover:bg-gray-50 text-emerald-700 font-black py-3 sm:py-4 px-3 rounded-xl flex items-center justify-center gap-2 transition shadow-lg text-xs sm:text-sm cursor-pointer active:scale-98 box-border max-w-full"
 						>
-							<svg class="w-5 h-5 fill-[#25D366] shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-							<span>Kirim Pesanan via WhatsApp</span>
+							<svg class="w-4 h-4 sm:w-5 sm:h-5 fill-[#25D366] shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+							<span class="truncate">Kirim Pesanan via WhatsApp</span>
 						</button>
 					</form>
 					<p class="text-center text-red-100 text-xs mt-3 sm:mt-4 flex items-center justify-center gap-1">
