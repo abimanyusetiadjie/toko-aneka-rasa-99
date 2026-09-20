@@ -115,7 +115,7 @@
 		href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin tanya dan pesan oleh-oleh khas Bangka.')}"
 		target="_blank"
 		rel="noopener noreferrer"
-		class="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom,0px))] right-4 sm:bottom-6 sm:right-6 z-50 group flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 ring-4 ring-white/90 shrink-0"
+		class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-40 group flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 ring-4 ring-white/95 shrink-0 mb-[env(safe-area-inset-bottom,0px)]"
 		aria-label="Hubungi WhatsApp Toko Aneka Rasa 99"
 	>
 		<!-- Pulse Ping Animation Effect -->
@@ -135,11 +135,19 @@
 
 	<!-- ===== MINI CART PANEL ===== -->
 	{#if cartOpen && cart.length > 0}
-	<div class="fixed inset-x-0 bottom-0 md:left-auto md:right-6 md:bottom-6 md:w-96 z-50 bg-white rounded-t-3xl md:rounded-2xl shadow-2xl border border-gray-200 flex flex-col max-h-[85vh] w-full md:max-w-md pb-[env(safe-area-inset-bottom,0px)]">
-		<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-red-600 rounded-t-2xl text-white shrink-0">
+	<!-- Mobile backdrop blur overlay -->
+	<button
+		type="button"
+		onclick={() => cartOpen = false}
+		class="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-xs transition-opacity cursor-default w-full h-full border-none p-0"
+		aria-label="Tutup Keranjang"
+	></button>
+
+	<div class="fixed inset-x-0 bottom-0 md:left-auto md:right-6 md:bottom-6 md:w-96 z-50 bg-white rounded-t-3xl md:rounded-2xl shadow-2xl border border-gray-200 flex flex-col max-h-[85vh] max-h-[85dvh] w-full md:max-w-md pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
+		<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-red-600 rounded-t-3xl md:rounded-t-2xl text-white shrink-0">
 			<div class="flex items-center gap-2 font-bold min-w-0">
 				<ShoppingCart class="w-5 h-5 shrink-0" />
-				<span class="truncate">Keranjang ({cartCount} item)</span>
+				<span class="truncate text-sm sm:text-base">Keranjang ({cartCount} item)</span>
 			</div>
 			<button onclick={() => cartOpen = false} class="p-1 hover:bg-red-700 rounded-full transition cursor-pointer shrink-0" aria-label="Tutup Keranjang"><X class="w-5 h-5" /></button>
 		</div>
@@ -152,9 +160,9 @@
 					<p class="text-[11px] sm:text-xs text-gray-500">Rp {formatCurrency(item.price)} / bks</p>
 				</div>
 				<div class="flex items-center gap-1 shrink-0">
-					<button onclick={() => changeQty(item.id, -1)} class="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition cursor-pointer" aria-label="Kurangi Qty"><Minus class="w-3 h-3" /></button>
+					<button onclick={() => changeQty(item.id, -1)} class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 active:scale-95 transition cursor-pointer" aria-label="Kurangi Qty"><Minus class="w-3.5 h-3.5" /></button>
 					<span class="w-5 sm:w-6 text-center text-xs sm:text-sm font-bold">{item.qty}</span>
-					<button onclick={() => changeQty(item.id, 1)} class="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition cursor-pointer" aria-label="Tambah Qty"><Plus class="w-3 h-3" /></button>
+					<button onclick={() => changeQty(item.id, 1)} class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 active:scale-95 transition cursor-pointer" aria-label="Tambah Qty"><Plus class="w-3.5 h-3.5" /></button>
 				</div>
 				<div class="text-right shrink-0">
 					<p class="font-bold text-xs sm:text-sm text-red-600">Rp {formatCurrency(item.price * item.qty)}</p>
@@ -168,7 +176,7 @@
 				<span class="text-gray-600 text-sm">Total</span>
 				<span class="font-black text-base sm:text-lg text-red-600">Rp {formatCurrency(cartTotal)}</span>
 			</div>
-			<button onclick={checkoutWhatsApp} class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition text-sm cursor-pointer active:scale-98">
+			<button onclick={checkoutWhatsApp} class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition text-sm cursor-pointer active:scale-98">
 				<svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
 				<span>Pesan via WhatsApp</span>
 			</button>
@@ -185,7 +193,7 @@
 					<img src="/logo.png" alt="Toko Aneka Rasa 99" class="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-xs group-hover:scale-105 transition-transform shrink-0" />
 					<div class="min-w-0">
 						<p class="font-black text-gray-900 text-sm leading-tight truncate">Toko Aneka Rasa 99</p>
-						<p class="text-[11px] text-red-600 font-semibold truncate hidden xs:block">Kemplang & Oleh-Oleh Bangka</p>
+						<p class="text-[11px] text-red-600 font-semibold truncate hidden sm:block">Kemplang & Oleh-Oleh Bangka</p>
 					</div>
 				</a>
 
@@ -269,7 +277,7 @@
 						<svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
 						<span>Pesan via WhatsApp</span>
 					</a>
-					<a href="https://shopee.co.id/tokoanekarasa99" target="_blank" rel="noopener noreferrer" class="bg-red-600 hover:bg-red-700 text-white font-bold text-sm px-4 py-3 rounded-xl flex items-center justify-center gap-2 shadow-xs text-center w-full">
+					<a href="https://shopee.co.id/tokoanekarasa99" target="_blank" rel="noopener noreferrer" class="bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold text-sm px-4 py-3 rounded-xl flex items-center justify-center gap-2 shadow-xs text-center w-full">
 						<ShoppingBag class="w-4 h-4 shrink-0" />
 						<span>Buka Toko di Shopee</span>
 					</a>
@@ -289,7 +297,7 @@
 			<div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 				<!-- Left: copy -->
 				<div class="text-center lg:text-left min-w-0">
-					<h1 class="text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.2] sm:leading-tight mb-3 sm:mb-5 tracking-tight break-words">
+					<h1 class="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-gray-900 leading-[1.15] sm:leading-tight mb-3 sm:mb-5 tracking-tight break-words">
 						Kemplang & Oleh-Oleh<br />
 						<span class="text-red-600">Khas Bangka</span><br />
 						<span class="text-amber-500">Renyah & Asli</span>
@@ -349,8 +357,8 @@
 						</div>
 						<div class="space-y-2 sm:space-y-3">
 							{#each FEATURED.slice(0, 3) as item, i}
-							<div class="flex items-center gap-2.5 sm:gap-4 p-2 sm:p-3 rounded-xl {i === 0 ? 'bg-red-50/80 border border-red-100' : 'bg-gray-50'} min-w-0">
-								<img src={item.image} alt={item.name} class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl object-cover border border-amber-100 shadow-xs shrink-0" />
+							<div class="flex items-center gap-2 sm:gap-3.5 p-2 sm:p-3 rounded-xl {i === 0 ? 'bg-red-50/80 border border-red-100' : 'bg-gray-50'} min-w-0">
+								<img src={item.image} alt={item.name} class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl object-cover border border-amber-100 shadow-xs shrink-0" />
 								<div class="flex-1 min-w-0">
 									<p class="font-bold text-xs sm:text-sm text-gray-800 truncate">{item.name}</p>
 									<p class="text-[10px] sm:text-xs text-gray-500">Rp {formatCurrency(item.price)}</p>
@@ -510,7 +518,7 @@
 					<h3 class="font-black text-gray-800 text-base mb-1.5">Pilih Produk</h3>
 					<p class="text-xs sm:text-sm text-gray-500 leading-relaxed">Lihat katalog produk unggulan kami. Tambahkan ke keranjang atau langsung tanya via WhatsApp.</p>
 					<!-- Connector only on desktop md+ -->
-					<div class="hidden md:block absolute top-7 left-[calc(50%+2rem)] w-full h-0.5 bg-gradient-to-r from-red-200 to-red-100"></div>
+					<div class="hidden md:block absolute top-7 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-0.5 bg-gradient-to-r from-red-200 to-red-100"></div>
 				</div>
 				<div class="text-center relative min-w-0">
 					<div class="w-12 h-12 sm:w-14 sm:h-14 bg-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
@@ -518,7 +526,7 @@
 					</div>
 					<h3 class="font-black text-gray-800 text-base mb-1.5">Chat WhatsApp</h3>
 					<p class="text-xs sm:text-sm text-gray-500 leading-relaxed">Kirim pesanan via WhatsApp. Konfirmasi stok, harga, dan ongkir bersama kami langsung.</p>
-					<div class="hidden md:block absolute top-7 left-[calc(50%+2rem)] w-full h-0.5 bg-gradient-to-r from-amber-200 to-amber-100"></div>
+					<div class="hidden md:block absolute top-7 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-0.5 bg-gradient-to-r from-amber-200 to-amber-100"></div>
 				</div>
 				<div class="text-center min-w-0">
 					<div class="w-12 h-12 sm:w-14 sm:h-14 bg-green-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
@@ -596,11 +604,11 @@
 								href="https://www.google.com/maps/search/?api=1&query=TOKO+ANEKA+RASA+99,+Jl.+Raya+Poris+Indah,+RT.007/RW.010,+Cipondoh+Indah,+Cipondoh,+Tangerang+City,+Banten+15122"
 								target="_blank"
 								rel="noopener noreferrer"
-								class="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg border border-red-200 transition mt-2.5"
+								class="inline-flex items-center justify-center gap-1.5 text-[11px] sm:text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 transition mt-2.5 w-full sm:w-auto text-center"
 							>
-								<MapPin class="w-3.5 h-3.5" />
-								<span>Buka Petunjuk Arah di Google Maps</span>
-								<ExternalLink class="w-3 h-3 ml-0.5" />
+								<MapPin class="w-3.5 h-3.5 shrink-0" />
+								<span class="truncate">Petunjuk Arah Google Maps</span>
+								<ExternalLink class="w-3 h-3 shrink-0 ml-0.5" />
 							</a>
 						</div>
 					</div>
@@ -627,11 +635,11 @@
 							loading="lazy"
 						/>
 						<div class="p-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs">
-							<span class="font-bold text-gray-800 flex items-center gap-1.5">
+							<span class="font-bold text-gray-800 flex items-center gap-1.5 min-w-0">
 								<MapPin class="w-3.5 h-3.5 text-red-600 shrink-0" />
-								Kios Toko Aneka Rasa 99 - Poris Indah
+								<span class="truncate">Kios Toko Aneka Rasa 99 - Poris Indah</span>
 							</span>
-							<span class="text-gray-400 text-[11px] shrink-0">Kios Resmi</span>
+							<span class="text-gray-400 text-[11px] shrink-0 ml-2">Kios Resmi</span>
 						</div>
 					</div>
 					<!-- Google Maps embed -->
@@ -679,18 +687,21 @@
 						</div>
 						<div>
 							<label for="cprod" class="block text-xs font-bold text-red-100 mb-1">Produk yang Diminati</label>
-							<select
-								id="cprod"
-								bind:value={selectedQuickProduct}
-								class="w-full px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/15 border border-white/20 text-white text-base focus:outline-none focus:ring-2 focus:ring-white/40 transition appearance-none box-border"
-							>
-								<option value="" class="text-gray-800">-- Pilih Produk --</option>
-								{#each FEATURED as p}
-								<option value={p.name} class="text-gray-800">{p.name} - Rp {formatCurrency(p.price)}</option>
-								{/each}
-								<option value="Hampers / Paket Oleh-Oleh" class="text-gray-800">Hampers / Paket Oleh-Oleh</option>
-								<option value="Lainnya (tanyakan via WA)" class="text-gray-800">Lainnya (tanyakan via WA)</option>
-							</select>
+							<div class="relative w-full">
+								<select
+									id="cprod"
+									bind:value={selectedQuickProduct}
+									class="w-full px-3.5 py-2.5 sm:py-3 pr-10 rounded-xl bg-white/15 border border-white/20 text-white text-base focus:outline-none focus:ring-2 focus:ring-white/40 transition appearance-none box-border cursor-pointer"
+								>
+									<option value="" class="text-gray-800">-- Pilih Produk --</option>
+									{#each FEATURED as p}
+									<option value={p.name} class="text-gray-800">{p.name} - Rp {formatCurrency(p.price)}</option>
+									{/each}
+									<option value="Hampers / Paket Oleh-Oleh" class="text-gray-800">Hampers / Paket Oleh-Oleh</option>
+									<option value="Lainnya (tanyakan via WA)" class="text-gray-800">Lainnya (tanyakan via WA)</option>
+								</select>
+								<ChevronRight class="w-4 h-4 text-white/80 absolute right-3.5 top-1/2 -translate-y-1/2 rotate-90 pointer-events-none shrink-0" />
+							</div>
 						</div>
 						<div>
 							<label for="cnotes" class="block text-xs font-bold text-red-100 mb-1">Catatan Tambahan (Opsional)</label>
@@ -720,7 +731,7 @@
 	</section>
 
 	<!-- ===== FOOTER ===== -->
-	<footer class="bg-gray-900 text-gray-400 pt-10 sm:pt-12 pb-8 overflow-hidden w-full max-w-full">
+	<footer class="bg-gray-900 text-gray-400 pt-10 sm:pt-12 pb-24 sm:pb-12 overflow-hidden w-full max-w-full">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-10">
 				<!-- Brand -->
