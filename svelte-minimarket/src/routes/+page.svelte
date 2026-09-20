@@ -4,7 +4,7 @@
 		Phone, MapPin, Clock, Star, ShoppingBag, ShieldCheck,
 		ChevronRight, Menu, X, ArrowRight, Truck, Award, Sparkles,
 		MessageCircle, ExternalLink, User, ShoppingCart,
-		Plus, Minus, Trash2, CheckCircle2, ThumbsUp
+		Plus, Minus, Trash2, CheckCircle2, ThumbsUp, ChevronDown, HelpCircle
 	} from 'lucide-svelte';
 
 	let { data }: { data: PageData } = $props();
@@ -78,30 +78,59 @@
 		{ name: 'Ci Meyling', city: 'Tangerang', review: 'Sudah langganan bertahun-tahun. Kalau mau kirim hampers ke kerabat pasti belinya di sini. Kualitas ikannya selalu konsisten juara!', stars: 5, product: 'Hampers Kerupuk dan Getas' },
 		{ name: 'Ibu Dian Pratiwi', city: 'Bandung', review: 'Terasi Bangka No. 1 dan Sambal Rusip-nya otentik banget! Aromanya wangi bikin masakan kangkung terasi langsung mirip di Belitung asli.', stars: 5, product: 'Terasi AB No. 1 Bangka' }
 	];
+
+	let openFaq = $state<number | null>(null);
+	function toggleFaq(index: number) {
+		openFaq = openFaq === index ? null : index;
+	}
+
+	const faqs = [
+		{
+			q: 'Apakah Toko Aneka Rasa 99 menjual oleh-oleh khas Bangka asli?',
+			a: 'Ya, Toko Aneka Rasa 99 adalah toko oleh-oleh khas Bangka resmi dan terlengkap di Tangerang. Semua kemplang panggang, getas ikan tenggiri, terasi udang rebon, kerupuk pasir, dan aneka kue didatangkan langsung dari pengrajin tradisional di Bangka Belitung dengan resep autentik turun-temurun.'
+		},
+		{
+			q: 'Di mana alamat toko fisik Toko Aneka Rasa 99?',
+			a: 'Toko fisik kami beralamat di Jl. Raya Poris Indah, RT.007/RW.010, Cipondoh Indah, Kec. Cipondoh, Kota Tangerang, Banten 15122. Buka setiap hari mulai pukul 07.30 hingga 21.30 WIB. Lokasi kami dapat dicari di Google Maps dengan nama "Toko Aneka Rasa 99".'
+		},
+		{
+			q: 'Apakah bisa pesan oleh-oleh khas Bangka secara online?',
+			a: 'Tentu bisa! Anda dapat memesan langsung melalui WhatsApp admin di +62 813-8710-9586 atau berbelanja di toko resmi Shopee kami (shopee.co.id/tokoanekarasa99). Kami siap melayani pengiriman ke seluruh wilayah Indonesia dengan packing kardus dan bubble wrap yang aman.'
+		},
+		{
+			q: 'Apakah produk di Toko Aneka Rasa 99 halal dan tanpa pengawet?',
+			a: 'Semua produk camilan dan kerupuk khas Bangka kami terjamin 100% halal, berbahan dasar ikan tenggiri dan udang segar pilihan, serta diolah secara higienis tanpa bahan pengawet berbahaya.'
+		},
+		{
+			q: 'Apa produk oleh-oleh khas Bangka yang paling terlaris?',
+			a: 'Produk paling diminati pelanggan adalah Kemplang Panggang Cap MM (lengkap dengan sambal terasi khas), Getas Bulat Cap Tiga Roda ikan tenggiri super, dan Terasi AB No.1 Asli Bangka.'
+		}
+	];
 </script>
 
 <svelte:head>
-	<title>Toko Aneka Rasa 99 | Pusat Kemplang dan Oleh-Oleh Khas Bangka di Poris Tangerang</title>
-	<meta name="description" content="Toko Aneka Rasa 99: Pusat Kemplang Panggang, Getas Ikan Tenggiri Asli Bangka, Kerupuk Pasir, Terasi AB, dan Oleh-Oleh Khas Bangka Belitung di Poris Indah Tangerang. Renyah, gurih, halal, siap kirim ke seluruh Indonesia." />
-	<meta name="keywords" content="toko aneka rasa 99, kemplang bangka tangerang, getas tenggiri poris indah, oleh oleh khas bangka tangerang, kemplang panggang cipondoh" />
+	<title>Toko Aneka Rasa 99 - Toko Oleh-Oleh Khas Bangka Terlengkap di Tangerang</title>
+	<meta name="description" content="Toko Aneka Rasa 99 adalah toko oleh-oleh khas Bangka terlengkap di Poris Tangerang. Sedia kemplang panggang arang, getas ikan tenggiri asli, kerupuk pasir, dan terasi super. Siap kirim ke seluruh Indonesia." />
+	<meta name="keywords" content="toko aneka rasa 99, toko oleh oleh bangka, toko oleh oleh khas bangka, pusat oleh oleh bangka, kemplang bangka tangerang, getas tenggiri poris indah, kerupuk bangka terdekat, terasi bangka asli" />
 	<meta name="author" content="Toko Aneka Rasa 99" />
 	<meta name="robots" content="index, follow" />
 	<link rel="canonical" href="https://tokoanekarasa99.my.id/" />
 	<meta property="og:locale" content="id_ID" />
 	<meta property="og:type" content="website" />
-	<meta property="og:title" content="Toko Aneka Rasa 99 | Pusat Kemplang dan Oleh-Oleh Khas Bangka di Poris Tangerang" />
-	<meta property="og:description" content="Pusat Kemplang Panggang, Getas Ikan Tenggiri Asli Bangka, Terasi dan Aneka Cemilan Khas Bangka di Poris Indah Tangerang." />
+	<meta property="og:title" content="Toko Aneka Rasa 99 - Toko Oleh-Oleh Khas Bangka Terlengkap" />
+	<meta property="og:description" content="Pusat Kemplang Panggang, Getas Ikan Tenggiri Asli Bangka, Terasi Super dan Ratusan Cemilan Khas Bangka di Poris Tangerang." />
 	<meta property="og:url" content="https://tokoanekarasa99.my.id/" />
 	<meta property="og:site_name" content="Toko Aneka Rasa 99" />
 	<meta property="og:image" content="https://tokoanekarasa99.my.id/logo.png" />
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content="Toko Aneka Rasa 99 | Pusat Kemplang dan Oleh-Oleh Khas Bangka" />
+	<meta name="twitter:title" content="Toko Aneka Rasa 99 - Toko Oleh-Oleh Khas Bangka Terlengkap" />
+	<meta name="twitter:description" content="Pusat Kemplang Panggang, Getas Ikan Tenggiri Asli Bangka, Terasi Super di Poris Tangerang." />
 	<meta name="twitter:image" content="https://tokoanekarasa99.my.id/logo.png" />
 	<meta name="geo.region" content="ID-BT" />
 	<meta name="geo.placename" content="Kota Tangerang" />
 	<meta name="geo.position" content="-6.1783;106.6713" />
 	<meta name="ICBM" content="-6.1783, 106.6713" />
-	{@html `<script type="application/ld+json">{"@context":"https://schema.org","@type":["Store","LocalBusiness"],"name":"Toko Aneka Rasa 99","url":"https://tokoanekarasa99.my.id","telephone":"+6281387109586","address":{"@type":"PostalAddress","streetAddress":"Jl. Raya Poris Indah, RT.007/RW.010, Kel. Cipondoh Indah","addressLocality":"Kota Tangerang","addressRegion":"Banten","postalCode":"15122","addressCountry":"ID"},"geo":{"@type":"GeoCoordinates","latitude":-6.1783,"longitude":106.6713},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"07:30","closes":"21:30"}],"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"128"}}<\/script>`}
+	{@html `<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":["Store","LocalBusiness"],"@id":"https://tokoanekarasa99.my.id/#store","name":"Toko Aneka Rasa 99","alternateName":["Toko Oleh-Oleh Bangka Aneka Rasa 99","Aneka Rasa 99 Poris","Toko Oleh Oleh Khas Bangka Tangerang"],"url":"https://tokoanekarasa99.my.id","telephone":"+6281387109586","description":"Toko Aneka Rasa 99: Toko oleh-oleh khas Bangka terlengkap di Poris Tangerang. Sedia kemplang panggang arang, getas tenggiri asli, kerupuk pasir, dan terasi Bangka super.","image":["https://tokoanekarasa99.my.id/logo.png","https://tokoanekarasa99.my.id/images/banner-toko.png"],"priceRange":"$$","servesCuisine":"Oleh-Oleh Khas Bangka Belitung","address":{"@type":"PostalAddress","streetAddress":"Jl. Raya Poris Indah, RT.007/RW.010, Kel. Cipondoh Indah","addressLocality":"Kota Tangerang","addressRegion":"Banten","postalCode":"15122","addressCountry":"ID"},"geo":{"@type":"GeoCoordinates","latitude":-6.1783,"longitude":106.6713},"hasMap":"https://www.google.com/maps/search/?api=1&query=TOKO+ANEKA+RASA+99,+Jl.+Raya+Poris+Indah,+RT.007/RW.010,+Cipondoh+Indah,+Cipondoh,+Tangerang+City,+Banten+15122","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"07:30","closes":"21:30"}],"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"128"},"sameAs":["https://shopee.co.id/tokoanekarasa99"]},{"@type":"FAQPage","@id":"https://tokoanekarasa99.my.id/#faq","mainEntity":[{"@type":"Question","name":"Apakah Toko Aneka Rasa 99 menjual oleh-oleh khas Bangka asli?","acceptedAnswer":{"@type":"Answer","text":"Ya, Toko Aneka Rasa 99 adalah toko oleh-oleh khas Bangka resmi dan terlengkap di Tangerang. Semua kemplang panggang, getas ikan tenggiri, terasi udang rebon, kerupuk pasir, dan aneka kue didatangkan langsung dari pengrajin tradisional di Bangka Belitung dengan resep autentik turun-temurun."}},{"@type":"Question","name":"Di mana alamat toko fisik Toko Aneka Rasa 99?","acceptedAnswer":{"@type":"Answer","text":"Toko fisik kami beralamat di Jl. Raya Poris Indah, RT.007/RW.010, Cipondoh Indah, Kec. Cipondoh, Kota Tangerang, Banten 15122. Buka setiap hari mulai pukul 07.30 hingga 21.30 WIB."}},{"@type":"Question","name":"Apakah bisa pesan oleh-oleh khas Bangka secara online?","acceptedAnswer":{"@type":"Answer","text":"Tentu bisa! Anda dapat memesan langsung melalui WhatsApp admin di +62 813-8710-9586 atau berbelanja di toko resmi Shopee kami (shopee.co.id/tokoanekarasa99) dengan pengiriman aman ke seluruh Indonesia."}},{"@type":"Question","name":"Apakah produk di Toko Aneka Rasa 99 halal dan tanpa pengawet?","acceptedAnswer":{"@type":"Answer","text":"Semua produk camilan dan kerupuk khas Bangka kami terjamin 100% halal, berbahan dasar ikan tenggiri dan udang segar pilihan, serta diolah secara higienis tanpa bahan pengawet berbahaya."}},{"@type":"Question","name":"Apa produk oleh-oleh khas Bangka yang paling terlaris?","acceptedAnswer":{"@type":"Answer","text":"Produk paling diminati pelanggan adalah Kemplang Panggang Cap MM (lengkap dengan sambal terasi khas), Getas Bulat Cap Tiga Roda ikan tenggiri super, dan Terasi AB No.1 Asli Bangka."}}]}]}<\/script>`}
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -204,6 +233,7 @@
 					<a href="#cara-pesan" class="hover:text-red-600 transition">Cara Pesan</a>
 					<a href="#testimoni" class="hover:text-red-600 transition">Testimoni</a>
 					<a href="#kontak" class="hover:text-red-600 transition">Kontak</a>
+					<a href="#faq" class="hover:text-red-600 transition">FAQ</a>
 				</div>
 
 				<!-- Right CTAs -->
@@ -272,6 +302,10 @@
 					<span>Lokasi & Kontak Toko</span>
 					<ChevronRight class="w-4 h-4 text-gray-400 shrink-0" />
 				</a>
+				<a href="#faq" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
+					<span>Tanya Jawab (FAQ)</span>
+					<ChevronRight class="w-4 h-4 text-gray-400 shrink-0" />
+				</a>
 				<div class="pt-2 flex flex-col gap-2 w-full">
 					<a href="https://wa.me/{WA_PHONE}" target="_blank" rel="noopener noreferrer" class="bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-sm px-4 py-3 rounded-xl flex items-center justify-center gap-2 shadow-xs text-center w-full">
 						<svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
@@ -297,10 +331,13 @@
 			<div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full max-w-full">
 				<!-- Left: copy -->
 				<div class="text-center lg:text-left min-w-0 w-full max-w-full">
+					<div class="inline-flex items-center gap-2 bg-red-50 border border-red-200/80 px-3 py-1 rounded-full text-xs font-bold text-red-700 mb-3">
+						<span>📍 Toko Aneka Rasa 99 Poris Tangerang</span>
+					</div>
 					<h1 class="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-gray-900 leading-[1.15] sm:leading-tight mb-3 sm:mb-5 tracking-tight break-words">
-						Kemplang & Oleh-Oleh<br />
+						Toko Oleh-Oleh<br />
 						<span class="text-red-600">Khas Bangka</span><br />
-						<span class="text-amber-500">Renyah & Asli</span>
+						<span class="text-amber-500">Terlengkap & Asli</span>
 					</h1>
 					<p class="text-xs sm:text-base lg:text-lg text-gray-600 mb-5 sm:mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0 break-words">
 						Pusat Kemplang Panggang, Getas Ikan Tenggiri, Terasi Asli, dan ratusan oleh-oleh khas Bangka Belitung terbaik. Tersedia di Poris Indah, Tangerang — siap kirim ke seluruh Indonesia.
@@ -358,7 +395,7 @@
 						<div class="space-y-2 sm:space-y-3">
 							{#each FEATURED.slice(0, 3) as item, i}
 							<div class="flex items-center gap-2 sm:gap-3.5 p-2 sm:p-3 rounded-xl {i === 0 ? 'bg-red-50/80 border border-red-100' : 'bg-gray-50'} min-w-0">
-								<img src={item.image} alt={item.name} class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl object-cover border border-amber-100 shadow-xs shrink-0" />
+								<img src={item.image} alt="{item.name} - Toko Oleh-Oleh Khas Bangka Aneka Rasa 99" class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl object-cover border border-amber-100 shadow-xs shrink-0" />
 								<div class="flex-1 min-w-0">
 									<p class="font-bold text-xs sm:text-sm text-gray-800 truncate">{item.name}</p>
 									<p class="text-[10px] sm:text-xs text-gray-500">Rp {formatCurrency(item.price)}</p>
@@ -449,7 +486,7 @@
 					<div class="h-44 sm:h-48 bg-gradient-to-br from-amber-50/60 to-red-50/60 overflow-hidden relative group/img">
 						<img
 							src={product.image}
-							alt={product.name}
+							alt="{product.name} - Toko Oleh-Oleh Khas Bangka Aneka Rasa 99"
 							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
 							loading="lazy"
 						/>
@@ -724,6 +761,56 @@
 						<span>Pesanan langsung diterima oleh admin toko</span>
 					</p>
 				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== FAQ SECTION (SEO & Customer Trust) ===== -->
+	<section class="py-12 sm:py-16 md:py-20 bg-amber-50/40 border-t border-amber-100/60 overflow-hidden w-full max-w-full" id="faq">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full">
+			<div class="text-center mb-8 sm:mb-12">
+				<span class="inline-flex items-center gap-1.5 bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full mb-2 sm:mb-3">
+					<HelpCircle class="w-3.5 h-3.5" /> Tanya Jawab Seputar Produk
+				</span>
+				<h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2 sm:mb-3">
+					Pertanyaan <span class="text-red-600">Sering Diajukan</span>
+				</h2>
+				<p class="text-gray-600 max-w-xl mx-auto text-xs sm:text-sm leading-relaxed">
+					Informasi lengkap seputar pemesanan, keaslian, dan pengiriman oleh-oleh khas Bangka dari Toko Aneka Rasa 99.
+				</p>
+			</div>
+
+			<div class="space-y-3 sm:space-y-4 w-full max-w-full">
+				{#each faqs as faq, idx}
+				<div class="bg-white rounded-xl sm:rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden transition">
+					<button
+						type="button"
+						onclick={() => toggleFaq(idx)}
+						class="w-full text-left px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-3 font-bold text-gray-900 text-sm sm:text-base hover:text-red-600 transition cursor-pointer box-border"
+						aria-expanded={openFaq === idx}
+					>
+						<span class="leading-snug">{faq.q}</span>
+						<ChevronDown class="w-5 h-5 text-gray-400 shrink-0 transition-transform duration-200 {openFaq === idx ? 'rotate-180 text-red-600' : ''}" />
+					</button>
+					{#if openFaq === idx}
+					<div class="px-4 sm:px-6 pb-4 sm:pb-5 text-xs sm:text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
+						{faq.a}
+					</div>
+					{/if}
+				</div>
+				{/each}
+			</div>
+
+			<div class="mt-8 text-center bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 shadow-sm w-full max-w-full">
+				<p class="text-xs sm:text-sm font-semibold text-gray-700 mb-2">Masih punya pertanyaan lain seputar pesanan oleh-oleh Bangka?</p>
+				<a
+					href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin tanya info seputar oleh-oleh Bangka:')}"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#25D366] hover:underline"
+				>
+					<MessageCircle class="w-4 h-4 shrink-0" /> Hubungi Customer Service via WhatsApp
+				</a>
 			</div>
 		</div>
 	</section>
