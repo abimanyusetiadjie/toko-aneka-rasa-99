@@ -57,14 +57,15 @@ let memoryStockMovements = [
 	{ id: 'sm-004', product_id: 'prod-070', product_name: 'Terasi AB No. 1 Pulau Bangka 500g', sku: 'BMB-TRSI-AB-500G', reference_type: 'ADJUSTMENT', qty_base_change: -1, balance_after: 49, unit_cost_snapshot: 48750, notes: 'Stock Opname: Kemasan Rusak', created_at: new Date(Date.now() - 3600000).toISOString() }
 ];
 
-// Password hash untuk 12345678
-const DEFAULT_PASSWORD_HASH = '$2b$10$KV0LmyRP4gCGBSCsP2MX9OAHKrOJBsbqsXW52Y6X3qTMIPJUYzuPu';
+// Bcrypt hash resmi untuk akun bawaan
+const OWNER_PASSWORD_HASH = '$2b$10$h84T5kvlFfE12VjokpzEP.tvSw6WLxMMYTVHq.OeE75A4PAq0Ka4K'; // hash valid 12345678
+const KASIR_PASSWORD_HASH = '$2b$10$iS7SfEKSMAuTiSdZDsrYq.go2JWGQs.pXZaKTaPQ70I58ubPmdZCm'; // hash valid minimarket123*
 
 let memoryUsers = [
-	{ id: '46030803-a7e6-4827-b93e-0cafcf148ac7', store_id: '11111111-1111-1111-1111-111111111111', username: 'owner_revaldo', full_name: 'Revaldo Julian (Owner)', role_id: 1, role_name: 'Owner', is_active: true, password_hash: DEFAULT_PASSWORD_HASH, created_at: new Date().toISOString() },
-	{ id: '11111111-2222-3333-4444-555555555555', store_id: '11111111-1111-1111-1111-111111111111', username: 'owner', full_name: 'Owner Toko', role_id: 1, role_name: 'Owner', is_active: true, password_hash: DEFAULT_PASSWORD_HASH, created_at: new Date().toISOString() },
-	{ id: '932ba9fe-2627-463b-898a-62a4c2b5ae41', store_id: '11111111-1111-1111-1111-111111111111', username: 'kasir_siti', full_name: 'Siti Aminah (Kasir)', role_id: 2, role_name: 'Kasir', is_active: true, password_hash: DEFAULT_PASSWORD_HASH, created_at: new Date().toISOString() },
-	{ id: '33333333-4444-5555-6666-777777777777', store_id: '11111111-1111-1111-1111-111111111111', username: 'kasir', full_name: 'Kasir Toko', role_id: 2, role_name: 'Kasir', is_active: true, password_hash: DEFAULT_PASSWORD_HASH, created_at: new Date().toISOString() }
+	{ id: '46030803-a7e6-4827-b93e-0cafcf148ac7', store_id: '11111111-1111-1111-1111-111111111111', username: 'owner_revaldo', full_name: 'Revaldo Julian (Owner)', role_id: 1, role_name: 'Owner', is_active: true, password_hash: OWNER_PASSWORD_HASH, created_at: new Date().toISOString() },
+	{ id: '11111111-2222-3333-4444-555555555555', store_id: '11111111-1111-1111-1111-111111111111', username: 'owner', full_name: 'Owner Toko', role_id: 1, role_name: 'Owner', is_active: true, password_hash: OWNER_PASSWORD_HASH, created_at: new Date().toISOString() },
+	{ id: '932ba9fe-2627-463b-898a-62a4c2b5ae41', store_id: '11111111-1111-1111-1111-111111111111', username: 'kasir_siti', full_name: 'Siti Aminah (Kasir)', role_id: 2, role_name: 'Kasir', is_active: true, password_hash: KASIR_PASSWORD_HASH, created_at: new Date().toISOString() },
+	{ id: '33333333-4444-5555-6666-777777777777', store_id: '11111111-1111-1111-1111-111111111111', username: 'kasir', full_name: 'Kasir Toko', role_id: 2, role_name: 'Kasir', is_active: true, password_hash: KASIR_PASSWORD_HASH, created_at: new Date().toISOString() }
 ];
 
 interface MemoryShift {

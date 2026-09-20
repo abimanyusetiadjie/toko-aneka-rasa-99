@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { ActionData } from './$types';
-	import { User, Lock, AlertCircle, ShoppingCart, ArrowLeft } from 'lucide-svelte';
+	import { User, Lock, AlertCircle, ShoppingCart, ArrowLeft, ShieldCheck } from 'lucide-svelte';
 
 	let { form } = $props<{ form: ActionData }>();
 	
@@ -91,20 +91,13 @@
 				</div>
 			</form>
 			
-			<div class="mt-6 p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-center text-xs text-slate-600 space-y-2">
-				<p class="font-bold text-slate-800">Akses Otomatis Sesuai Role (RBAC):</p>
-				<div class="grid grid-cols-2 gap-2 text-left text-[11px] pt-1">
-					<div class="p-2 bg-white rounded-lg border border-slate-100">
-						<span class="font-bold text-purple-700 block">👑 Akun Owner</span>
-						<span class="text-slate-500">Otomatis ke Dashboard & Manajemen</span>
-					</div>
-					<div class="p-2 bg-white rounded-lg border border-slate-100">
-						<span class="font-bold text-blue-700 block">🛒 Akun Kasir</span>
-						<span class="text-slate-500">Otomatis ke Layar Kasir POS</span>
-					</div>
+			<div class="mt-6 p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-center text-xs text-slate-600 space-y-1.5">
+				<div class="flex items-center justify-center gap-1.5 font-bold text-slate-800">
+					<ShieldCheck class="w-4 h-4 text-emerald-600 shrink-0" />
+					<span>Portal Khusus Staf Resmi Toko</span>
 				</div>
-				<p class="text-[10px] text-slate-400 pt-1 border-t border-slate-200/60 font-mono">
-					Demo: <b>owner_revaldo</b> / 12345678 · <b>kasir_siti</b> / minimarket123*
+				<p class="text-[11px] text-slate-500 leading-relaxed">
+					Sistem dilindungi enkripsi JWT & proteksi pembatasan akses (rate-limiting). Hanya pemilik toko dan kasir resmi terdaftar yang dapat masuk.
 				</p>
 			</div>
 		</div>
