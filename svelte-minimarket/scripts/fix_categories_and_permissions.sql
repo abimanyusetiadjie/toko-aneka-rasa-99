@@ -83,7 +83,7 @@ WHERE (
   LOWER(name) LIKE '%kecap%' OR LOWER(name) LIKE '%rusip%' OR LOWER(name) LIKE '%kecalo%' OR 
   LOWER(name) LIKE '%lada%' OR LOWER(name) LIKE '%bumbu%' OR LOWER(name) LIKE '%sambal%' OR 
   LOWER(name) LIKE '%madu%' OR LOWER(name) LIKE '%kelubi%' OR LOWER(name) LIKE '%gula aren%' OR 
-  LOWER(name) LIKE '%gula kabung%' OR LOWER(name) LIKE '%sagu%' OR LOWER(name) LIKE '%tapioka%' OR 
+  LOWER(name) LIKE '%gula kabung%' OR LOWER(name) LIKE '%sagu%' OR LOWER(name) LIKE '%tapiok%' OR 
   LOWER(name) LIKE '%tauco%'
 );
 
