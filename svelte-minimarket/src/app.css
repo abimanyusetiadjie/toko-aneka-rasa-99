@@ -98,8 +98,12 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 	color: #0F172A;
 }
 
-/* Thermal Printer 58mm Print Engine (STRUK TRANSAKSI & STRUK REKAP TUTUP KASIR) */
+/* Thermal Printer 80mm Print Engine (Standar Kasir Minimarket / Supermarket) */
 @media print {
+	@page {
+		size: 80mm auto;
+		margin: 0;
+	}
 	body:has(#receipt-print-area) *,
 	body:has(#closing-print-area.is-printing) * {
 		visibility: hidden !important;
@@ -122,13 +126,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 		position: absolute !important;
 		left: 0 !important;
 		top: 0 !important;
-		width: 58mm !important;
-		max-width: 58mm !important;
-		padding: 4px !important;
+		width: 76mm !important;
+		max-width: 80mm !important;
+		padding: 3mm !important;
 		margin: 0 auto !important;
-		font-family: monospace !important;
-		font-size: 10px !important;
-		line-height: 1.2 !important;
+		font-family: 'Courier New', Courier, monospace !important;
+		font-size: 12px !important;
+		line-height: 1.25 !important;
 	}
 }
 

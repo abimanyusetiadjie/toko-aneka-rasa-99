@@ -2600,7 +2600,7 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 					onclick={printShiftReport}
 					class="flex-1 min-w-[140px] py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
 				>
-					<Printer class="w-4 h-4 text-slate-600" /> Cetak Struk Rekap (58mm)
+					<Printer class="w-4 h-4 text-slate-600" /> Cetak Struk Rekap (80mm)
 				</button>
 
 				<!-- Kirim WA ke Owner -->
@@ -2634,8 +2634,8 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 	</div>
 {/if}
 
-<!-- Thermal Shift Closing Report 58mm Print Component (Hidden from screen view) -->
-<div id="closing-print-area" class="{isPrintingClosing ? 'is-printing' : 'hidden'} text-black font-mono text-xs max-w-[58mm] mx-auto p-1">
+<!-- Thermal Shift Closing Report 80mm Print Component (Hidden from screen view) -->
+<div id="closing-print-area" class="{isPrintingClosing ? 'is-printing' : 'hidden'} text-black font-mono text-xs max-w-[80mm] w-[76mm] mx-auto p-1">
 	<div class="text-center mb-2">
 		<h2 class="font-bold text-sm uppercase">{storeName}</h2>
 		<p class="text-[10px]">{storeAddress}</p>
@@ -3034,53 +3034,53 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 	{/each}
 </aside>
 
-<!-- Thermal Receipt Print Component 58mm (Hidden from screen view) -->
-<div id="receipt-print-area" class="hidden text-black font-mono text-xs max-w-[58mm] mx-auto p-1">
+<!-- Thermal Receipt Print Component 80mm (Standar POS Kasir Toko & Minimarket) -->
+<div id="receipt-print-area" class="hidden text-black font-mono text-xs max-w-[80mm] w-[76mm] mx-auto p-1">
 	<div class="text-center mb-2">
-		<h2 class="font-bold text-sm uppercase">{storeName}</h2>
-		<p class="text-[10px]">{storeAddress}</p>
-		<p class="text-[10px]">Telp: {storePhone}</p>
-		<div class="border-b border-black border-dashed my-1 pb-1 text-[10px]">
-			No: {completedTxData?.receiptNumber || $lastReceiptNumber}<br />
-			Kasir: {cashierName}<br />
-			Waktu: {new Date().toLocaleString('id-ID')}
+		<h2 class="font-black text-base uppercase tracking-tight">{storeName}</h2>
+		<p class="text-[11px] leading-tight mt-0.5">{storeAddress}</p>
+		<p class="text-[11px] leading-tight">Telp / WA: {storePhone}</p>
+		<div class="border-b-2 border-black border-dashed my-2 pb-1.5 text-[11px] text-left">
+			<div class="flex justify-between"><span>No: {completedTxData?.receiptNumber || $lastReceiptNumber}</span><span>{new Date().toLocaleDateString('id-ID')}</span></div>
+			<div class="flex justify-between"><span>Kasir: {cashierName}</span><span>{new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WIB</span></div>
 		</div>
 	</div>
 
-	<table class="w-full text-[10px] mb-2">
+	<table class="w-full text-[11px] mb-2 border-collapse">
 		<tbody>
 			{#each (completedTxData?.items || receiptItems) as item}
 				<tr>
-					<td colspan="2" class="font-semibold">{item.name}</td>
+					<td colspan="2" class="font-bold pt-1">{item.name}</td>
 				</tr>
-				<tr>
-					<td class="pb-0.5 text-slate-600">{item.qty} x {formatCurrency(item.price)}</td>
-					<td class="pb-0.5 text-right">{formatCurrency(item.qty * item.price)}</td>
+				<tr class="border-b border-black/20 border-dotted">
+					<td class="pb-1 text-slate-700">{item.qty} x {formatCurrency(item.price)}</td>
+					<td class="pb-1 text-right font-semibold">{formatCurrency(item.qty * item.price)}</td>
 				</tr>
 			{/each}
 		</tbody>
 	</table>
 
-	<div class="border-t border-black border-dashed pt-1 text-[10px] space-y-0.5">
-		<div class="flex justify-between"><span>Subtotal:</span><span>{formatCurrency(completedTxData?.subtotal ?? $subtotal)}</span></div>
+	<div class="border-t-2 border-black border-dashed pt-2 text-[11px] space-y-1">
+		<div class="flex justify-between"><span>Subtotal Belanja:</span><span>{formatCurrency(completedTxData?.subtotal ?? $subtotal)}</span></div>
 		{#if (completedTxData?.discount ?? (pointDiscountAmount + $discount)) > 0}
 			<div class="flex justify-between"><span>Diskon:</span><span>- {formatCurrency(completedTxData?.discount ?? (pointDiscountAmount + $discount))}</span></div>
 		{/if}
-		<div class="flex justify-between font-bold text-xs pt-1 border-t border-black border-dotted">
-			<span>TOTAL:</span><span>{formatCurrency(completedTxData?.total ?? finalPayTotal)}</span>
+		<div class="flex justify-between font-black text-sm pt-1.5 border-t border-black border-dotted">
+			<span>TOTAL TRANSAKSI:</span><span>{formatCurrency(completedTxData?.total ?? finalPayTotal)}</span>
 		</div>
-		<div class="flex justify-between pt-0.5">
-			<span>BAYAR ({$paymentMethod}):</span><span>{formatCurrency(completedTxData?.paidAmount ?? ($paymentMethod === 'CASH' ? $amountPaid || finalPayTotal : finalPayTotal))}</span>
+		<div class="flex justify-between pt-1">
+			<span>BAYAR ({$paymentMethod}):</span><span class="font-bold">{formatCurrency(completedTxData?.paidAmount ?? ($paymentMethod === 'CASH' ? $amountPaid || finalPayTotal : finalPayTotal))}</span>
 		</div>
 		{#if $paymentMethod === 'CASH'}
-			<div class="flex justify-between font-semibold">
+			<div class="flex justify-between font-bold text-xs pt-0.5">
 				<span>KEMBALI:</span><span>{formatCurrency(completedTxData?.changeAmount ?? Math.max(0, ($amountPaid || 0) - finalPayTotal))}</span>
 			</div>
 		{/if}
 	</div>
 
-	<div class="text-center mt-3 text-[9px]">
-		<p>Terima kasih atas kunjungan Anda!</p>
-		<p>Barang yang dibeli tidak dapat ditukar/dikembalikan.</p>
+	<div class="text-center mt-4 text-[10px] space-y-0.5 border-t-2 border-black border-dashed pt-2">
+		<p class="font-bold">*** TERIMA KASIH ATAS KUNJUNGAN ANDA ***</p>
+		<p>Pusat Kemplang, Getas & Oleh-Oleh Khas Bangka</p>
+		<p class="text-[9px] text-slate-600">Barang yang dibeli tidak dapat ditukar/dikembalikan.</p>
 	</div>
 </div>
