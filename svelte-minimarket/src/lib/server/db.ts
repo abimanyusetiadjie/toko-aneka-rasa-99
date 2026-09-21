@@ -1,9 +1,11 @@
 import pg from 'pg';
 import { env } from '$env/dynamic/private';
 
+const rawDbUrl = (env.DATABASE_URL || '').trim();
 const connectionString =
-	env.DATABASE_URL ||
-	"postgresql://minimarket:AnekaRasa99Secure*@localhost:5432/minimarket_db";
+	rawDbUrl && !rawDbUrl.includes('supabase.com')
+		? rawDbUrl
+		: 'postgresql://minimarket:AnekaRasa99Secure*@localhost:5432/minimarket_db';
 
 const isLocal = connectionString.includes('localhost') || connectionString.includes('127.0.0.1');
 
