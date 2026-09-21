@@ -304,8 +304,15 @@
 						</select>
 					</div>
 					<div>
-						<label for="create-bar-inv" class="block font-bold text-slate-700 mb-1">Barcode (Opsional)</label>
-						<input id="create-bar-inv" type="text" name="barcode" placeholder="Otomatis jika kosong" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono" />
+						<label for="create-bar-inv" class="block font-bold text-slate-700 mb-1">Barcode (Tembak Scanner / Ketik)</label>
+						<input
+							id="create-bar-inv"
+							type="text"
+							name="barcode"
+							placeholder="Scan kemasan atau biarkan kosong"
+							onkeydown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
+							class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono"
+						/>
 					</div>
 				</div>
 
@@ -384,8 +391,16 @@
 						</select>
 					</div>
 					<div>
-						<label for="edit-bar-inv" class="block font-bold text-slate-700 mb-1">Barcode</label>
-						<input id="edit-bar-inv" type="text" name="barcode" bind:value={editItem.barcode} class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono" />
+						<label for="edit-bar-inv" class="block font-bold text-slate-700 mb-1">Barcode (Tembak Scanner / Ketik)</label>
+						<input
+							id="edit-bar-inv"
+							type="text"
+							name="barcode"
+							bind:value={editItem.barcode}
+							placeholder="Scan kemasan produk..."
+							onkeydown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
+							class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono"
+						/>
 					</div>
 				</div>
 
