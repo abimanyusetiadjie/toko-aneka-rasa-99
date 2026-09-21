@@ -36,12 +36,12 @@
 	}
 
 	function openEdit(product: Product) {
-		editItem = product;
+		editItem = { ...product };
 		showEditModal = true;
 	}
 
 	function openRestock(product: Product) {
-		restockItem = product;
+		restockItem = { ...product };
 		showRestockModal = true;
 	}
 </script>
@@ -225,9 +225,12 @@
 				method="POST"
 				action="?/restock"
 				use:enhance={() => {
-					return async ({ update }) => {
+					return async ({ update, result }) => {
 						await update();
-						showRestockModal = false;
+						if (result.type === 'success' && (result.data as any)?.success !== false) {
+							showRestockModal = false;
+							restockItem = null;
+						}
 					};
 				}}
 				class="space-y-3 text-xs"
@@ -277,9 +280,11 @@
 				method="POST"
 				action="?/create"
 				use:enhance={() => {
-					return async ({ update }) => {
+					return async ({ update, result }) => {
 						await update();
-						showAddModal = false;
+						if (result.type === 'success' && (result.data as any)?.success !== false) {
+							showAddModal = false;
+						}
 					};
 				}}
 				class="space-y-3 text-xs"
@@ -352,9 +357,12 @@
 				method="POST"
 				action="?/update"
 				use:enhance={() => {
-					return async ({ update }) => {
+					return async ({ update, result }) => {
 						await update();
-						showEditModal = false;
+						if (result.type === 'success' && (result.data as any)?.success !== false) {
+							showEditModal = false;
+							editItem = null;
+						}
 					};
 				}}
 				class="space-y-3 text-xs"
