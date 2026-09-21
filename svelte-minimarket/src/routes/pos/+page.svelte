@@ -79,9 +79,16 @@
 	import type { PettyCashExpense } from '$lib/types';
 
 
+	let { data } = $props();
+
 	let barcodeInput: HTMLInputElement;
 	let barcode = $state('');
-	let cashierName = $state('Siti Aminah');
+	let cashierName = $derived(
+		data?.user?.full_name || data?.user?.username || 'Kasir Toko'
+	);
+	let isOwner = $derived(
+		data?.user?.role_id === 1 || data?.user?.username?.toLowerCase().includes('owner')
+	);
 	let storeName = $state('Toko Aneka Rasa 99');
 	let storeAddress = $state('Poris Indah Blok B 11 No.1');
 	let storePhone = $state('0812-3456-7890');
@@ -1216,9 +1223,6 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 		} else if (e.key === 'F2') {
 			e.preventDefault();
 			barcodeInput?.focus();
-		} else if (e.key === 'F3') {
-			e.preventDefault();
-			showMemberModal = true;
 		} else if (e.key === 'F4') {
 			e.preventDefault();
 			showSplitModal = true;
@@ -1416,7 +1420,7 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 					<span class="truncate">{storeName}</span>
 					{#if $isOnline}
 						<span class="inline-flex items-center gap-1 text-[9px] sm:text-[10px] text-emerald-800 bg-emerald-100 border border-emerald-300 px-1.5 py-0.2 rounded font-bold shrink-0">
-							<Wifi class="w-2.5 h-2.5 text-emerald-600" /> <span class="hidden sm:inline">Online (Supabase)</span>
+							<Wifi class="w-2.5 h-2.5 text-emerald-600" /> <span class="hidden sm:inline">Online (VPS Lokal)</span>
 						</span>
 					{:else}
 						<span class="inline-flex items-center gap-1 text-[9px] sm:text-[10px] text-amber-800 bg-amber-100 border border-amber-300 px-1.5 py-0.2 rounded font-bold shrink-0">
@@ -1489,24 +1493,17 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 			</button>
 
 
-			<button
-				onclick={() => (showMemberModal = true)}
-				class="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 rounded border transition-all {currentMember
-					? 'bg-purple-50 border-purple-300 text-purple-900 font-bold'
-					: 'bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100'}"
-			>
-				<Award class="w-4 h-4 text-purple-600 shrink-0" />
-				<div class="text-left">
-					<span class="text-[8px] sm:text-[9px] text-slate-500 block font-mono">MEMBER</span>
-					<span class="font-bold text-[11px] sm:text-xs max-w-[70px] sm:max-w-none truncate block">{currentMember ? currentMember.name : 'Pilih'}</span>
-				</div>
-			</button>
-
 			<div class="flex items-center gap-1.5 sm:gap-2 border-l border-slate-300 pl-2 sm:pl-3">
-				<User class="w-4 h-4 text-slate-400 shrink-0" />
-				<div class="text-left">
-					<span class="text-[8px] sm:text-[9px] text-slate-500 block font-mono">KASIR</span>
-					<span class="font-bold text-[11px] sm:text-xs text-slate-800 max-w-[65px] sm:max-w-none truncate block">{cashierName}</span>
+				<div class="w-7 h-7 rounded-lg {isOwner ? 'bg-blue-100 text-blue-700 border border-blue-300' : 'bg-slate-100 text-slate-700 border border-slate-300'} flex items-center justify-center font-bold text-xs shrink-0">
+					{(cashierName || 'U').charAt(0).toUpperCase()}
+				</div>
+				<div class="text-left min-w-0">
+					<span class="text-[8px] sm:text-[9px] font-mono font-bold block leading-none {isOwner ? 'text-blue-700' : 'text-slate-500'}">
+						{isOwner ? 'PEMILIK (OWNER)' : 'KASIR'}
+					</span>
+					<span class="font-bold text-[11px] sm:text-xs text-slate-900 max-w-[90px] sm:max-w-[150px] truncate block leading-tight mt-0.5" title={cashierName}>
+						{cashierName}
+					</span>
 				</div>
 			</div>
 
@@ -2094,7 +2091,6 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 			<div class="space-y-1.5 text-xs font-mono">
 				<div class="flex justify-between py-1 border-b border-slate-100"><span class="text-slate-600">Bantuan Shortcut:</span><span class="kbd-badge">F1</span></div>
 				<div class="flex justify-between py-1 border-b border-slate-100"><span class="text-slate-600">Pindai / Ketik Barcode:</span><span class="kbd-badge">F2</span></div>
-				<div class="flex justify-between py-1 border-b border-slate-100"><span class="text-slate-600">Member & Tukar Poin:</span><span class="kbd-badge">F3</span></div>
 				<div class="flex justify-between py-1 border-b border-slate-100"><span class="text-slate-600">Split Payment (Tunai+Non-Tunai):</span><span class="kbd-badge">F4</span></div>
 				<div class="flex justify-between py-1 border-b border-slate-100"><span class="text-slate-600">Buka Katalog Cepat (Pilih Barang):</span><span class="kbd-badge text-purple-800 border-purple-300 bg-purple-50">F7</span></div>
 				<div class="flex justify-between py-1 border-b border-slate-100"><span class="text-slate-600">Pilih Pembayaran Tunai:</span><span class="kbd-badge">F8</span></div>
