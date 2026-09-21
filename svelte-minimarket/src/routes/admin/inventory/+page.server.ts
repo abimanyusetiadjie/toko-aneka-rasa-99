@@ -63,7 +63,10 @@ export const actions: Actions = {
 		const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
 		const data = await request.formData();
 		const name = String(data.get('name') || '').trim();
-		const category_id = Number(data.get('category_id') || 1);
+		const rawCat = String(data.get('category_id') || '').trim();
+		const category_id = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawCat)
+			? rawCat
+			: '55555555-5555-5555-5555-555555555555';
 		const base_hpp = isOwner ? Number(data.get('base_hpp') || 0) : 0;
 		const selling_price = Number(data.get('selling_price') || 0);
 		const stock = Number(data.get('stock') || 0);
@@ -182,7 +185,10 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const id = String(data.get('id'));
 		const name = String(data.get('name') || '').trim();
-		const category_id = Number(data.get('category_id') || 1);
+		const rawCat = String(data.get('category_id') || '').trim();
+		const category_id = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawCat)
+			? rawCat
+			: '55555555-5555-5555-5555-555555555555';
 		const base_hpp_form = Number(data.get('base_hpp') || 0);
 		const selling_price = Number(data.get('selling_price') || 0);
 		const stock = Number(data.get('stock') || 0);
@@ -211,6 +217,10 @@ export const actions: Actions = {
 				 WHERE id = $6`,
 				[name, category_id, base_hpp, selling_price, stock, id]
 			);
+
+			if (barcode) {
+				await query(`UPDATE products SET barcode = $1 WHERE id = $2`, [barcode, id]).catch(() => {});
+			}
 
 			const existingUnits = await query(`SELECT id FROM product_units WHERE product_id = $1 AND conversion_factor = 1 LIMIT 1`, [id]);
 			if (existingUnits.length > 0) {
