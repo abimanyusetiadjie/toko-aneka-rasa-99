@@ -23,6 +23,7 @@ export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 				FROM products p
 				LEFT JOIN categories c ON p.category_id = c.id
 				LEFT JOIN product_units pu ON p.id = pu.product_id AND pu.conversion_factor = 1
+				WHERE (p.is_active = true OR p.is_active IS NULL)
 				ORDER BY p.name ASC
 			`),
 			query<Category>(`SELECT id, name FROM categories ORDER BY name ASC`),
@@ -259,7 +260,23 @@ export const actions: Actions = {
 		if (!id) return { success: false, message: 'ID produk tidak valid.' };
 
 		try {
-			await query(`DELETE FROM products WHERE id = $1`, [id]);
+			// Cek apakah produk sudah pernah terlibat dalam transaksi penjualan
+			let hasTransactions = false;
+			try {
+				const txUsage = await query(`SELECT id FROM transaction_details WHERE product_id = $1 LIMIT 1`, [id]);
+				if (txUsage && txUsage.length > 0) hasTransactions = true;
+			} catch {}
+
+			if (hasTransactions) {
+				// Soft delete: tandai tidak aktif agar riwayat nota/laporan keuangan masa lalu tetap valid
+				await query(`UPDATE products SET is_active = false, updated_at = NOW() WHERE id = $1`, [id]);
+				await query(`DELETE FROM product_units WHERE product_id = $1`, [id]);
+			} else {
+				// Hard delete bersih jika belum ada transaksi
+				try { await query(`DELETE FROM stock_movements WHERE product_id = $1`, [id]); } catch {}
+				try { await query(`DELETE FROM product_units WHERE product_id = $1`, [id]); } catch {}
+				await query(`DELETE FROM products WHERE id = $1`, [id]);
+			}
 
 			broadcastRealtimeEvent({
 				type: 'STOCK_CHANGED',
@@ -270,7 +287,7 @@ export const actions: Actions = {
 				}
 			});
 
-			return { success: true, message: 'Produk berhasil dihapus.' };
+			return { success: true, message: 'Produk berhasil dihapus dari inventori detik ini juga.' };
 		} catch (err: any) {
 			return { success: false, message: 'Gagal menghapus produk: ' + err.message };
 		}
