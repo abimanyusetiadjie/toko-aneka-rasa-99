@@ -183,6 +183,21 @@
 
 		<!-- Nav Links -->
 		<nav class="flex-1 p-3 space-y-4 overflow-y-auto custom-scrollbar">
+			<!-- Link Kembali ke Pusat Kendali (Pilih 3 Modul) -->
+			<div>
+				<a
+					href="/portal"
+					onclick={closeDrawer}
+					class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-800 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border border-slate-300 hover:border-blue-300 transition-all shadow-2xs group"
+					title="Kembali ke Pusat Kendali (Pilih 3 Modul Sistem)"
+				>
+					<span class="flex items-center gap-2">
+						<Store class="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
+						<span>Pusat Kendali Toko</span>
+					</span>
+					<span class="text-[10px] font-mono text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200">3 Modul</span>
+				</a>
+			</div>
 			<!-- Executive Section (Khusus Owner) -->
 			{#if data?.user?.role_id === 1}
 				<div class="space-y-1">
