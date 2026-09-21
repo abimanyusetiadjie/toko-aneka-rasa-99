@@ -1,44 +1,19 @@
 import pg from 'pg';
 import { env } from '$env/dynamic/private';
 
-const connectionString = env.DATABASE_URL || "postgresql://postgres.zdqrraxsefjvopucyysm:minimarket123*@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres";
+const connectionString =
+	env.DATABASE_URL ||
+	"postgresql://minimarket:AnekaRasa99Secure*@localhost:5432/minimarket_db";
+
+const isLocal = connectionString.includes('localhost') || connectionString.includes('127.0.0.1');
 
 export const pool = new pg.Pool({
 	connectionString,
-	ssl: {
-		rejectUnauthorized: false
-	},
-	max: 5,
-	idleTimeoutMillis: 15000,
-	connectionTimeoutMillis: 2500 // 2.5s connection timeout for ultra-responsive failover
+	ssl: isLocal ? false : { rejectUnauthorized: false },
+	max: 20,
+	idleTimeoutMillis: 30000,
+	connectionTimeoutMillis: 5000
 });
-
-// ==========================================
-// ⚡ CIRCUIT BREAKER STATE (0ms Latency Engine)
-// ==========================================
-// Jika koneksi remote gagal 1x, circuit langsung OPEN sehingga request berikutnya
-// merespons instan (< 1ms) tanpa menunggu timeout TCP berulang-ulang.
-let circuitState: 'CLOSED' | 'OPEN' = 'CLOSED';
-let lastFailureTime = 0;
-const CIRCUIT_COOLDOWN_MS = 60000; // Coba reconnect setiap 60 detik di latar belakang
-
-function isCircuitOpen(): boolean {
-	if (circuitState === 'OPEN') {
-		const now = Date.now();
-		if (now - lastFailureTime > CIRCUIT_COOLDOWN_MS) {
-			// Cooldown selesai, coba probing kembali
-			circuitState = 'CLOSED';
-			return false;
-		}
-		return true;
-	}
-	return false;
-}
-
-function tripCircuit() {
-	circuitState = 'OPEN';
-	lastFailureTime = Date.now();
-}
 
 import { CATEGORIES, PRODUCTS, PRODUCT_UNITS } from './seeds/tokoanekarasa99';
 
@@ -106,37 +81,26 @@ export function updateMemoryProductStock(productId: string, newStock: number) {
 }
 
 /**
- * High-performance query with Circuit Breaker (Zero Delay < 1ms on offline)
+ * Direct PostgreSQL Query Execution Engine (< 0.5ms on local VPS)
  */
 export async function query<T = any>(text: string, params: any[] = []): Promise<T[]> {
-	// Jika circuit breaker aktif (karena Supabase sedang unreachable), langsung kirim in-memory < 1ms
-	if (isCircuitOpen()) {
-		return executeInMemoryFallback<T>(text, params);
-	}
-
 	try {
-		const queryTask = (async () => {
-			const client = await pool.connect();
-			try {
-				const res = await client.query(text, params);
-				return res.rows;
-			} finally {
-				client.release();
-			}
-		})();
-
-		let timer: any;
-		const timeoutTask = new Promise<never>((_, reject) => {
-			timer = setTimeout(() => reject(new Error('Query timeout (2500ms)')), 2500);
-		});
-
-		const result = await Promise.race([queryTask, timeoutTask]);
-		clearTimeout(timer);
-		return result;
+		const client = await pool.connect();
+		try {
+			const res = await client.query(text, params);
+			return res.rows;
+		} finally {
+			client.release();
+		}
 	} catch (dbErr: any) {
-		// Trip circuit breaker agar request berikutnya langsung instan tanpa delay timeout
-		tripCircuit();
-		return executeInMemoryFallback<T>(text, params);
+		console.error('[DB Query Error]', dbErr?.message || dbErr, 'SQL:', text.trim().slice(0, 120));
+		const trimmedSql = text.trim().toUpperCase();
+		if (trimmedSql.startsWith('SELECT')) {
+			console.warn('[DB Fallback] Falling back to in-memory seed for SELECT query');
+			return executeInMemoryFallback<T>(text, params);
+		}
+		// DO NOT swallow mutations (INSERT/UPDATE/DELETE). Throw so caller knows.
+		throw dbErr;
 	}
 }
 
