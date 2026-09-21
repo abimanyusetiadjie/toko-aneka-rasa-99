@@ -58,11 +58,7 @@ CREATE TABLE members (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     phone_number VARCHAR(20) NOT NULL UNIQUE,
     full_name VARCHAR(100) NOT NULL,
-    phone VARCHAR(20),
-    name VARCHAR(100),
     points INT DEFAULT 0,
-    points_balance INT DEFAULT 0,
-    total_spend NUMERIC(15, 2) DEFAULT 0.00,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -234,10 +230,11 @@ INSERT INTO categories (id, slug, name) VALUES
 ('1e74cb32-59e4-403b-97c6-01665230f5b7', 'bumbu-khas-bangka', 'BUMBU & OLEH-OLEH BANGKA'),
 ('60c489bd-d317-4d28-8bad-f24e8e732fc2', 'cemilan', 'CEMILAN'),
 ('0c78d523-1858-48a6-9671-c53a43e5b97e', 'getas-bangka', 'GETAS BANGKA'),
+('e4d7a211-9491-49b9-8e47-2bf3e7b1a201', 'kemplang-goreng', 'KEMPLANG GORENG'),
 ('05fc957b-f0b1-4bb8-b101-a73ebaa1c1aa', 'kemplang-panggang', 'KEMPLANG PANGGANG'),
 ('7a3cbb9c-080e-42fb-9bb7-f2b14f4e1f93', 'kemplang-pasir', 'KEMPLANG PASIR'),
 ('7774e144-8dae-4e31-8ae2-6e27a69bcba2', 'kemplang-ring-koin', 'KEMPLANG RING / KOIN'),
-('a571ea00-b6f7-418b-ae10-8b093354cb43', 'kerupuk-mentah-bangka', 'KERUPUK MENTAH BANGKA'),
+('a571ea00-b6f7-418b-ae10-8b093354cb43', 'kerupuk-mentah', 'KERUPUK MENTAH'),
 ('2c6e6e22-e421-4f93-8686-35ba0633b474', 'kopi-bangka', 'KOPI BANGKA'),
 ('965f7c22-b529-43c3-ae62-c11dfd9a6566', 'kue-khas-bangka', 'KUE KHAS BANGKA'),
 ('3448a39a-5f33-4f96-be6a-e64e52b22556', 'non-makanan', 'NON-MAKANAN'),

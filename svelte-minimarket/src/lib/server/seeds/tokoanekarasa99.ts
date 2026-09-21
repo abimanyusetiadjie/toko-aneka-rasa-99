@@ -48,6 +48,11 @@ export const CATEGORIES: SeedCategory[] = [
     "name": "GETAS BANGKA"
   },
   {
+    "id": "e4d7a211-9491-49b9-8e47-2bf3e7b1a201",
+    "slug": "kemplang-goreng",
+    "name": "KEMPLANG GORENG"
+  },
+  {
     "id": "05fc957b-f0b1-4bb8-b101-a73ebaa1c1aa",
     "slug": "kemplang-panggang",
     "name": "KEMPLANG PANGGANG"
@@ -64,8 +69,8 @@ export const CATEGORIES: SeedCategory[] = [
   },
   {
     "id": "a571ea00-b6f7-418b-ae10-8b093354cb43",
-    "slug": "kerupuk-mentah-bangka",
-    "name": "KERUPUK MENTAH BANGKA"
+    "slug": "kerupuk-mentah",
+    "name": "KERUPUK MENTAH"
   },
   {
     "id": "2c6e6e22-e421-4f93-8686-35ba0633b474",
