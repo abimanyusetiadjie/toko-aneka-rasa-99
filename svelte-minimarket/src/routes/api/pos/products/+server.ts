@@ -16,11 +16,12 @@ export const GET: RequestHandler = async ({ url }) => {
 		FROM products p
 		LEFT JOIN categories c ON p.category_id = c.id
 		LEFT JOIN product_units pu ON p.id = pu.product_id AND pu.conversion_factor = 1
+		WHERE (p.is_active = true OR p.is_active IS NULL)
 	`;
 
 	const params: any[] = [];
 	if (search) {
-		sql += ` WHERE p.name ILIKE $1 OR p.sku ILIKE $1 OR pu.barcode ILIKE $1`;
+		sql += ` AND (p.name ILIKE $1 OR p.sku ILIKE $1 OR pu.barcode ILIKE $1)`;
 		params.push(`%${search}%`);
 	}
 	sql += ` ORDER BY p.name ASC LIMIT 50`;

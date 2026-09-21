@@ -178,13 +178,24 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				const pointsEarned = data.member_id ? Math.round(calculatePointsEarned(calculatedSubtotal)) : 0;
 				const txCreatedAt = data.client_timestamp ? new Date(data.client_timestamp) : new Date();
 
+				let activeShiftId: string | null = null;
+				try {
+					const shiftRes = await client.query(
+						`SELECT id FROM cashier_shifts WHERE user_id = $1 AND status = 'OPEN' ORDER BY opened_at DESC LIMIT 1`,
+						[userId]
+					);
+					if (shiftRes.rows.length > 0) {
+						activeShiftId = shiftRes.rows[0].id;
+					}
+				} catch {}
+
 				await client.query(
 					`INSERT INTO transactions (
 						id, store_id, shift_id, user_id, member_id, receipt_number, idempotency_key, 
 						subtotal_amount, discount_amount, total_amount, points_earned, points_redeemed, status, payment_method, created_at
 					) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'COMPLETED', $13, $14)`,
 					[
-						transactionId, storeId, null, userId, data.member_id || null, receiptNumber, data.idempotency_key,
+						transactionId, storeId, activeShiftId, userId, data.member_id || null, receiptNumber, data.idempotency_key,
 						calculatedSubtotal, Math.round(data.points_discount || 0), actualFinalTotal, pointsEarned, data.points_redeemed || 0,
 						data.payments[0]?.payment_method || 'CASH', txCreatedAt
 					]
@@ -200,6 +211,23 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 					const newBalance = detail.currentStock - detail.baseQty;
 					await client.query(`UPDATE products SET stock = $1, updated_at = NOW() WHERE id = $2`, [newBalance, detail.productId]);
+
+					await client.query(
+						`INSERT INTO stock_movements (
+							id, store_id, product_id, reference_type, reference_id, qty_base_change, balance_after, unit_cost_snapshot, created_by, notes, created_at
+						) VALUES ($1, $2, $3, 'SALE', $4, $5, $6, $7, $8, $9, NOW())`,
+						[
+							crypto.randomUUID(),
+							storeId,
+							detail.productId,
+							transactionId,
+							-detail.baseQty,
+							newBalance,
+							detail.baseHpp,
+							userId,
+							`Penjualan Kasir No: ${receiptNumber}`
+						]
+					);
 				}
 
 				for (const pay of data.payments) {
@@ -209,6 +237,18 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 						) VALUES ($1, $2, $3, $4, $5, $6)`,
 						[crypto.randomUUID(), transactionId, pay.payment_method, pay.amount, pay.payment_reference || null, pay.change_given || 0]
 					);
+				}
+
+				if (activeShiftId) {
+					const cashPaid = data.payments
+						.filter((p: any) => p.payment_method === 'CASH')
+						.reduce((sum: number, p: any) => sum + (Number(p.amount) - Number(p.change_given || 0)), 0);
+					if (cashPaid > 0) {
+						await client.query(
+							`UPDATE cashier_shifts SET expected_cash = expected_cash + $1 WHERE id = $2`,
+							[cashPaid, activeShiftId]
+						);
+					}
 				}
 
 				if (data.member_id) {
@@ -224,6 +264,22 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				for (const detail of preparedDetails) {
 					updateMemoryProductStock(detail.productId, detail.currentStock - detail.baseQty);
 				}
+
+				try {
+					broadcastRealtimeEvent({
+						type: 'STOCK_CHANGED',
+						data: {
+							items: preparedDetails.map(d => ({
+								productId: d.productId,
+								qty: d.qty,
+								baseQty: d.baseQty,
+								newBalance: d.currentStock - d.baseQty
+							})),
+							timestamp: new Date().toISOString(),
+							message: `Penjualan Kasir No: ${receiptNumber}`
+						}
+					});
+				} catch {}
 
 				try {
 					broadcastRealtimeEvent({
