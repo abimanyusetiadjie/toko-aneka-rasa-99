@@ -58,7 +58,11 @@ CREATE TABLE members (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     phone_number VARCHAR(20) NOT NULL UNIQUE,
     full_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    name VARCHAR(100),
     points INT DEFAULT 0,
+    points_balance INT DEFAULT 0,
+    total_spend NUMERIC(15, 2) DEFAULT 0.00,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
