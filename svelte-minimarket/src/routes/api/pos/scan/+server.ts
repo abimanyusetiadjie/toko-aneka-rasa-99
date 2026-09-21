@@ -3,7 +3,10 @@ import type { RequestHandler } from './$types';
 import { query } from '$lib/server/db';
 import type { Product, ProductUnit } from '$lib/types';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, setHeaders }) => {
+	setHeaders({
+		'cache-control': 'no-cache, no-store, must-revalidate'
+	});
 	const barcode = url.searchParams.get('barcode')?.trim();
 
 	if (!barcode) {
@@ -15,22 +18,36 @@ export const GET: RequestHandler = async ({ url }) => {
 		let units = await query<ProductUnit>(
 			`SELECT id, product_id, unit_name, conversion_factor, price, barcode 
 			 FROM product_units 
-			 WHERE barcode = $1 
+			 WHERE barcode = $1 OR barcode ILIKE $1
 			 LIMIT 1`,
 			[barcode]
 		);
 
 		let productId = units[0]?.product_id;
 
-		// 2. Fallback: Jika belum ada di product_units, cari di tabel products (barcode atau SKU)
+		// 2. Fallback: Jika belum ada di product_units, cari di tabel products (barcode, SKU, atau ID)
 		if (units.length === 0) {
-			const matched = await query<any>(
-				`SELECT id, sku, name, unit, price, cost_price, barcode 
-				 FROM products 
-				 WHERE barcode = $1 OR sku = $1 
-				 LIMIT 1`,
-				[barcode]
-			);
+			const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(barcode);
+			let matched: any[] = [];
+			if (isUuid) {
+				matched = await query<any>(
+					`SELECT id, sku, name, unit, price, cost_price, barcode 
+					 FROM products 
+					 WHERE id = $1 
+					 LIMIT 1`,
+					[barcode]
+				);
+			}
+
+			if (matched.length === 0) {
+				matched = await query<any>(
+					`SELECT id, sku, name, unit, price, cost_price, barcode 
+					 FROM products 
+					 WHERE barcode = $1 OR sku = $1 OR barcode ILIKE $1 OR sku ILIKE $1
+					 LIMIT 1`,
+					[barcode]
+				);
+			}
 
 			if (matched.length > 0) {
 				productId = matched[0].id;
@@ -64,12 +81,12 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		const scannedUnit = units[0];
 
-		// 3. Cari data induk produk
+		// 3. Cari data induk produk (hanya yang aktif)
 		const products = await query<Product>(
 			`SELECT p.id, p.sku, p.name, p.category_id, p.unit as base_unit, COALESCE(p.cost_price, 0) as base_hpp, p.stock, false as is_taxable, c.name as category_name
 			 FROM products p
 			 LEFT JOIN categories c ON p.category_id = c.id
-			 WHERE p.id = $1 
+			 WHERE p.id = $1 AND (p.is_active = true OR p.is_active IS NULL)
 			 LIMIT 1`,
 			[productId]
 		);

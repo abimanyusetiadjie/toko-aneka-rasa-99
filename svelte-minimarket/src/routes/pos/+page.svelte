@@ -650,7 +650,7 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 	async function fetchCatalog() {
 		isLoadingCatalog = true;
 		try {
-			const res = await fetch('/api/pos/products');
+			const res = await fetch('/api/pos/products', { cache: 'no-store' });
 			const data = await res.json();
 			catalogProducts = data.products || [];
 		} catch (e) {
@@ -661,6 +661,7 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 	}
 
 	async function openCatalog() {
+		catalogSearch = '';
 		showCatalogModal = true;
 		await fetchCatalog();
 	}
@@ -882,30 +883,33 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 		$amountPaid = finalPayTotal;
 	}
 
-	// 1. Pindai Barcode (Local-First Cache Strategy)
+	// 1. Pindai Barcode (Online-First dengan Local Fallback)
 	async function handleScan(codeToScan?: string) {
 		const code = (codeToScan || barcode).trim();
 		if (!code) return;
 		barcode = '';
 
-		const cached = findLocalProduct(code);
-		if (cached) {
-			addItem(cached.product, cached.scanned_unit, cached.all_units);
-			return;
-		}
-
+		// Ambil data terbaru langsung dari database VPS (< 0.5ms) agar update harga & nama dari Inventori langsung aktif
 		try {
-			const res = await fetch(`/api/pos/scan?barcode=${encodeURIComponent(code)}`);
-			if (!res.ok) {
+			const res = await fetch(`/api/pos/scan?barcode=${encodeURIComponent(code)}`, { cache: 'no-store' });
+			if (res.ok) {
+				const data = await res.json();
+				addItem(data.product, data.scanned_unit, data.all_units);
+				cacheProductItem(code, data);
+				return;
+			}
+			if (res.status === 404) {
 				const errData = await res.json().catch(() => ({}));
 				throw new Error(errData.message || `Barcode "${code}" tidak terdaftar di sistem`);
 			}
-
-			const data = await res.json();
-			addItem(data.product, data.scanned_unit, data.all_units);
-			cacheProductItem(code, data);
 		} catch (err: any) {
-			displayActionableError(`Barcode Tidak Terdaftar: "${code}"`, 'Pastikan barcode sudah didaftarkan di Master Inventory gudang.');
+			// Jika server terputus/offline, gunakan data cache lokal
+			const cached = findLocalProduct(code);
+			if (cached) {
+				addItem(cached.product, cached.scanned_unit, cached.all_units);
+				return;
+			}
+			displayActionableError(`Barcode Tidak Terdaftar: "${code}"`, err.message || 'Pastikan barcode sudah didaftarkan di Master Inventory gudang.');
 		}
 	}
 
@@ -1290,8 +1294,9 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 				console.error('Error reading localStorage shift data', e);
 			}
 
-			// Sinkronkan data shift hari ini dari server
+			// Sinkronkan data shift hari ini & seluruh katalog produk dari database VPS
 			fetchTodayShiftData();
+			fetchCatalog();
 		}
 
 		// Bersihkan keranjang otomatis jika ada sisa data dummy / non-UUID dari sesi lama

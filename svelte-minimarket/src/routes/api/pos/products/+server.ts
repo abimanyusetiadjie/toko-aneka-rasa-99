@@ -2,7 +2,10 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { query } from '$lib/server/db';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, setHeaders }) => {
+	setHeaders({
+		'cache-control': 'no-cache, no-store, must-revalidate'
+	});
 	const search = url.searchParams.get('q')?.trim() || '';
 
 	let sql = `
@@ -24,7 +27,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		sql += ` AND (p.name ILIKE $1 OR p.sku ILIKE $1 OR pu.barcode ILIKE $1)`;
 		params.push(`%${search}%`);
 	}
-	sql += ` ORDER BY p.name ASC LIMIT 50`;
+	sql += ` ORDER BY p.name ASC LIMIT 1000`;
 
 	try {
 		const products = await query(sql, params);
