@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		const [pRes, tRes, lsRes] = await Promise.all([
 			query(`SELECT COUNT(*) as count FROM products WHERE (is_active = true OR is_active IS NULL)`),
 			query(`SELECT COALESCE(SUM(total_amount), 0) as total FROM transactions WHERE created_at >= CURRENT_DATE`),
-			query(`SELECT COUNT(*) as count FROM products WHERE (is_active = true OR is_active IS NULL) AND stock < 20`)
+			query(`SELECT COUNT(*) as count FROM products WHERE (is_active = true OR is_active IS NULL) AND stock < 5`)
 		]);
 		if (pRes[0]?.count) productCount = Number(pRes[0].count);
 		if (tRes[0]?.total) todaySales = Number(tRes[0].total);

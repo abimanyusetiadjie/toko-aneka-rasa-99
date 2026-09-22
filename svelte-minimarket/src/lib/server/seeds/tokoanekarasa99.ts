@@ -108,7 +108,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KAC-830",
+    "barcode": "700830",
     "is_taxable": false,
     "is_active": true
   },
@@ -125,7 +125,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KER-450",
+    "barcode": "700450",
     "is_taxable": false,
     "is_active": true
   },
@@ -142,7 +142,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KER-273",
+    "barcode": "700273",
     "is_taxable": false,
     "is_active": true
   },
@@ -159,7 +159,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-ASA-936",
+    "barcode": "400936",
     "is_taxable": false,
     "is_active": true
   },
@@ -176,7 +176,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-TER-388",
+    "barcode": "400388",
     "is_taxable": false,
     "is_active": true
   },
@@ -210,7 +210,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 0,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KUE-650",
+    "barcode": "500650",
     "is_taxable": false,
     "is_active": true
   },
@@ -227,7 +227,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KOP-969",
+    "barcode": "600969",
     "is_taxable": false,
     "is_active": true
   },
@@ -244,7 +244,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 15,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KOP-427",
+    "barcode": "600427",
     "is_taxable": false,
     "is_active": true
   },
@@ -261,7 +261,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 0,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KOP-992",
+    "barcode": "600992",
     "is_taxable": false,
     "is_active": true
   },
@@ -278,7 +278,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-MAD-426",
+    "barcode": "400426",
     "is_taxable": false,
     "is_active": true
   },
@@ -295,7 +295,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 13,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEC-671",
+    "barcode": "400671",
     "is_taxable": false,
     "is_active": true
   },
@@ -312,7 +312,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 9,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEC-660",
+    "barcode": "400660",
     "is_taxable": false,
     "is_active": true
   },
@@ -329,7 +329,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 7,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEC-462",
+    "barcode": "400462",
     "is_taxable": false,
     "is_active": true
   },
@@ -346,7 +346,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 10,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-430",
+    "barcode": "120430",
     "is_taxable": false,
     "is_active": true
   },
@@ -363,7 +363,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-642",
+    "barcode": "110642",
     "is_taxable": false,
     "is_active": true
   },
@@ -380,7 +380,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KER-545",
+    "barcode": "700545",
     "is_taxable": false,
     "is_active": true
   },
@@ -397,7 +397,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 7,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KER-287",
+    "barcode": "700287",
     "is_taxable": false,
     "is_active": true
   },
@@ -414,7 +414,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 10,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KER-998",
+    "barcode": "700998",
     "is_taxable": false,
     "is_active": true
   },
@@ -431,7 +431,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KER-229",
+    "barcode": "700229",
     "is_taxable": false,
     "is_active": true
   },
@@ -448,7 +448,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 7,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KER-749",
+    "barcode": "700749",
     "is_taxable": false,
     "is_active": true
   },
@@ -465,7 +465,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 0,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-325",
+    "barcode": "110325",
     "is_taxable": false,
     "is_active": true
   },
@@ -482,7 +482,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 0,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-740",
+    "barcode": "110740",
     "is_taxable": false,
     "is_active": true
   },
@@ -499,7 +499,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-473",
+    "barcode": "110473",
     "is_taxable": false,
     "is_active": true
   },
@@ -516,7 +516,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-726",
+    "barcode": "110726",
     "is_taxable": false,
     "is_active": true
   },
@@ -533,7 +533,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 9,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-680",
+    "barcode": "110680",
     "is_taxable": false,
     "is_active": true
   },
@@ -550,7 +550,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 10,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-286",
+    "barcode": "110286",
     "is_taxable": false,
     "is_active": true
   },
@@ -567,7 +567,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-491",
+    "barcode": "130491",
     "is_taxable": false,
     "is_active": true
   },
@@ -584,7 +584,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-409",
+    "barcode": "130409",
     "is_taxable": false,
     "is_active": true
   },
@@ -601,7 +601,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-588",
+    "barcode": "990588",
     "is_taxable": false,
     "is_active": true
   },
@@ -618,7 +618,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 2,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-739",
+    "barcode": "990739",
     "is_taxable": false,
     "is_active": true
   },
@@ -635,7 +635,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-563",
+    "barcode": "990563",
     "is_taxable": false,
     "is_active": true
   },
@@ -652,7 +652,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 7,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-267",
+    "barcode": "110267",
     "is_taxable": false,
     "is_active": true
   },
@@ -669,7 +669,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 2,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-698",
+    "barcode": "110698",
     "is_taxable": false,
     "is_active": true
   },
@@ -686,7 +686,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-917",
+    "barcode": "110917",
     "is_taxable": false,
     "is_active": true
   },
@@ -703,7 +703,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 30,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-138",
+    "barcode": "110138",
     "is_taxable": false,
     "is_active": true
   },
@@ -720,7 +720,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 10,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-805",
+    "barcode": "100805",
     "is_taxable": false,
     "is_active": true
   },
@@ -737,7 +737,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-751",
+    "barcode": "100751",
     "is_taxable": false,
     "is_active": true
   },
@@ -754,7 +754,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-277",
+    "barcode": "100277",
     "is_taxable": false,
     "is_active": true
   },
@@ -771,7 +771,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-436",
+    "barcode": "100436",
     "is_taxable": false,
     "is_active": true
   },
@@ -788,7 +788,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-428",
+    "barcode": "990428",
     "is_taxable": false,
     "is_active": true
   },
@@ -805,7 +805,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 2,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-455",
+    "barcode": "990455",
     "is_taxable": false,
     "is_active": true
   },
@@ -822,7 +822,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-KEM-500",
+    "barcode": "990500",
     "is_taxable": false,
     "is_active": true
   },
@@ -839,7 +839,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 0,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-STI-187",
+    "barcode": "700187",
     "is_taxable": false,
     "is_active": true
   },
@@ -856,7 +856,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 2,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-STI-801",
+    "barcode": "700801",
     "is_taxable": false,
     "is_active": true
   },
@@ -873,7 +873,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 6,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-STI-705",
+    "barcode": "700705",
     "is_taxable": false,
     "is_active": true
   },
@@ -890,7 +890,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-STI-301",
+    "barcode": "700301",
     "is_taxable": false,
     "is_active": true
   },
@@ -907,7 +907,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-AMP-314",
+    "barcode": "990314",
     "is_taxable": false,
     "is_active": true
   },
@@ -924,7 +924,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-GET-989",
+    "barcode": "200989",
     "is_taxable": false,
     "is_active": true
   },
@@ -941,7 +941,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-GET-703",
+    "barcode": "200703",
     "is_taxable": false,
     "is_active": true
   },
@@ -958,7 +958,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-GET-525",
+    "barcode": "200525",
     "is_taxable": false,
     "is_active": true
   },
@@ -975,7 +975,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 0,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-GET-843",
+    "barcode": "200843",
     "is_taxable": false,
     "is_active": true
   },
@@ -992,7 +992,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 2,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-GET-791",
+    "barcode": "200791",
     "is_taxable": false,
     "is_active": true
   },
@@ -1009,7 +1009,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 0,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-GET-192",
+    "barcode": "200192",
     "is_taxable": false,
     "is_active": true
   },
@@ -1026,7 +1026,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 17,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "SKU-GET-225",
+    "barcode": "200225",
     "is_taxable": false,
     "is_active": true
   },
@@ -1043,7 +1043,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 17,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000017",
+    "barcode": "200001",
     "is_taxable": false,
     "is_active": true
   },
@@ -1060,7 +1060,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000024",
+    "barcode": "200002",
     "is_taxable": false,
     "is_active": true
   },
@@ -1077,7 +1077,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000031",
+    "barcode": "400001",
     "is_taxable": false,
     "is_active": true
   },
@@ -1094,7 +1094,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000048",
+    "barcode": "700001",
     "is_taxable": false,
     "is_active": true
   },
@@ -1111,7 +1111,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000055",
+    "barcode": "700002",
     "is_taxable": false,
     "is_active": true
   },
@@ -1128,7 +1128,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000062",
+    "barcode": "700003",
     "is_taxable": false,
     "is_active": true
   },
@@ -1145,7 +1145,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 9,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000079",
+    "barcode": "200003",
     "is_taxable": false,
     "is_active": true
   },
@@ -1162,7 +1162,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 20,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000086",
+    "barcode": "200004",
     "is_taxable": false,
     "is_active": true
   },
@@ -1179,7 +1179,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 17,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000093",
+    "barcode": "200005",
     "is_taxable": false,
     "is_active": true
   },
@@ -1196,7 +1196,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 24,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000109",
+    "barcode": "200006",
     "is_taxable": false,
     "is_active": true
   },
@@ -1213,7 +1213,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 16,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000116",
+    "barcode": "200007",
     "is_taxable": false,
     "is_active": true
   },
@@ -1230,7 +1230,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 12,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000123",
+    "barcode": "200008",
     "is_taxable": false,
     "is_active": true
   },
@@ -1247,7 +1247,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 0,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000130",
+    "barcode": "200009",
     "is_taxable": false,
     "is_active": true
   },
@@ -1264,7 +1264,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 2,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000147",
+    "barcode": "400002",
     "is_taxable": false,
     "is_active": true
   },
@@ -1281,7 +1281,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 70,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000154",
+    "barcode": "700004",
     "is_taxable": false,
     "is_active": true
   },
@@ -1298,7 +1298,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 33,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000161",
+    "barcode": "700005",
     "is_taxable": false,
     "is_active": true
   },
@@ -1315,7 +1315,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000178",
+    "barcode": "700006",
     "is_taxable": false,
     "is_active": true
   },
@@ -1332,7 +1332,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000185",
+    "barcode": "700007",
     "is_taxable": false,
     "is_active": true
   },
@@ -1349,7 +1349,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000192",
+    "barcode": "700008",
     "is_taxable": false,
     "is_active": true
   },
@@ -1366,7 +1366,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000208",
+    "barcode": "700009",
     "is_taxable": false,
     "is_active": true
   },
@@ -1383,7 +1383,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 2,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000215",
+    "barcode": "700010",
     "is_taxable": false,
     "is_active": true
   },
@@ -1400,7 +1400,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000222",
+    "barcode": "700011",
     "is_taxable": false,
     "is_active": true
   },
@@ -1417,7 +1417,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000239",
+    "barcode": "700012",
     "is_taxable": false,
     "is_active": true
   },
@@ -1434,7 +1434,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000246",
+    "barcode": "700013",
     "is_taxable": false,
     "is_active": true
   },
@@ -1451,7 +1451,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000253",
+    "barcode": "700014",
     "is_taxable": false,
     "is_active": true
   },
@@ -1468,7 +1468,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000260",
+    "barcode": "700015",
     "is_taxable": false,
     "is_active": true
   },
@@ -1485,7 +1485,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000277",
+    "barcode": "700016",
     "is_taxable": false,
     "is_active": true
   },
@@ -1502,7 +1502,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4010,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "8999900000284",
+    "barcode": "400003",
     "is_taxable": false,
     "is_active": true
   },
@@ -1519,7 +1519,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 10,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000291",
+    "barcode": "400004",
     "is_taxable": false,
     "is_active": true
   },
@@ -1536,7 +1536,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 18,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "8999900000307",
+    "barcode": "400005",
     "is_taxable": false,
     "is_active": true
   },
@@ -1553,7 +1553,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 13,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "8999900000314",
+    "barcode": "400006",
     "is_taxable": false,
     "is_active": true
   },
@@ -1570,7 +1570,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "8999900000321",
+    "barcode": "400007",
     "is_taxable": false,
     "is_active": true
   },
@@ -1587,7 +1587,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 15,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "8999900000338",
+    "barcode": "400008",
     "is_taxable": false,
     "is_active": true
   },
@@ -1604,7 +1604,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 10,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "8999900000345",
+    "barcode": "400009",
     "is_taxable": false,
     "is_active": true
   },
@@ -1621,7 +1621,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "8999900000352",
+    "barcode": "400010",
     "is_taxable": false,
     "is_active": true
   },
@@ -1638,7 +1638,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 19,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "8999900000369",
+    "barcode": "400011",
     "is_taxable": false,
     "is_active": true
   },
@@ -1655,7 +1655,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000376",
+    "barcode": "110001",
     "is_taxable": false,
     "is_active": true
   },
@@ -1672,7 +1672,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000383",
+    "barcode": "110002",
     "is_taxable": false,
     "is_active": true
   },
@@ -1689,7 +1689,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000390",
+    "barcode": "110003",
     "is_taxable": false,
     "is_active": true
   },
@@ -1706,7 +1706,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000406",
+    "barcode": "110004",
     "is_taxable": false,
     "is_active": true
   },
@@ -1723,7 +1723,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000413",
+    "barcode": "110005",
     "is_taxable": false,
     "is_active": true
   },
@@ -1740,7 +1740,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000420",
+    "barcode": "110006",
     "is_taxable": false,
     "is_active": true
   },
@@ -1757,7 +1757,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000437",
+    "barcode": "110007",
     "is_taxable": false,
     "is_active": true
   },
@@ -1774,7 +1774,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000444",
+    "barcode": "110008",
     "is_taxable": false,
     "is_active": true
   },
@@ -1791,7 +1791,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000451",
+    "barcode": "110009",
     "is_taxable": false,
     "is_active": true
   },
@@ -1808,7 +1808,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000468",
+    "barcode": "130001",
     "is_taxable": false,
     "is_active": true
   },
@@ -1825,7 +1825,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000475",
+    "barcode": "300001",
     "is_taxable": false,
     "is_active": true
   },
@@ -1842,7 +1842,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000482",
+    "barcode": "100001",
     "is_taxable": false,
     "is_active": true
   },
@@ -1859,7 +1859,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000499",
+    "barcode": "100002",
     "is_taxable": false,
     "is_active": true
   },
@@ -1876,7 +1876,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000505",
+    "barcode": "100003",
     "is_taxable": false,
     "is_active": true
   },
@@ -1893,7 +1893,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000512",
+    "barcode": "100004",
     "is_taxable": false,
     "is_active": true
   },
@@ -1910,7 +1910,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000529",
+    "barcode": "100005",
     "is_taxable": false,
     "is_active": true
   },
@@ -1927,7 +1927,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000536",
+    "barcode": "100006",
     "is_taxable": false,
     "is_active": true
   },
@@ -1944,7 +1944,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000543",
+    "barcode": "100007",
     "is_taxable": false,
     "is_active": true
   },
@@ -1961,7 +1961,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000550",
+    "barcode": "100008",
     "is_taxable": false,
     "is_active": true
   },
@@ -1978,7 +1978,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000567",
+    "barcode": "100009",
     "is_taxable": false,
     "is_active": true
   },
@@ -1995,7 +1995,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000574",
+    "barcode": "100010",
     "is_taxable": false,
     "is_active": true
   },
@@ -2012,7 +2012,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000581",
+    "barcode": "100011",
     "is_taxable": false,
     "is_active": true
   },
@@ -2029,7 +2029,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000598",
+    "barcode": "700017",
     "is_taxable": false,
     "is_active": true
   },
@@ -2046,7 +2046,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000604",
+    "barcode": "700018",
     "is_taxable": false,
     "is_active": true
   },
@@ -2063,7 +2063,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000611",
+    "barcode": "700019",
     "is_taxable": false,
     "is_active": true
   },
@@ -2080,7 +2080,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000628",
+    "barcode": "700020",
     "is_taxable": false,
     "is_active": true
   },
@@ -2097,7 +2097,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000635",
+    "barcode": "700021",
     "is_taxable": false,
     "is_active": true
   },
@@ -2114,7 +2114,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000642",
+    "barcode": "700022",
     "is_taxable": false,
     "is_active": true
   },
@@ -2131,7 +2131,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": -1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000659",
+    "barcode": "700023",
     "is_taxable": false,
     "is_active": true
   },
@@ -2148,7 +2148,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 9,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000666",
+    "barcode": "700024",
     "is_taxable": false,
     "is_active": true
   },
@@ -2165,7 +2165,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000673",
+    "barcode": "700025",
     "is_taxable": false,
     "is_active": true
   },
@@ -2182,7 +2182,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000680",
+    "barcode": "300002",
     "is_taxable": false,
     "is_active": true
   },
@@ -2199,7 +2199,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000697",
+    "barcode": "300003",
     "is_taxable": false,
     "is_active": true
   },
@@ -2216,7 +2216,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000703",
+    "barcode": "300004",
     "is_taxable": false,
     "is_active": true
   },
@@ -2233,7 +2233,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000710",
+    "barcode": "300005",
     "is_taxable": false,
     "is_active": true
   },
@@ -2250,7 +2250,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000727",
+    "barcode": "300006",
     "is_taxable": false,
     "is_active": true
   },
@@ -2267,7 +2267,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000734",
+    "barcode": "300007",
     "is_taxable": false,
     "is_active": true
   },
@@ -2284,7 +2284,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "ball",
     "base_unit": "BALL",
-    "barcode": "8999900000741",
+    "barcode": "300008",
     "is_taxable": false,
     "is_active": true
   },
@@ -2301,7 +2301,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000758",
+    "barcode": "300009",
     "is_taxable": false,
     "is_active": true
   },
@@ -2318,7 +2318,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 40,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000765",
+    "barcode": "300010",
     "is_taxable": false,
     "is_active": true
   },
@@ -2335,7 +2335,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000772",
+    "barcode": "300011",
     "is_taxable": false,
     "is_active": true
   },
@@ -2352,7 +2352,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000789",
+    "barcode": "300012",
     "is_taxable": false,
     "is_active": true
   },
@@ -2369,7 +2369,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 13,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000796",
+    "barcode": "300013",
     "is_taxable": false,
     "is_active": true
   },
@@ -2386,7 +2386,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000802",
+    "barcode": "300014",
     "is_taxable": false,
     "is_active": true
   },
@@ -2403,7 +2403,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000819",
+    "barcode": "300015",
     "is_taxable": false,
     "is_active": true
   },
@@ -2420,7 +2420,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 30,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000826",
+    "barcode": "300016",
     "is_taxable": false,
     "is_active": true
   },
@@ -2437,7 +2437,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000833",
+    "barcode": "300017",
     "is_taxable": false,
     "is_active": true
   },
@@ -2454,7 +2454,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000840",
+    "barcode": "300018",
     "is_taxable": false,
     "is_active": true
   },
@@ -2471,7 +2471,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 30,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000857",
+    "barcode": "300019",
     "is_taxable": false,
     "is_active": true
   },
@@ -2488,7 +2488,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000864",
+    "barcode": "300020",
     "is_taxable": false,
     "is_active": true
   },
@@ -2505,7 +2505,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000871",
+    "barcode": "300021",
     "is_taxable": false,
     "is_active": true
   },
@@ -2522,7 +2522,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000888",
+    "barcode": "300022",
     "is_taxable": false,
     "is_active": true
   },
@@ -2539,7 +2539,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 8,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000895",
+    "barcode": "300023",
     "is_taxable": false,
     "is_active": true
   },
@@ -2556,7 +2556,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000901",
+    "barcode": "300024",
     "is_taxable": false,
     "is_active": true
   },
@@ -2573,7 +2573,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000918",
+    "barcode": "300025",
     "is_taxable": false,
     "is_active": true
   },
@@ -2590,7 +2590,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "ball",
     "base_unit": "BALL",
-    "barcode": "8999900000925",
+    "barcode": "300026",
     "is_taxable": false,
     "is_active": true
   },
@@ -2607,7 +2607,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000932",
+    "barcode": "300027",
     "is_taxable": false,
     "is_active": true
   },
@@ -2624,7 +2624,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 40,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000949",
+    "barcode": "300028",
     "is_taxable": false,
     "is_active": true
   },
@@ -2641,7 +2641,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000956",
+    "barcode": "300029",
     "is_taxable": false,
     "is_active": true
   },
@@ -2658,7 +2658,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000963",
+    "barcode": "300030",
     "is_taxable": false,
     "is_active": true
   },
@@ -2675,7 +2675,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000970",
+    "barcode": "300031",
     "is_taxable": false,
     "is_active": true
   },
@@ -2692,7 +2692,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000987",
+    "barcode": "300032",
     "is_taxable": false,
     "is_active": true
   },
@@ -2709,7 +2709,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900000994",
+    "barcode": "300033",
     "is_taxable": false,
     "is_active": true
   },
@@ -2726,7 +2726,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001007",
+    "barcode": "300034",
     "is_taxable": false,
     "is_active": true
   },
@@ -2743,7 +2743,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "ball",
     "base_unit": "BALL",
-    "barcode": "8999900001014",
+    "barcode": "300035",
     "is_taxable": false,
     "is_active": true
   },
@@ -2760,7 +2760,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001021",
+    "barcode": "300036",
     "is_taxable": false,
     "is_active": true
   },
@@ -2777,7 +2777,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001038",
+    "barcode": "300037",
     "is_taxable": false,
     "is_active": true
   },
@@ -2794,7 +2794,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001045",
+    "barcode": "300038",
     "is_taxable": false,
     "is_active": true
   },
@@ -2811,7 +2811,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001052",
+    "barcode": "300039",
     "is_taxable": false,
     "is_active": true
   },
@@ -2828,7 +2828,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001069",
+    "barcode": "300040",
     "is_taxable": false,
     "is_active": true
   },
@@ -2845,7 +2845,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001076",
+    "barcode": "300041",
     "is_taxable": false,
     "is_active": true
   },
@@ -2862,7 +2862,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001083",
+    "barcode": "300042",
     "is_taxable": false,
     "is_active": true
   },
@@ -2879,7 +2879,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "ball",
     "base_unit": "BALL",
-    "barcode": "8999900001090",
+    "barcode": "300043",
     "is_taxable": false,
     "is_active": true
   },
@@ -2896,7 +2896,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001106",
+    "barcode": "300044",
     "is_taxable": false,
     "is_active": true
   },
@@ -2913,7 +2913,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001113",
+    "barcode": "300045",
     "is_taxable": false,
     "is_active": true
   },
@@ -2930,7 +2930,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001120",
+    "barcode": "300046",
     "is_taxable": false,
     "is_active": true
   },
@@ -2947,7 +2947,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001137",
+    "barcode": "300047",
     "is_taxable": false,
     "is_active": true
   },
@@ -2964,7 +2964,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001144",
+    "barcode": "300048",
     "is_taxable": false,
     "is_active": true
   },
@@ -2981,7 +2981,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001151",
+    "barcode": "300049",
     "is_taxable": false,
     "is_active": true
   },
@@ -2998,7 +2998,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 40,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001168",
+    "barcode": "300050",
     "is_taxable": false,
     "is_active": true
   },
@@ -3015,7 +3015,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001175",
+    "barcode": "300051",
     "is_taxable": false,
     "is_active": true
   },
@@ -3032,7 +3032,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001182",
+    "barcode": "300052",
     "is_taxable": false,
     "is_active": true
   },
@@ -3049,7 +3049,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001199",
+    "barcode": "300053",
     "is_taxable": false,
     "is_active": true
   },
@@ -3066,7 +3066,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001205",
+    "barcode": "300054",
     "is_taxable": false,
     "is_active": true
   },
@@ -3083,7 +3083,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001212",
+    "barcode": "300055",
     "is_taxable": false,
     "is_active": true
   },
@@ -3100,7 +3100,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001229",
+    "barcode": "300056",
     "is_taxable": false,
     "is_active": true
   },
@@ -3117,7 +3117,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001236",
+    "barcode": "300057",
     "is_taxable": false,
     "is_active": true
   },
@@ -3134,7 +3134,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001243",
+    "barcode": "300058",
     "is_taxable": false,
     "is_active": true
   },
@@ -3151,7 +3151,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001250",
+    "barcode": "300059",
     "is_taxable": false,
     "is_active": true
   },
@@ -3168,7 +3168,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 40,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001267",
+    "barcode": "300060",
     "is_taxable": false,
     "is_active": true
   },
@@ -3185,7 +3185,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001274",
+    "barcode": "300061",
     "is_taxable": false,
     "is_active": true
   },
@@ -3202,7 +3202,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001281",
+    "barcode": "300062",
     "is_taxable": false,
     "is_active": true
   },
@@ -3219,7 +3219,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001298",
+    "barcode": "300063",
     "is_taxable": false,
     "is_active": true
   },
@@ -3236,7 +3236,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001304",
+    "barcode": "300064",
     "is_taxable": false,
     "is_active": true
   },
@@ -3253,7 +3253,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 100,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001311",
+    "barcode": "300065",
     "is_taxable": false,
     "is_active": true
   },
@@ -3270,7 +3270,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001328",
+    "barcode": "300066",
     "is_taxable": false,
     "is_active": true
   },
@@ -3287,7 +3287,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001335",
+    "barcode": "300067",
     "is_taxable": false,
     "is_active": true
   },
@@ -3304,7 +3304,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 80,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001342",
+    "barcode": "300068",
     "is_taxable": false,
     "is_active": true
   },
@@ -3321,7 +3321,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001359",
+    "barcode": "300069",
     "is_taxable": false,
     "is_active": true
   },
@@ -3338,7 +3338,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001366",
+    "barcode": "300070",
     "is_taxable": false,
     "is_active": true
   },
@@ -3355,7 +3355,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 20,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001373",
+    "barcode": "700026",
     "is_taxable": false,
     "is_active": true
   },
@@ -3372,7 +3372,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 6,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001380",
+    "barcode": "600001",
     "is_taxable": false,
     "is_active": true
   },
@@ -3389,7 +3389,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 15,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001397",
+    "barcode": "600002",
     "is_taxable": false,
     "is_active": true
   },
@@ -3406,7 +3406,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 9,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001403",
+    "barcode": "600003",
     "is_taxable": false,
     "is_active": true
   },
@@ -3423,7 +3423,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001410",
+    "barcode": "600004",
     "is_taxable": false,
     "is_active": true
   },
@@ -3440,7 +3440,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 9,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001427",
+    "barcode": "600005",
     "is_taxable": false,
     "is_active": true
   },
@@ -3457,7 +3457,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 19,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001434",
+    "barcode": "600006",
     "is_taxable": false,
     "is_active": true
   },
@@ -3474,7 +3474,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 9,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001441",
+    "barcode": "600007",
     "is_taxable": false,
     "is_active": true
   },
@@ -3491,7 +3491,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 0,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001458",
+    "barcode": "500001",
     "is_taxable": false,
     "is_active": true
   },
@@ -3508,7 +3508,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 0,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001465",
+    "barcode": "500002",
     "is_taxable": false,
     "is_active": true
   },
@@ -3525,7 +3525,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 0,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001472",
+    "barcode": "500003",
     "is_taxable": false,
     "is_active": true
   },
@@ -3542,7 +3542,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 2,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001489",
+    "barcode": "500004",
     "is_taxable": false,
     "is_active": true
   },
@@ -3559,7 +3559,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 10,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001496",
+    "barcode": "500005",
     "is_taxable": false,
     "is_active": true
   },
@@ -3576,7 +3576,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001502",
+    "barcode": "500006",
     "is_taxable": false,
     "is_active": true
   },
@@ -3593,7 +3593,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001519",
+    "barcode": "500007",
     "is_taxable": false,
     "is_active": true
   },
@@ -3610,7 +3610,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001526",
+    "barcode": "500008",
     "is_taxable": false,
     "is_active": true
   },
@@ -3627,7 +3627,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001533",
+    "barcode": "130002",
     "is_taxable": false,
     "is_active": true
   },
@@ -3644,7 +3644,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001540",
+    "barcode": "700027",
     "is_taxable": false,
     "is_active": true
   },
@@ -3661,7 +3661,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001557",
+    "barcode": "700028",
     "is_taxable": false,
     "is_active": true
   },
@@ -3678,7 +3678,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001564",
+    "barcode": "700029",
     "is_taxable": false,
     "is_active": true
   },
@@ -3695,7 +3695,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 2,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "8999900001571",
+    "barcode": "400012",
     "is_taxable": false,
     "is_active": true
   },
@@ -3712,7 +3712,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001588",
+    "barcode": "700030",
     "is_taxable": false,
     "is_active": true
   },
@@ -3729,7 +3729,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001595",
+    "barcode": "500009",
     "is_taxable": false,
     "is_active": true
   },
@@ -3746,7 +3746,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001601",
+    "barcode": "700031",
     "is_taxable": false,
     "is_active": true
   },
@@ -3763,7 +3763,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001618",
+    "barcode": "700032",
     "is_taxable": false,
     "is_active": true
   },
@@ -3780,7 +3780,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001625",
+    "barcode": "400013",
     "is_taxable": false,
     "is_active": true
   },
@@ -3797,7 +3797,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001632",
+    "barcode": "700033",
     "is_taxable": false,
     "is_active": true
   },
@@ -3814,7 +3814,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "ball",
     "base_unit": "BALL",
-    "barcode": "8999900001649",
+    "barcode": "300071",
     "is_taxable": false,
     "is_active": true
   },
@@ -3831,7 +3831,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001656",
+    "barcode": "130003",
     "is_taxable": false,
     "is_active": true
   },
@@ -3848,7 +3848,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 2,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001663",
+    "barcode": "130004",
     "is_taxable": false,
     "is_active": true
   },
@@ -3865,7 +3865,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 9,
     "unit": "botol",
     "base_unit": "BOTOL",
-    "barcode": "8999900001670",
+    "barcode": "400014",
     "is_taxable": false,
     "is_active": true
   },
@@ -3882,7 +3882,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001687",
+    "barcode": "400015",
     "is_taxable": false,
     "is_active": true
   },
@@ -3899,7 +3899,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 10,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001694",
+    "barcode": "500010",
     "is_taxable": false,
     "is_active": true
   },
@@ -3916,7 +3916,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001700",
+    "barcode": "900001",
     "is_taxable": false,
     "is_active": true
   },
@@ -3933,7 +3933,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001717",
+    "barcode": "900002",
     "is_taxable": false,
     "is_active": true
   },
@@ -3950,7 +3950,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 3,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001724",
+    "barcode": "700034",
     "is_taxable": false,
     "is_active": true
   },
@@ -3967,7 +3967,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 60,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001731",
+    "barcode": "130005",
     "is_taxable": false,
     "is_active": true
   },
@@ -3984,7 +3984,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001748",
+    "barcode": "130006",
     "is_taxable": false,
     "is_active": true
   },
@@ -4001,7 +4001,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001755",
+    "barcode": "700035",
     "is_taxable": false,
     "is_active": true
   },
@@ -4018,7 +4018,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 20,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001762",
+    "barcode": "700036",
     "is_taxable": false,
     "is_active": true
   },
@@ -4035,7 +4035,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 50,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001779",
+    "barcode": "100012",
     "is_taxable": false,
     "is_active": true
   },
@@ -4052,7 +4052,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 20,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001786",
+    "barcode": "700037",
     "is_taxable": false,
     "is_active": true
   },
@@ -4069,7 +4069,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 17,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001793",
+    "barcode": "400016",
     "is_taxable": false,
     "is_active": true
   },
@@ -4086,7 +4086,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 7,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001809",
+    "barcode": "500011",
     "is_taxable": false,
     "is_active": true
   },
@@ -4103,7 +4103,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 12,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001816",
+    "barcode": "500012",
     "is_taxable": false,
     "is_active": true
   },
@@ -4120,7 +4120,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 17,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001823",
+    "barcode": "500013",
     "is_taxable": false,
     "is_active": true
   },
@@ -4137,7 +4137,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 17,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001830",
+    "barcode": "400017",
     "is_taxable": false,
     "is_active": true
   },
@@ -4154,7 +4154,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001847",
+    "barcode": "400018",
     "is_taxable": false,
     "is_active": true
   },
@@ -4171,7 +4171,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 5,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001854",
+    "barcode": "400019",
     "is_taxable": false,
     "is_active": true
   },
@@ -4205,7 +4205,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 4,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001878",
+    "barcode": "100013",
     "is_taxable": false,
     "is_active": true
   },
@@ -4222,7 +4222,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 1,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001885",
+    "barcode": "400020",
     "is_taxable": false,
     "is_active": true
   },
@@ -4239,7 +4239,7 @@ export const PRODUCTS: SeedProduct[] = [
     "stock": 19,
     "unit": "pcs",
     "base_unit": "PCS",
-    "barcode": "8999900001892",
+    "barcode": "400021",
     "is_taxable": false,
     "is_active": true
   }
@@ -4252,7 +4252,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 27500,
-    "barcode": "SKU-KAC-830"
+    "barcode": "700830"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000002",
@@ -4260,7 +4260,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 12000,
-    "barcode": "SKU-KER-450"
+    "barcode": "700450"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000003",
@@ -4268,7 +4268,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "SKU-KER-273"
+    "barcode": "700273"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000004",
@@ -4276,7 +4276,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "SKU-ASA-936"
+    "barcode": "400936"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000005",
@@ -4284,7 +4284,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 27500,
-    "barcode": "SKU-TER-388"
+    "barcode": "400388"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000006",
@@ -4300,7 +4300,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "SKU-KUE-650"
+    "barcode": "500650"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000008",
@@ -4308,7 +4308,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 7500,
-    "barcode": "SKU-KOP-969"
+    "barcode": "600969"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000009",
@@ -4316,7 +4316,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "SKU-KOP-427"
+    "barcode": "600427"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000010",
@@ -4324,7 +4324,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "SKU-KOP-992"
+    "barcode": "600992"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000011",
@@ -4332,7 +4332,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 150000,
-    "barcode": "SKU-MAD-426"
+    "barcode": "400426"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000012",
@@ -4340,7 +4340,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 26000,
-    "barcode": "SKU-KEC-671"
+    "barcode": "400671"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000013",
@@ -4348,7 +4348,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 17000,
-    "barcode": "SKU-KEC-660"
+    "barcode": "400660"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000014",
@@ -4356,7 +4356,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "SKU-KEC-462"
+    "barcode": "400462"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000015",
@@ -4364,7 +4364,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "SKU-KEM-430"
+    "barcode": "120430"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000016",
@@ -4372,7 +4372,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "SKU-KEM-642"
+    "barcode": "110642"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000017",
@@ -4380,7 +4380,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "SKU-KER-545"
+    "barcode": "700545"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000018",
@@ -4388,7 +4388,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "SKU-KER-287"
+    "barcode": "700287"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000019",
@@ -4396,7 +4396,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "SKU-KER-998"
+    "barcode": "700998"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000020",
@@ -4404,7 +4404,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 40000,
-    "barcode": "SKU-KER-229"
+    "barcode": "700229"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000021",
@@ -4412,7 +4412,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 22000,
-    "barcode": "SKU-KER-749"
+    "barcode": "700749"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000022",
@@ -4420,7 +4420,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 11000,
-    "barcode": "SKU-KEM-325"
+    "barcode": "110325"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000023",
@@ -4428,7 +4428,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 10000,
-    "barcode": "SKU-KEM-740"
+    "barcode": "110740"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000024",
@@ -4436,7 +4436,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "SKU-KEM-473"
+    "barcode": "110473"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000025",
@@ -4444,7 +4444,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "SKU-KEM-726"
+    "barcode": "110726"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000026",
@@ -4452,7 +4452,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "SKU-KEM-680"
+    "barcode": "110680"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000027",
@@ -4460,7 +4460,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 12000,
-    "barcode": "SKU-KEM-286"
+    "barcode": "110286"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000028",
@@ -4468,7 +4468,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "SKU-KEM-491"
+    "barcode": "130491"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000029",
@@ -4476,7 +4476,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 16000,
-    "barcode": "SKU-KEM-409"
+    "barcode": "130409"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000030",
@@ -4484,7 +4484,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "SKU-KEM-588"
+    "barcode": "990588"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000031",
@@ -4492,7 +4492,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "SKU-KEM-739"
+    "barcode": "990739"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000032",
@@ -4500,7 +4500,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "SKU-KEM-563"
+    "barcode": "990563"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000033",
@@ -4508,7 +4508,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "SKU-KEM-267"
+    "barcode": "110267"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000034",
@@ -4516,7 +4516,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "SKU-KEM-698"
+    "barcode": "110698"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000035",
@@ -4524,7 +4524,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "SKU-KEM-917"
+    "barcode": "110917"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000036",
@@ -4532,7 +4532,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 40000,
-    "barcode": "SKU-KEM-138"
+    "barcode": "110138"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000037",
@@ -4540,7 +4540,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 15000,
-    "barcode": "SKU-KEM-805"
+    "barcode": "100805"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000038",
@@ -4548,7 +4548,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "SKU-KEM-751"
+    "barcode": "100751"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000039",
@@ -4556,7 +4556,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 19000,
-    "barcode": "SKU-KEM-277"
+    "barcode": "100277"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000040",
@@ -4564,7 +4564,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "SKU-KEM-436"
+    "barcode": "100436"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000041",
@@ -4572,7 +4572,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 32000,
-    "barcode": "SKU-KEM-428"
+    "barcode": "990428"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000042",
@@ -4580,7 +4580,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 27500,
-    "barcode": "SKU-KEM-455"
+    "barcode": "990455"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000043",
@@ -4588,7 +4588,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 40000,
-    "barcode": "SKU-KEM-500"
+    "barcode": "990500"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000044",
@@ -4596,7 +4596,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 29000,
-    "barcode": "SKU-STI-187"
+    "barcode": "700187"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000045",
@@ -4604,7 +4604,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 35000,
-    "barcode": "SKU-STI-801"
+    "barcode": "700801"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000046",
@@ -4612,7 +4612,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 38000,
-    "barcode": "SKU-STI-705"
+    "barcode": "700705"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000047",
@@ -4620,7 +4620,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 58000,
-    "barcode": "SKU-STI-301"
+    "barcode": "700301"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000048",
@@ -4628,7 +4628,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 20000,
-    "barcode": "SKU-AMP-314"
+    "barcode": "990314"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000049",
@@ -4636,7 +4636,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "SKU-GET-989"
+    "barcode": "200989"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000050",
@@ -4644,7 +4644,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 30000,
-    "barcode": "SKU-GET-703"
+    "barcode": "200703"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000051",
@@ -4652,7 +4652,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 52000,
-    "barcode": "SKU-GET-525"
+    "barcode": "200525"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000052",
@@ -4660,7 +4660,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 52000,
-    "barcode": "SKU-GET-843"
+    "barcode": "200843"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000053",
@@ -4668,7 +4668,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 55000,
-    "barcode": "SKU-GET-791"
+    "barcode": "200791"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000054",
@@ -4676,7 +4676,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 55000,
-    "barcode": "SKU-GET-192"
+    "barcode": "200192"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000055",
@@ -4684,7 +4684,7 @@ export const PRODUCT_UNITS: SeedProductUnit[] = [
     "unit_name": "PCS",
     "conversion_factor": 1,
     "price": 71250,
-    "barcode": "SKU-GET-225"
+    "barcode": "200225"
   },
   {
     "id": "a9910000-0000-0000-0000-000000000056",

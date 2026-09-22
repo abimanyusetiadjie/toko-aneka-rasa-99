@@ -2,6 +2,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { query } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import type { Product, Category } from '$lib/types';
+import { build6DigitBarcode } from '$lib/server/barcode-cluster';
 
 export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 	setHeaders({
@@ -82,7 +83,10 @@ export const actions: Actions = {
 			sku = 'SKU-' + name.replace(/[^a-zA-Z0-9]/g, '').slice(0, 3).toUpperCase() + '-' + Math.floor(100 + Math.random() * 900);
 		}
 		if (!barcode) {
-			barcode = '899' + Math.floor(10000000 + Math.random() * 90000000);
+			const catRow = await query<any>(`SELECT name FROM categories WHERE id = $1`, [category_id]);
+			const existingUnits = await query<any>(`SELECT barcode FROM product_units WHERE barcode ~ '^[0-9]{6}$'`);
+			const usedSet = new Set<string>((existingUnits || []).map((u: any) => u.barcode));
+			barcode = build6DigitBarcode(catRow[0]?.name || '', name, sku, usedSet, {});
 		}
 
 		const productId = crypto.randomUUID();

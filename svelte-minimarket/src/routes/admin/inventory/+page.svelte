@@ -22,7 +22,7 @@
 				(p.barcode && p.barcode.includes(searchQuery)) ||
 				(p.sku && p.sku.toLowerCase().includes(searchQuery.toLowerCase()));
 			const matchCategory = selectedCategory === 'ALL' || String(p.category_id) === selectedCategory;
-			const matchLowStock = !filterLowStock || p.stock < 20;
+			const matchLowStock = !filterLowStock || p.stock < 5;
 			return matchSearch && matchCategory && matchLowStock;
 		})
 	);
@@ -119,7 +119,7 @@
 				onclick={() => (filterLowStock = !filterLowStock)}
 				class="px-3 py-2 rounded-lg border font-semibold transition-colors shrink-0 {filterLowStock ? 'bg-red-600 text-white border-red-600' : 'bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100'}"
 			>
-				⚠️ Stok &lt;20
+				⚠️ Stok &lt;5
 			</button>
 		</div>
 	</div>
@@ -163,7 +163,7 @@
 								{formatCurrency(p.selling_price || p.base_hpp * 1.25)}
 							</td>
 							<td class="py-3 px-4 text-center">
-								<span class="px-2.5 py-0.5 rounded-full font-bold text-[11px] font-mono {p.stock < 20 ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-200'}">
+								<span class="px-2.5 py-0.5 rounded-full font-bold text-[11px] font-mono {p.stock < 5 ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-200'}">
 									{p.stock} {p.base_unit || 'Pcs'}
 								</span>
 							</td>

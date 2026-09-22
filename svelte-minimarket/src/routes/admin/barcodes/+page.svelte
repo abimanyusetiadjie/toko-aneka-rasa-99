@@ -64,34 +64,24 @@
 	}
 
 	/**
-	 * Logika Pintar Barcode:
-	 * - Human readable text: SKU lengkap (misal "SKU-KAC-830")
-	 * - Encoded Barcode: Dipendekkan (misal "KAC830") agar barcode Code 128 punya batang tebal,
-	 *   quiet zone lega 3mm, dan langsung terbaca 1x beep di scanner Zenpert 4T520!
+	 * Logika Barcode 6-Digit Klaster Bersih (KK-XXXX):
+	 * - Garis barcode Code 128C: Angka murni 6 digit (contoh "700830")
+	 * - Teks bawah: Tepat 6 digit angka bersih, rata tengah, tidak terlipat/wrap!
 	 */
 	function getBarcodeData(product: any) {
-		const rawSku = (product.sku || '').trim();
 		const rawBarcode = (product.barcode || '').trim();
+		const rawSku = (product.sku || '').trim();
 
-		// Teks display manusia di kanan bawah
-		const displayText = rawSku || rawBarcode || 'SKU-ITEM';
-
-		// Data encode barcode Code 128:
-		// Jika diawali SKU-, buang "SKU-" dan tanda hubung "-" -> KAC830
-		let encodedValue = rawBarcode || rawSku;
-		if (/^SKU-/i.test(encodedValue)) {
-			encodedValue = encodedValue.replace(/^SKU-/i, '').replace(/[^a-zA-Z0-9]/g, '');
-		} else if (/^SKU-/i.test(rawSku)) {
-			encodedValue = rawSku.replace(/^SKU-/i, '').replace(/[^a-zA-Z0-9]/g, '');
-		}
-
-		if (!encodedValue) {
-			encodedValue = 'ITEM' + String(product.id || '').slice(0, 5).toUpperCase();
+		let code6 = rawBarcode;
+		if (!/^\d{6}$/.test(code6)) {
+			const numMatch = (rawBarcode + ' ' + rawSku).match(/-(\d{1,4})/);
+			const num = numMatch ? parseInt(numMatch[1], 10) : 1;
+			code6 = '70' + String(num).padStart(4, '0');
 		}
 
 		return {
-			encodedValue,
-			displayText
+			encodedValue: code6,
+			displayText: code6
 		};
 	}
 
@@ -107,9 +97,9 @@
 	function getSizeConfig(size: LabelSize) {
 		switch (size) {
 			case '33x15':
-				// Zenpert 4T520 (203 DPI) - Code 128 pendek (misal: KAC830)
-				// Margin 0 di SVG karena quiet zone 3mm kiri-kanan ditangani oleh padding kontainer
-				return { width: 1.15, height: 28, margin: 0 };
+				// Zenpert 4T520 (203 DPI) - Code 128C 6-digit murni (contoh: 700830)
+				// Margin 0 di SVG karena quiet zone 3mm ditangani oleh padding kontainer
+				return { width: 1.25, height: 32, margin: 0 };
 			case '35x15':
 				return { width: 1.05, height: 14, margin: 1 };
 			case '38x18':
@@ -135,7 +125,7 @@
 						format: 'CODE128',
 						width: cfg.width,
 						height: cfg.height,
-						displayValue: false, // Ditampilkan via teks HTML di bawahnya agar tajam & tidak gepeng
+						displayValue: false, // Nilai teks ditampilkan via HTML bottom agar crisp & rapi
 						margin: cfg.margin,
 						lineColor: '#000000',
 						background: 'transparent'
@@ -223,12 +213,21 @@
 						<span class="text-[10px] bg-red-100 text-red-800 font-bold px-2 py-0.5 rounded font-mono">Toko Aneka Rasa 99</span>
 					</h1>
 					<p class="text-xs text-slate-500 font-mono">
-						{filteredProducts.length} Produk • Format Standar Ritel Siap Scan
+						{filteredProducts.length} Produk • Format 6-Digit Klaster Bersih (Zenpert 4T520)
 					</p>
 				</div>
 			</div>
 
-			<div class="flex items-center gap-2 w-full md:w-auto">
+			<div class="flex items-center gap-2 w-full md:w-auto flex-wrap">
+				<form method="POST" action="?/convertAll" use:enhance class="inline">
+					<button
+						type="submit"
+						class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs shrink-0 cursor-pointer active:scale-95"
+						title="Konversi seluruh produk ke barcode 6 digit klaster (KK-XXXX)"
+					>
+						<Sparkles class="w-4 h-4" /> <span>Konversi ke 6-Digit</span>
+					</button>
+				</form>
 				<button
 					onclick={handlePrint}
 					class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-xs shrink-0 cursor-pointer active:scale-95"
@@ -338,7 +337,7 @@
 			<div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-emerald-950">
 				<div class="flex items-center gap-2">
 					<Sparkles class="w-4 h-4 text-emerald-600 shrink-0" />
-					<span><b>Format Standar Minimarket 10/10 (Zenpert 4T520):</b> Header atas 1mm (Arial Bold 7pt) → Barcode tinggi 8mm (Code 128, Quiet Zone 3mm kiri-kanan) → Bawah Rp Harga 6pt & SKU 6pt. Barcode di-encode pendek (misal: <code>KAC830</code>) agar batang tebal dan terbaca 1x beep instan!</span>
+					<span><b>Standar Ritel 10/10 (Zenpert 4T520 - 33×15 mm):</b> Header 1 baris (Arial Bold 7pt) → Barcode Full Angka 6-Digit Tinggi 9.5 mm (Code 128C, Batang Tebal Maksimal, Quiet Zone 3 mm) → Kode 6-Digit Rata Tengah (Tanpa Harga, Bebas Ubah Harga Tanpa Ganti Stiker). 1x Beep Instan!</span>
 				</div>
 			</div>
 		{:else}
@@ -356,21 +355,21 @@
 		{#if labelSize === '33x15'}
 			<!-- ========================================================================= -->
 			<!-- LAYOUT UKURAN 33 x 15 mm (STANDAR MINIMARKET ZENPERT 4T520) -->
-			<!-- STRUKTUR: TOKO ANEKA RASA 99 (atas) -> BARCODE (tengah) -> HARGA + SKU (bawah) -->
+			<!-- STRUKTUR: ANEKA RASA 99 (atas) -> BARCODE (tengah 9.5mm) -> KODE 6-DIGIT (bawah) -->
 			<!-- ========================================================================= -->
 			<div class="{printMode === 'roll' ? 'flex flex-wrap gap-3 justify-center print:block' : 'grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-2 print:grid-cols-6 print:gap-1'}">
 				{#each filteredProducts as product (product.id)}
 					{@const bData = getBarcodeData(product)}
 					<div class="barcode-card-33x15 bg-white border border-slate-300 rounded print:rounded-none flex flex-col justify-between items-center text-center shadow-xs print:shadow-none print:border-none {printMode === 'roll' ? 'print:break-after-page' : 'print:break-inside-avoid'}">
 						
-						<!-- Header Toko: Arial Bold 7pt, 1mm dari atas, warna merah / hitam pekat -->
+						<!-- Header Toko: Arial Bold 7pt, 1 baris bersih rapi tanpa wrap -->
 						<div class="header-33x15 w-full text-center">
 							<span class="store-title-33x15">
-								TOKO ANEKA RASA 99
+								ANEKA RASA 99
 							</span>
 						</div>
 
-						<!-- Barcode: Tinggi 8mm, Quiet Zone 3mm kiri & kanan, Type Code 128 -->
+						<!-- Barcode: Tinggi 9.5 mm, Quiet Zone 3mm kiri & kanan, Type Code 128C 6-Digit -->
 						<div class="barcode-container-33x15 w-full flex items-center justify-center">
 							<svg 
 								class="barcode-svg" 
@@ -378,12 +377,9 @@
 							></svg>
 						</div>
 
-						<!-- Bawah: Rp 27.500 di kiri 6pt, SKU-KAC-830 di kanan 6pt -->
-						<div class="footer-33x15 w-full flex justify-between items-baseline px-0.5">
-							<span class="price-33x15 font-bold">
-								Rp {formatNumberOnly(product.selling_price || product.price)}
-							</span>
-							<span class="sku-33x15 font-bold">
+						<!-- Bawah: 6 Digit Nomor Produk Rata Tengah (Font 7pt Bold) Tanpa Harga -->
+						<div class="footer-33x15 w-full text-center">
+							<span class="code-33x15">
 								{bData.displayText}
 							</span>
 						</div>
@@ -399,7 +395,6 @@
 				{#each filteredProducts as product (product.id)}
 					{@const bData = getBarcodeData(product)}
 					<div class="barcode-card-40x20 bg-white border border-slate-300 rounded print:rounded-none p-1 flex flex-col justify-between items-center text-center shadow-xs print:shadow-none print:border-black print:border {printMode === 'roll' ? 'print:break-after-page' : 'print:break-inside-avoid'}">
-						<!-- Header Toko & Nama Produk -->
 						<div class="w-full border-b border-slate-200 print:border-black/40 pb-0.5 mb-0.5">
 							<span class="text-[6.5px] font-black uppercase text-red-700 print:text-black tracking-wider block font-mono leading-none">
 								TOKO ANEKA RASA 99
@@ -409,7 +404,6 @@
 							</p>
 						</div>
 
-						<!-- Barcode SVG & Nomor -->
 						<div class="flex flex-col items-center justify-center w-full py-0.5 my-auto">
 							<svg class="barcode-svg max-w-full" data-barcode={bData.encodedValue}></svg>
 							<span class="font-mono text-[7px] font-black tracking-wider text-slate-900 leading-none mt-0.5">
@@ -417,7 +411,6 @@
 							</span>
 						</div>
 
-						<!-- Footer Harga & Satuan -->
 						<div class="w-full border-t border-slate-200 print:border-black/40 pt-0.5 mt-0.5 flex justify-between items-center px-0.5 leading-none">
 							<span class="font-mono text-[8px] font-black text-slate-900">
 								{formatCurrency(product.selling_price || product.price)}
@@ -438,7 +431,6 @@
 				{#each filteredProducts as product (product.id)}
 					{@const bData = getBarcodeData(product)}
 					<div class="barcode-card-38x18 bg-white border border-slate-300 rounded print:rounded-none p-1 flex flex-col justify-between items-center text-center shadow-xs print:shadow-none print:border-black print:border {printMode === 'roll' ? 'print:break-after-page' : 'print:break-inside-avoid'}">
-						<!-- Header Toko & Nama Produk -->
 						<div class="w-full border-b border-slate-200 print:border-black/40 pb-0.5 mb-0.5">
 							<span class="text-[6px] font-black uppercase text-red-700 print:text-black tracking-wider block font-mono leading-none">
 								TOKO ANEKA RASA 99
@@ -448,7 +440,6 @@
 							</p>
 						</div>
 
-						<!-- Barcode SVG & Nomor -->
 						<div class="flex flex-col items-center justify-center w-full py-0.5 my-auto">
 							<svg class="barcode-svg max-w-full" data-barcode={bData.encodedValue}></svg>
 							<span class="font-mono text-[6.5px] font-black tracking-wider text-slate-900 leading-none mt-0.5">
@@ -456,7 +447,6 @@
 							</span>
 						</div>
 
-						<!-- Footer Harga & Satuan -->
 						<div class="w-full border-t border-slate-200 print:border-black/40 pt-0.5 mt-0.5 flex justify-between items-center px-0.5 leading-none">
 							<span class="font-mono text-[7.5px] font-black text-slate-900">
 								{formatCurrency(product.selling_price || product.price)}
@@ -477,7 +467,6 @@
 				{#each filteredProducts as product (product.id)}
 					{@const bData = getBarcodeData(product)}
 					<div class="barcode-card-35x15 bg-white border border-slate-300 rounded print:rounded-none p-0.5 flex flex-col justify-between items-center text-center shadow-xs print:shadow-none print:border-black print:border {printMode === 'roll' ? 'print:break-after-page' : 'print:break-inside-avoid'}">
-						<!-- Header Toko & Nama Produk -->
 						<div class="w-full border-b border-slate-200 print:border-black/40 pb-0.5 mb-0.5">
 							<span class="text-[5.5px] font-black uppercase text-red-700 print:text-black tracking-wider block font-mono leading-none">
 								ANEKA RASA 99
@@ -487,7 +476,6 @@
 							</p>
 						</div>
 
-						<!-- Barcode SVG & Nomor -->
 						<div class="flex flex-col items-center justify-center w-full py-0.5 my-auto">
 							<svg class="barcode-svg max-w-full" data-barcode={bData.encodedValue}></svg>
 							<span class="font-mono text-[6px] font-black tracking-wider text-slate-900 leading-none mt-0.5">
@@ -495,7 +483,6 @@
 							</span>
 						</div>
 
-						<!-- Footer Harga & Satuan -->
 						<div class="w-full border-t border-slate-200 print:border-black/40 pt-0.5 mt-0.5 flex justify-between items-center px-0.5 leading-none">
 							<span class="font-mono text-[7px] font-black text-slate-900">
 								{formatCurrency(product.selling_price || product.price)}
@@ -516,7 +503,6 @@
 				{#each filteredProducts as product (product.id)}
 					{@const bData = getBarcodeData(product)}
 					<div class="barcode-card-a4 bg-white border border-slate-300 rounded-lg p-3 flex flex-col justify-between items-center text-center shadow-xs print:shadow-none print:border-black print:border print:rounded-none print:break-inside-avoid">
-						<!-- Store Label Header -->
 						<div class="w-full border-b border-slate-100 print:border-slate-300 pb-1 mb-1">
 							<span class="text-[9px] font-black uppercase text-red-700 print:text-black tracking-wider block font-mono">
 								TOKO ANEKA RASA 99
@@ -526,7 +512,6 @@
 							</p>
 						</div>
 
-						<!-- Barcode SVG & Nomor -->
 						<div class="py-1.5 flex flex-col items-center justify-center w-full">
 							<svg class="barcode-svg max-w-full" data-barcode={bData.encodedValue}></svg>
 							<span class="font-mono text-[10px] font-black tracking-widest text-slate-900 mt-1 block">
@@ -534,7 +519,6 @@
 							</span>
 						</div>
 
-						<!-- Price & Unit Footer -->
 						<div class="w-full border-t border-slate-100 print:border-slate-300 pt-1 mt-1 flex justify-between items-center">
 							<span class="font-mono text-xs font-black text-slate-900">
 								{formatCurrency(product.selling_price || product.price)}
@@ -574,7 +558,7 @@
 		width: 33mm;
 		height: 15mm;
 		max-height: 15mm;
-		padding: 1mm 3mm 0.5mm 3mm;
+		padding: 0.8mm 3mm 0.6mm 3mm;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
@@ -589,22 +573,24 @@
 		padding-top: 0;
 		line-height: 1;
 		width: 100%;
+		white-space: nowrap;
 	}
 
 	.store-title-33x15 {
 		font-family: Arial, Helvetica, sans-serif;
 		font-size: 7pt;
 		font-weight: 800;
-		color: #dc2626; /* Merah pekat di layar dan cetak */
-		letter-spacing: 0.1px;
+		color: #dc2626;
+		letter-spacing: 0.2px;
 		display: block;
 		line-height: 1;
 		margin: 0;
+		white-space: nowrap;
 	}
 
 	.barcode-container-33x15 {
-		height: 8mm;
-		max-height: 8mm;
+		height: 9.5mm;
+		max-height: 9.5mm;
 		width: 100%;
 		display: flex;
 		align-items: center;
@@ -613,8 +599,8 @@
 	}
 
 	.barcode-container-33x15 svg {
-		height: 8mm !important;
-		max-height: 8mm !important;
+		height: 9.5mm !important;
+		max-height: 9.5mm !important;
 		width: auto;
 		max-width: 100%;
 		display: block;
@@ -622,29 +608,19 @@
 
 	.footer-33x15 {
 		width: 100%;
-		display: flex;
-		justify-content: space-between;
-		align-items: baseline;
+		text-align: center;
 		line-height: 1;
-		padding-bottom: 0;
+		white-space: nowrap;
 	}
 
-	.price-33x15 {
-		font-family: Arial, Helvetica, sans-serif;
-		font-size: 6pt;
-		font-weight: 800;
-		color: #000000;
-		line-height: 1;
-		letter-spacing: -0.2px;
-	}
-
-	.sku-33x15 {
+	.code-33x15 {
 		font-family: Arial, 'Courier New', monospace;
-		font-size: 6pt;
+		font-size: 7pt;
 		font-weight: 800;
 		color: #000000;
 		line-height: 1;
-		letter-spacing: 0.1px;
+		letter-spacing: 1.5px;
+		display: inline-block;
 	}
 
 	/* Dimensi On-Screen Preview & Print Ukuran Lainnya */
@@ -702,7 +678,7 @@
 			width: 33mm !important;
 			height: 15mm !important;
 			max-height: 15mm !important;
-			padding: 1mm 3mm 0.5mm 3mm !important;
+			padding: 0.8mm 3mm 0.6mm 3mm !important;
 			box-sizing: border-box !important;
 			border: none !important;
 			box-shadow: none !important;
@@ -720,18 +696,12 @@
 			print-color-adjust: exact !important;
 		}
 
-		.price-33x15 {
-			font-family: Arial, sans-serif !important;
-			font-size: 6pt !important;
-			font-weight: 800 !important;
-			color: #000000 !important;
-		}
-
-		.sku-33x15 {
+		.code-33x15 {
 			font-family: Arial, monospace !important;
-			font-size: 6pt !important;
+			font-size: 7pt !important;
 			font-weight: 800 !important;
 			color: #000000 !important;
+			letter-spacing: 1.5px !important;
 		}
 	}
 </style>
