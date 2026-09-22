@@ -33,41 +33,49 @@ export function getCategoryPrefix(
 	const name = (productName || '').toUpperCase();
 	const s = (sku || '').toUpperCase();
 
-	// 1. Deteksi langsung dari nama kategori
-	if (cat.includes('PANGGANG') || name.includes('PANGGANG') || s.includes('PNG')) return { prefix: '10', name: 'KEMPLANG PANGGANG' };
-	if (cat.includes('GORENG') || name.includes('KEMPLANG GORENG')) return { prefix: '11', name: 'KEMPLANG GORENG' };
+	// 1. Deteksi langsung dari nama kategori & produk
+	if (cat.includes('PANGGANG') || name.includes('PANGGANG') || name.includes('OVEN') || s.includes('PNG')) return { prefix: '10', name: 'KEMPLANG PANGGANG' };
 	if (cat.includes('PASIR') || name.includes('PASIR') || s.includes('PSR')) return { prefix: '12', name: 'KEMPLANG PASIR' };
+	if (cat.includes('GORENG') || name.includes('KEMPLANG GORENG') || name.includes('GORENG')) return { prefix: '11', name: 'KEMPLANG GORENG' };
 	if (cat.includes('RING') || cat.includes('KOIN') || name.includes('KOIN') || name.includes('RING')) return { prefix: '13', name: 'KEMPLANG RING / KOIN' };
 	if (cat.includes('GETAS') || name.includes('GETAS') || s.includes('GET')) return { prefix: '20', name: 'GETAS BANGKA' };
 	if (cat.includes('MENTAH') || name.includes('MENTAH')) return { prefix: '30', name: 'KERUPUK MENTAH' };
 	if (
 		cat.includes('BUMBU') || cat.includes('OLEH-OLEH') ||
 		name.includes('TERASI') || name.includes('RUSIP') || name.includes('KECAP') ||
-		name.includes('ASAM') || name.includes('LEMPOK') || name.includes('CALO') ||
-		name.includes('MADU') || s.includes('TER') || s.includes('KEC') || s.includes('ASA') || s.includes('MAD')
+		name.includes('ASAM') || name.includes('ASEM') || name.includes('LEMPOK') ||
+		name.includes('CALO') || name.includes('KECALO') || name.includes('MADU') ||
+		name.includes('GULA') || name.includes('KABUNG') || name.includes('LADA') || name.includes('SAHANG') ||
+		s.includes('TER') || s.includes('KEC') || s.includes('ASA') || s.includes('MAD')
 	) {
 		return { prefix: '40', name: 'BUMBU & OLEH-OLEH BANGKA' };
 	}
 	if (
 		cat.includes('KUE') || name.includes('KUE') || name.includes('RINTAK') ||
-		name.includes('PIA') || name.includes('BONG LI') || s.includes('KUE')
+		name.includes('PIA') || name.includes('BONG LI') || name.includes('BANGKIT') ||
+		s.includes('KUE')
 	) {
 		return { prefix: '50', name: 'KUE KHAS BANGKA' };
 	}
 	if (cat.includes('KOPI') || name.includes('KOPI') || s.includes('KOP')) return { prefix: '60', name: 'KOPI BANGKA' };
 	if (
-		cat.includes('CEMILAN') || cat.includes('SNACK') || name.includes('KACANG') ||
-		name.includes('KERIPIK') || name.includes('KERUPUK') || name.includes('STIK') ||
-		name.includes('PILUS') || name.includes('KRICU') || name.includes('KERICU') ||
-		s.includes('KAC') || s.includes('KER') || s.includes('CEM')
-	) {
-		return { prefix: '70', name: 'CEMILAN' };
-	}
-	if (
-		cat.includes('NON') || cat.includes('ALAT') || name.includes('PLASTIK') ||
-		name.includes('KANTONG') || name.includes('KRESEK') || name.includes('DUS') || name.includes('SIKAT')
+		cat.includes('NON') || cat.includes('ALAT') || cat.includes('PACKING') ||
+		name.includes('BUBBLE') || name.includes('WRAP') || name.includes('PLASTIK') ||
+		name.includes('KANTONG') || name.includes('KRESEK') || name.includes('DUS') ||
+		name.includes('KARTON') || name.includes('SIKAT') || name.includes('LAKBAN') ||
+		name.includes('SOLASI') || name.includes('TALI')
 	) {
 		return { prefix: '90', name: 'NON-MAKANAN' };
+	}
+	if (
+		cat.includes('CEMILAN') || cat.includes('SNACK') || name.includes('AMPLANG') ||
+		name.includes('KACANG') || name.includes('KERIPIK') || name.includes('KERUPUK') ||
+		name.includes('STIK') || name.includes('STICK') || name.includes('PILUS') ||
+		name.includes('KRICU') || name.includes('KERICU') || name.includes('EMPING') ||
+		name.includes('INDOMIE') || name.includes('MIE') ||
+		s.includes('AMP') || s.includes('KAC') || s.includes('KER') || s.includes('CEM')
+	) {
+		return { prefix: '70', name: 'CEMILAN' };
 	}
 
 	return { prefix: '99', name: 'UMUM' };

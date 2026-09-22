@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 					p.stock,
 					c.name as category_name,
 					COALESCE(pu.price, p.price) as selling_price,
-					COALESCE(pu.barcode, p.sku) as barcode
+					COALESCE(pu.barcode, p.barcode, p.sku) as barcode
 				FROM products p
 				LEFT JOIN categories c ON p.category_id = c.id
 				LEFT JOIN product_units pu ON p.id = pu.product_id AND pu.conversion_factor = 1
@@ -101,9 +101,9 @@ export const actions: Actions = {
 			}
 
 			await query(
-				`INSERT INTO products (id, store_id, sku, name, category_id, base_unit, base_hpp, cost_price, stock)
-				 VALUES ($1, $2, $3, $4, $5, 'Pcs', $6, $6, $7)`,
-				[productId, storeId, sku, name, category_id, base_hpp, stock]
+				`INSERT INTO products (id, store_id, sku, name, category_id, base_unit, base_hpp, cost_price, stock, barcode)
+				 VALUES ($1, $2, $3, $4, $5, 'Pcs', $6, $6, $7, $8)`,
+				[productId, storeId, sku, name, category_id, base_hpp, stock, barcode]
 			);
 
 			await query(
@@ -212,34 +212,42 @@ export const actions: Actions = {
 				}
 			}
 
-			const existingProd = await query<Product>(`SELECT base_hpp, cost_price FROM products WHERE id = $1`, [id]);
+			const existingProd = await query<Product>(`SELECT base_hpp, cost_price, sku, barcode FROM products WHERE id = $1`, [id]);
 			const currentHpp = Number(existingProd[0]?.base_hpp || existingProd[0]?.cost_price || 0);
 			const base_hpp = isOwner ? base_hpp_form : currentHpp;
 
-			await query(
-				`UPDATE products 
-				 SET name = $1, category_id = $2, base_hpp = $3, cost_price = $3, price = $4, stock = $5, updated_at = NOW()
-				 WHERE id = $6`,
-				[name, category_id, base_hpp, selling_price, stock, id]
-			);
-
-			if (barcode) {
-				await query(`UPDATE products SET barcode = $1 WHERE id = $2`, [barcode, id]).catch(() => {});
+			let finalBarcode = barcode;
+			if (!finalBarcode) {
+				if (existingProd[0]?.barcode && /^\d{6}$/.test(existingProd[0].barcode)) {
+					finalBarcode = existingProd[0].barcode;
+				} else {
+					const catRow = await query<any>(`SELECT name FROM categories WHERE id = $1`, [category_id]);
+					const existingUnits = await query<any>(`SELECT barcode FROM product_units WHERE barcode ~ '^[0-9]{6}$'`);
+					const usedSet = new Set<string>((existingUnits || []).map((u: any) => u.barcode));
+					finalBarcode = build6DigitBarcode(catRow[0]?.name || '', name, existingProd[0]?.sku || '', usedSet, {});
+				}
 			}
 
-			const existingUnits = await query(`SELECT id FROM product_units WHERE product_id = $1 AND conversion_factor = 1 LIMIT 1`, [id]);
+			await query(
+				`UPDATE products 
+				 SET name = $1, category_id = $2, base_hpp = $3, cost_price = $3, price = $4, stock = $5, barcode = $6, updated_at = NOW()
+				 WHERE id = $7`,
+				[name, category_id, base_hpp, selling_price, stock, finalBarcode, id]
+			);
+
+			const existingUnits = await query(`SELECT id FROM product_units WHERE product_id = $1 AND (conversion_factor = 1 OR conversion_factor IS NULL) LIMIT 1`, [id]);
 			if (existingUnits.length > 0) {
 				await query(
 					`UPDATE product_units 
-					 SET price = $1, barcode = COALESCE(NULLIF($2, ''), barcode)
+					 SET price = $1, barcode = $2
 					 WHERE id = $3`,
-					[selling_price, barcode, existingUnits[0].id]
+					[selling_price, finalBarcode, existingUnits[0].id]
 				);
 			} else {
 				await query(
 					`INSERT INTO product_units (id, product_id, unit_name, conversion_factor, price, barcode)
 					 VALUES ($1, $2, 'Pcs', 1, $3, $4)`,
-					[crypto.randomUUID(), id, selling_price, barcode || `899${Math.floor(10000000 + Math.random() * 90000000)}`]
+					[crypto.randomUUID(), id, selling_price, finalBarcode]
 				);
 			}
 

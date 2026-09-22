@@ -12,7 +12,7 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 		SELECT 
 			p.id, p.sku, p.name, p.category_id, p.stock, p.unit as base_unit,
 			COALESCE(pu.price, p.price) as price,
-			COALESCE(pu.barcode, p.sku) as barcode,
+			COALESCE(pu.barcode, p.barcode, p.sku) as barcode,
 			pu.id as unit_id,
 			pu.unit_name,
 			c.name as category_name
@@ -29,8 +29,10 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 			p.name ILIKE $1 
 			OR p.sku ILIKE $1 
 			OR pu.barcode ILIKE $1 
+			OR p.barcode ILIKE $1
 			OR REPLACE(REPLACE(UPPER(p.sku), 'SKU-', ''), '-', '') ILIKE $2
 			OR REPLACE(REPLACE(UPPER(pu.barcode), 'SKU-', ''), '-', '') ILIKE $2
+			OR REPLACE(REPLACE(UPPER(p.barcode), 'SKU-', ''), '-', '') ILIKE $2
 		)`;
 		params.push(`%${search}%`);
 		params.push(`%${clean || search}%`);

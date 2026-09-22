@@ -33,11 +33,10 @@ export const load: PageServerLoad = async () => {
 			}
 		}
 
-		// Konversi setiap produk yang belum memiliki barcode 6-digit
-		let convertedAny = false;
-		for (const prod of products) {
-			const b = (prod.barcode || '').trim();
-			if (!/^\d{6}$/.test(b)) {
+		// Konversi setiap produk yang belum memiliki barcode 6-digit (dengan await agar tersimpan permanen di DB)
+		const unmigrated = products.filter(p => !/^\d{6}$/.test((p.barcode || '').trim()));
+		if (unmigrated.length > 0) {
+			for (const prod of unmigrated) {
 				const newCode = build6DigitBarcode(
 					prod.category_name,
 					prod.name,
@@ -46,17 +45,34 @@ export const load: PageServerLoad = async () => {
 					categorySeqMap
 				);
 				prod.barcode = newCode;
-				convertedAny = true;
 
-				// Simpan langsung ke database VPS
-				query(`UPDATE products SET barcode = $1 WHERE id = $2`, [newCode, prod.id]).catch(() => {});
-				query(`UPDATE product_units SET barcode = $1 WHERE product_id = $2`, [newCode, prod.id]).catch(() => {});
+				try {
+					await query(`UPDATE products SET barcode = $1 WHERE id = $2`, [newCode, prod.id]);
+					const unitCheck = await query<any>(`SELECT id FROM product_units WHERE product_id = $1`, [prod.id]);
+					if (unitCheck && unitCheck.length > 0) {
+						await query(
+							`UPDATE product_units 
+							 SET barcode = $1 
+							 WHERE product_id = $2 AND (conversion_factor = 1 OR conversion_factor IS NULL)`, 
+							[newCode, prod.id]
+						);
+					} else {
+						await query(
+							`INSERT INTO product_units (id, product_id, unit_name, conversion_factor, price, barcode)
+							 VALUES ($1, $2, 'Pcs', 1, (SELECT COALESCE(price, 0) FROM products WHERE id = $2), $3)
+							 ON CONFLICT (id) DO NOTHING`,
+							[crypto.randomUUID(), prod.id, newCode]
+						);
+					}
+				} catch (err) {
+					console.error('[Barcode Auto-Healing Error]', prod.name, err);
+				}
 			}
 		}
 
 		return { 
 			products,
-			totalConverted: convertedAny ? products.length : 0
+			totalConverted: unmigrated.length
 		};
 	} catch (e: any) {
 		return { products: [], totalConverted: 0, error: e.message };
@@ -81,27 +97,46 @@ export const actions: Actions = {
 			const usedBarcodes = new Set<string>();
 			const categorySeqMap: Record<string, number> = {};
 
+			// Kumpulkan yang sudah 6 digit
+			for (const prod of products) {
+				const b = (prod.barcode || '').trim();
+				if (/^\d{6}$/.test(b)) {
+					usedBarcodes.add(b);
+				}
+			}
+
+			// Bersihkan barcode sementara agar tidak clash pada UNIQUE constraint
+			await query(`UPDATE product_units SET barcode = CONCAT('TMP_', substring(id::text, 1, 8)) WHERE barcode IS NOT NULL AND barcode !~ '^[0-9]{6}$'`).catch(() => {});
+
 			let count = 0;
 			for (const prod of products) {
-				const newCode = build6DigitBarcode(
-					prod.category_name,
-					prod.name,
-					prod.sku,
-					usedBarcodes,
-					categorySeqMap
-				);
+				let finalCode = (prod.barcode || '').trim();
+				if (!/^\d{6}$/.test(finalCode)) {
+					finalCode = build6DigitBarcode(
+						prod.category_name,
+						prod.name,
+						prod.sku,
+						usedBarcodes,
+						categorySeqMap
+					);
+				}
 
-				await query(`UPDATE products SET barcode = $1 WHERE id = $2`, [newCode, prod.id]);
+				await query(`UPDATE products SET barcode = $1 WHERE id = $2`, [finalCode, prod.id]);
 				
 				const units = await query<any>(`SELECT id FROM product_units WHERE product_id = $1`, [prod.id]);
 				if (units.length > 0) {
-					await query(`UPDATE product_units SET barcode = $1 WHERE product_id = $2`, [newCode, prod.id]);
+					await query(
+						`UPDATE product_units 
+						 SET barcode = $1 
+						 WHERE product_id = $2 AND (conversion_factor = 1 OR conversion_factor IS NULL)`, 
+						[finalCode, prod.id]
+					);
 				} else {
 					await query(
 						`INSERT INTO product_units (id, product_id, unit_name, conversion_factor, price, barcode)
 						 VALUES ($1, $2, 'Pcs', 1, (SELECT COALESCE(price, 0) FROM products WHERE id = $2), $3)
 						 ON CONFLICT (id) DO NOTHING`,
-						[crypto.randomUUID(), prod.id, newCode]
+						[crypto.randomUUID(), prod.id, finalCode]
 					);
 				}
 				count++;
@@ -109,7 +144,7 @@ export const actions: Actions = {
 
 			return {
 				success: true,
-				message: `Sukses! Seluruh ${count} produk di inventori telah berhasil dikonversi ke barcode 6-digit klaster bersih (KK-XXXX)!`
+				message: `Sukses! Seluruh ${count} produk di inventori telah berhasil disinkronkan ke barcode 6-digit klaster bersih (KK-XXXX)!`
 			};
 		} catch (err: any) {
 			return {

@@ -72,16 +72,12 @@
 		const rawBarcode = (product.barcode || '').trim();
 		const rawSku = (product.sku || '').trim();
 
-		let code6 = rawBarcode;
-		if (!/^\d{6}$/.test(code6)) {
-			const numMatch = (rawBarcode + ' ' + rawSku).match(/-(\d{1,4})/);
-			const num = numMatch ? parseInt(numMatch[1], 10) : 1;
-			code6 = '70' + String(num).padStart(4, '0');
-		}
+		// Gunakan barcode resmi langsung dari database
+		const finalCode = rawBarcode || rawSku || '000000';
 
 		return {
-			encodedValue: code6,
-			displayText: code6
+			encodedValue: finalCode,
+			displayText: finalCode
 		};
 	}
 
