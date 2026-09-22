@@ -13,14 +13,38 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 		throw error(400, 'Barcode wajib diisi');
 	}
 
+	// Smart Code Candidates: scanner bisa membaca "KAC830", "SKU-KAC-830", dsb.
+	const upperBarcode = barcode.toUpperCase();
+	const cleanAlphanumeric = upperBarcode.replace(/^SKU-?/i, '').replace(/[^A-Z0-9]/g, '');
+
+	const candidates = Array.from(
+		new Set([
+			barcode,
+			upperBarcode,
+			cleanAlphanumeric,
+			`SKU-${cleanAlphanumeric}`,
+			`SKU-${barcode}`,
+			`SKU-${upperBarcode}`
+		])
+	).filter(Boolean);
+
+	// Jika format seperti 3 huruf + 3 angka (contoh KAC + 830), tambahkan SKU-KAC-830
+	const matchSplit = cleanAlphanumeric.match(/^([A-Z]{2,4})(\d{2,5})$/);
+	if (matchSplit) {
+		candidates.push(`SKU-${matchSplit[1]}-${matchSplit[2]}`);
+		candidates.push(`${matchSplit[1]}-${matchSplit[2]}`);
+	}
+
 	try {
-		// 1. Cari unit berdasarkan barcode
+		// 1. Cari unit berdasarkan barcode (exact, ILIKE, ANY candidates, atau normalized)
 		let units = await query<ProductUnit>(
 			`SELECT id, product_id, unit_name, conversion_factor, price, barcode 
 			 FROM product_units 
-			 WHERE barcode = $1 OR barcode ILIKE $1
+			 WHERE barcode = ANY($1) 
+			    OR barcode ILIKE ANY($1)
+			    OR REPLACE(REPLACE(UPPER(barcode), 'SKU-', ''), '-', '') = $2
 			 LIMIT 1`,
-			[barcode]
+			[candidates, cleanAlphanumeric]
 		);
 
 		let productId = units[0]?.product_id;
@@ -43,9 +67,14 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 				matched = await query<any>(
 					`SELECT id, sku, name, unit, price, cost_price, barcode 
 					 FROM products 
-					 WHERE barcode = $1 OR sku = $1 OR barcode ILIKE $1 OR sku ILIKE $1
+					 WHERE barcode = ANY($1) 
+					    OR sku = ANY($1) 
+					    OR barcode ILIKE ANY($1) 
+					    OR sku ILIKE ANY($1)
+					    OR REPLACE(REPLACE(UPPER(sku), 'SKU-', ''), '-', '') = $2
+					    OR REPLACE(REPLACE(UPPER(barcode), 'SKU-', ''), '-', '') = $2
 					 LIMIT 1`,
-					[barcode]
+					[candidates, cleanAlphanumeric]
 				);
 			}
 

@@ -30,11 +30,11 @@ export const load: PageServerLoad = async () => {
 					query(`UPDATE products SET name = $1 WHERE id = $2`, [original.name, prod.id]).catch(() => {});
 				}
 
-				// 2. Pastikan barcode selalu menggunakan 13-digit EAN tebal yang mudah di-scan
-				if (!prod.barcode || prod.barcode.length !== 13 || !/^\d+$/.test(prod.barcode)) {
-					prod.barcode = original.barcode;
-					query(`UPDATE products SET barcode = $1 WHERE id = $2`, [original.barcode, prod.id]).catch(() => {});
-					query(`UPDATE product_units SET barcode = $1 WHERE product_id = $2`, [original.barcode, prod.id]).catch(() => {});
+				// 2. Pastikan barcode terisi jika kosong
+				if (!prod.barcode) {
+					prod.barcode = original.barcode || prod.sku;
+					query(`UPDATE products SET barcode = $1 WHERE id = $2`, [prod.barcode, prod.id]).catch(() => {});
+					query(`UPDATE product_units SET barcode = $1 WHERE product_id = $2`, [prod.barcode, prod.id]).catch(() => {});
 				}
 
 				// 3. Pastikan harga kasir selalu terisi dan akurat

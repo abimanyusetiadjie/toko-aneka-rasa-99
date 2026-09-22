@@ -24,8 +24,16 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 
 	const params: any[] = [];
 	if (search) {
-		sql += ` AND (p.name ILIKE $1 OR p.sku ILIKE $1 OR pu.barcode ILIKE $1)`;
+		const clean = search.toUpperCase().replace(/^SKU-?/i, '').replace(/[^A-Z0-9]/g, '');
+		sql += ` AND (
+			p.name ILIKE $1 
+			OR p.sku ILIKE $1 
+			OR pu.barcode ILIKE $1 
+			OR REPLACE(REPLACE(UPPER(p.sku), 'SKU-', ''), '-', '') ILIKE $2
+			OR REPLACE(REPLACE(UPPER(pu.barcode), 'SKU-', ''), '-', '') ILIKE $2
+		)`;
 		params.push(`%${search}%`);
+		params.push(`%${clean || search}%`);
 	}
 	sql += ` ORDER BY p.name ASC LIMIT 1000`;
 

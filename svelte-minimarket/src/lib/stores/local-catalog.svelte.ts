@@ -83,7 +83,19 @@ export function cacheProductItem(barcode: string, item: LocalCatalogItem) {
  */
 export function findLocalProduct(barcode: string): LocalCatalogItem | null {
 	const map = get(localCatalog);
-	return map.get(barcode) || null;
+	if (map.has(barcode)) return map.get(barcode)!;
+
+	const clean = barcode.toUpperCase().replace(/^SKU-?/i, '').replace(/[^A-Z0-9]/g, '');
+	for (const [k, v] of map.entries()) {
+		if (k === barcode) return v;
+		const kClean = k.toUpperCase().replace(/^SKU-?/i, '').replace(/[^A-Z0-9]/g, '');
+		const skuClean = (v.product?.sku || '').toUpperCase().replace(/^SKU-?/i, '').replace(/[^A-Z0-9]/g, '');
+		const barClean = (v.product?.barcode || '').toUpperCase().replace(/^SKU-?/i, '').replace(/[^A-Z0-9]/g, '');
+		if (kClean === clean || skuClean === clean || barClean === clean) {
+			return v;
+		}
+	}
+	return null;
 }
 
 /**
