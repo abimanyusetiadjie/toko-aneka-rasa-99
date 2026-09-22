@@ -27,8 +27,29 @@ export interface CategoryCluster {
 export function getCategoryPrefix(
 	categoryName: string = '',
 	productName: string = '',
-	sku: string = ''
+	sku: string = '',
+	categoryId: string = ''
 ): CategoryCluster {
+	// 0. Deteksi langsung dari ID Kategori Resmi PostgreSQL (100% Deterministik)
+	const CID_MAP: Record<string, CategoryCluster> = {
+		'05fc957b-f0b1-4bb8-b101-a73ebaa1c1aa': { prefix: '10', name: 'KEMPLANG PANGGANG' },
+		'e4d7a211-9491-49b9-8e47-2bf3e7b1a201': { prefix: '11', name: 'KEMPLANG GORENG' },
+		'7a3cbb9c-080e-42fb-9bb7-f2b14f4e1f93': { prefix: '12', name: 'KEMPLANG PASIR' },
+		'7774e144-8dae-4e31-8ae2-6e27a69bcba2': { prefix: '13', name: 'KEMPLANG RING / KOIN' },
+		'0c78d523-1858-48a6-9671-c53a43e5b97e': { prefix: '20', name: 'GETAS BANGKA' },
+		'a571ea00-b6f7-418b-ae10-8b093354cb43': { prefix: '30', name: 'KERUPUK MENTAH' },
+		'1e74cb32-59e4-403b-97c6-01665230f5b7': { prefix: '40', name: 'BUMBU & OLEH-OLEH BANGKA' },
+		'965f7c22-b529-43c3-ae62-c11dfd9a6566': { prefix: '50', name: 'KUE KHAS BANGKA' },
+		'2c6e6e22-e421-4f93-8686-35ba0633b474': { prefix: '60', name: 'KOPI BANGKA' },
+		'60c489bd-d317-4d28-8bad-f24e8e732fc2': { prefix: '70', name: 'CEMILAN' },
+		'3448a39a-5f33-4f96-be6a-e64e52b22556': { prefix: '90', name: 'NON-MAKANAN' },
+		'55555555-5555-5555-5555-555555555555': { prefix: '99', name: 'UMUM' }
+	};
+
+	if (categoryId && CID_MAP[categoryId]) {
+		return CID_MAP[categoryId];
+	}
+
 	const cat = (categoryName || '').toUpperCase();
 	const name = (productName || '').toUpperCase();
 	const s = (sku || '').toUpperCase();
@@ -89,9 +110,10 @@ export function build6DigitBarcode(
 	productName: string = '',
 	sku: string = '',
 	usedSet: Set<string>,
-	categorySeqMap: Record<string, number>
+	categorySeqMap: Record<string, number>,
+	categoryId: string = ''
 ): string {
-	const { prefix } = getCategoryPrefix(categoryName, productName, sku);
+	const { prefix } = getCategoryPrefix(categoryName, productName, sku, categoryId);
 	if (!categorySeqMap[prefix]) categorySeqMap[prefix] = 1;
 
 	// Coba ambil angka dari SKU (contoh: SKU-KAC-830 -> 830) jika <= 9999

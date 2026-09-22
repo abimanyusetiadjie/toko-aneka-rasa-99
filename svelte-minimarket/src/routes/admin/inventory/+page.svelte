@@ -313,6 +313,9 @@
 							onkeydown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
 							class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono"
 						/>
+						<p class="text-[10px] text-blue-600 mt-1 font-medium">
+							✨ Kosongkan agar sistem otomatis membuat kode 6-digit klaster (KK-XXXX) sesuai kepala kategori.
+						</p>
 					</div>
 				</div>
 
@@ -401,6 +404,9 @@
 							onkeydown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
 							class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 outline-none focus:border-blue-600 text-slate-900 font-mono"
 						/>
+						<p class="text-[10px] text-blue-600 mt-1 font-medium">
+							✨ Kosongkan jika ingin di-generate ulang otomatis 6-digit klaster (KK-XXXX).
+						</p>
 					</div>
 				</div>
 

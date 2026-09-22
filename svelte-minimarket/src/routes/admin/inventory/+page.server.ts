@@ -44,6 +44,51 @@ export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 			base_hpp: isOwner ? Number(p.base_hpp || 0) : 0
 		}));
 
+		// Self-healing: jika ada produk yang belum ber-barcode 6-digit klaster (KK-XXXX), otomatis generate & simpan ke DB
+		const unmigrated = products.filter(p => !/^\d{6}$/.test((p.barcode || '').trim()));
+		if (unmigrated.length > 0) {
+			const usedBarcodes = new Set<string>();
+			for (const prod of products) {
+				const b = (prod.barcode || '').trim();
+				if (/^\d{6}$/.test(b)) usedBarcodes.add(b);
+			}
+			const categorySeqMap: Record<string, number> = {};
+
+			for (const prod of unmigrated) {
+				const newCode = build6DigitBarcode(
+					prod.category_name,
+					prod.name,
+					prod.sku,
+					usedBarcodes,
+					categorySeqMap,
+					prod.category_id
+				);
+				prod.barcode = newCode;
+
+				try {
+					await query(`UPDATE products SET barcode = $1 WHERE id = $2`, [newCode, prod.id]);
+					const unitCheck = await query<any>(`SELECT id FROM product_units WHERE product_id = $1`, [prod.id]);
+					if (unitCheck && unitCheck.length > 0) {
+						await query(
+							`UPDATE product_units 
+							 SET barcode = $1 
+							 WHERE product_id = $2 AND (conversion_factor = 1 OR conversion_factor IS NULL)`, 
+							[newCode, prod.id]
+						);
+					} else {
+						await query(
+							`INSERT INTO product_units (id, product_id, unit_name, conversion_factor, price, barcode)
+							 VALUES ($1, $2, 'Pcs', 1, (SELECT COALESCE(price, 0) FROM products WHERE id = $2), $3)
+							 ON CONFLICT (id) DO NOTHING`,
+							[crypto.randomUUID(), prod.id, newCode]
+						);
+					}
+				} catch (err) {
+					console.error('[Inventory Barcode Auto-Sync Error]', prod.name, err);
+				}
+			}
+		}
+
 		const movements = (rawMovements || []).map((m: any) => ({
 			...m,
 			unit_cost_snapshot: isOwner ? Number(m.unit_cost_snapshot || 0) : 0
@@ -86,7 +131,7 @@ export const actions: Actions = {
 			const catRow = await query<any>(`SELECT name FROM categories WHERE id = $1`, [category_id]);
 			const existingUnits = await query<any>(`SELECT barcode FROM product_units WHERE barcode ~ '^[0-9]{6}$'`);
 			const usedSet = new Set<string>((existingUnits || []).map((u: any) => u.barcode));
-			barcode = build6DigitBarcode(catRow[0]?.name || '', name, sku, usedSet, {});
+			barcode = build6DigitBarcode(catRow[0]?.name || '', name, sku, usedSet, {}, category_id);
 		}
 
 		const productId = crypto.randomUUID();
@@ -224,7 +269,7 @@ export const actions: Actions = {
 					const catRow = await query<any>(`SELECT name FROM categories WHERE id = $1`, [category_id]);
 					const existingUnits = await query<any>(`SELECT barcode FROM product_units WHERE barcode ~ '^[0-9]{6}$'`);
 					const usedSet = new Set<string>((existingUnits || []).map((u: any) => u.barcode));
-					finalBarcode = build6DigitBarcode(catRow[0]?.name || '', name, existingProd[0]?.sku || '', usedSet, {});
+					finalBarcode = build6DigitBarcode(catRow[0]?.name || '', name, existingProd[0]?.sku || '', usedSet, {}, category_id);
 				}
 			}
 

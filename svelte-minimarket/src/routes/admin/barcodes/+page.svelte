@@ -353,31 +353,44 @@
 			<!-- LAYOUT UKURAN 33 x 15 mm (STANDAR MINIMARKET ZENPERT 4T520) -->
 			<!-- STRUKTUR: ANEKA RASA 99 (atas) -> BARCODE (tengah 9.5mm) -> KODE 6-DIGIT (bawah) -->
 			<!-- ========================================================================= -->
-			<div class="{printMode === 'roll' ? 'flex flex-wrap gap-3 justify-center print:block' : 'grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-2 print:grid-cols-6 print:gap-1'}">
+			<div class="{printMode === 'roll' ? 'flex flex-wrap gap-4 justify-center print:block' : 'grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 print:grid-cols-6 print:gap-1'}">
 				{#each filteredProducts as product (product.id)}
 					{@const bData = getBarcodeData(product)}
-					<div class="barcode-card-33x15 bg-white border border-slate-300 rounded print:rounded-none flex flex-col justify-between items-center text-center shadow-xs print:shadow-none print:border-none {printMode === 'roll' ? 'print:break-after-page' : 'print:break-inside-avoid'}">
+					<div class="flex flex-col items-center bg-slate-50/70 p-2 rounded-lg border border-slate-200 print:bg-transparent print:p-0 print:border-none {printMode === 'roll' ? 'print:break-after-page' : 'print:break-inside-avoid'}">
 						
-						<!-- Header Toko: Arial Bold 7pt, 1 baris bersih rapi tanpa wrap -->
-						<div class="header-33x15 w-full text-center">
-							<span class="store-title-33x15">
-								ANEKA RASA 99
-							</span>
+						<!-- Info Nama Produk & Kategori (Hanya Tampil di Layar Monitor, Otomatis Hilang Saat Print) -->
+						<div class="print:hidden w-[33mm] text-center mb-1.5 px-0.5">
+							<p class="text-[10px] font-bold text-slate-900 truncate leading-tight" title={product.name}>
+								{product.name}
+							</p>
+							<p class="text-[9px] font-mono text-slate-500 truncate leading-tight">
+								{product.category_name || 'Umum'} • {product.sku}
+							</p>
 						</div>
 
-						<!-- Barcode: Tinggi 9.5 mm, Quiet Zone 3mm kiri & kanan, Type Code 128C 6-Digit -->
-						<div class="barcode-container-33x15 w-full flex items-center justify-center">
-							<svg 
-								class="barcode-svg" 
-								data-barcode={bData.encodedValue}
-							></svg>
-						</div>
+						<!-- Kartu Fisik Label Stiker 33x15 mm (Standar Zenpert 4T520) -->
+						<div class="barcode-card-33x15 bg-white border border-slate-300 rounded print:rounded-none flex flex-col justify-between items-center text-center shadow-xs print:shadow-none print:border-none">
+							<!-- Header Toko: Arial Bold 7pt, 1 baris bersih rapi tanpa wrap -->
+							<div class="header-33x15 w-full text-center">
+								<span class="store-title-33x15">
+									ANEKA RASA 99
+								</span>
+							</div>
 
-						<!-- Bawah: 6 Digit Nomor Produk Rata Tengah (Font 7pt Bold) Tanpa Harga -->
-						<div class="footer-33x15 w-full text-center">
-							<span class="code-33x15">
-								{bData.displayText}
-							</span>
+							<!-- Barcode: Tinggi 9.5 mm, Quiet Zone 3mm kiri & kanan, Type Code 128C 6-Digit -->
+							<div class="barcode-container-33x15 w-full flex items-center justify-center">
+								<svg 
+									class="barcode-svg" 
+									data-barcode={bData.encodedValue}
+								></svg>
+							</div>
+
+							<!-- Bawah: 6 Digit Nomor Produk Rata Tengah (Font 7pt Bold) Tanpa Harga -->
+							<div class="footer-33x15 w-full text-center">
+								<span class="code-33x15">
+									{bData.displayText}
+								</span>
+							</div>
 						</div>
 					</div>
 				{/each}
