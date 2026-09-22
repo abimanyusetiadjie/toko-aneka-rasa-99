@@ -903,20 +903,27 @@ _Laporan otomatis dari Sistem POS Toko Aneka Rasa 99._`;
 				const data = await res.json();
 				addItem(data.product, data.scanned_unit, data.all_units);
 				cacheProductItem(code, data);
+				if (data.product?.barcode && data.product.barcode !== code) {
+					cacheProductItem(data.product.barcode, data);
+				}
 				return;
 			}
 			if (res.status === 404) {
 				const errData = await res.json().catch(() => ({}));
-				throw new Error(errData.message || `Barcode "${code}" tidak terdaftar di sistem`);
-			}
-		} catch (err: any) {
-			// Jika server terputus/offline, gunakan data cache lokal
-			const cached = findLocalProduct(code);
-			if (cached) {
-				addItem(cached.product, cached.scanned_unit, cached.all_units);
+				displayActionableError(`Produk Tidak Ditemukan: "${code}"`, errData.message || 'Pastikan barcode atau nama produk sudah terdaftar di Inventori.');
 				return;
 			}
-			displayActionableError(`Barcode Tidak Terdaftar: "${code}"`, err.message || 'Pastikan barcode sudah didaftarkan di Master Inventory gudang.');
+			throw new Error('Gagal memproses pemindaian di server.');
+		} catch (err: any) {
+			// HANYA gunakan fallback offline jika browser terputus dari jaringan!
+			if (typeof navigator !== 'undefined' && !navigator.onLine) {
+				const cached = findLocalProduct(code);
+				if (cached) {
+					addItem(cached.product, cached.scanned_unit, cached.all_units);
+					return;
+				}
+			}
+			displayActionableError(`Gagal Memindai: "${code}"`, err.message || 'Periksa koneksi jaringan atau data produk.');
 		}
 	}
 

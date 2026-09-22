@@ -49,11 +49,10 @@
 				pName.includes(q) ||
 				pSku.includes(q) ||
 				pBar.includes(q) ||
-				pCat.includes(q) ||
-				(pSku.includes('314') && q.includes('314'));
+				pCat.includes(q);
 
 			// PENTING: Jika ada query pencarian (q aktif), cari ke SELURUH produk (abaikan dropdown kategori)
-			// agar pencarian barcode 200314 / 700314 / amplang langsung muncul 100%!
+			// agar pencarian barcode / SKU / nama langsung muncul seketika!
 			const matchCat = q ? true : (selectedCategory === 'ALL' || pCat === selectedCategory.toLowerCase());
 			return matchQuery && matchCat;
 		})

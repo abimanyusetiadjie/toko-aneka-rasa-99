@@ -20,10 +20,10 @@ export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 					p.stock,
 					c.name as category_name,
 					COALESCE(pu.price, p.price) as selling_price,
-					COALESCE(pu.barcode, p.barcode, p.sku) as barcode
+					COALESCE(p.barcode, pu.barcode, p.sku) as barcode
 				FROM products p
 				LEFT JOIN categories c ON p.category_id = c.id
-				LEFT JOIN product_units pu ON p.id = pu.product_id AND pu.conversion_factor = 1
+				LEFT JOIN product_units pu ON p.id = pu.product_id AND (pu.conversion_factor = 1 OR pu.conversion_factor IS NULL)
 				WHERE (p.is_active = true OR p.is_active IS NULL)
 				ORDER BY p.name ASC
 			`),
@@ -43,61 +43,6 @@ export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 			...p,
 			base_hpp: isOwner ? Number(p.base_hpp || 0) : 0
 		}));
-
-		// Koreksi Kategori Amplang: Pastikan masuk ke Cemilan (700314), bukan Getas (200314)
-		const amplangProd = products.find(p => p.name.toLowerCase().includes('amplang') || (p.sku || '').toUpperCase().includes('AMP'));
-		if (amplangProd && (amplangProd.barcode === '200314' || amplangProd.barcode === 'SKU-AMP-314' || !/^\d{6}$/.test(amplangProd.barcode || ''))) {
-			amplangProd.barcode = '700314';
-			amplangProd.category_id = '60c489bd-d317-4d28-8bad-f24e8e732fc2';
-			amplangProd.category_name = 'CEMILAN';
-			query(`UPDATE products SET category_id = '60c489bd-d317-4d28-8bad-f24e8e732fc2', barcode = '700314' WHERE id = $1`, [amplangProd.id]).catch(() => {});
-			query(`UPDATE product_units SET barcode = '700314' WHERE product_id = $1 AND (conversion_factor = 1 OR conversion_factor IS NULL)`, [amplangProd.id]).catch(() => {});
-		}
-
-		// Self-healing: jika ada produk yang belum ber-barcode 6-digit klaster (KK-XXXX), otomatis generate & simpan ke DB
-		const unmigrated = products.filter(p => !/^\d{6}$/.test((p.barcode || '').trim()));
-		if (unmigrated.length > 0) {
-			const usedBarcodes = new Set<string>();
-			for (const prod of products) {
-				const b = (prod.barcode || '').trim();
-				if (/^\d{6}$/.test(b)) usedBarcodes.add(b);
-			}
-			const categorySeqMap: Record<string, number> = {};
-
-			for (const prod of unmigrated) {
-				const newCode = build6DigitBarcode(
-					prod.category_name,
-					prod.name,
-					prod.sku,
-					usedBarcodes,
-					categorySeqMap,
-					prod.category_id
-				);
-				prod.barcode = newCode;
-
-				try {
-					await query(`UPDATE products SET barcode = $1 WHERE id = $2`, [newCode, prod.id]);
-					const unitCheck = await query<any>(`SELECT id FROM product_units WHERE product_id = $1`, [prod.id]);
-					if (unitCheck && unitCheck.length > 0) {
-						await query(
-							`UPDATE product_units 
-							 SET barcode = $1 
-							 WHERE product_id = $2 AND (conversion_factor = 1 OR conversion_factor IS NULL)`, 
-							[newCode, prod.id]
-						);
-					} else {
-						await query(
-							`INSERT INTO product_units (id, product_id, unit_name, conversion_factor, price, barcode)
-							 VALUES ($1, $2, 'Pcs', 1, (SELECT COALESCE(price, 0) FROM products WHERE id = $2), $3)
-							 ON CONFLICT (id) DO NOTHING`,
-							[crypto.randomUUID(), prod.id, newCode]
-						);
-					}
-				} catch (err) {
-					console.error('[Inventory Barcode Auto-Sync Error]', prod.name, err);
-				}
-			}
-		}
 
 		const movements = (rawMovements || []).map((m: any) => ({
 			...m,
@@ -259,10 +204,15 @@ export const actions: Actions = {
 		}
 
 		try {
-			// Sprint 3: Alert Barcode Duplikat
+			// Cek duplikasi barcode di produk lain
 			if (barcode) {
-				const existingBarcode = await query(`SELECT id, product_id FROM product_units WHERE barcode = $1`, [barcode]);
-				if (existingBarcode.length > 0 && existingBarcode[0].product_id !== id) {
+				const existingBarcode = await query(
+					`SELECT id, product_id FROM product_units WHERE barcode = $1 AND product_id != $2
+					 UNION
+					 SELECT id, id as product_id FROM products WHERE barcode = $1 AND id != $2`, 
+					[barcode, id]
+				);
+				if (existingBarcode.length > 0) {
 					return { success: false, message: `Gagal: Barcode "${barcode}" sudah dipakai oleh produk lain!` };
 				}
 			}
@@ -273,14 +223,10 @@ export const actions: Actions = {
 
 			let finalBarcode = barcode;
 			if (!finalBarcode) {
-				if (existingProd[0]?.barcode && /^\d{6}$/.test(existingProd[0].barcode)) {
-					finalBarcode = existingProd[0].barcode;
-				} else {
-					const catRow = await query<any>(`SELECT name FROM categories WHERE id = $1`, [category_id]);
-					const existingUnits = await query<any>(`SELECT barcode FROM product_units WHERE barcode ~ '^[0-9]{6}$'`);
-					const usedSet = new Set<string>((existingUnits || []).map((u: any) => u.barcode));
-					finalBarcode = build6DigitBarcode(catRow[0]?.name || '', name, existingProd[0]?.sku || '', usedSet, {}, category_id);
-				}
+				const catRow = await query<any>(`SELECT name FROM categories WHERE id = $1`, [category_id]);
+				const existingUnits = await query<any>(`SELECT barcode FROM product_units WHERE barcode ~ '^[0-9]{6}$' UNION SELECT barcode FROM products WHERE barcode ~ '^[0-9]{6}$'`);
+				const usedSet = new Set<string>((existingUnits || []).map((u: any) => u.barcode));
+				finalBarcode = build6DigitBarcode(catRow[0]?.name || '', name, existingProd[0]?.sku || '', usedSet, {}, category_id);
 			}
 
 			await query(
@@ -290,13 +236,13 @@ export const actions: Actions = {
 				[name, category_id, base_hpp, selling_price, stock, finalBarcode, id]
 			);
 
-			const existingUnits = await query(`SELECT id FROM product_units WHERE product_id = $1 AND (conversion_factor = 1 OR conversion_factor IS NULL) LIMIT 1`, [id]);
+			const existingUnits = await query<any>(`SELECT id FROM product_units WHERE product_id = $1`, [id]);
 			if (existingUnits.length > 0) {
 				await query(
 					`UPDATE product_units 
 					 SET price = $1, barcode = $2
-					 WHERE id = $3`,
-					[selling_price, finalBarcode, existingUnits[0].id]
+					 WHERE product_id = $3 AND (conversion_factor = 1 OR conversion_factor IS NULL)`,
+					[selling_price, finalBarcode, id]
 				);
 			} else {
 				await query(
@@ -309,13 +255,13 @@ export const actions: Actions = {
 			broadcastRealtimeEvent({
 				type: 'STOCK_CHANGED',
 				data: {
-					items: [{ productId: id, qty: 0, baseQty: 0, newBalance: stock, price: selling_price }],
+					items: [{ productId: id, qty: 0, baseQty: 0, newBalance: stock, price: selling_price, barcode: finalBarcode, name }],
 					timestamp: new Date().toISOString(),
-					message: `Produk diperbarui: ${name} (Harga: Rp ${selling_price.toLocaleString('id-ID')})`
+					message: `Produk diperbarui: ${name} (Barcode: ${finalBarcode})`
 				}
 			});
 
-			return { success: true, message: `Produk "${name}" berhasil diperbarui (Harga: Rp ${selling_price.toLocaleString('id-ID')}).` };
+			return { success: true, message: `Produk "${name}" berhasil diperbarui dengan Barcode "${finalBarcode}".` };
 		} catch (err: any) {
 			return { success: false, message: 'Gagal memperbarui produk: ' + err.message };
 		}

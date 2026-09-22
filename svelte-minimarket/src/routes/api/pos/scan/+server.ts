@@ -35,16 +35,6 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 		candidates.push(`${matchSplit[1]}-${matchSplit[2]}`);
 	}
 
-	// Jika format 6-digit angka murni (KK-XXXX), tambahkan variasi prefix klaster silang
-	// (misalnya scanner membaca 200314 atau 700314 untuk Amplang @100g)
-	if (/^\d{6}$/.test(cleanAlphanumeric)) {
-		const numPart = cleanAlphanumeric.slice(2);
-		candidates.push(`20${numPart}`);
-		candidates.push(`70${numPart}`);
-		candidates.push(`99${numPart}`);
-		candidates.push(`SKU-AMP-${parseInt(numPart, 10)}`);
-	}
-
 	try {
 		// 1. Cari unit berdasarkan barcode (exact, ILIKE, ANY candidates, atau normalized)
 		let units = await query<ProductUnit>(
@@ -59,7 +49,7 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 
 		let productId = units[0]?.product_id;
 
-		// 2. Fallback: Jika belum ada di product_units, cari di tabel products (barcode, SKU, atau ID)
+		// 2. Fallback: Jika belum ada di product_units, cari di tabel products (barcode, SKU, ID, atau nama)
 		if (units.length === 0) {
 			const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(barcode);
 			let matched: any[] = [];
@@ -67,7 +57,7 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 				matched = await query<any>(
 					`SELECT id, sku, name, unit, price, cost_price, barcode 
 					 FROM products 
-					 WHERE id = $1 
+					 WHERE id = $1 AND (is_active = true OR is_active IS NULL)
 					 LIMIT 1`,
 					[barcode]
 				);
@@ -77,14 +67,23 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 				matched = await query<any>(
 					`SELECT id, sku, name, unit, price, cost_price, barcode 
 					 FROM products 
-					 WHERE barcode = ANY($1) 
-					    OR sku = ANY($1) 
-					    OR barcode ILIKE ANY($1) 
-					    OR sku ILIKE ANY($1)
-					    OR REPLACE(REPLACE(UPPER(sku), 'SKU-', ''), '-', '') = $2
-					    OR REPLACE(REPLACE(UPPER(barcode), 'SKU-', ''), '-', '') = $2
+					 WHERE (is_active = true OR is_active IS NULL)
+					   AND (
+					     barcode = ANY($1) 
+					     OR sku = ANY($1) 
+					     OR barcode ILIKE ANY($1) 
+					     OR sku ILIKE ANY($1)
+					     OR REPLACE(REPLACE(UPPER(sku), 'SKU-', ''), '-', '') = $2
+					     OR REPLACE(REPLACE(UPPER(barcode), 'SKU-', ''), '-', '') = $2
+					     OR name ILIKE $3
+					   )
+					 ORDER BY 
+					   CASE WHEN barcode = $4 THEN 1
+					        WHEN sku = $4 THEN 2
+					        WHEN barcode ILIKE $4 THEN 3
+					        ELSE 4 END
 					 LIMIT 1`,
-					[candidates, cleanAlphanumeric]
+					[candidates, cleanAlphanumeric, `%${barcode}%`, barcode]
 				);
 			}
 
@@ -108,7 +107,7 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 						unit_name: matched[0].unit || 'Pcs',
 						conversion_factor: 1,
 						price: matched[0].price || 0,
-						barcode: barcode
+						barcode: matched[0].barcode || barcode
 					}];
 				}
 			}
@@ -122,9 +121,13 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 
 		// 3. Cari data induk produk (hanya yang aktif)
 		const products = await query<Product>(
-			`SELECT p.id, p.sku, p.name, p.category_id, p.unit as base_unit, COALESCE(p.cost_price, 0) as base_hpp, p.stock, false as is_taxable, c.name as category_name
+			`SELECT p.id, p.sku, p.name, p.category_id, p.unit as base_unit, 
+			        COALESCE(p.cost_price, 0) as base_hpp, p.stock, false as is_taxable, 
+			        c.name as category_name,
+			        COALESCE(p.barcode, pu.barcode, p.sku) as barcode
 			 FROM products p
 			 LEFT JOIN categories c ON p.category_id = c.id
+			 LEFT JOIN product_units pu ON p.id = pu.product_id AND (pu.conversion_factor = 1 OR pu.conversion_factor IS NULL)
 			 WHERE p.id = $1 AND (p.is_active = true OR p.is_active IS NULL)
 			 LIMIT 1`,
 			[productId]
