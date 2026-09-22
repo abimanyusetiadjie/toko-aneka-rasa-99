@@ -21,6 +21,18 @@ export const load: PageServerLoad = async () => {
 
 		const products = rawProducts || [];
 
+		// Koreksi Spesifik Amplang -> CEMILAN (700314)
+		const amplangProd = products.find((p: any) => 
+			(p.name || '').toLowerCase().includes('amplang') || (p.sku || '').toUpperCase().includes('AMP')
+		);
+		if (amplangProd && (amplangProd.barcode === '200314' || amplangProd.barcode === 'SKU-AMP-314' || amplangProd.barcode !== '700314' || (amplangProd.category_name || '').toUpperCase() !== 'CEMILAN')) {
+			amplangProd.barcode = '700314';
+			amplangProd.category_id = '60c489bd-d317-4d28-8bad-f24e8e732fc2';
+			amplangProd.category_name = 'CEMILAN';
+			query(`UPDATE products SET category_id = '60c489bd-d317-4d28-8bad-f24e8e732fc2', barcode = '700314' WHERE id = $1`, [amplangProd.id]).catch(() => {});
+			query(`UPDATE product_units SET barcode = '700314' WHERE product_id = $1 AND (conversion_factor = 1 OR conversion_factor IS NULL)`, [amplangProd.id]).catch(() => {});
+		}
+
 		// Konversi Otomatis / Self-Healing ke 6-Digit Klaster Bersih
 		// Kumpulkan barcode 6-digit yang sudah valid
 		const usedBarcodes = new Set<string>();
@@ -97,8 +109,25 @@ export const actions: Actions = {
 			const usedBarcodes = new Set<string>();
 			const categorySeqMap: Record<string, number> = {};
 
+			// Pastikan Amplang selalu ke CEMILAN (700314)
+			await query(`
+				UPDATE products 
+				SET category_id = '60c489bd-d317-4d28-8bad-f24e8e732fc2', barcode = '700314' 
+				WHERE LOWER(name) LIKE '%amplang%' OR UPPER(sku) LIKE '%AMP%'
+			`).catch(() => {});
+			await query(`
+				UPDATE product_units 
+				SET barcode = '700314' 
+				WHERE product_id IN (SELECT id FROM products WHERE LOWER(name) LIKE '%amplang%' OR UPPER(sku) LIKE '%AMP%')
+				  AND (conversion_factor = 1 OR conversion_factor IS NULL)
+			`).catch(() => {});
+
 			// Kumpulkan yang sudah 6 digit
 			for (const prod of products) {
+				if ((prod.name || '').toLowerCase().includes('amplang') || (prod.sku || '').toUpperCase().includes('AMP')) {
+					prod.barcode = '700314';
+					prod.category_name = 'CEMILAN';
+				}
 				const b = (prod.barcode || '').trim();
 				if (/^\d{6}$/.test(b)) {
 					usedBarcodes.add(b);

@@ -19,6 +19,8 @@ function getCategoryPrefix(categoryName = '', productName = '', sku = '') {
 	if (cat.includes('PASIR') || name.includes('PASIR') || s.includes('PSR')) return { prefix: '12', name: 'KEMPLANG PASIR' };
 	if (cat.includes('GORENG') || name.includes('KEMPLANG GORENG') || name.includes('GORENG')) return { prefix: '11', name: 'KEMPLANG GORENG' };
 	if (cat.includes('RING') || cat.includes('KOIN') || name.includes('KOIN') || name.includes('RING')) return { prefix: '13', name: 'KEMPLANG RING / KOIN' };
+	// Khusus Amplang: Amplang adalah jenis cemilan khas (bukan getas bulat), wajib masuk klaster CEMILAN (70)
+	if (name.includes('AMPLANG') || s.includes('AMP')) return { prefix: '70', name: 'CEMILAN' };
 	if (cat.includes('GETAS') || name.includes('GETAS') || s.includes('GET')) return { prefix: '20', name: 'GETAS BANGKA' };
 	if (cat.includes('MENTAH') || name.includes('MENTAH')) return { prefix: '30', name: 'KERUPUK MENTAH' };
 	if (
@@ -154,8 +156,16 @@ async function main() {
 		for (const p of products) {
 			const currentCode = (p.unit_barcode || p.prod_barcode || '').trim();
 			let finalCode = currentCode;
+			let newCategoryId = null;
 
-			if (/^\d{6}$/.test(currentCode)) {
+			const isAmplang = (p.name || '').toUpperCase().includes('AMPLANG') || (p.sku || '').toUpperCase().includes('AMP');
+			if (isAmplang) {
+				usedSet.delete('200314');
+				finalCode = '700314';
+				newCategoryId = '60c489bd-d317-4d28-8bad-f24e8e732fc2';
+				p.category_name = 'CEMILAN';
+				convertedCount++;
+			} else if (/^\d{6}$/.test(currentCode)) {
 				// Sudah 6-digit, pastikan kedua tabel sinkron memiliki kode yang sama
 				alreadySyncedCount++;
 			} else {
@@ -171,6 +181,7 @@ async function main() {
 				oldCode: currentCode || '(kosong)',
 				newCode: finalCode,
 				category: p.category_name || 'Umum',
+				newCategoryId,
 				hasUnit: !!p.unit_id
 			});
 
@@ -200,6 +211,9 @@ async function main() {
 
 		for (const u of updates) {
 			await client.query(`UPDATE products SET barcode = $1 WHERE id = $2`, [u.newCode, u.id]);
+			if (u.newCategoryId) {
+				await client.query(`UPDATE products SET category_id = $1 WHERE id = $2`, [u.newCategoryId, u.id]);
+			}
 			
 			const unitCheck = await client.query(`SELECT id FROM product_units WHERE product_id = $1`, [u.id]);
 			if (unitCheck.rows.length > 0) {

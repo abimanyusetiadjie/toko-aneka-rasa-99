@@ -44,6 +44,16 @@ export const load: PageServerLoad = async ({ setHeaders, locals }) => {
 			base_hpp: isOwner ? Number(p.base_hpp || 0) : 0
 		}));
 
+		// Koreksi Kategori Amplang: Pastikan masuk ke Cemilan (700314), bukan Getas (200314)
+		const amplangProd = products.find(p => p.name.toLowerCase().includes('amplang') || (p.sku || '').toUpperCase().includes('AMP'));
+		if (amplangProd && (amplangProd.barcode === '200314' || amplangProd.barcode === 'SKU-AMP-314' || !/^\d{6}$/.test(amplangProd.barcode || ''))) {
+			amplangProd.barcode = '700314';
+			amplangProd.category_id = '60c489bd-d317-4d28-8bad-f24e8e732fc2';
+			amplangProd.category_name = 'CEMILAN';
+			query(`UPDATE products SET category_id = '60c489bd-d317-4d28-8bad-f24e8e732fc2', barcode = '700314' WHERE id = $1`, [amplangProd.id]).catch(() => {});
+			query(`UPDATE product_units SET barcode = '700314' WHERE product_id = $1 AND (conversion_factor = 1 OR conversion_factor IS NULL)`, [amplangProd.id]).catch(() => {});
+		}
+
 		// Self-healing: jika ada produk yang belum ber-barcode 6-digit klaster (KK-XXXX), otomatis generate & simpan ke DB
 		const unmigrated = products.filter(p => !/^\d{6}$/.test((p.barcode || '').trim()));
 		if (unmigrated.length > 0) {

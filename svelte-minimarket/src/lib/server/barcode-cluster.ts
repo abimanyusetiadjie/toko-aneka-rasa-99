@@ -46,19 +46,27 @@ export function getCategoryPrefix(
 		'55555555-5555-5555-5555-555555555555': { prefix: '99', name: 'UMUM' }
 	};
 
-	if (categoryId && CID_MAP[categoryId]) {
-		return CID_MAP[categoryId];
-	}
-
 	const cat = (categoryName || '').toUpperCase();
 	const name = (productName || '').toUpperCase();
 	const s = (sku || '').toUpperCase();
+
+	// Amplang adalah cemilan Bangka (bukan getas bulat), pastikan selalu masuk klaster CEMILAN (70)
+	if (name.includes('AMPLANG') || s.includes('AMP')) {
+		return { prefix: '70', name: 'CEMILAN' };
+	}
+
+	if (categoryId && CID_MAP[categoryId]) {
+		return CID_MAP[categoryId];
+	}
 
 	// 1. Deteksi langsung dari nama kategori & produk
 	if (cat.includes('PANGGANG') || name.includes('PANGGANG') || name.includes('OVEN') || s.includes('PNG')) return { prefix: '10', name: 'KEMPLANG PANGGANG' };
 	if (cat.includes('PASIR') || name.includes('PASIR') || s.includes('PSR')) return { prefix: '12', name: 'KEMPLANG PASIR' };
 	if (cat.includes('GORENG') || name.includes('KEMPLANG GORENG') || name.includes('GORENG')) return { prefix: '11', name: 'KEMPLANG GORENG' };
 	if (cat.includes('RING') || cat.includes('KOIN') || name.includes('KOIN') || name.includes('RING')) return { prefix: '13', name: 'KEMPLANG RING / KOIN' };
+	// Khusus Amplang: Amplang adalah cemilan (bukan getas bulat/panjang), pastikan selalu klaster 70
+	if (name.includes('AMPLANG') || s.includes('AMP')) return { prefix: '70', name: 'CEMILAN' };
+
 	if (cat.includes('GETAS') || name.includes('GETAS') || s.includes('GET')) return { prefix: '20', name: 'GETAS BANGKA' };
 	if (cat.includes('MENTAH') || name.includes('MENTAH')) return { prefix: '30', name: 'KERUPUK MENTAH' };
 	if (

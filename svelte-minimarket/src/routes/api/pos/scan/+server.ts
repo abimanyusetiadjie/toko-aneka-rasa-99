@@ -35,6 +35,16 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 		candidates.push(`${matchSplit[1]}-${matchSplit[2]}`);
 	}
 
+	// Jika format 6-digit angka murni (KK-XXXX), tambahkan variasi prefix klaster silang
+	// (misalnya scanner membaca 200314 atau 700314 untuk Amplang @100g)
+	if (/^\d{6}$/.test(cleanAlphanumeric)) {
+		const numPart = cleanAlphanumeric.slice(2);
+		candidates.push(`20${numPart}`);
+		candidates.push(`70${numPart}`);
+		candidates.push(`99${numPart}`);
+		candidates.push(`SKU-AMP-${parseInt(numPart, 10)}`);
+	}
+
 	try {
 		// 1. Cari unit berdasarkan barcode (exact, ILIKE, ANY candidates, atau normalized)
 		let units = await query<ProductUnit>(

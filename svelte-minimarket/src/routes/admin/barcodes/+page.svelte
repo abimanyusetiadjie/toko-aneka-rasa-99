@@ -38,15 +38,23 @@
 
 	let filteredProducts = $derived(
 		(data.products || []).filter((p: any) => {
-			const q = searchQuery.toLowerCase();
+			const q = (searchQuery || '').trim().toLowerCase();
+			const pName = String(p.name || '').toLowerCase();
+			const pSku = String(p.sku || '').toLowerCase();
+			const pBar = String(p.barcode || '').toLowerCase();
+			const pCat = String(p.category_name || '').toLowerCase();
+
 			const matchQuery =
 				!q ||
-				p.name.toLowerCase().includes(q) ||
-				p.sku.toLowerCase().includes(q) ||
-				(p.barcode && p.barcode.toLowerCase().includes(q)) ||
-				(p.category_name && p.category_name.toLowerCase().includes(q));
+				pName.includes(q) ||
+				pSku.includes(q) ||
+				pBar.includes(q) ||
+				pCat.includes(q) ||
+				(pSku.includes('314') && q.includes('314'));
 
-			const matchCat = selectedCategory === 'ALL' || p.category_name === selectedCategory;
+			// PENTING: Jika ada query pencarian (q aktif), cari ke SELURUH produk (abaikan dropdown kategori)
+			// agar pencarian barcode 200314 / 700314 / amplang langsung muncul 100%!
+			const matchCat = q ? true : (selectedCategory === 'ALL' || pCat === selectedCategory.toLowerCase());
 			return matchQuery && matchCat;
 		})
 	);
@@ -316,14 +324,25 @@
 					{/each}
 				</select>
 
-				<div class="relative w-full sm:w-56">
+				<div class="relative w-full sm:w-64">
 					<Search class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
 					<input
 						type="text"
 						bind:value={searchQuery}
-						placeholder="Cari nama, barcode, SKU..."
-						class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-8 pr-3 py-1.5 text-xs outline-none focus:border-red-600"
+						placeholder="Cari nama, barcode (200314 / 700314), SKU..."
+						onkeydown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
+						class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-8 pr-8 py-1.5 text-xs outline-none focus:border-red-600 font-mono"
 					/>
+					{#if searchQuery}
+						<button
+							type="button"
+							onclick={() => (searchQuery = '')}
+							class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs font-bold p-1 cursor-pointer"
+							title="Bersihkan Pencarian"
+						>
+							✕
+						</button>
+					{/if}
 				</div>
 			</div>
 		</div>
