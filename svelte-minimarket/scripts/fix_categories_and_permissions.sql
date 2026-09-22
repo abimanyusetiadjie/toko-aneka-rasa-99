@@ -54,17 +54,22 @@ WHERE LOWER(name) LIKE '%mentah%';
 UPDATE products SET category_id = '7a3cbb9c-080e-42fb-9bb7-f2b14f4e1f93'
 WHERE LOWER(name) LIKE '%pasir%';
 
--- KEMPLANG PANGGANG
+-- KEMPLANG PANGGANG (Termasuk Oven, OVN, MM, Sari Laut)
 UPDATE products SET category_id = '05fc957b-f0b1-4bb8-b101-a73ebaa1c1aa'
-WHERE (LOWER(name) LIKE '%panggang%' OR LOWER(name) LIKE '%bakar%');
+WHERE (
+  LOWER(name) LIKE '%panggang%' OR LOWER(name) LIKE '%bakar%' OR 
+  LOWER(name) LIKE '%ovn%' OR LOWER(name) LIKE '%oven%' OR 
+  LOWER(name) LIKE '%sari laut%' OR LOWER(name) LIKE '%mm kotak%' OR 
+  LOWER(name) LIKE '%mm bulat%'
+);
 
 -- KEMPLANG RING / KOIN
 UPDATE products SET category_id = '7774e144-8dae-4e31-8ae2-6e27a69bcba2'
 WHERE (LOWER(name) LIKE '%ring%' OR LOWER(name) LIKE '%koin%');
 
--- GETAS BANGKA & AMPLANG
+-- GETAS BANGKA (Murni Getas, Bukan Amplang)
 UPDATE products SET category_id = '0c78d523-1858-48a6-9671-c53a43e5b97e'
-WHERE (LOWER(name) LIKE '%getas%' OR LOWER(name) LIKE '%amplang%');
+WHERE LOWER(name) LIKE '%getas%' AND LOWER(name) NOT LIKE '%amplang%';
 
 -- KEMPLANG GORENG & KERUPUK GORENG LAINNYA
 UPDATE products SET category_id = 'e4d7a211-9491-49b9-8e47-2bf3e7b1a201'
@@ -102,10 +107,10 @@ WHERE (
   LOWER(name) LIKE '%sabun%' OR LOWER(name) LIKE '%sikat%'
 );
 
--- CEMILAN (KACANG, KERIPIK, KERICU, MAKARONI DLL)
+-- CEMILAN (KACANG, KERIPIK, KERICU, AMPLANG, MAKARONI DLL)
 UPDATE products SET category_id = '60c489bd-d317-4d28-8bad-f24e8e732fc2'
 WHERE (
-  LOWER(name) LIKE '%keripik%' OR LOWER(name) LIKE '%kacang%' OR LOWER(name) LIKE '%emping%' OR 
+  LOWER(name) LIKE '%amplang%' OR LOWER(name) LIKE '%keripik%' OR LOWER(name) LIKE '%kacang%' OR LOWER(name) LIKE '%emping%' OR 
   LOWER(name) LIKE '%sukro%' OR LOWER(name) LIKE '%stik%' OR LOWER(name) LIKE '%pilus%' OR 
   LOWER(name) LIKE '%snack%' OR LOWER(name) LIKE '%biskuit%' OR LOWER(name) LIKE '%wafer%' OR 
   LOWER(name) LIKE '%sale%' OR LOWER(name) LIKE '%makaroni%' OR LOWER(name) LIKE '%singkong%' OR 

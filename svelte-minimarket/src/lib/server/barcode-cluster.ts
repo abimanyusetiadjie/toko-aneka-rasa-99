@@ -60,7 +60,14 @@ export function getCategoryPrefix(
 	}
 
 	// 1. Deteksi langsung dari nama kategori & produk
-	if (cat.includes('PANGGANG') || name.includes('PANGGANG') || name.includes('OVEN') || s.includes('PNG')) return { prefix: '10', name: 'KEMPLANG PANGGANG' };
+	if (
+		cat.includes('PANGGANG') || name.includes('PANGGANG') || 
+		name.includes('OVEN') || name.includes('OVN') || name.includes('BAKAR') || 
+		name.includes('SARI LAUT') || name.includes('MM KOTAK') || name.includes('MM BULAT') || 
+		name.includes('KEMPLANG MM') || s.includes('PNG')
+	) {
+		return { prefix: '10', name: 'KEMPLANG PANGGANG' };
+	}
 	if (cat.includes('PASIR') || name.includes('PASIR') || s.includes('PSR')) return { prefix: '12', name: 'KEMPLANG PASIR' };
 	if (cat.includes('GORENG') || name.includes('KEMPLANG GORENG') || name.includes('GORENG')) return { prefix: '11', name: 'KEMPLANG GORENG' };
 	if (cat.includes('RING') || cat.includes('KOIN') || name.includes('KOIN') || name.includes('RING')) return { prefix: '13', name: 'KEMPLANG RING / KOIN' };
