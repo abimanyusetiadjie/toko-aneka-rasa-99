@@ -1401,7 +1401,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 
 		scannerDriver = new BarcodeScannerListener({
 			minChars: 3,
-			maxIntervalMs: 45,
+			maxIntervalMs: 80,
 			onScan: (code) => {
 				handleScan(code);
 			}

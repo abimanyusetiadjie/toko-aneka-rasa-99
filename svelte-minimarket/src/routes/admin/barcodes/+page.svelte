@@ -125,19 +125,19 @@
 		}, 1500);
 	}
 
-	// Konfigurasi barcode berdasarkan ukuran stiker agar pas dan tidak terpotong
+	// Konfigurasi barcode berdasarkan ukuran stiker agar pas, kontras tajam, dan mudah di-scan
 	function getSizeConfig(size: LabelSize) {
 		switch (size) {
 			case '33x15_3col':
 			case '33x15':
-				// Zenpert 4T520 (203 DPI) - Code 128C 6-digit murni (tinggi 26px / ~7.8mm agar ada safe-margin di atas)
-				return { width: 1.2, height: 26, margin: 0 };
+				// Zenpert 4T520 (203 DPI) - Code 128C 6-digit murni dengan Quiet Zone & Crisp rendering
+				return { width: 1.25, height: 32, margin: 4 };
 			case '35x15':
-				return { width: 1.05, height: 14, margin: 1 };
+				return { width: 1.15, height: 26, margin: 3 };
 			case '38x18':
-				return { width: 1.15, height: 16, margin: 1 };
+				return { width: 1.25, height: 28, margin: 3 };
 			case '40x20':
-				return { width: 1.25, height: 18, margin: 1 };
+				return { width: 1.35, height: 32, margin: 4 };
 			case 'a4':
 			default:
 				return { width: 1.6, height: 36, margin: 4 };
@@ -153,6 +153,7 @@
 			const text = svg.getAttribute('data-barcode');
 			if (text) {
 				try {
+					svg.setAttribute('shape-rendering', 'crispEdges');
 					JsBarcode(svg, text, {
 						format: 'CODE128',
 						width: cfg.width,
@@ -160,7 +161,7 @@
 						displayValue: false, // Nilai teks ditampilkan via HTML bottom agar crisp & rapi
 						margin: cfg.margin,
 						lineColor: '#000000',
-						background: 'transparent'
+						background: '#ffffff'
 					});
 				} catch (err) {
 					console.error('Gagal render barcode untuk', text, err);
@@ -782,7 +783,7 @@
 		width: 33mm;
 		height: 15mm;
 		max-height: 15mm;
-		padding: 1.2mm 2.0mm 0.8mm 2.0mm;
+		padding: 0.8mm 1.5mm 0.5mm 1.5mm;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
@@ -802,7 +803,7 @@
 
 	.store-title-33x15 {
 		font-family: Arial, Helvetica, sans-serif;
-		font-size: 6.8pt;
+		font-size: 6.2pt;
 		font-weight: 800;
 		color: #dc2626;
 		letter-spacing: 0.3px;
@@ -813,8 +814,8 @@
 	}
 
 	.barcode-container-33x15 {
-		height: 7.8mm;
-		max-height: 7.8mm;
+		height: 8.5mm;
+		max-height: 8.5mm;
 		width: 100%;
 		display: flex;
 		align-items: center;
@@ -823,11 +824,19 @@
 	}
 
 	.barcode-container-33x15 svg {
-		height: 7.8mm !important;
-		max-height: 7.8mm !important;
+		height: 8.5mm !important;
+		max-height: 8.5mm !important;
 		width: auto;
 		max-width: 100%;
 		display: block;
+		shape-rendering: crispEdges !important;
+	}
+
+	.barcode-svg,
+	.barcode-svg rect {
+		shape-rendering: crispEdges !important;
+		-webkit-print-color-adjust: exact !important;
+		print-color-adjust: exact !important;
 	}
 
 	.footer-33x15 {
@@ -839,11 +848,11 @@
 
 	.code-33x15 {
 		font-family: Arial, 'Courier New', monospace;
-		font-size: 6.8pt;
+		font-size: 6.2pt;
 		font-weight: 800;
 		color: #000000;
 		line-height: 1.1;
-		letter-spacing: 1.5px;
+		letter-spacing: 1.2px;
 		display: inline-block;
 	}
 
@@ -955,28 +964,55 @@
 			width: 33mm !important;
 			height: 15mm !important;
 			max-height: 15mm !important;
-			padding: 1.2mm 2.0mm 0.8mm 2.0mm !important;
+			padding: 0.8mm 1.5mm 0.5mm 1.5mm !important;
 			box-sizing: border-box !important;
 			border: none !important;
 			box-shadow: none !important;
 			margin: 0 !important;
+			background: #ffffff !important;
 		}
 
 		.store-title-33x15 {
 			font-family: Arial, sans-serif !important;
-			font-size: 6.8pt !important;
+			font-size: 6.2pt !important;
 			font-weight: 800 !important;
 			color: #dc2626 !important;
 			-webkit-print-color-adjust: exact !important;
 			print-color-adjust: exact !important;
 		}
 
+		.barcode-container-33x15 {
+			height: 8.5mm !important;
+			max-height: 8.5mm !important;
+			width: 100% !important;
+			display: flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			overflow: hidden !important;
+		}
+
+		.barcode-container-33x15 svg {
+			height: 8.5mm !important;
+			max-height: 8.5mm !important;
+			width: auto !important;
+			max-width: 100% !important;
+			display: block !important;
+			shape-rendering: crispEdges !important;
+		}
+
+		.barcode-svg,
+		.barcode-svg rect {
+			shape-rendering: crispEdges !important;
+			-webkit-print-color-adjust: exact !important;
+			print-color-adjust: exact !important;
+		}
+
 		.code-33x15 {
 			font-family: Arial, monospace !important;
-			font-size: 6.8pt !important;
+			font-size: 6.2pt !important;
 			font-weight: 800 !important;
 			color: #000000 !important;
-			letter-spacing: 1.5px !important;
+			letter-spacing: 1.2px !important;
 		}
 	}
 </style>
