@@ -108,7 +108,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			let calculatedSubtotal = 0;
 			const preparedDetails: any[] = [];
 
-			for (const item of data.items) {
+			// Urutkan items secara deterministik untuk mencegah deadlock database
+			// Jika 2 transaksi kasir bersamaan mengunci item A lalu B vs B lalu A, bisa deadlock
+			const sortedItems = [...data.items].sort((a, b) => 
+				String(a.unit_id || '').localeCompare(String(b.unit_id || ''))
+			);
+
+			for (const item of sortedItems) {
 				const rawUnitId = String(item.unit_id || '').trim();
 				const cleanCode = rawUnitId.replace(/^(unit-|u-)/i, '').trim();
 				const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(rawUnitId);
@@ -188,7 +194,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 							 ON CONFLICT DO NOTHING`,
 							[genUnitId, unit.prod_id, unit.unit_name || 'Pcs', unit.price, cleanCode || unit.prod_id]
 						);
-						validUnitId = genUnitId;
+						// Verifikasi apakah insert berhasil atau ada conflict
+						const verifyRes = await client.query(
+							`SELECT id FROM product_units WHERE id = $1 OR (product_id = $2 AND conversion_factor = 1) ORDER BY created_at DESC LIMIT 1`,
+							[genUnitId, unit.prod_id]
+						);
+						validUnitId = verifyRes.rows[0]?.id || genUnitId;
 					}
 
 					const pricePerUnit = Math.round(isOfflineSync && item.price_snapshot !== undefined ? item.price_snapshot : Number(unit.price));
@@ -214,7 +225,19 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				}
 			}
 
-			// Jika seluruh item ditemukan di database
+			// CRITICAL: Jika ada item yang tidak ditemukan di database, tolak transaksi secara eksplisit
+			// Jangan pernah jatuh diam-diam ke Jalur 2 (in-memory) karena bisa menyebabkan:
+			// - Harga salah (default Rp 10.000)
+			// - Stok tidak terpotong di database
+			// - Transaksi hilang saat server restart
+			if (preparedDetails.length !== data.items.length) {
+				const missingItems = data.items
+					.filter((_: any, i: number) => !preparedDetails.some((d: any) => d.unitId === data.items[i].unit_id))
+					.map((item: any) => item.unit_id);
+				throw new Error(`Produk tidak ditemukan di database: ${missingItems.join(', ')}. Silakan scan ulang barang yang bermasalah.`);
+			}
+
+			// Seluruh item berhasil ditemukan di database
 			if (preparedDetails.length === data.items.length) {
 				const calculatedFinalTotal = Math.max(0, calculatedSubtotal - Math.round(data.points_discount || 0));
 				const totalPaid = Math.round(data.payments.reduce((sum, p) => sum + Number(p.amount), 0));
@@ -360,10 +383,17 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			}
 		} catch (dbErr: any) {
 			try { await client.query('ROLLBACK'); } catch {}
-			console.warn('Database query error, proceeding with circuit-breaker fallback:', dbErr.message);
-			if (dbErr.message.includes('Stok fisik tidak mencukupi') || dbErr.message.includes('Pembayaran tidak mencukupi')) {
+			console.warn('Database query error:', dbErr.message);
+			// Semua error bisnis (stok, pembayaran, produk tidak ditemukan) harus langsung dikembalikan ke kasir
+			// JANGAN pernah jatuh ke Jalur 2 untuk error bisnis — itu hanya menyembunyikan masalah
+			if (dbErr.message.includes('Stok fisik tidak mencukupi') || 
+			    dbErr.message.includes('Pembayaran tidak mencukupi') ||
+			    dbErr.message.includes('Produk tidak ditemukan') ||
+			    dbErr.message.includes('Saldo poin member')) {
 				throw error(400, dbErr.message);
 			}
+			// Untuk error koneksi/SQL murni, baru jatuh ke Jalur 2 sebagai cadangan
+			console.warn('Falling back to circuit-breaker for non-business DB error');
 		} finally {
 			try { client.release(); } catch {}
 		}
@@ -378,17 +408,25 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	for (const item of data.items) {
 		const unitInfo = getProductForCheckout(item.unit_id);
+
+		// CRITICAL: Jika produk tidak ditemukan di memori, tolak transaksi
+		// Jangan pernah menggunakan default stok 100 atau harga Rp 10.000
+		if (!unitInfo && !isOfflineSync) {
+			throw error(400, `Produk dengan kode "${item.unit_id}" tidak ditemukan di sistem. Silakan scan ulang atau hubungi admin inventori.`);
+		}
+
 		const qty = Number(item.qty);
 		const conversionFactor = unitInfo?.conversion_factor || 1;
 		const baseQty = Math.round(qty * conversionFactor);
-		const currentStock = unitInfo?.stock ?? 100;
+		const currentStock = unitInfo?.stock ?? 0;
 		const productName = unitInfo?.product_name || 'Produk';
 		const unitName = unitInfo?.unit_name || 'Pcs';
-		const pricePerUnit = Number(item.price_snapshot !== undefined ? item.price_snapshot : (unitInfo?.price || 10000));
+		// Gunakan price_snapshot dari keranjang kasir (sudah divalidasi saat scan), baru fallback ke memori
+		const pricePerUnit = Number(item.price_snapshot !== undefined ? item.price_snapshot : (unitInfo?.price || 0));
 		const subtotal = Math.round(qty * pricePerUnit);
 
 		if (!isOfflineSync && currentStock < baseQty) {
-			throw error(400, `Stok fisik tidak mencukupi untuk "${productName}". Tersedia: ${currentStock} Pcs, Diminta: ${baseQty} Pcs.`);
+			throw error(400, `Stok fisik tidak mencukupi untuk "${productName}". Tersedia: ${currentStock} Pcs, Diminta: ${baseQty} Pcs. Harap kurangi quantity atau hubungi admin inventori.`);
 		}
 
 		calculatedSubtotal += subtotal;
@@ -420,8 +458,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const pointsEarned = data.member_id ? Math.round(calculatePointsEarned(calculatedSubtotal)) : 0;
 
 	// Potong stok in-memory
+	// Biarkan stok menjadi negatif jika ini adalah offline sync, agar sinkron dengan database PostgreSQL
 	for (const detail of preparedDetails) {
-		updateMemoryProductStock(detail.productId, Math.max(0, detail.currentStock - detail.baseQty));
+		updateMemoryProductStock(detail.productId, detail.currentStock - detail.baseQty);
 	}
 
 	// Catat riwayat transaksi in-memory

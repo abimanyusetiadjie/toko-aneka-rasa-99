@@ -152,19 +152,21 @@ export const actions: Actions = {
 		}
 
 		try {
-			const prodList = await query<Product>(`SELECT id, stock, base_hpp, cost_price, name FROM products WHERE id = $1`, [id]);
+			const prodList = await query<Product>(`SELECT id, stock, base_hpp, cost_price, name, sku FROM products WHERE id = $1`, [id]);
 			const prod = prodList[0];
 			if (!prod) return { success: false, message: 'Produk tidak ditemukan.' };
 
-			const newBalance = Number(prod.stock) + addQty;
 			const currentHpp = Number(prod.base_hpp || prod.cost_price || 0);
 			const unitCost = (isOwner && purchaseCost > 0) ? purchaseCost : currentHpp;
 
-			await query(`UPDATE products SET stock = $1, base_hpp = $2, cost_price = $2, updated_at = NOW() WHERE id = $3`, [
-				newBalance,
-				unitCost,
-				id
-			]);
+			// CRITICAL: Gunakan atomic increment (stock = stock + $1) untuk mencegah race condition
+			// Jika kasir menjual barang bersamaan dengan admin menambah stok, 
+			// metode lama (read-modify-write) bisa menimpa pengurangan stok kasir
+			const updateResult = await query<any>(
+				`UPDATE products SET stock = stock + $1, base_hpp = $2, cost_price = $2, updated_at = NOW() WHERE id = $3 RETURNING stock`,
+				[addQty, unitCost, id]
+			);
+			const newBalance = Number(updateResult[0]?.stock ?? (Number(prod.stock) + addQty));
 
 			await query(
 				`INSERT INTO stock_movements (

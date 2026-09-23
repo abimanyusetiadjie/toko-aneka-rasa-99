@@ -99,6 +99,13 @@ export function addItem(product: Product, scannedUnit: ProductUnit, allUnits: Pr
 			persistCartDraft();
 			return res;
 		} else {
+			const parsedPrice = Number(scannedUnit.price);
+			const parsedConversion = Number(scannedUnit.conversion_factor);
+			
+			// Guard: Jangan masukkan item dengan harga NaN atau 0 ke keranjang
+			const safePrice = (!isNaN(parsedPrice) && parsedPrice > 0) ? parsedPrice : (Number(product.price) || 0);
+			const safeConversion = (!isNaN(parsedConversion) && parsedConversion > 0) ? parsedConversion : 1;
+
 			const newItem: CartItem = {
 				id: `${product.id}-${scannedUnit.id}-${Date.now()}`,
 				product_id: product.id,
@@ -106,8 +113,8 @@ export function addItem(product: Product, scannedUnit: ProductUnit, allUnits: Pr
 				name: product.name,
 				unit_name: scannedUnit.unit_name,
 				qty: 1,
-				price: Number(scannedUnit.price),
-				conversion_factor: Number(scannedUnit.conversion_factor),
+				price: safePrice,
+				conversion_factor: safeConversion,
 				available_units: allUnits && allUnits.length > 0 ? allUnits : [scannedUnit],
 				is_taxable: product.is_taxable
 			};

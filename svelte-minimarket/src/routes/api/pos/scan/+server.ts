@@ -81,7 +81,8 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 					   CASE WHEN barcode = $4 THEN 1
 					        WHEN sku = $4 THEN 2
 					        WHEN barcode ILIKE $4 THEN 3
-					        ELSE 4 END
+					        ELSE 4 END,
+					   CASE WHEN stock > 0 THEN 1 ELSE 2 END
 					 LIMIT 1`,
 					[candidates, cleanAlphanumeric, `%${barcode}%`, barcode]
 				);
@@ -112,14 +113,32 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 						const createdUnits = await query<ProductUnit>(
 							`SELECT id, product_id, unit_name, conversion_factor, price, barcode 
 							 FROM product_units 
-							 WHERE id = $1`,
-							[newUnitId]
+							 WHERE id = $1 OR (product_id = $2 AND conversion_factor = 1)
+							 ORDER BY CASE WHEN id = $1 THEN 0 ELSE 1 END
+							 LIMIT 1`,
+							[newUnitId, matched[0].id]
 						);
 						if (createdUnits && createdUnits.length > 0) {
 							units = createdUnits;
 						}
 					} catch (e) {
 						console.warn('[POS Scan] Tidak dapat menyimpan fallback unit ke database:', e);
+					}
+
+					if (units.length === 0) {
+						// Terakhir cari apapun yang ada untuk produk ini
+						try {
+							const existingUnits = await query<ProductUnit>(
+								`SELECT id, product_id, unit_name, conversion_factor, price, barcode 
+								 FROM product_units 
+								 WHERE product_id = $1 
+								 ORDER BY conversion_factor ASC LIMIT 1`,
+								[matched[0].id]
+							);
+							if (existingUnits && existingUnits.length > 0) {
+								units = existingUnits;
+							}
+						} catch {}
 					}
 
 					if (units.length === 0) {
