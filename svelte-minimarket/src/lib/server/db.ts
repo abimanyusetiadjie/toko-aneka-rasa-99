@@ -588,6 +588,191 @@ export function deleteMemoryExpense(expenseId: string) {
 	memoryExpenses = memoryExpenses.filter(e => e.id !== expenseId);
 }
 
+/**
+ * Inisialisasi Otomatis Tabel POS Expenses & Shifts jika belum ada di database
+ */
+let posTablesInitialized = false;
+export async function ensurePosTablesExist() {
+	if (posTablesInitialized) return;
+	try {
+		const client = await pool.connect();
+		try {
+			await client.query(`
+				CREATE TABLE IF NOT EXISTS pos_expenses (
+					id TEXT PRIMARY KEY,
+					category TEXT NOT NULL,
+					amount NUMERIC NOT NULL,
+					notes TEXT DEFAULT '',
+					cashier TEXT NOT NULL,
+					created_at TIMESTAMPTZ DEFAULT NOW()
+				);
+
+				CREATE TABLE IF NOT EXISTS pos_shifts (
+					id TEXT PRIMARY KEY,
+					cashier_name TEXT NOT NULL,
+					starting_cash NUMERIC NOT NULL,
+					total_cash_sales NUMERIC NOT NULL,
+					total_qris_sales NUMERIC NOT NULL,
+					total_transfer_sales NUMERIC NOT NULL,
+					total_expenses NUMERIC NOT NULL,
+					expected_drawer_cash NUMERIC NOT NULL,
+					actual_physical_cash NUMERIC,
+					cash_difference NUMERIC,
+					status TEXT NOT NULL DEFAULT 'CLOSED',
+					notes TEXT DEFAULT '',
+					opened_at TIMESTAMPTZ DEFAULT NOW(),
+					closed_at TIMESTAMPTZ DEFAULT NOW()
+				);
+			`);
+			posTablesInitialized = true;
+		} finally {
+			client.release();
+		}
+	} catch (err: any) {
+		console.warn('[DB Init] Gagal inisialisasi tabel pos_expenses/pos_shifts di PostgreSQL:', err?.message || err);
+	}
+}
+
+// Jalankan inisialisasi tabel di latar belakang
+ensurePosTablesExist().catch(() => {});
+
+export async function getDbExpenses(): Promise<any[]> {
+	await ensurePosTablesExist();
+	try {
+		const client = await pool.connect();
+		try {
+			const res = await client.query(`
+				SELECT id, category, amount, notes, cashier, created_at
+				FROM pos_expenses
+				ORDER BY created_at DESC
+				LIMIT 100
+			`);
+			if (res.rows.length > 0) {
+				return res.rows.map(r => ({
+					...r,
+					amount: Number(r.amount)
+				}));
+			}
+		} finally {
+			client.release();
+		}
+	} catch (err) {
+		console.warn('[DB Expenses GET] Fallback to in-memory expenses', err);
+	}
+	return memoryExpenses;
+}
+
+export async function createDbExpense(expense: {
+	id: string;
+	category: string;
+	amount: number;
+	notes: string;
+	cashier: string;
+	created_at?: string;
+}): Promise<any> {
+	await ensurePosTablesExist();
+	recordMemoryExpense(expense);
+	try {
+		const client = await pool.connect();
+		try {
+			await client.query(`
+				INSERT INTO pos_expenses (id, category, amount, notes, cashier, created_at)
+				VALUES ($1, $2, $3, $4, $5, $6)
+				ON CONFLICT (id) DO UPDATE SET
+					category = EXCLUDED.category,
+					amount = EXCLUDED.amount,
+					notes = EXCLUDED.notes,
+					cashier = EXCLUDED.cashier
+			`, [
+				expense.id,
+				expense.category,
+				expense.amount,
+				expense.notes || '',
+				expense.cashier,
+				expense.created_at || new Date().toISOString()
+			]);
+		} finally {
+			client.release();
+		}
+	} catch (err) {
+		console.warn('[DB Expenses INSERT] Saved in memory only', err);
+	}
+	return expense;
+}
+
+export async function deleteDbExpense(expenseId: string): Promise<boolean> {
+	await ensurePosTablesExist();
+	deleteMemoryExpense(expenseId);
+	try {
+		const client = await pool.connect();
+		try {
+			await client.query(`DELETE FROM pos_expenses WHERE id = $1`, [expenseId]);
+			return true;
+		} finally {
+			client.release();
+		}
+	} catch (err) {
+		console.warn('[DB Expenses DELETE] Deleted in memory only', err);
+	}
+	return true;
+}
+
+export async function saveDbShiftClosing(shiftData: any): Promise<any> {
+	await ensurePosTablesExist();
+	try {
+		const client = await pool.connect();
+		try {
+			await client.query(`
+				INSERT INTO pos_shifts (
+					id, cashier_name, starting_cash, total_cash_sales,
+					total_qris_sales, total_transfer_sales, total_expenses,
+					expected_drawer_cash, actual_physical_cash, cash_difference,
+					status, notes, opened_at, closed_at
+				) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+			`, [
+				shiftData.id || `shift-${Date.now()}`,
+				shiftData.cashier_name || 'Kasir',
+				shiftData.starting_cash || 0,
+				shiftData.total_cash_sales || 0,
+				shiftData.total_qris_sales || 0,
+				shiftData.total_transfer_sales || 0,
+				shiftData.total_expenses || 0,
+				shiftData.expected_drawer_cash || 0,
+				shiftData.actual_physical_cash ?? null,
+				shiftData.cash_difference ?? null,
+				shiftData.status || 'CLOSED',
+				shiftData.notes || '',
+				shiftData.opened_at || new Date(Date.now() - 28800000).toISOString(),
+				shiftData.closed_at || new Date().toISOString()
+			]);
+		} finally {
+			client.release();
+		}
+	} catch (err) {
+		console.warn('[DB Shift Closing] Saved locally/fallback', err);
+	}
+	return shiftData;
+}
+
+export async function getDbRecentShifts(): Promise<any[]> {
+	await ensurePosTablesExist();
+	try {
+		const client = await pool.connect();
+		try {
+			const res = await client.query(`
+				SELECT * FROM pos_shifts
+				ORDER BY closed_at DESC
+				LIMIT 20
+			`);
+			return res.rows;
+		} finally {
+			client.release();
+		}
+	} catch {
+		return [];
+	}
+}
+
 export interface IncomingShortage {
 	id: string;
 	invoice_number: string;

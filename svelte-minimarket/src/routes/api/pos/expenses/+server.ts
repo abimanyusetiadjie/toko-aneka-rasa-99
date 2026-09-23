@@ -1,11 +1,12 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { memoryExpenses, recordMemoryExpense, deleteMemoryExpense } from '$lib/server/db';
+import { getDbExpenses, createDbExpense, deleteDbExpense } from '$lib/server/db';
 
 export const GET: RequestHandler = async () => {
+	const expenses = await getDbExpenses();
 	return json({
 		status: 'success',
-		expenses: memoryExpenses
+		expenses
 	});
 };
 
@@ -24,23 +25,23 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	const category = (body.category || 'Lain-lain').trim();
 	const notes = (body.notes || '').trim();
-	const cashier = body.cashier || locals.user?.full_name || 'Siti Aminah';
+	const cashier = body.cashier || locals.user?.full_name || 'Kasir';
 
 	const newExpense = {
-		id: `exp-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`,
+		id: body.id || `exp-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`,
 		category,
 		amount,
 		notes,
 		cashier,
-		created_at: new Date().toISOString()
+		created_at: body.created_at || new Date().toISOString()
 	};
 
-	recordMemoryExpense(newExpense);
+	const saved = await createDbExpense(newExpense);
 
 	return json({
 		status: 'success',
-		message: 'Pengeluaran berhasil dicatat',
-		expense: newExpense
+		message: 'Pengeluaran kas berhasil dicatat',
+		expense: saved
 	}, { status: 201 });
 };
 
@@ -50,10 +51,10 @@ export const DELETE: RequestHandler = async ({ url }) => {
 		throw error(400, 'ID pengeluaran diperlukan');
 	}
 
-	deleteMemoryExpense(id);
+	await deleteDbExpense(id);
 
 	return json({
 		status: 'success',
-		message: 'Pengeluaran berhasil dihapus'
+		message: 'Pengeluaran kas berhasil dihapus'
 	});
 };
