@@ -734,7 +734,7 @@ export const PRODUCTS: SeedProduct[] = [
     "selling_price": 30000,
     "base_hpp": 22500,
     "cost_price": 22500,
-    "stock": 3,
+    "stock": 17,
     "unit": "pcs",
     "base_unit": "PCS",
     "barcode": "100751",

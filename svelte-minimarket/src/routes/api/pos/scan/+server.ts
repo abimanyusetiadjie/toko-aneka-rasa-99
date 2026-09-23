@@ -99,16 +99,39 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 					[productId]
 				);
 
-				// Jika di product_units belum ada, buat unit default
+				// Jika di product_units belum ada, buat unit default langsung di database
 				if (units.length === 0) {
-					units = [{
-						id: `unit-${matched[0].id}`,
-						product_id: matched[0].id,
-						unit_name: matched[0].unit || 'Pcs',
-						conversion_factor: 1,
-						price: matched[0].price || 0,
-						barcode: matched[0].barcode || barcode
-					}];
+					const newUnitId = crypto.randomUUID();
+					try {
+						await query(
+							`INSERT INTO product_units (id, product_id, unit_name, conversion_factor, price, barcode)
+							 VALUES ($1, $2, $3, 1, $4, $5)
+							 ON CONFLICT DO NOTHING`,
+							[newUnitId, matched[0].id, matched[0].unit || 'Pcs', matched[0].price || 0, matched[0].barcode || barcode]
+						);
+						const createdUnits = await query<ProductUnit>(
+							`SELECT id, product_id, unit_name, conversion_factor, price, barcode 
+							 FROM product_units 
+							 WHERE id = $1`,
+							[newUnitId]
+						);
+						if (createdUnits && createdUnits.length > 0) {
+							units = createdUnits;
+						}
+					} catch (e) {
+						console.warn('[POS Scan] Tidak dapat menyimpan fallback unit ke database:', e);
+					}
+
+					if (units.length === 0) {
+						units = [{
+							id: newUnitId,
+							product_id: matched[0].id,
+							unit_name: matched[0].unit || 'Pcs',
+							conversion_factor: 1,
+							price: matched[0].price || 0,
+							barcode: matched[0].barcode || barcode
+						}];
+					}
 				}
 			}
 		}

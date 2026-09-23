@@ -75,8 +75,16 @@ let memoryPromoBundles = [
 /**
  * Update stock in memoryProducts to keep fallback state synchronized
  */
-export function updateMemoryProductStock(productId: string, newStock: number) {
-	const found = memoryProducts.find(p => p.id === productId);
+export function updateMemoryProductStock(productIdOrCode: string, newStock: number) {
+	if (!productIdOrCode) return;
+	const clean = productIdOrCode.replace(/^(unit-|u-)/i, '').toLowerCase();
+	const found = memoryProducts.find(p => 
+		p.id === productIdOrCode || 
+		p.id === clean || 
+		p.sku?.toLowerCase() === clean || 
+		(p.barcode && p.barcode.toLowerCase() === clean) ||
+		p.name?.toLowerCase().includes(clean)
+	);
 	if (found) {
 		found.stock = newStock;
 	}
@@ -845,13 +853,19 @@ export function deleteMemoryShortage(id: string) {
 
 
 export function getProductForCheckout(unitId: string) {
+	if (!unitId) return null;
 	const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(unitId);
+	const clean = unitId.replace(/^(unit-|u-)/i, '').toLowerCase();
 	let unit: any = null;
+
 	if (isUuid) {
-		unit = memoryProductUnits.find(u => u.id === unitId);
+		unit = memoryProductUnits.find(u => u.id === unitId || u.product_id === unitId);
 	} else {
-		const clean = unitId.replace(/^u-/, '').toLowerCase();
-		unit = memoryProductUnits.find(u => u.barcode.toLowerCase() === clean || u.id.toLowerCase() === clean);
+		unit = memoryProductUnits.find(u => 
+			u.barcode?.toLowerCase() === clean || 
+			u.id.toLowerCase() === clean ||
+			u.product_id?.toLowerCase() === clean
+		);
 	}
 
 	let product: any = null;
@@ -860,12 +874,12 @@ export function getProductForCheckout(unitId: string) {
 	}
 	
 	if (!product) {
-		const clean = unitId.replace(/^u-/, '').toLowerCase();
 		product = memoryProducts.find(p => 
 			p.id === unitId || 
-			p.sku.toLowerCase() === clean || 
+			p.id.toLowerCase() === clean ||
+			p.sku?.toLowerCase() === clean || 
 			(p.barcode && p.barcode.toLowerCase() === clean) ||
-			p.name.toLowerCase().includes(clean)
+			p.name?.toLowerCase().includes(clean)
 		);
 		if (product && !unit) {
 			unit = {

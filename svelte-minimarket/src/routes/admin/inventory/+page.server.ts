@@ -1,5 +1,5 @@
 import type { PageServerLoad, Actions } from './$types';
-import { query } from '$lib/server/db';
+import { query, updateMemoryProductStock } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import type { Product, Category } from '$lib/types';
 import { build6DigitBarcode } from '$lib/server/barcode-cluster';
@@ -121,6 +121,9 @@ export const actions: Actions = {
 				);
 			}
 
+			updateMemoryProductStock(productId, stock);
+			if (barcode) updateMemoryProductStock(barcode, stock);
+
 			broadcastRealtimeEvent({
 				type: 'STOCK_CHANGED',
 				data: {
@@ -169,6 +172,10 @@ export const actions: Actions = {
 				) VALUES ($1, '11111111-1111-1111-1111-111111111111', $2, 'RESTOCK', $3, $4, $5, $6)`,
 				[crypto.randomUUID(), id, addQty, newBalance, unitCost, notes]
 			);
+
+			updateMemoryProductStock(id, newBalance);
+			if (prod.sku) updateMemoryProductStock(prod.sku, newBalance);
+			if (prod.name) updateMemoryProductStock(prod.name, newBalance);
 
 			broadcastRealtimeEvent({
 				type: 'STOCK_CHANGED',
@@ -252,6 +259,10 @@ export const actions: Actions = {
 				);
 			}
 
+			updateMemoryProductStock(id, stock);
+			if (finalBarcode) updateMemoryProductStock(finalBarcode, stock);
+			if (name) updateMemoryProductStock(name, stock);
+
 			broadcastRealtimeEvent({
 				type: 'STOCK_CHANGED',
 				data: {
@@ -290,6 +301,8 @@ export const actions: Actions = {
 				try { await query(`DELETE FROM product_units WHERE product_id = $1`, [id]); } catch {}
 				await query(`DELETE FROM products WHERE id = $1`, [id]);
 			}
+
+			updateMemoryProductStock(id, 0);
 
 			broadcastRealtimeEvent({
 				type: 'STOCK_CHANGED',

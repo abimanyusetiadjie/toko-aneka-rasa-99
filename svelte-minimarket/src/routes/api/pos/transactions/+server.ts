@@ -109,26 +109,59 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			const preparedDetails: any[] = [];
 
 			for (const item of data.items) {
-				const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(item.unit_id);
+				const rawUnitId = String(item.unit_id || '').trim();
+				const cleanCode = rawUnitId.replace(/^(unit-|u-)/i, '').trim();
+				const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(rawUnitId);
+				const isCleanUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(cleanCode);
+
 				let unitRes;
 				if (isUuid) {
+					// 1. Cek jika rawUnitId adalah pu.id ATAU p.id
 					unitRes = await client.query(
-						`SELECT pu.id as unit_id, pu.product_id, pu.unit_name, pu.conversion_factor, pu.price, 
-						        p.id as prod_id, p.name as product_name, p.stock, COALESCE(p.cost_price, 0) as base_hpp
-						 FROM product_units pu
-						 JOIN products p ON pu.product_id = p.id
-						 WHERE pu.id = $1
+						`SELECT pu.id as unit_id, p.id as prod_id, p.name as product_name, p.stock,
+						        COALESCE(pu.unit_name, p.unit, 'Pcs') as unit_name,
+						        COALESCE(pu.conversion_factor, 1) as conversion_factor,
+						        COALESCE(pu.price, p.price, 0) as price,
+						        COALESCE(p.cost_price, p.base_hpp, 0) as base_hpp
+						 FROM products p
+						 LEFT JOIN product_units pu ON p.id = pu.product_id
+						 WHERE pu.id = $1 OR p.id = $1
+						 ORDER BY CASE WHEN p.stock > 0 THEN 1 ELSE 2 END, pu.conversion_factor ASC
+						 LIMIT 1
 						 FOR UPDATE OF p`,
-						[item.unit_id]
+						[rawUnitId]
+					);
+				} else if (isCleanUuid) {
+					// 2. Cek jika rawUnitId berupa format 'unit-<uuid>'
+					unitRes = await client.query(
+						`SELECT pu.id as unit_id, p.id as prod_id, p.name as product_name, p.stock,
+						        COALESCE(pu.unit_name, p.unit, 'Pcs') as unit_name,
+						        COALESCE(pu.conversion_factor, 1) as conversion_factor,
+						        COALESCE(pu.price, p.price, 0) as price,
+						        COALESCE(p.cost_price, p.base_hpp, 0) as base_hpp
+						 FROM products p
+						 LEFT JOIN product_units pu ON p.id = pu.product_id
+						 WHERE p.id = $1 OR pu.id = $1
+						 ORDER BY CASE WHEN p.stock > 0 THEN 1 ELSE 2 END, pu.conversion_factor ASC
+						 LIMIT 1
+						 FOR UPDATE OF p`,
+						[cleanCode]
 					);
 				} else {
-					const cleanCode = item.unit_id.replace(/^u-/, '');
+					// 3. Cek jika rawUnitId berupa Barcode atau SKU
 					unitRes = await client.query(
-						`SELECT pu.id as unit_id, pu.product_id, pu.unit_name, pu.conversion_factor, pu.price, 
-						        p.id as prod_id, p.name as product_name, p.stock, COALESCE(p.cost_price, 0) as base_hpp
-						 FROM product_units pu
-						 JOIN products p ON pu.product_id = p.id
-						 WHERE pu.barcode = $1 OR p.sku = $1 OR pu.barcode ILIKE $2
+						`SELECT pu.id as unit_id, p.id as prod_id, p.name as product_name, p.stock,
+						        COALESCE(pu.unit_name, p.unit, 'Pcs') as unit_name,
+						        COALESCE(pu.conversion_factor, 1) as conversion_factor,
+						        COALESCE(pu.price, p.price, 0) as price,
+						        COALESCE(p.cost_price, p.base_hpp, 0) as base_hpp
+						 FROM products p
+						 LEFT JOIN product_units pu ON p.id = pu.product_id
+						 WHERE pu.barcode = $1 
+						    OR p.sku = $1 
+						    OR pu.barcode ILIKE $2 
+						    OR p.sku ILIKE $2
+						 ORDER BY CASE WHEN p.stock > 0 THEN 1 ELSE 2 END, pu.conversion_factor ASC
 						 LIMIT 1
 						 FOR UPDATE OF p`,
 						[cleanCode, `%${cleanCode}%`]
@@ -138,10 +171,24 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				if (unitRes.rows.length > 0) {
 					const unit = unitRes.rows[0];
 					const qty = Number(item.qty);
-					const baseQty = Math.round(qty * Number(unit.conversion_factor));
+					const conversionFactor = Number(unit.conversion_factor || 1);
+					const baseQty = Math.round(qty * conversionFactor);
 
 					if (!isOfflineSync && Number(unit.stock) < baseQty) {
 						throw new Error(`Stok fisik tidak mencukupi untuk "${unit.product_name}". Tersedia: ${unit.stock} Pcs, Diminta: ${baseQty} Pcs.`);
+					}
+
+					let validUnitId = unit.unit_id;
+					if (!validUnitId) {
+						// Buat baris unit baru di database jika produk belum memiliki product_units
+						const genUnitId = crypto.randomUUID();
+						await client.query(
+							`INSERT INTO product_units (id, product_id, unit_name, conversion_factor, price, barcode)
+							 VALUES ($1, $2, $3, 1, $4, $5)
+							 ON CONFLICT DO NOTHING`,
+							[genUnitId, unit.prod_id, unit.unit_name || 'Pcs', unit.price, cleanCode || unit.prod_id]
+						);
+						validUnitId = genUnitId;
 					}
 
 					const pricePerUnit = Math.round(isOfflineSync && item.price_snapshot !== undefined ? item.price_snapshot : Number(unit.price));
@@ -151,17 +198,19 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					preparedDetails.push({
 						detailId: crypto.randomUUID(),
 						productId: unit.prod_id,
-						unitId: unit.unit_id,
+						unitId: validUnitId,
 						productName: unit.product_name,
 						unitName: unit.unit_name,
 						qty,
-						conversionFactor: unit.conversion_factor,
+						conversionFactor,
 						baseQty,
 						pricePerUnit,
-						baseHpp: Math.round(unit.base_hpp),
+						baseHpp: Math.round(unit.base_hpp || 0),
 						subtotal,
 						currentStock: Number(unit.stock)
 					});
+				} else {
+					console.warn('[POS Transactions] Item tidak ditemukan di DB:', item.unit_id);
 				}
 			}
 
