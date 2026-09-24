@@ -232,9 +232,10 @@ export const actions: Actions = {
 				}
 			}
 
-			const existingProd = await query<Product>(`SELECT base_hpp, cost_price, sku, barcode FROM products WHERE id = $1`, [id]);
+			const existingProd = await query<Product>(`SELECT base_hpp, cost_price, sku, barcode, stock FROM products WHERE id = $1`, [id]);
 			const currentHpp = Number(existingProd[0]?.base_hpp || existingProd[0]?.cost_price || 0);
 			const base_hpp = isOwner ? base_hpp_form : currentHpp;
+			const oldStock = Number(existingProd[0]?.stock ?? stock);
 
 			let finalBarcode = barcode;
 			if (!finalBarcode) {
@@ -250,6 +251,24 @@ export const actions: Actions = {
 				 WHERE id = $7`,
 				[name, category_id, base_hpp, selling_price, stock, finalBarcode, id]
 			);
+
+			// Catat riwayat jika ada perubahan jumlah stok manual
+			const stockDiff = stock - oldStock;
+			if (stockDiff !== 0) {
+				await query(
+					`INSERT INTO stock_movements (
+						id, store_id, product_id, reference_type, qty_base_change, balance_after, unit_cost_snapshot, notes
+					) VALUES ($1, '11111111-1111-1111-1111-111111111111', $2, 'ADJUSTMENT', $3, $4, $5, $6)`,
+					[
+						crypto.randomUUID(),
+						id,
+						stockDiff,
+						stock,
+						base_hpp,
+						`Koreksi Manual Admin: ${oldStock} -> ${stock} (${stockDiff > 0 ? '+' + stockDiff : stockDiff})`
+					]
+				);
+			}
 
 			const existingUnits = await query<any>(`SELECT id FROM product_units WHERE product_id = $1`, [id]);
 			if (existingUnits.length > 0) {

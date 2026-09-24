@@ -7,6 +7,7 @@ export const load: PageServerLoad = async ({ url, setHeaders, locals }) => {
 	});
 	const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
 	const filterType = url.searchParams.get('type') || 'ALL';
+	const searchQuery = (url.searchParams.get('q') || '').trim();
 
 	try {
 		let sql = `
@@ -15,15 +16,26 @@ export const load: PageServerLoad = async ({ url, setHeaders, locals }) => {
 				sm.unit_cost_snapshot, sm.notes, p.name as product_name, p.sku
 			FROM stock_movements sm
 			JOIN products p ON sm.product_id = p.id
+			WHERE 1=1
 		`;
 
 		const params: any[] = [];
-		if (filterType !== 'ALL') {
-			sql += ` WHERE sm.reference_type = $1`;
+		let paramIdx = 1;
+
+		if (filterType === 'SHOPEE') {
+			sql += ` AND sm.reference_type IN ('SHOPEE_ORDER', 'SHOPEE_CANCEL')`;
+		} else if (filterType !== 'ALL') {
+			sql += ` AND sm.reference_type = $${paramIdx++}`;
 			params.push(filterType);
 		}
 
-		sql += ` ORDER BY sm.created_at DESC LIMIT 50`;
+		if (searchQuery) {
+			sql += ` AND (p.name ILIKE $${paramIdx} OR p.sku ILIKE $${paramIdx} OR sm.notes ILIKE $${paramIdx})`;
+			params.push(`%${searchQuery}%`);
+			paramIdx++;
+		}
+
+		sql += ` ORDER BY sm.created_at DESC LIMIT 100`;
 
 		const rawMovements = await query(sql, params);
 		const movements = (rawMovements || []).map((m: any) => ({
@@ -31,8 +43,8 @@ export const load: PageServerLoad = async ({ url, setHeaders, locals }) => {
 			unit_cost_snapshot: isOwner ? Number(m.unit_cost_snapshot || 0) : 0
 		}));
 
-		return { movements, filterType, isOwner: !!isOwner };
+		return { movements, filterType, searchQuery, isOwner: !!isOwner };
 	} catch (e: any) {
-		return { movements: [], filterType, isOwner: !!isOwner, error: e.message };
+		return { movements: [], filterType, searchQuery, isOwner: !!isOwner, error: e.message };
 	}
 };

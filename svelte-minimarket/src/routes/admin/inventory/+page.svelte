@@ -63,6 +63,15 @@
 
 		<div class="flex items-center gap-2 flex-wrap">
 			<a
+				href="/admin/gudang/mutasi"
+				class="flex-1 sm:flex-initial bg-purple-50 hover:bg-purple-100 text-purple-800 border border-purple-200 px-3.5 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
+				title="Lihat riwayat pergerakan stok (penjualan, restock, opname, shopee)"
+			>
+				<History class="w-4 h-4 text-purple-600" />
+				<span>Riwayat Mutasi</span>
+			</a>
+
+			<a
 				href="/admin/gudang/masuk"
 				class="flex-1 sm:flex-initial bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3.5 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
 			>
