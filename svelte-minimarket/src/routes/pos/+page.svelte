@@ -975,10 +975,26 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 		$amountPaid = finalPayTotal;
 	}
 
+	let lastScannedBarcode = '';
+	let lastScanTime = 0;
+
 	// 1. Pindai Barcode (Online-First dengan Local Fallback)
 	async function handleScan(codeToScan?: string) {
-		const code = (codeToScan || barcode).trim();
+		const raw = (codeToScan || barcode).trim();
+		if (!raw) return;
+
+		// Bersihkan AIM identifier (misal "]C1", "]e0") & karakter kontrol jika dikirim via input
+		const code = raw.replace(/^\][A-Za-z0-9]{2}/i, '').replace(/[\x00-\x1F\x7F-\x9F]/g, '').trim();
 		if (!code) return;
+
+		const now = Date.now();
+		// De-duplication: Mencegah tabrakan race-condition antara scanner hardware driver dan event onkeydown input
+		if (code === lastScannedBarcode && now - lastScanTime < 450) {
+			barcode = '';
+			return;
+		}
+		lastScannedBarcode = code;
+		lastScanTime = now;
 		barcode = '';
 
 		// Ambil data terbaru langsung dari database VPS (< 0.5ms) agar update harga & nama dari Inventori langsung aktif
@@ -1401,7 +1417,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 
 		scannerDriver = new BarcodeScannerListener({
 			minChars: 3,
-			maxIntervalMs: 80,
+			maxIntervalMs: 150,
 			onScan: (code) => {
 				handleScan(code);
 			}

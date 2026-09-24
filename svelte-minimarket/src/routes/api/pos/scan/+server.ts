@@ -13,17 +13,26 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 		throw error(400, 'Barcode wajib diisi');
 	}
 
-	// Smart Code Candidates: scanner bisa membaca "KAC830", "SKU-KAC-830", dsb.
-	const upperBarcode = barcode.toUpperCase();
+	const rawBarcode = barcode
+		.replace(/^\][A-Za-z0-9]{2}/i, '') // Hapus AIM identifier dari hardware scanner
+		.replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Hapus non-printable characters
+		.trim();
+
+	// Smart Code Candidates: scanner bisa membaca "KAC830", "SKU-KAC-830", "0700830", dsb.
+	const upperBarcode = rawBarcode.toUpperCase();
 	const cleanAlphanumeric = upperBarcode.replace(/^SKU-?/i, '').replace(/[^A-Z0-9]/g, '');
+	const strippedLeadingZeros = cleanAlphanumeric.replace(/^0+/, '');
 
 	const candidates = Array.from(
 		new Set([
 			barcode,
+			rawBarcode,
 			upperBarcode,
 			cleanAlphanumeric,
+			strippedLeadingZeros,
 			`SKU-${cleanAlphanumeric}`,
-			`SKU-${barcode}`,
+			`SKU-${strippedLeadingZeros}`,
+			`SKU-${rawBarcode}`,
 			`SKU-${upperBarcode}`
 		])
 	).filter(Boolean);
