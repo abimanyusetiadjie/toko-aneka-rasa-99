@@ -13,8 +13,8 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 			p.id, p.sku, p.name, p.category_id, p.stock, p.unit as base_unit,
 			COALESCE(pu.price, p.price, 0) as price,
 			COALESCE(p.barcode, pu.barcode, p.sku) as barcode,
-			pu.id as unit_id,
-			pu.unit_name,
+			COALESCE(pu.id, p.id) as unit_id,
+			COALESCE(pu.unit_name, p.unit, 'Pcs') as unit_name,
 			c.name as category_name
 		FROM products p
 		LEFT JOIN categories c ON p.category_id = c.id

@@ -166,7 +166,8 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 			`SELECT p.id, p.sku, p.name, p.category_id, p.unit as base_unit, 
 			        COALESCE(p.cost_price, 0) as base_hpp, p.stock, false as is_taxable, 
 			        c.name as category_name,
-			        COALESCE(p.barcode, pu.barcode, p.sku) as barcode
+			        COALESCE(p.barcode, pu.barcode, p.sku) as barcode,
+			        COALESCE(p.price, pu.price, 0) as price
 			 FROM products p
 			 LEFT JOIN categories c ON p.category_id = c.id
 			 LEFT JOIN product_units pu ON p.id = pu.product_id AND (pu.conversion_factor = 1 OR pu.conversion_factor IS NULL)

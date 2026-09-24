@@ -1923,7 +1923,20 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 				</div>
 			</div>
 
-			<div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+			<div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+				{#if errorAdvice.includes('Produk tidak ditemukan') || errorMessage.includes('Produk tidak ditemukan')}
+					<button
+						onclick={() => {
+							resetCart();
+							fetchCatalog();
+							showErrorModal = false;
+							barcodeInput?.focus();
+						}}
+						class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-4 py-2 rounded-lg font-bold text-xs transition-colors"
+					>
+						Bersihkan Keranjang & Muat Ulang
+					</button>
+				{/if}
 				<button
 					onclick={() => {
 						showErrorModal = false;

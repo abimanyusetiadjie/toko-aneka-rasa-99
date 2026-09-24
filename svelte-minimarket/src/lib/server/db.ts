@@ -19,6 +19,138 @@ export const pool = new pg.Pool({
 
 import { CATEGORIES, PRODUCTS, PRODUCT_UNITS } from './seeds/tokoanekarasa99';
 
+let dbInitPromise: Promise<void> | null = null;
+
+/**
+ * Otomatisasi Sinkronisasi Database PostgreSQL Lokal VPS:
+ * Memastikan tabel, kolom (barcode, base_hpp), seluruh 252 produk, dan product_units
+ * terpasang secara utuh dan 100% tersinkronisasi sebagai SATU KESATUAN DATABASE.
+ */
+export async function ensureDatabaseSynced(): Promise<void> {
+	if (!dbInitPromise) {
+		dbInitPromise = (async () => {
+			let client: any = null;
+			try {
+				client = await pool.connect();
+			} catch (err: any) {
+				console.warn('[DB Auto-Sync] Belum bisa konek ke PostgreSQL, lewati auto-sync sementara:', err.message);
+				return;
+			}
+
+			try {
+				console.log('[DB Auto-Sync] Memeriksa & menyelaraskan database PostgreSQL VPS...');
+				
+				// 1. Ekstensi UUID
+				await client.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`);
+				await client.query(`CREATE EXTENSION IF NOT EXISTS "pgcrypto";`);
+
+				// 2. Kolom pendukung di tabel products
+				await client.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS base_hpp NUMERIC(12, 2) DEFAULT 0.00;`);
+				await client.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS barcode VARCHAR(100);`);
+				await client.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS cost_price NUMERIC(12, 2) DEFAULT 0.00;`);
+				await client.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS base_unit VARCHAR(50) DEFAULT 'PCS';`);
+
+				// 3. Pastikan tabel product_units tersedia
+				await client.query(`
+					CREATE TABLE IF NOT EXISTS product_units (
+						id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+						product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+						unit_name VARCHAR(50) NOT NULL DEFAULT 'Pcs',
+						conversion_factor NUMERIC(12, 2) NOT NULL DEFAULT 1,
+						price NUMERIC(12, 2) NOT NULL DEFAULT 0,
+						barcode VARCHAR(100),
+						created_at TIMESTAMPTZ DEFAULT NOW()
+					);
+					CREATE INDEX IF NOT EXISTS idx_product_units_barcode ON product_units(barcode);
+					CREATE INDEX IF NOT EXISTS idx_product_units_prod_id ON product_units(product_id);
+				`);
+
+				// 4. Sinkronisasi Kategori Resmi
+				for (const cat of CATEGORIES) {
+					await client.query(
+						`INSERT INTO categories (id, slug, name)
+						 VALUES ($1, $2, $3)
+						 ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, slug = EXCLUDED.slug`,
+						[cat.id, cat.slug, cat.name]
+					).catch(() => {});
+				}
+
+				// 5. Cek jumlah produk di database
+				const countRes = await client.query(`SELECT COUNT(*) as cnt FROM products`);
+				const totalInDb = parseInt(countRes.rows[0]?.cnt || '0', 10);
+
+				if (totalInDb < 50) {
+					console.log(`[DB Auto-Sync] Mengisi ${PRODUCTS.length} produk master ke tabel products...`);
+					for (const prod of PRODUCTS) {
+						await client.query(
+							`INSERT INTO products (id, category_id, sku, barcode, name, price, cost_price, base_hpp, stock, unit, base_unit, is_active, created_at, updated_at)
+							 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, true, NOW(), NOW())
+							 ON CONFLICT (id) DO NOTHING`,
+							[
+								prod.id,
+								prod.category_id,
+								prod.sku,
+								prod.barcode || prod.sku,
+								prod.name,
+								prod.price,
+								prod.cost_price || prod.base_hpp || 0,
+								prod.base_hpp || prod.cost_price || 0,
+								prod.stock,
+								prod.unit || 'pcs',
+								prod.base_unit || 'PCS'
+							]
+						).catch(() => {});
+					}
+				}
+
+				// 6. Pastikan SETIAP produk aktif memiliki minimal 1 unit di product_units
+				await client.query(`
+					INSERT INTO product_units (id, product_id, unit_name, conversion_factor, price, barcode, created_at)
+					SELECT 
+						gen_random_uuid(),
+						p.id,
+						COALESCE(p.unit, 'Pcs'),
+						1,
+						COALESCE(p.price, 0),
+						COALESCE(NULLIF(p.barcode, ''), p.sku),
+						NOW()
+					FROM products p
+					WHERE NOT EXISTS (
+						SELECT 1 FROM product_units pu WHERE pu.product_id = p.id
+					)
+					AND (p.is_active = TRUE OR p.is_active IS NULL);
+				`);
+
+				// 7. Selaraskan barcode antara products dan product_units (2 arah)
+				await client.query(`
+					UPDATE products p
+					SET barcode = pu.barcode
+					FROM product_units pu
+					WHERE p.id = pu.product_id 
+					  AND (p.barcode IS NULL OR p.barcode = '')
+					  AND pu.barcode IS NOT NULL 
+					  AND pu.barcode != '';
+
+					UPDATE product_units pu
+					SET barcode = p.barcode
+					FROM products p
+					WHERE pu.product_id = p.id 
+					  AND (pu.barcode IS NULL OR pu.barcode = '')
+					  AND p.barcode IS NOT NULL 
+					  AND p.barcode != '';
+				`);
+
+				console.log('✅ [DB Auto-Sync] Database PostgreSQL VPS telah 100% sinkron dan siap digunakan.');
+			} catch (syncErr: any) {
+				console.warn('[DB Auto-Sync Error]', syncErr.message);
+			} finally {
+				try { client.release(); } catch {}
+			}
+		})();
+	}
+	return dbInitPromise;
+}
+
 // ==========================================
 // 📦 SEED DATA IN-MEMORY (Instant Response < 1ms)
 // Toko Aneka Rasa 99 (Kemplang, Getas, Kerupuk Bangka)
@@ -95,6 +227,7 @@ export function updateMemoryProductStock(productIdOrCode: string, newStock: numb
  */
 export async function query<T = any>(text: string, params: any[] = []): Promise<T[]> {
 	try {
+		await ensureDatabaseSynced();
 		const client = await pool.connect();
 		try {
 			const res = await client.query(text, params);

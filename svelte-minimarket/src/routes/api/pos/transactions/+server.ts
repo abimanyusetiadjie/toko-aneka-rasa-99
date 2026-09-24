@@ -174,7 +174,37 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					);
 				}
 
-				if (unitRes.rows.length > 0) {
+				if (!unitRes || unitRes.rows.length === 0) {
+					// Fallback cerdas: Jika ID yang dikirim dari keranjang kasir adalah UUID dari draft/cache lokal,
+					// cari padanan barcode/SKU di mapping produk resmi, lalu cari di database VPS
+					const seedUnit = memoryProductUnits.find(u => u.id === rawUnitId || u.product_id === rawUnitId);
+					const seedProd = memoryProducts.find(p => p.id === rawUnitId || (seedUnit && p.id === seedUnit.product_id));
+					const candidates: string[] = [];
+					if (seedUnit?.barcode) candidates.push(seedUnit.barcode);
+					if (seedProd?.barcode) candidates.push(seedProd.barcode);
+					if (seedProd?.sku) candidates.push(seedProd.sku);
+
+					if (candidates.length > 0) {
+						unitRes = await client.query(
+							`SELECT pu.id as unit_id, p.id as prod_id, p.name as product_name, p.stock,
+							        COALESCE(pu.unit_name, p.unit, 'Pcs') as unit_name,
+							        COALESCE(pu.conversion_factor, 1) as conversion_factor,
+							        COALESCE(pu.price, p.price, 0) as price,
+							        COALESCE(p.cost_price, p.base_hpp, 0) as base_hpp
+							 FROM products p
+							 LEFT JOIN product_units pu ON p.id = pu.product_id
+							 WHERE pu.barcode = ANY($1) 
+							    OR p.barcode = ANY($1) 
+							    OR p.sku = ANY($1)
+							 ORDER BY CASE WHEN p.stock > 0 THEN 1 ELSE 2 END, pu.conversion_factor ASC
+							 LIMIT 1
+							 FOR UPDATE OF p`,
+							[candidates]
+						);
+					}
+				}
+
+				if (unitRes && unitRes.rows.length > 0) {
 					const unit = unitRes.rows[0];
 					const qty = Number(item.qty);
 					const conversionFactor = Number(unit.conversion_factor || 1);
@@ -207,6 +237,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					calculatedSubtotal += subtotal;
 
 					preparedDetails.push({
+						requestedId: item.unit_id,
 						detailId: crypto.randomUUID(),
 						productId: unit.prod_id,
 						unitId: validUnitId,
@@ -232,7 +263,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			// - Transaksi hilang saat server restart
 			if (preparedDetails.length !== data.items.length) {
 				const missingItems = data.items
-					.filter((_: any, i: number) => !preparedDetails.some((d: any) => d.unitId === data.items[i].unit_id))
+					.filter((_: any, i: number) => !preparedDetails.some((d: any) => 
+						d.requestedId === data.items[i].unit_id || 
+						d.unitId === data.items[i].unit_id || 
+						d.productId === data.items[i].unit_id
+					))
 					.map((item: any) => item.unit_id);
 				throw new Error(`Produk tidak ditemukan di database: ${missingItems.join(', ')}. Silakan scan ulang barang yang bermasalah.`);
 			}
