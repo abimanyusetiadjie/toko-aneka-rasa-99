@@ -21,12 +21,19 @@
 		Download,
 		Printer,
 		Activity,
-		CreditCard
+		CreditCard,
+		Award,
+		Clock,
+		ArrowRight,
+		ExternalLink
 	} from 'lucide-svelte';
 
 	let { data } = $props();
 
 	let isPdfModalOpen = $state(false);
+	let txFilter = $state<'ALL' | 'POS' | 'SHOPEE'>('ALL');
+	let showAllTransactions = $state(false);
+	let lastUpdated = $state('');
 
 	let trendChartContainer: HTMLDivElement | undefined = $state();
 	let paymentChartContainer: HTMLDivElement | undefined = $state();
@@ -35,6 +42,16 @@
 	let ApexChartsModule: any = null;
 
 	onMount(async () => {
+		const now = new Date();
+		const options: Intl.DateTimeFormatOptions = {
+			day: 'numeric',
+			month: 'short',
+			year: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit'
+		};
+		lastUpdated = now.toLocaleDateString('id-ID', options) + ' WIB';
+
 		try {
 			const mod = await import('apexcharts');
 			ApexChartsModule = mod.default;
@@ -43,6 +60,18 @@
 			console.error('Gagal memuat ApexCharts:', err);
 		}
 	});
+
+	let filteredTransactions = $derived(
+		(data.recentTransactions || []).filter((tx: any) => {
+			if (txFilter === 'POS') return tx.channel !== 'SHOPEE';
+			if (txFilter === 'SHOPEE') return tx.channel === 'SHOPEE';
+			return true;
+		})
+	);
+
+	let displayedTransactions = $derived(
+		showAllTransactions ? filteredTransactions : filteredTransactions.slice(0, 8)
+	);
 
 	onDestroy(() => {
 		if (trendChart) {
@@ -71,11 +100,19 @@
 			const categories = (data.dailyTrend || []).map((d: any) => d.label);
 			const posSeries = (data.dailyTrend || []).map((d: any) => d.pos);
 			const shopeeSeries = (data.dailyTrend || []).map((d: any) => d.shopee);
+			const hasShopee = shopeeSeries.some((v: number) => v > 0);
+
+			const series = [
+				{ name: 'Kasir Toko', data: posSeries }
+			];
+			if (hasShopee) {
+				series.push({ name: 'Shopee', data: shopeeSeries });
+			}
 
 			const options = {
 				chart: {
 					type: 'area',
-					height: 310,
+					height: 300,
 					toolbar: { show: false },
 					fontFamily: 'inherit',
 					animations: { enabled: true, easing: 'easeinout', speed: 600 }
@@ -92,10 +129,7 @@
 						stops: [0, 90, 100]
 					}
 				},
-				series: [
-					{ name: 'Kasir Toko (POS)', data: posSeries },
-					{ name: 'Marketplace Shopee', data: shopeeSeries }
-				],
+				series,
 				xaxis: {
 					categories,
 					labels: {
@@ -218,13 +252,19 @@
 			const categories = data.dailyTrend.map((d: any) => d.label);
 			const posSeries = data.dailyTrend.map((d: any) => d.pos);
 			const shopeeSeries = data.dailyTrend.map((d: any) => d.shopee);
+			const hasShopee = shopeeSeries.some((v: number) => v > 0);
+
+			const series = [
+				{ name: 'Kasir Toko', data: posSeries }
+			];
+			if (hasShopee) {
+				series.push({ name: 'Shopee', data: shopeeSeries });
+			}
+
 			trendChart.updateOptions({
 				xaxis: { categories }
 			});
-			trendChart.updateSeries([
-				{ name: 'Kasir Toko (POS)', data: posSeries },
-				{ name: 'Marketplace Shopee', data: shopeeSeries }
-			]);
+			trendChart.updateSeries(series);
 		}
 
 		if (paymentChart && data.paymentMethods) {
@@ -248,8 +288,8 @@
 	}
 
 	function getPeriodLabel(p: string): string {
-		if (p === 'weekly') return 'Mingguan (7 Hari Terakhir)';
-		if (p === 'monthly') return 'Bulanan (Bulan Ini)';
+		if (p === 'weekly') return '7 Hari Terakhir';
+		if (p === 'monthly') return 'Bulan Ini';
 		return 'Semua Waktu';
 	}
 
@@ -396,69 +436,72 @@
 </script>
 
 <div class="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
-	<!-- Page Header & Action Bar -->
-	<header class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+	<!-- 1. Header & Filter Periode -->
+	<header class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200">
 		<div>
 			<div class="flex items-center gap-2 mb-1 flex-wrap">
-				<span class="text-[11px] font-black tracking-wider text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded font-mono uppercase">
-					EXECUTIVE BI DASHBOARD • KHUSUS OWNER
+				<span class="text-[11px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-full">
+					Ringkasan Bisnis
 				</span>
-				<span class="text-xs text-slate-500 font-mono">Laba Bersih & Rekapitulasi Finansial</span>
+				{#if lastUpdated}
+					<span class="text-xs text-slate-500 flex items-center gap-1 font-sans">
+						<Clock class="w-3.5 h-3.5 text-slate-400" />
+						Update terakhir: {lastUpdated}
+					</span>
+				{/if}
 			</div>
-			<h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Kinerja Finansial, Omnichannel & Rekapitulasi</h2>
-			<p class="text-xs text-slate-600">Pantau omzet riil, modal pokok barang (HPP), keuntungan bersih toko, dan ekspor laporan resmi</p>
+			<h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Performa Toko</h2>
+			<p class="text-xs sm:text-sm text-slate-600 mt-0.5">Pantau omzet, modal barang, dan keuntungan bersih toko Anda dalam sekejap.</p>
 		</div>
 
-		<!-- Action Buttons: Export Excel & PDF Resmi (Signature Red) -->
-		<div class="flex flex-wrap items-center gap-2">
-			<!-- Tombol Ekspor Excel -->
+		<!-- Tombol Aksi & Ekspor -->
+		<div class="flex items-center gap-2 flex-wrap">
 			<button
 				onclick={exportToExcel}
-				class="bg-emerald-700 hover:bg-emerald-600 active:scale-95 text-white px-3.5 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
-				title="Unduh rekapitulasi data penjualan dalam format Excel (.xls)"
+				class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+				title="Unduh data dalam format Excel (.xls)"
 			>
-				<FileSpreadsheet class="w-4 h-4 text-emerald-200" />
-				<span>Unduh Excel (.xls)</span>
+				<FileSpreadsheet class="w-4 h-4 text-emerald-100" />
+				<span>Unduh Excel</span>
 			</button>
 
-			<!-- Tombol Cetak / PDF Resmi (Signature Adobe Red) -->
 			<button
 				onclick={() => (isPdfModalOpen = true)}
-				class="bg-red-600 hover:bg-red-700 active:scale-95 text-white px-3.5 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
-				title="Buka pratinjau dokumen laporan resmi A4 siap cetak atau simpan PDF"
+				class="bg-red-600 hover:bg-red-700 active:scale-95 text-white px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+				title="Buka pratinjau laporan PDF siap cetak"
 			>
 				<FileText class="w-4 h-4 text-red-100" />
-				<span>Ekspor PDF Resmi</span>
+				<span>Ekspor PDF</span>
 			</button>
 		</div>
 	</header>
 
-	<!-- Filter Periode Bar (Mingguan vs Bulanan vs Semua) -->
-	<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-2xs">
-		<div class="flex items-center gap-1.5">
-			<Calendar class="w-4 h-4 text-slate-500 shrink-0 ml-1" />
-			<span class="text-xs font-bold text-slate-700 mr-2">Filter Periode Data:</span>
-			<div class="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-xs font-bold">
+	<!-- Filter Periode Menonjol -->
+	<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-2.5 sm:p-3 rounded-xl border border-slate-200 shadow-xs">
+		<div class="flex items-center gap-2">
+			<Calendar class="w-4 h-4 text-slate-400 ml-1 shrink-0" />
+			<span class="text-xs font-semibold text-slate-700">Periode:</span>
+			<div class="inline-flex rounded-lg bg-slate-100 p-1 text-xs font-bold gap-1">
 				<a
 					href="?period=weekly"
 					class="px-3 py-1.5 rounded-md transition-all {data.period === 'weekly'
-						? 'bg-blue-600 text-white shadow-xs font-black'
+						? 'bg-white text-blue-700 shadow-xs font-extrabold'
 						: 'text-slate-600 hover:text-slate-900'}"
 				>
-					Mingguan (7 Hari)
+					7 Hari Terakhir
 				</a>
 				<a
 					href="?period=monthly"
 					class="px-3 py-1.5 rounded-md transition-all {data.period === 'monthly'
-						? 'bg-blue-600 text-white shadow-xs font-black'
+						? 'bg-white text-blue-700 shadow-xs font-extrabold'
 						: 'text-slate-600 hover:text-slate-900'}"
 				>
-					Bulanan (Bulan Ini)
+					Bulan Ini
 				</a>
 				<a
 					href="?period=all"
 					class="px-3 py-1.5 rounded-md transition-all {data.period === 'all'
-						? 'bg-blue-600 text-white shadow-xs font-black'
+						? 'bg-white text-blue-700 shadow-xs font-extrabold'
 						: 'text-slate-600 hover:text-slate-900'}"
 				>
 					Semua Waktu
@@ -466,9 +509,9 @@
 			</div>
 		</div>
 
-		<div class="text-[11px] text-slate-500 font-mono flex items-center gap-2 self-end sm:self-auto">
-			<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping inline-block"></span>
-			<span>Status: <strong>{getPeriodLabel(data.period)}</strong></span>
+		<div class="text-xs text-slate-500 flex items-center gap-2 self-start sm:self-auto px-1">
+			<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+			<span>Menampilkan data: <strong>{getPeriodLabel(data.period)}</strong></span>
 		</div>
 	</div>
 
@@ -480,318 +523,331 @@
 		</div>
 	{/if}
 
-	<!-- 4 Kartu Finansial Utama (Financial Health Cards) -->
-	<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-		<!-- 1. Total Omset Kotor -->
-		<div class="pos-panel p-4 bg-white border-l-4 border-l-blue-600 flex flex-col justify-between">
+	<!-- 2. 4 Kartu KPI Utama (Besar, Bold, Jelas & Bersih) -->
+	<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+		<!-- 1. Omzet -->
+		<div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs relative overflow-hidden flex flex-col justify-between">
+			<div class="absolute top-0 left-0 right-0 h-1 bg-blue-600"></div>
 			<div>
-				<div class="flex items-center justify-between text-slate-500 mb-1">
-					<span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider font-mono">TOTAL OMSET KOTOR</span>
-					<DollarSign class="w-4 h-4 text-blue-600" />
+				<div class="flex items-center justify-between text-slate-500 mb-2">
+					<span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Omzet</span>
+					<div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+						<DollarSign class="w-4 h-4" />
+					</div>
 				</div>
-				<div class="text-xl sm:text-2xl font-black text-slate-900 font-mono mt-1">
+				<div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
 					{formatCurrency(data.totalRevenue)}
 				</div>
 			</div>
-			<p class="text-[10px] text-slate-500 font-mono mt-2 pt-2 border-t border-slate-100 flex justify-between">
-				<span>Volume: {data.totalTransactions} Transaksi</span>
-				<span class="text-blue-700 font-bold">Gross Sales</span>
-			</p>
+			<div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+				<span>Total dari <strong>{data.totalTransactions}</strong> transaksi</span>
+				<span class="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded text-[11px]">Penjualan</span>
+			</div>
 		</div>
 
-		<!-- 2. Modal Pokok Barang (HPP) -->
-		<div class="pos-panel p-4 bg-white border-l-4 border-l-amber-500 flex flex-col justify-between">
+		<!-- 2. Modal Barang -->
+		<div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs relative overflow-hidden flex flex-col justify-between">
+			<div class="absolute top-0 left-0 right-0 h-1 bg-amber-500"></div>
 			<div>
-				<div class="flex items-center justify-between text-slate-500 mb-1">
-					<span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider font-mono">MODAL POKOK (HPP / COGS)</span>
-					<Package class="w-4 h-4 text-amber-500" />
+				<div class="flex items-center justify-between text-slate-500 mb-2">
+					<span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Modal Barang</span>
+					<div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+						<Package class="w-4 h-4" />
+					</div>
 				</div>
-				<div class="text-xl sm:text-2xl font-black text-slate-800 font-mono mt-1">
+				<div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
 					{formatCurrency(data.totalCogs)}
 				</div>
 			</div>
-			<p class="text-[10px] text-slate-500 font-mono mt-2 pt-2 border-t border-slate-100 flex justify-between">
-				<span>Modal barang dari supplier</span>
-				<span class="text-amber-700 font-bold">Cost</span>
-			</p>
+			<div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+				<span>Uang modal buat stok</span>
+				<span class="text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded text-[11px]">HPP</span>
+			</div>
 		</div>
 
-		<!-- 3. Laba Bersih Kotor (Gross Profit) -->
-		<div class="pos-panel p-4 bg-white border-l-4 border-l-emerald-600 flex flex-col justify-between shadow-xs">
+		<!-- 3. Keuntungan Bersih -->
+		<div class="bg-white rounded-xl border border-emerald-200 p-4 sm:p-5 shadow-xs relative overflow-hidden flex flex-col justify-between bg-gradient-to-b from-emerald-50/20 to-white">
+			<div class="absolute top-0 left-0 right-0 h-1 bg-emerald-500"></div>
 			<div>
-				<div class="flex items-center justify-between text-slate-500 mb-1">
-					<span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider font-mono text-emerald-800">LABA BERSIH KOTOR (PROFIT)</span>
-					<span class="text-[10px] font-mono font-black px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
-						{data.grossProfitMargin}% GPM
-					</span>
+				<div class="flex items-center justify-between text-slate-500 mb-2">
+					<span class="text-xs font-bold text-emerald-800 uppercase tracking-wider">Keuntungan Bersih</span>
+					<div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+						<TrendingUp class="w-4 h-4" />
+					</div>
 				</div>
-				<div class="text-xl sm:text-2xl font-black text-emerald-600 font-mono mt-1">
+				<div class="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight font-mono">
 					{formatCurrency(data.grossProfit)}
 				</div>
 			</div>
-			<p class="text-[10px] text-emerald-700 font-mono mt-2 pt-2 border-t border-emerald-100 flex justify-between font-semibold">
-				<span>Cuan Bersih Penjualan</span>
-				<span class="text-emerald-800 font-bold">Net Margin</span>
-			</p>
+			<div class="mt-3 pt-3 border-t border-emerald-100 flex items-center justify-between text-xs">
+				<span class="text-slate-600">Margin Keuntungan:</span>
+				<span class="font-extrabold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-full text-xs font-mono">
+					{data.grossProfitMargin}%
+				</span>
+			</div>
 		</div>
 
-		<!-- 4. Rata-Rata Keranjang (Average Basket Size) -->
-		<div class="pos-panel p-4 bg-white border-l-4 border-l-purple-600 flex flex-col justify-between">
+		<!-- 4. Rata-rata Belanja -->
+		<div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs relative overflow-hidden flex flex-col justify-between">
+			<div class="absolute top-0 left-0 right-0 h-1 bg-purple-600"></div>
 			<div>
-				<div class="flex items-center justify-between text-slate-500 mb-1">
-					<span class="text-[10px] sm:text-[11px] font-black uppercase tracking-wider font-mono">AVERAGE BASKET SIZE</span>
-					<ShoppingBag class="w-4 h-4 text-purple-600" />
+				<div class="flex items-center justify-between text-slate-500 mb-2">
+					<span class="text-xs font-bold text-slate-600 uppercase tracking-wider">Rata-rata Belanja</span>
+					<div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
+						<ShoppingBag class="w-4 h-4" />
+					</div>
 				</div>
-				<div class="text-xl sm:text-2xl font-black text-slate-900 font-mono mt-1">
+				<div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
 					{formatCurrency(data.avgBasketSize)}
 				</div>
 			</div>
-			<p class="text-[10px] text-slate-500 font-mono mt-2 pt-2 border-t border-slate-100 flex justify-between">
-				<span>Rata-rata belanja per pembeli</span>
-				<span class="text-purple-700 font-bold">Per Struk</span>
-			</p>
+			<div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+				<span>Rata-rata per transaksi</span>
+				<span class="text-purple-700 font-bold bg-purple-50 px-2 py-0.5 rounded text-[11px]">Per Struk</span>
+			</div>
 		</div>
 	</section>
 
-	<!-- Omnichannel Sales Channel Breakdown (POS Offline vs Shopee Online) -->
-	<section class="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-4">
-		<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+	<!-- 3. Penjualan Offline vs Online (Omnichannel) -->
+	<section class="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-xs space-y-4">
+		<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
 			<div>
 				<div class="flex items-center gap-2">
-					<span class="text-[10px] font-black tracking-widest text-slate-500 uppercase font-mono">OMNICHANNEL REVENUE BREAKDOWN</span>
-					<span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded font-mono">Real-Time Sync</span>
+					<h3 class="text-base sm:text-lg font-black text-slate-900">Penjualan Offline vs Online</h3>
+					<span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+						<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+						Data Terkini
+					</span>
 				</div>
-				<h3 class="text-sm sm:text-base font-black text-slate-900 mt-0.5">Komparasi Penjualan: Kasir Offline vs Marketplace Shopee</h3>
+				<p class="text-xs text-slate-500 mt-0.5">Perbandingan omzet kasir toko fisik dan marketplace online Shopee</p>
 			</div>
+
 			{#if data.shopeeReadyToShip > 0}
 				<a
 					href="/admin/shopee"
 					class="inline-flex items-center gap-1.5 text-xs font-bold text-orange-700 bg-orange-50 hover:bg-orange-100 border border-orange-200 px-3 py-1.5 rounded-lg transition-colors self-start sm:self-auto"
 				>
-					<Truck class="w-3.5 h-3.5" />
+					<Truck class="w-3.5 h-3.5 text-orange-600" />
 					<span>{data.shopeeReadyToShip} Pesanan Shopee Perlu Dikirim</span>
-					<ArrowUpRight class="w-3.5 h-3.5" />
+					<ArrowRight class="w-3.5 h-3.5" />
 				</a>
 			{/if}
 		</div>
 
-		<!-- Channel Omset Cards Grid -->
-		<div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-			<!-- POS Kasir Offline -->
-			<div class="p-3.5 bg-blue-50/50 border border-blue-200 rounded-xl flex flex-col justify-between">
+		<!-- 2 Card Saluran Penjualan -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+			<!-- Toko Fisik (Kasir) -->
+			<div class="p-4 rounded-xl bg-blue-50/50 border border-blue-200 flex flex-col justify-between">
 				<div>
-					<div class="flex items-center justify-between text-blue-900 mb-1">
-						<span class="text-[11px] font-bold uppercase tracking-wider font-mono flex items-center gap-1.5">
-							<Store class="w-3.5 h-3.5 text-blue-600" />
-							KASIR TOKO FISIK (POS)
+					<div class="flex items-center justify-between mb-1.5">
+						<span class="text-xs font-bold text-blue-900 flex items-center gap-1.5">
+							<Store class="w-4 h-4 text-blue-600" />
+							Kasir Toko Fisik
 						</span>
-						<span class="text-xs font-black font-mono bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+						<span class="text-xs font-black font-mono bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
 							{data.channelBreakdown?.posPercent || 0}%
 						</span>
 					</div>
-					<div class="text-xl sm:text-2xl font-black text-slate-900 font-mono mt-2">
+					<div class="text-2xl font-black text-slate-900 font-mono mt-2">
 						{formatCurrency(data.posRevenue || 0)}
 					</div>
 				</div>
-				<p class="text-[10px] text-slate-500 font-mono mt-2 pt-2 border-t border-blue-100 flex justify-between">
-					<span>{data.posCount || 0} Transaksi Kasir</span>
-					<span class="text-blue-700 font-bold">Offline Store</span>
+				<p class="text-xs text-slate-500 mt-3 pt-2.5 border-t border-blue-100 flex items-center justify-between">
+					<span>{data.posCount || 0} transaksi di kasir</span>
+					<span class="text-blue-700 font-bold">Penjualan Langsung</span>
 				</p>
 			</div>
 
-			<!-- Marketplace Shopee Online -->
-			<div class="p-3.5 bg-orange-50/50 border border-orange-200 rounded-xl flex flex-col justify-between">
+			<!-- Marketplace Shopee -->
+			<div class="p-4 rounded-xl bg-orange-50/50 border border-orange-200 flex flex-col justify-between">
 				<div>
-					<div class="flex items-center justify-between text-orange-900 mb-1">
-						<span class="text-[11px] font-bold uppercase tracking-wider font-mono flex items-center gap-1.5">
-							<ShoppingBag class="w-3.5 h-3.5 text-orange-600" />
-							MARKETPLACE SHOPEE
+					<div class="flex items-center justify-between mb-1.5">
+						<span class="text-xs font-bold text-orange-900 flex items-center gap-1.5">
+							<ShoppingBag class="w-4 h-4 text-orange-600" />
+							Shopee Marketplace
 						</span>
-						<span class="text-xs font-black font-mono bg-orange-100 text-orange-800 px-2 py-0.5 rounded">
+						<span class="text-xs font-black font-mono bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full">
 							{data.channelBreakdown?.shopeePercent || 0}%
 						</span>
 					</div>
-					<div class="text-xl sm:text-2xl font-black text-orange-700 font-mono mt-2">
+					<div class="text-2xl font-black text-orange-700 font-mono mt-2">
 						{formatCurrency(data.shopeeRevenue || 0)}
 					</div>
 				</div>
-				<p class="text-[10px] text-slate-500 font-mono mt-2 pt-2 border-t border-orange-100 flex justify-between">
-					<span>{data.shopeeCount || 0} Pesanan Online</span>
-					<a href="/admin/shopee" class="text-orange-700 hover:underline font-bold flex items-center gap-0.5">
-						Kelola Pesanan &rarr;
-					</a>
-				</p>
-			</div>
-
-			<!-- Total Omset Gabungan -->
-			<div class="p-3.5 bg-slate-900 text-white rounded-xl flex flex-col justify-between shadow-xs">
-				<div>
-					<div class="flex items-center justify-between text-slate-400 mb-1">
-						<span class="text-[11px] font-bold uppercase tracking-wider font-mono flex items-center gap-1.5 text-slate-300">
-							<DollarSign class="w-3.5 h-3.5 text-emerald-400" />
-							TOTAL OMSET GABUNGAN
-						</span>
-						<span class="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">
-							100%
-						</span>
-					</div>
-					<div class="text-xl sm:text-2xl font-black text-emerald-400 font-mono mt-2">
-						{formatCurrency(data.totalRevenue || 0)}
-					</div>
+				<div class="text-xs text-slate-500 mt-3 pt-2.5 border-t border-orange-100 flex items-center justify-between">
+					{#if (data.shopeeCount || 0) > 0}
+						<span>{data.shopeeCount} pesanan online</span>
+						<a href="/admin/shopee" class="text-orange-700 hover:underline font-bold flex items-center gap-1">
+							Buka Pesanan &rarr;
+						</a>
+					{:else}
+						<span class="text-orange-800 font-medium italic">Belum ada penjualan Shopee di periode ini</span>
+						<a href="/admin/shopee" class="text-orange-700 hover:underline font-bold text-[11px]">
+							Cek Integrasi &rarr;
+						</a>
+					{/if}
 				</div>
-				<p class="text-[10px] text-slate-400 font-mono mt-2 pt-2 border-t border-slate-800 flex justify-between">
-					<span>Total {data.totalTransactions || 0} Penjualan</span>
-					<span class="text-slate-300">Aneka Rasa 99</span>
-				</p>
 			</div>
 		</div>
 
-		<!-- Progress Bar Komparasi Channel -->
-		<div class="space-y-1">
-			<div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
+		<!-- Progress Bar Tebal Kontras -->
+		<div class="space-y-1.5 pt-1">
+			<div class="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden flex p-0.5 border border-slate-200">
 				<div
-					class="bg-blue-600 h-full transition-all duration-500"
+					class="bg-blue-600 h-full rounded-l-full transition-all duration-500"
 					style="width: {data.channelBreakdown?.posPercent || 100}%"
-					title="Kasir Offline: {data.channelBreakdown?.posPercent || 100}%"
+					title="Kasir Toko: {data.channelBreakdown?.posPercent || 100}%"
 				></div>
 				<div
-					class="bg-orange-500 h-full transition-all duration-500"
+					class="bg-orange-500 h-full rounded-r-full transition-all duration-500"
 					style="width: {data.channelBreakdown?.shopeePercent || 0}%"
-					title="Shopee Online: {data.channelBreakdown?.shopeePercent || 0}%"
+					title="Shopee: {data.channelBreakdown?.shopeePercent || 0}%"
 				></div>
 			</div>
-			<div class="flex justify-between text-[10px] text-slate-500 font-mono">
-				<span class="flex items-center gap-1">
-					<span class="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>
-					Kasir Offline ({data.channelBreakdown?.posPercent || 0}%)
+			<div class="flex justify-between text-xs text-slate-600 font-medium px-1">
+				<span class="flex items-center gap-1.5">
+					<span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block"></span>
+					Kasir Toko: <strong>{data.channelBreakdown?.posPercent || 0}%</strong>
 				</span>
-				<span class="flex items-center gap-1">
-					<span class="w-2 h-2 rounded-full bg-orange-500 inline-block"></span>
-					Shopee Marketplace ({data.channelBreakdown?.shopeePercent || 0}%)
+				<span class="flex items-center gap-1.5">
+					<span class="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block"></span>
+					Shopee: <strong>{data.channelBreakdown?.shopeePercent || 0}%</strong>
 				</span>
 			</div>
 		</div>
 	</section>
 
-	<!-- 2 Visualisasi BI Utama: Trend Penjualan Harian & Komposisi Metode Bayar -->
+	<!-- 4. Dua Kolom Grafik: Tren Penjualan Harian & Komposisi Pembayaran -->
 	<section class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-		<!-- 1. Trend Penjualan Harian (Area / Smooth Line Chart) -->
-		<div class="pos-panel p-4 sm:p-5 bg-white space-y-3 shadow-2xs">
+		<!-- Tren Penjualan Harian -->
+		<div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-3">
 			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2 border-b border-slate-100">
 				<div>
-					<div class="flex items-center gap-1.5 text-blue-600 mb-0.5">
-						<Activity class="w-4 h-4" />
-						<span class="text-[10px] font-black uppercase tracking-wider font-mono">ARAH TREN PENJUALAN</span>
-					</div>
-					<h3 class="text-sm font-black text-slate-900">Trend Penjualan Harian (POS vs Shopee)</h3>
+					<h3 class="text-sm sm:text-base font-black text-slate-900 flex items-center gap-1.5">
+						<Activity class="w-4 h-4 text-blue-600" />
+						Tren Penjualan Harian
+					</h3>
+					<p class="text-xs text-slate-500">Pergerakan omzet harian dari kasir toko dan online</p>
 				</div>
-				<span class="text-[10px] font-mono font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200 self-start sm:self-auto">
-					Fluktuasi Omset
-				</span>
+				<div class="flex items-center gap-3 text-xs self-start sm:self-auto font-medium">
+					<span class="flex items-center gap-1 text-slate-600">
+						<span class="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>
+						Kasir Toko
+					</span>
+					<span class="flex items-center gap-1 text-slate-600">
+						<span class="w-2 h-2 rounded-full bg-orange-500 inline-block"></span>
+						Shopee
+					</span>
+				</div>
 			</div>
 			<div class="w-full overflow-hidden">
-				<div bind:this={trendChartContainer} class="-ml-2 min-h-[310px]"></div>
+				<div bind:this={trendChartContainer} class="-ml-2 min-h-[300px]"></div>
 			</div>
 		</div>
 
-		<!-- 2. Komposisi Metode Pembayaran (Donut Chart) -->
-		<div class="pos-panel p-4 sm:p-5 bg-white space-y-3 shadow-2xs">
+		<!-- Komposisi Pembayaran -->
+		<div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-3">
 			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2 border-b border-slate-100">
 				<div>
-					<div class="flex items-center gap-1.5 text-purple-600 mb-0.5">
-						<CreditCard class="w-4 h-4" />
-						<span class="text-[10px] font-black uppercase tracking-wider font-mono">LIKUIDITAS KAS MASUK</span>
-					</div>
-					<h3 class="text-sm font-black text-slate-900">Komposisi Metode Pembayaran</h3>
+					<h3 class="text-sm sm:text-base font-black text-slate-900 flex items-center gap-1.5">
+						<CreditCard class="w-4 h-4 text-purple-600" />
+						Komposisi Pembayaran
+					</h3>
+					<p class="text-xs text-slate-500">Metode bayar yang paling sering dipakai pembeli</p>
 				</div>
-				<span class="text-[10px] font-mono font-bold bg-purple-50 text-purple-700 px-2 py-0.5 rounded border border-purple-200 self-start sm:self-auto">
-					100% Share Kas
-				</span>
 			</div>
 			<div class="w-full overflow-hidden">
-				<div bind:this={paymentChartContainer} class="min-h-[310px] flex items-center justify-center"></div>
+				<div bind:this={paymentChartContainer} class="min-h-[300px] flex items-center justify-center"></div>
 			</div>
 		</div>
 	</section>
 
-	<!-- Top 5 Best Sellers vs Slow Moving Alert (Pareto Analysis) -->
+	<!-- 5. Dua Kolom: Top 5 Produk & Stok yang Perlu Diperhatikan -->
 	<section class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-		<!-- Top 5 Best Sellers -->
-		<div class="pos-panel p-4 sm:p-5 bg-white space-y-3">
+		<!-- Top 5 Produk Terlaris -->
+		<div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-3">
 			<div class="flex items-center justify-between pb-2 border-b border-slate-100">
 				<div>
-					<h3 class="text-sm font-black text-slate-900 flex items-center gap-2">
-						<TrendingUp class="w-4 h-4 text-emerald-600" />
-						Top 5 Produk Paling Laris (Best Seller)
+					<h3 class="text-sm sm:text-base font-black text-slate-900 flex items-center gap-1.5">
+						<Award class="w-4 h-4 text-amber-500" />
+						Top 5 Produk Terlaris
 					</h3>
-					<p class="text-xs text-slate-500">Penyumbang perputaran omset tertinggi pada periode ini</p>
+					<p class="text-xs text-slate-500">Produk yang paling banyak menghasilkan penjualan</p>
 				</div>
-				<span class="text-[10px] font-mono font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">
-					Pareto 80/20
+				<span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+					Paling Dicari
 				</span>
 			</div>
 
 			<div class="space-y-2.5">
 				{#each (data.topProducts || []).slice(0, 5) as p, idx}
-					<div class="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors border border-slate-100">
-						<div class="flex items-center justify-between text-xs mb-1">
-							<div class="flex items-center gap-2 min-w-0">
-								<span class="w-5 h-5 rounded-full bg-blue-600 text-white font-black text-[10px] flex items-center justify-center shrink-0">
-									{idx + 1}
-								</span>
-								<span class="font-bold text-slate-900 truncate">{p.product_name || p.name || 'Produk Bangka'}</span>
-								<span class="text-[10px] text-slate-400 font-mono shrink-0">({p.category_name || 'Umum'})</span>
+					<div class="p-3 rounded-lg bg-slate-50 hover:bg-slate-100/80 transition-colors border border-slate-100 flex items-center justify-between gap-3">
+						<div class="flex items-center gap-3 min-w-0">
+							<!-- Ranking badge besar -->
+							<div class="w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs shrink-0 {idx === 0 ? 'bg-amber-400 text-amber-950 shadow-xs' : idx === 1 ? 'bg-slate-300 text-slate-800' : idx === 2 ? 'bg-amber-700/20 text-amber-900' : 'bg-slate-200 text-slate-700'}">
+								#{idx + 1}
 							</div>
-							<span class="font-mono font-bold text-emerald-700 text-xs shrink-0 ml-2">
+							<div class="min-w-0">
+								<p class="text-xs sm:text-sm font-bold text-slate-900 truncate">{p.product_name || p.name || 'Produk'}</p>
+								<p class="text-xs text-slate-500 mt-0.5">
+									Terjual <strong>{p.qty_sold || 0} unit</strong> • Omzet {formatCurrency(p.total_sales)}
+								</p>
+							</div>
+						</div>
+						<div class="text-right shrink-0">
+							<span class="text-xs font-bold font-mono text-emerald-700 bg-emerald-50 px-2 py-1 rounded">
 								{formatCurrency(p.total_sales)}
 							</span>
 						</div>
-						<div class="flex items-center justify-between text-[11px] text-slate-500 font-mono">
-							<span>Terjual: <strong>{p.qty_sold || 0} unit</strong></span>
-							<span>Kontribusi Omset</span>
-						</div>
 					</div>
 				{:else}
-					<div class="py-6 text-center text-slate-400 text-xs">
+					<div class="py-8 text-center text-slate-400 text-xs">
 						Belum ada transaksi penjualan pada periode ini.
 					</div>
 				{/each}
 			</div>
 		</div>
 
-		<!-- Slow Moving / Dead Stock Alert -->
-		<div class="pos-panel p-4 sm:p-5 bg-white space-y-3">
+		<!-- Stok yang Perlu Diperhatikan (Slow Moving) -->
+		<div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-3">
 			<div class="flex items-center justify-between pb-2 border-b border-slate-100">
 				<div>
-					<h3 class="text-sm font-black text-slate-900 flex items-center gap-2">
+					<h3 class="text-sm sm:text-base font-black text-slate-900 flex items-center gap-1.5">
 						<AlertTriangle class="w-4 h-4 text-amber-500" />
-						Peringatan Slow Moving (Dead Stock)
+						Stok yang Perlu Diperhatikan
 					</h3>
 					<p class="text-xs text-slate-500">Stok banyak di gudang tapi belum laku di periode ini</p>
 				</div>
-				<span class="text-[10px] font-mono font-bold bg-amber-50 text-amber-800 px-2 py-0.5 rounded border border-amber-200">
-					Perlu Promo
+				<span class="text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+					Perlu Aksi
 				</span>
 			</div>
 
 			<div class="space-y-2.5">
 				{#each (data.slowMovingProducts || []).slice(0, 5) as p}
-					<div class="p-2.5 rounded-lg bg-amber-50/40 hover:bg-amber-50/80 transition-colors border border-amber-100 flex items-center justify-between">
-						<div class="min-w-0 pr-2">
-							<div class="text-xs font-bold text-slate-900 truncate">{p.product_name || p.name || 'Produk Tertahan'}</div>
-							<div class="text-[10px] text-slate-500 font-mono truncate">
-								Kategori: {p.category_name || 'Umum'} • Harga: {formatCurrency(p.price || 0)}
+					<div class="p-3 rounded-lg bg-amber-50/50 hover:bg-amber-50 transition-colors border border-amber-200/60 flex items-center justify-between gap-3">
+						<div class="min-w-0">
+							<p class="text-xs sm:text-sm font-bold text-slate-900 truncate">{p.product_name || p.name || 'Produk'}</p>
+							<div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+								<span>Harga: {formatCurrency(p.price || 0)}</span>
+								<span>•</span>
+								<span class="text-amber-800 font-semibold">Saran: Buat promo bundling</span>
 							</div>
 						</div>
-						<div class="text-right shrink-0">
+						<div class="text-right shrink-0 flex flex-col items-end gap-1">
 							<span class="px-2 py-0.5 rounded font-mono font-bold text-xs bg-amber-100 text-amber-900 border border-amber-300">
 								{p.stock} pcs tertahan
 							</span>
-							<p class="text-[10px] text-amber-700 font-medium mt-0.5">Saran: Bundling Promo</p>
+							<a
+								href="/admin/inventory"
+								class="text-[11px] text-blue-600 hover:text-blue-800 hover:underline font-bold flex items-center gap-0.5"
+							>
+								Lihat di Inventori &rarr;
+							</a>
 						</div>
 					</div>
 				{:else}
-					<div class="py-6 text-center text-slate-400 text-xs">
+					<div class="py-8 text-center text-slate-400 text-xs">
 						Semua stok produk bergerak aktif pada periode ini.
 					</div>
 				{/each}
@@ -799,30 +855,42 @@
 		</div>
 	</section>
 
-	<!-- Rincian Transaksi Terkini (Live Ledger) -->
-	<section class="pos-panel p-4 sm:p-5 bg-white space-y-3">
-		<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200">
+	<!-- 6. Tabel Transaksi Terkini -->
+	<section class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-4">
+		<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
 			<div>
-				<h3 class="text-sm font-black text-slate-900 flex items-center gap-2">
+				<h3 class="text-sm sm:text-base font-black text-slate-900 flex items-center gap-1.5">
 					<FileSpreadsheet class="w-4 h-4 text-blue-600" />
-					Rincian Transaksi Terkini (Live Ledger)
+					Transaksi Terkini
 				</h3>
-				<p class="text-xs text-slate-500">Data penjualan riil lengkap dengan modal HPP dan estimasi laba bersih</p>
+				<p class="text-xs text-slate-500">Daftar transaksi penjualan terbaru beserta modal dan keuntungan bersihnya</p>
 			</div>
-			<div class="flex items-center gap-2">
+
+			<!-- Filter Cepat Tab: Semua | Kasir Toko | Shopee -->
+			<div class="inline-flex rounded-lg bg-slate-100 p-1 text-xs font-bold gap-1 self-start sm:self-auto">
 				<button
-					onclick={exportToExcel}
-					class="text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+					onclick={() => (txFilter = 'ALL')}
+					class="px-3 py-1 rounded-md transition-all cursor-pointer {txFilter === 'ALL'
+						? 'bg-white text-slate-900 shadow-xs'
+						: 'text-slate-600 hover:text-slate-900'}"
 				>
-					<Download class="w-3.5 h-3.5 text-emerald-600" />
-					<span>Unduh Excel</span>
+					Semua ({data.recentTransactions.length})
 				</button>
 				<button
-					onclick={() => (isPdfModalOpen = true)}
-					class="text-xs font-bold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+					onclick={() => (txFilter = 'POS')}
+					class="px-3 py-1 rounded-md transition-all cursor-pointer {txFilter === 'POS'
+						? 'bg-white text-blue-700 shadow-xs'
+						: 'text-slate-600 hover:text-slate-900'}"
 				>
-					<FileText class="w-3.5 h-3.5 text-red-600" />
-					<span>Format Laporan PDF</span>
+					Kasir Toko ({data.recentTransactions.filter((t: any) => t.channel !== 'SHOPEE').length})
+				</button>
+				<button
+					onclick={() => (txFilter = 'SHOPEE')}
+					class="px-3 py-1 rounded-md transition-all cursor-pointer {txFilter === 'SHOPEE'
+						? 'bg-white text-orange-700 shadow-xs'
+						: 'text-slate-600 hover:text-slate-900'}"
+				>
+					Shopee ({data.recentTransactions.filter((t: any) => t.channel === 'SHOPEE').length})
 				</button>
 			</div>
 		</div>
@@ -830,45 +898,56 @@
 		<div class="overflow-x-auto">
 			<table class="w-full text-left text-xs border-collapse">
 				<thead>
-					<tr class="text-slate-500 border-b border-slate-200 bg-slate-50 text-[11px] font-mono">
+					<tr class="text-slate-500 border-b border-slate-200 bg-slate-50/80 text-[11px] font-semibold">
 						<th class="py-2.5 px-3">WAKTU</th>
-						<th class="py-2.5 px-3">NO. STRUK / ID</th>
+						<th class="py-2.5 px-3">NO. STRUK / PESANAN</th>
 						<th class="py-2.5 px-3 text-center">SALURAN</th>
-						<th class="py-2.5 px-3 text-center">METODE</th>
+						<th class="py-2.5 px-3 text-center">METODE BAYAR</th>
 						<th class="py-2.5 px-3">KASIR</th>
-						<th class="py-2.5 px-3 text-right">OMSET</th>
-						<th class="py-2.5 px-3 text-right">MODAL HPP</th>
-						<th class="py-2.5 px-3 text-right text-emerald-700 font-bold">LABA BERSIH</th>
+						<th class="py-2.5 px-3 text-right">TOTAL (OMZET)</th>
+						<th class="py-2.5 px-3 text-right">MODAL BARANG</th>
+						<th class="py-2.5 px-3 text-right text-emerald-700 font-bold">KEUNTUNGAN</th>
 					</tr>
 				</thead>
-				<tbody class="divide-y divide-slate-100 font-mono">
-					{#each data.recentTransactions.slice(0, 15) as tx}
-						<tr class="hover:bg-slate-50 transition-colors">
-							<td class="py-2 px-3 font-sans text-slate-600 text-[11px]">
+				<tbody class="divide-y divide-slate-100">
+					{#each displayedTransactions as tx}
+						<tr class="even:bg-slate-50/50 hover:bg-blue-50/40 transition-colors">
+							<td class="py-2.5 px-3 text-slate-600 text-[11px] font-mono">
 								{new Date(tx.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' })} {new Date(tx.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
 							</td>
-							<td class="py-2 px-3 font-bold text-slate-900">{tx.receipt_number}</td>
-							<td class="py-2 px-3 text-center">
-								<span class="px-2 py-0.5 rounded text-[10px] font-bold font-sans {tx.channel === 'SHOPEE' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'}">
-									{tx.channel === 'SHOPEE' ? 'Shopee' : 'Kasir POS'}
+							<td class="py-2.5 px-3 font-bold font-mono text-slate-900">{tx.receipt_number}</td>
+							<td class="py-2.5 px-3 text-center">
+								<span class="px-2 py-0.5 rounded text-[10px] font-bold {tx.channel === 'SHOPEE' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'}">
+									{tx.channel === 'SHOPEE' ? 'Shopee' : 'Kasir Toko'}
 								</span>
 							</td>
-							<td class="py-2 px-3 text-center font-sans text-slate-600">{tx.payment_method}</td>
-							<td class="py-2 px-3 font-sans text-slate-600 truncate max-w-[100px]">{tx.cashier_name}</td>
-							<td class="py-2 px-3 text-right font-bold text-slate-900">{formatCurrency(tx.total_amount)}</td>
-							<td class="py-2 px-3 text-right text-slate-500">{formatCurrency(tx.cogs || 0)}</td>
-							<td class="py-2 px-3 text-right font-bold text-emerald-700">{formatCurrency(tx.gross_profit || 0)}</td>
+							<td class="py-2.5 px-3 text-center text-slate-600">{tx.payment_method}</td>
+							<td class="py-2.5 px-3 text-slate-600 truncate max-w-[120px]">{tx.cashier_name}</td>
+							<td class="py-2.5 px-3 text-right font-bold text-slate-900 font-mono">{formatCurrency(tx.total_amount)}</td>
+							<td class="py-2.5 px-3 text-right text-slate-500 font-mono">{formatCurrency(tx.cogs || 0)}</td>
+							<td class="py-2.5 px-3 text-right font-bold text-emerald-700 font-mono">{formatCurrency(tx.gross_profit || 0)}</td>
 						</tr>
 					{:else}
 						<tr>
-							<td colspan="8" class="py-8 text-center text-slate-400 font-sans">
-								Belum ada transaksi tercatat pada periode ini.
+							<td colspan="8" class="py-8 text-center text-slate-400">
+								Tidak ada transaksi yang cocok pada filter ini.
 							</td>
 						</tr>
 					{/each}
 				</tbody>
 			</table>
 		</div>
+
+		{#if filteredTransactions.length > 8}
+			<div class="text-center pt-2 border-t border-slate-100">
+				<button
+					onclick={() => (showAllTransactions = !showAllTransactions)}
+					class="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline py-1 px-3 rounded cursor-pointer"
+				>
+					{showAllTransactions ? 'Tampilkan Lebih Sedikit' : `Lihat Semua (${filteredTransactions.length} Transaksi)`}
+				</button>
+			</div>
+		{/if}
 	</section>
 </div>
 
