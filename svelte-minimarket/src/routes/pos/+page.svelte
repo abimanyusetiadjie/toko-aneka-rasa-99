@@ -767,7 +767,34 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 	);
 
 	function pickCatalogItem(item: any) {
-		handleScan(item.barcode || item.sku);
+		const productObj: Product = {
+			id: item.id,
+			sku: item.sku,
+			name: item.name,
+			category_id: item.category_id,
+			category_name: item.category_name,
+			base_unit: item.base_unit || 'PCS',
+			base_hpp: 0,
+			stock: Number(item.stock || 0),
+			price: Number(item.price || 0),
+			barcode: item.barcode || item.sku
+		};
+
+		const unitObj: ProductUnit = {
+			id: item.unit_id || item.id,
+			product_id: item.id,
+			unit_name: item.unit_name || item.base_unit || 'Pcs',
+			conversion_factor: 1,
+			price: Number(item.price || 0),
+			barcode: item.barcode || item.sku
+		};
+
+		addItem(productObj, unitObj, [unitObj]);
+		addAppNotification({
+			type: 'INFO',
+			title: 'Produk Ditambahkan',
+			message: `${item.name} (${formatCurrency(item.price)}) berhasil dimasukkan ke keranjang.`
+		});
 	}
 
 	// HP Camera Barcode Scanner State (Universal Scanner Menggunakan html5-qrcode)
@@ -1437,6 +1464,16 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 						const payload = JSON.parse(event.data);
 						if (payload?.items) {
 							updateLocalStockBalance(payload.items);
+							// Perbarui stok dan harga di katalog cepat seketika tanpa jeda
+							for (const changed of payload.items) {
+								const found = catalogProducts.find((p) => p.id === changed.productId);
+								if (found) {
+									if (typeof changed.newBalance === 'number') found.stock = changed.newBalance;
+									if (typeof changed.price === 'number') found.price = changed.price;
+									if (changed.barcode) found.barcode = changed.barcode;
+									if (changed.name) found.name = changed.name;
+								}
+							}
 						}
 					} catch {}
 				});

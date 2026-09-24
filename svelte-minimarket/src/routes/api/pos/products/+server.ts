@@ -11,14 +11,20 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 	let sql = `
 		SELECT 
 			p.id, p.sku, p.name, p.category_id, p.stock, p.unit as base_unit,
-			COALESCE(pu.price, p.price, 0) as price,
+			COALESCE(NULLIF(pu.price, 0), p.price, 0) as price,
 			COALESCE(p.barcode, pu.barcode, p.sku) as barcode,
 			COALESCE(pu.id, p.id) as unit_id,
 			COALESCE(pu.unit_name, p.unit, 'Pcs') as unit_name,
 			c.name as category_name
 		FROM products p
 		LEFT JOIN categories c ON p.category_id = c.id
-		LEFT JOIN product_units pu ON p.id = pu.product_id AND (pu.conversion_factor = 1 OR pu.conversion_factor IS NULL)
+		LEFT JOIN LATERAL (
+			SELECT id, unit_name, price, barcode
+			FROM product_units
+			WHERE product_id = p.id AND (conversion_factor = 1 OR conversion_factor IS NULL)
+			ORDER BY CASE WHEN price > 0 THEN 1 ELSE 2 END, created_at DESC
+			LIMIT 1
+		) pu ON true
 		WHERE (p.is_active = true OR p.is_active IS NULL)
 	`;
 
