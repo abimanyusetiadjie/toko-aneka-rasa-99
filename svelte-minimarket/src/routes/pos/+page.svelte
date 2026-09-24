@@ -1465,6 +1465,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 						if (payload?.items) {
 							updateLocalStockBalance(payload.items);
 							// Perbarui stok dan harga di katalog cepat seketika tanpa jeda
+							let hasCatalogChange = false;
 							for (const changed of payload.items) {
 								const found = catalogProducts.find((p) => p.id === changed.productId);
 								if (found) {
@@ -1472,7 +1473,11 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 									if (typeof changed.price === 'number') found.price = changed.price;
 									if (changed.barcode) found.barcode = changed.barcode;
 									if (changed.name) found.name = changed.name;
+									hasCatalogChange = true;
 								}
+							}
+							if (hasCatalogChange) {
+								catalogProducts = [...catalogProducts];
 							}
 						}
 					} catch {}
