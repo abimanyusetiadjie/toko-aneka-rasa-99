@@ -81,6 +81,13 @@
 	</header>
 
 	<!-- Flash Message -->
+	{#if data?.error}
+		<div class="p-3.5 rounded-lg text-xs font-semibold flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-900">
+			<AlertCircle class="w-4 h-4 text-amber-600 shrink-0" />
+			<span>Kendala Koneksi Database: {data.error}. Data mungkin belum termuat sempurna, silakan muat ulang halaman.</span>
+		</div>
+	{/if}
+
 	{#if form?.message}
 		<div class="p-3.5 rounded-lg text-xs font-semibold flex items-center gap-2 {form.success ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-red-50 border border-red-200 text-red-800'}">
 			{#if form.success}

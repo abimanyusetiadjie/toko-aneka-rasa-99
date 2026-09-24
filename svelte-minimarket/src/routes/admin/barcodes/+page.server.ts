@@ -15,7 +15,13 @@ export const load: PageServerLoad = async () => {
 				COALESCE(p.barcode, pu.barcode, p.sku) as barcode
 			FROM products p
 			LEFT JOIN categories c ON p.category_id = c.id
-			LEFT JOIN product_units pu ON p.id = pu.product_id AND (pu.conversion_factor = 1 OR pu.conversion_factor IS NULL)
+			LEFT JOIN LATERAL (
+				SELECT barcode
+				FROM product_units
+				WHERE product_id = p.id AND (conversion_factor = 1 OR conversion_factor IS NULL)
+				ORDER BY CASE WHEN barcode ~ '^[0-9]{6}$' THEN 1 ELSE 2 END, created_at DESC
+				LIMIT 1
+			) pu ON true
 			WHERE (p.is_active = true OR p.is_active IS NULL)
 			ORDER BY c.name ASC, p.name ASC
 		`);
@@ -42,7 +48,13 @@ export const actions: Actions = {
 					COALESCE(p.barcode, pu.barcode, p.sku) as barcode
 				FROM products p
 				LEFT JOIN categories c ON p.category_id = c.id
-				LEFT JOIN product_units pu ON p.id = pu.product_id AND (pu.conversion_factor = 1 OR pu.conversion_factor IS NULL)
+				LEFT JOIN LATERAL (
+					SELECT barcode
+					FROM product_units
+					WHERE product_id = p.id AND (conversion_factor = 1 OR conversion_factor IS NULL)
+					ORDER BY CASE WHEN barcode ~ '^[0-9]{6}$' THEN 1 ELSE 2 END, created_at DESC
+					LIMIT 1
+				) pu ON true
 				ORDER BY c.name ASC, p.name ASC
 			`);
 

@@ -17,6 +17,10 @@ export const pool = new pg.Pool({
 	connectionTimeoutMillis: 5000
 });
 
+pool.on('error', (err) => {
+	console.error('[PostgreSQL Pool Unexpected Error]', err.message);
+});
+
 import { CATEGORIES, PRODUCTS, PRODUCT_UNITS } from './seeds/tokoanekarasa99';
 
 let dbInitPromise: Promise<void> | null = null;
@@ -237,12 +241,35 @@ export async function query<T = any>(text: string, params: any[] = []): Promise<
 		}
 	} catch (dbErr: any) {
 		console.error('[DB Query Error]', dbErr?.message || dbErr, 'SQL:', text.trim().slice(0, 120));
+
+		// Coba 1x retry jika koneksi terputus sesaat (misal pool reset atau restart sesaat)
+		if (
+			dbErr?.message?.includes('Connection terminated') ||
+			dbErr?.message?.includes('timeout') ||
+			dbErr?.code === '57P01' ||
+			dbErr?.code === 'ECONNRESET'
+		) {
+			try {
+				await new Promise((resolve) => setTimeout(resolve, 150));
+				const retryClient = await pool.connect();
+				try {
+					const res = await retryClient.query(text, params);
+					return res.rows;
+				} finally {
+					retryClient.release();
+				}
+			} catch (retryErr: any) {
+				console.error('[DB Query Retry Failed]', retryErr?.message || retryErr);
+			}
+		}
+
 		const trimmedSql = text.trim().toUpperCase();
-		if (trimmedSql.startsWith('SELECT')) {
-			console.warn('[DB Fallback] Falling back to in-memory seed for SELECT query');
+		// Hanya gunakan fallback in-memory jika benar-benar offline (PostgreSQL tidak berjalan di server)
+		if (trimmedSql.startsWith('SELECT') && (dbErr?.code === 'ECONNREFUSED' || !connectionString)) {
+			console.warn('[DB Fallback] Falling back to in-memory seed for SELECT query (Database Server Offline)');
 			return executeInMemoryFallback<T>(text, params);
 		}
-		// DO NOT swallow mutations (INSERT/UPDATE/DELETE). Throw so caller knows.
+		// JANGAN pernah mengembalikan data palsu/seed jika koneksi PostgreSQL aktif
 		throw dbErr;
 	}
 }
