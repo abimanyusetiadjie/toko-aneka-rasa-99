@@ -8,7 +8,13 @@ import {
 } from '$lib/server/shopee-service';
 import type { ShopeeOrder } from '$lib/types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ url }) => {
+	const shopIdFromUrl = url.searchParams.get('shop_id');
+	const codeFromUrl = url.searchParams.get('code');
+	if (shopIdFromUrl) {
+		process.env.SHOPEE_SHOP_ID = shopIdFromUrl;
+	}
+
 	try {
 		const [orders, statsRows] = await Promise.all([
 			query<ShopeeOrder>(`
@@ -44,13 +50,18 @@ export const load: PageServerLoad = async () => {
 		return {
 			orders: orders || [],
 			stats,
-			connectionStatus: getShopeeConnectionStatus()
+			connectionStatus: {
+				...getShopeeConnectionStatus(),
+				shopId: shopIdFromUrl || getShopeeConnectionStatus().shopId
+			},
+			authSuccess: shopIdFromUrl ? { shopId: shopIdFromUrl, code: codeFromUrl } : null
 		};
 	} catch (err: any) {
 		return {
 			orders: [],
 			stats: { ready_to_ship: 0, shipped: 0, completed: 0, cancelled: 0, total_revenue: 0, total_escrow: 0 },
 			connectionStatus: getShopeeConnectionStatus(),
+			authSuccess: shopIdFromUrl ? { shopId: shopIdFromUrl, code: codeFromUrl } : null,
 			error: err.message
 		};
 	}
