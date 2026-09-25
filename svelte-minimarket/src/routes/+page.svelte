@@ -2,52 +2,191 @@
 	import type { PageData } from './$types';
 	import {
 		Phone, MapPin, Clock, Star, ShoppingBag, ShieldCheck,
-		ChevronRight, Menu, X, ArrowRight, Truck, Award, Sparkles,
+		ChevronRight, ChevronLeft, Menu, X, ArrowRight, Truck, Award, Sparkles,
 		MessageCircle, ExternalLink, User, ShoppingCart,
-		Plus, Minus, Trash2, CheckCircle2, ThumbsUp, ChevronDown, HelpCircle
+		Plus, Minus, Trash2, CheckCircle2, ThumbsUp, ChevronDown, HelpCircle,
+		Package, Store, Check
 	} from 'lucide-svelte';
 
 	let { data }: { data: PageData } = $props();
 
 	const WA_PHONE = '6281387109586';
 	const STORE_NAME = 'Toko Aneka Rasa 99';
-	const STORE_ADDRESS = 'Jl. Raya Poris Indah, RT.007/RW.010, Cipondoh Indah, Kec. Cipondoh, Kota Tangerang, Banten 15122';
+	const STORE_ADDRESS = 'Perumahan Poris Indah Blok B 11 No. 1, RT 001/RW 005, Kel. Cipondoh Indah, Kec. Cipondoh, Kota Tangerang, Banten 15148';
 	const STORE_HOURS = 'Buka Setiap Hari: 07.30 – 21.30 WIB';
 
 	let mobileMenuOpen = $state(false);
 	let cartOpen = $state(false);
+	let waBubbleVisible = $state(true);
 
-	interface FeaturedProduct { id: string; name: string; desc: string; price: number; image: string; badge: string; }
+	// Category filter state
+	type ProductCategory = 'all' | 'kemplang' | 'getas' | 'terasi' | 'snack';
+	let selectedCategory = $state<ProductCategory>('all');
+
+	interface FeaturedProduct {
+		id: string;
+		name: string;
+		category: ProductCategory;
+		desc: string;
+		price: number;
+		originalPrice?: number;
+		weight: string;
+		rating: number;
+		reviewsCount: number;
+		image: string;
+		badge: string;
+		highlight: string;
+	}
 
 	const FEATURED: FeaturedProduct[] = [
-		{ id: 'fp1', name: 'Kemplang Panggang Cap MM', desc: 'Dipanggang di atas bara arang. Aroma asap harum, tekstur renyah di luar dan empuk di dalam. Disertai sambal terasi khas. Tanpa pengawet.', price: 37500, image: '/images/products/kemplang.png', badge: 'Terlaris' },
-		{ id: 'fp2', name: 'Getas Bulat Cap Tiga Roda', desc: 'Getas bulat dari ikan tenggiri pilihan. Renyah, gurih, dan tidak terlalu asin. Cocok untuk camilan sehari-hari atau oleh-oleh.', price: 42500, image: '/images/products/getas.png', badge: 'Favorit' },
-		{ id: 'fp3', name: 'Terasi AB No.1 Asli Bangka', desc: 'Terasi udang rebon super asli Bangka. Wangi khas, warna natural tanpa pewarna, diolah secara higienis dan tradisional.', price: 55000, image: '/images/products/terasi.png', badge: 'Original' },
-		{ id: 'fp4', name: 'Kemplang Goreng Pasir Tjokro', desc: 'Kemplang goreng pasir dengan tekstur ekstra renyah. Rasa gurih ikan tenggiri yang kuat. Cocok dimakan langsung atau lauk.', price: 32000, image: '/images/products/kemplang.png', badge: 'Crispy' },
-		{ id: 'fp5', name: 'Getas Amplang Ikan Tenggiri', desc: 'Camilan khas Bangka berbahan ikan tenggiri asli. Bentuk bulat renyah, gurih tahan lama, oleh-oleh favorit keluarga.', price: 25000, image: '/images/products/getas.png', badge: 'Hemat' },
-		{ id: 'fp6', name: 'Kericu Keripik Telur Cumi', desc: 'Keripik gurih dari telur cumi segar pilihan khas Bangka. Tekstur renyah krispi dengan cita rasa seafood istimewa.', price: 30000, image: '/images/products/snack-kericu.png', badge: 'Premium' },
-		{ id: 'fp7', name: 'Kerupuk Mentah Khas Bangka', desc: 'Kerupuk mentah kualitas istimewa khas Bangka. Mudah digoreng, mekar sempurna, renyah dan gurih alami.', price: 35000, image: '/images/products/kerupuk-mentah.png', badge: 'Siap Goreng' },
-		{ id: 'fp8', name: 'Aneka Kue Tradisional Bangka', desc: 'Kue tradisional khas Bangka dibuat dengan resep turun-temurun. Manis, gurih, legit, cocok untuk teman santai dan oleh-oleh.', price: 28000, image: '/images/products/kue.png', badge: 'Tradisional' }
+		{
+			id: 'fp1',
+			name: 'Kemplang Panggang Cap MM',
+			category: 'kemplang',
+			desc: 'Dipanggang tradisional di atas bara arang. Wangi asap harum, gurih renyah di luar, empuk gurih di dalam. Lengkap dengan sambal terasi autentik khas Bangka.',
+			price: 37500,
+			originalPrice: 43000,
+			weight: '250 gr',
+			rating: 5.0,
+			reviewsCount: 142,
+			image: '/images/products/kemplang.png',
+			badge: '🔥 Paling Laris',
+			highlight: 'Sambal Terasi Asli'
+		},
+		{
+			id: 'fp2',
+			name: 'Getas Bulat Cap Tiga Roda',
+			category: 'getas',
+			desc: 'Dibuat dari daging ikan tenggiri segar pilihan. Bulat renyah, gurih empuk, dan tidak keras di gigi. Camilan favorit keluarga.',
+			price: 42500,
+			originalPrice: 48000,
+			weight: '250 gr',
+			rating: 4.9,
+			reviewsCount: 98,
+			image: '/images/products/getas.png',
+			badge: '⭐ Pilihan Utama',
+			highlight: 'Ikan Tenggiri Super'
+		},
+		{
+			id: 'fp3',
+			name: 'Terasi AB No.1 Asli Bangka',
+			category: 'terasi',
+			desc: 'Terasi udang rebon asli tanpa campuran pewarna kimia. Wangi harum semerbak, bikin sambal dan tumisan sedap ala resto Belitung.',
+			price: 55000,
+			originalPrice: 62000,
+			weight: '500 gr',
+			rating: 5.0,
+			reviewsCount: 86,
+			image: '/images/products/terasi.png',
+			badge: '🦐 Resep Murni',
+			highlight: 'Udang Rebon Segar'
+		},
+		{
+			id: 'fp4',
+			name: 'Kemplang Goreng Pasir Tjokro',
+			category: 'kemplang',
+			desc: 'Digoreng tanpa minyak berlebih menggunakan media pasir bersih khas kepulauan. Tekstur ekstra garing & gurih ikan terasa kuat.',
+			price: 32000,
+			originalPrice: 37000,
+			weight: '250 gr',
+			rating: 4.8,
+			reviewsCount: 64,
+			image: '/images/products/kemplang.png',
+			badge: '✨ Extra Krispi',
+			highlight: 'Rendah Kolesterol'
+		},
+		{
+			id: 'fp5',
+			name: 'Getas Amplang Ikan Tenggiri',
+			category: 'getas',
+			desc: 'Bentuk lonjong renyah khas Bangka dengan bumbu bawang gurih alami. Praktis dibawa bepergian atau oleh-oleh ke kerabat.',
+			price: 25000,
+			originalPrice: 29000,
+			weight: '200 gr',
+			rating: 4.9,
+			reviewsCount: 73,
+			image: '/images/products/getas-tenggiri.png',
+			badge: '📦 Paling Hemat',
+			highlight: 'Gurih Tahan Lama'
+		},
+		{
+			id: 'fp6',
+			name: 'Kericu Keripik Telur Cumi',
+			category: 'snack',
+			desc: 'Camilan legendaris Bangka dari telur cumi segar dan sagu pilihan. Tekstur unik, renyah manis-gurih yang bikin ketagihan.',
+			price: 30000,
+			originalPrice: 35000,
+			weight: '200 gr',
+			rating: 4.9,
+			reviewsCount: 55,
+			image: '/images/products/snack-kericu.png',
+			badge: '🦑 Khas Bangka',
+			highlight: 'Telur Cumi Asli'
+		},
+		{
+			id: 'fp7',
+			name: 'Kerupuk Mentah Siap Goreng',
+			category: 'kemplang',
+			desc: 'Kerupuk ikan mentah kualitas ekspor. Praktis disimpan lama, mekar 3x lipat saat digoreng di rumah dengan aroma ikan segar.',
+			price: 35000,
+			originalPrice: 40000,
+			weight: '500 gr',
+			rating: 4.8,
+			reviewsCount: 41,
+			image: '/images/products/kerupuk-mentah.png',
+			badge: '🍳 Siap Goreng',
+			highlight: 'Mekar Maksimal'
+		},
+		{
+			id: 'fp8',
+			name: 'Aneka Kue Tradisional Bangka',
+			category: 'snack',
+			desc: 'Kue kering tradisional Bangka bertekstur legit renyah. Sangat cocok disajikan saat santai bersama kopi atau teh hangat.',
+			price: 28000,
+			originalPrice: 32000,
+			weight: '250 gr',
+			rating: 4.8,
+			reviewsCount: 39,
+			image: '/images/products/aneka-kue.png',
+			badge: '🍪 Resep Kuno',
+			highlight: 'Bahan Alami'
+		}
 	];
+
+	let filteredProducts = $derived(
+		selectedCategory === 'all'
+			? FEATURED
+			: FEATURED.filter(p => p.category === selectedCategory)
+	);
 
 	interface CartItem extends FeaturedProduct { qty: number; }
 	let cart = $state<CartItem[]>([]);
 
 	function addToCart(product: FeaturedProduct) {
 		const existing = cart.find(c => c.id === product.id);
-		if (existing) { cart = cart.map(c => c.id === product.id ? { ...c, qty: c.qty + 1 } : c); }
-		else { cart = [...cart, { ...product, qty: 1 }]; }
+		if (existing) {
+			cart = cart.map(c => c.id === product.id ? { ...c, qty: c.qty + 1 } : c);
+		} else {
+			cart = [...cart, { ...product, qty: 1 }];
+		}
 		cartOpen = true;
 	}
-	function removeFromCart(id: string) { cart = cart.filter(c => c.id !== id); if (cart.length === 0) cartOpen = false; }
-	function changeQty(id: string, delta: number) { cart = cart.map(c => c.id === id ? { ...c, qty: Math.max(1, c.qty + delta) } : c); }
+
+	function removeFromCart(id: string) {
+		cart = cart.filter(c => c.id !== id);
+		if (cart.length === 0) cartOpen = false;
+	}
+
+	function changeQty(id: string, delta: number) {
+		cart = cart.map(c => c.id === id ? { ...c, qty: Math.max(1, c.qty + delta) } : c);
+	}
 
 	let cartTotal = $derived(cart.reduce((sum, c) => sum + c.price * c.qty, 0));
 	let cartCount = $derived(cart.reduce((sum, c) => sum + c.qty, 0));
 
 	function checkoutWhatsApp() {
 		const lines = cart.map(c => `- ${c.name} (${c.qty} bks) Rp ${formatCurrency(c.price * c.qty)}`).join('\n');
-		const msg = `Halo ${STORE_NAME}!\n\nPesanan saya:\n${lines}\n\nTotal: Rp ${formatCurrency(cartTotal)}\n\nMohon info stok dan ongkir. Terima kasih!`;
+		const msg = `Halo ${STORE_NAME}!\n\nSaya ingin memesan:\n${lines}\n\n*Total Belanja:* Rp ${formatCurrency(cartTotal)}\n\nMohon informasi ongkos kirim dan ketersediaan stok ya. Terima kasih!`;
 		window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
 	}
 
@@ -61,219 +200,275 @@
 		const name = customerName.trim() || 'Pelanggan';
 		const city = customerCity.trim() || '-';
 		const item = selectedQuickProduct.trim() || 'Oleh-oleh Khas Bangka';
-		const notes = orderNotes.trim() ? `\nCatatan: ${orderNotes.trim()}` : '';
-		const msg = `Halo ${STORE_NAME}!\n\nNama: *${name}*\nKota: *${city}*\nProduk: *${item}*${notes}\n\nMohon info ketersediaan, total dan ongkir. Terima kasih!`;
+		const notes = orderNotes.trim() ? `\nCatatan Tambahan: ${orderNotes.trim()}` : '';
+		const msg = `Halo ${STORE_NAME}!\n\nSaya ingin memesan cepat:\n- Nama: *${name}*\n- Kota Tujuan: *${city}*\n- Produk: *${item}*${notes}\n\nMohon info ketersediaan stok, total biaya, dan perkiraan ongkir. Terima kasih!`;
 		window.open(`https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
 	}
 
-	function formatCurrency(val: number) { return new Intl.NumberFormat('id-ID').format(val); }
+	function formatCurrency(val: number) {
+		return new Intl.NumberFormat('id-ID').format(val);
+	}
+
 	function productWaLink(name: string, price: number) {
-		const msg = `Halo ${STORE_NAME}, saya mau pesan *${name}* (Rp ${formatCurrency(price)}). Apakah tersedia?`;
+		const msg = `Halo ${STORE_NAME}, saya mau pesan *${name}* (Rp ${formatCurrency(price)}). Apakah stok masih tersedia?`;
 		return `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`;
 	}
 
+	// Testimonials Carousel State
 	const testimonials = [
-		{ name: 'Ibu Ratna Hendrawan', city: 'Jakarta Selatan', review: 'Getasnya bener-bener renyah empuk, ikannya kerasa banget. Anak-anak doyan banget. Langganan terus kalau ke Poris!', stars: 5, product: 'Getas Bulat Tiga Roda' },
-		{ name: 'Bpk. Hendra Wijaya', city: 'Surabaya', review: 'Kemplang panggangnya wangi arang khas Bangka, sambal terasinya mantap. Kirim ke Surabaya packing rapi, tidak ada yang hancur.', stars: 5, product: 'Kemplang Panggang Cap MM' },
-		{ name: 'Ci Meyling', city: 'Tangerang', review: 'Sudah langganan bertahun-tahun. Kalau mau kirim hampers ke kerabat pasti belinya di sini. Kualitas ikannya selalu konsisten juara!', stars: 5, product: 'Hampers Kerupuk dan Getas' },
-		{ name: 'Ibu Dian Pratiwi', city: 'Bandung', review: 'Terasi Bangka No. 1 dan Sambal Rusip-nya otentik banget! Aromanya wangi bikin masakan kangkung terasi langsung mirip di Belitung asli.', stars: 5, product: 'Terasi AB No. 1 Bangka' }
+		{
+			name: 'Ibu Ratna Hendrawan',
+			city: 'Jakarta Selatan',
+			avatar: 'RH',
+			review: 'Getasnya bener-bener renyah empuk, ikannya kerasa banget dan nggak amis. Anak-anak doyan sekali buat cemilan nonton TV. Selalu langganan setiap ada acara kumpul keluarga di Jakarta!',
+			stars: 5,
+			product: 'Getas Bulat Cap Tiga Roda',
+			tag: 'Pelanggan Setia (4 Tahun)'
+		},
+		{
+			name: 'Bpk. Hendra Wijaya',
+			city: 'Surabaya',
+			avatar: 'HW',
+			review: 'Kemplang panggangnya otentik wangi arang Bangka asli! Sambal terasinya pedas gurih nagih banget. Kirim ke Surabaya aman terlindungi, packing kardus tebal tanpa ada yang remuk sama sekali.',
+			stars: 5,
+			product: 'Kemplang Panggang Cap MM',
+			tag: 'Kirim Antar Pulau'
+		},
+		{
+			name: 'Ci Meyling',
+			city: 'Tangerang',
+			avatar: 'CM',
+			review: 'Sudah langganan bertahun-tahun langsung ke tokonya di Poris. Kalau mau kirim hampers oleh-oleh ke mertua dan rekan bisnis pasti pesannya di Toko Aneka Rasa 99. Kualitasnya selalu konsisten nomor satu!',
+			stars: 5,
+			product: 'Paket Kemplang & Hampers',
+			tag: 'Langganan Poris'
+		},
+		{
+			name: 'Ibu Dian Pratiwi',
+			city: 'Bandung',
+			avatar: 'DP',
+			review: 'Terasi AB No. 1 Bangka-nya benar-benar juara dunia! Wangi alami tanpa pewarna merah aneh. Bikin tumis kangkung terasi aromanya langsung persis waktu liburan ke Belitung asli.',
+			stars: 5,
+			product: 'Terasi AB No. 1 Asli Bangka',
+			tag: 'Verified Review'
+		}
 	];
 
-	let openFaq = $state<number | null>(null);
+	let activeTestimonial = $state(0);
+	function nextTestimonial() {
+		activeTestimonial = (activeTestimonial + 1) % testimonials.length;
+	}
+	function prevTestimonial() {
+		activeTestimonial = (activeTestimonial - 1 + testimonials.length) % testimonials.length;
+	}
+
+	let openFaq = $state<number | null>(0);
 	function toggleFaq(index: number) {
 		openFaq = openFaq === index ? null : index;
 	}
 
 	const faqs = [
 		{
-			q: 'Apakah Toko Aneka Rasa 99 menjual oleh-oleh khas Bangka asli?',
-			a: 'Ya, Toko Aneka Rasa 99 adalah toko oleh-oleh khas Bangka resmi dan terlengkap di Tangerang. Semua kemplang panggang, getas ikan tenggiri, terasi udang rebon, kerupuk pasir, dan aneka kue didatangkan langsung dari pengrajin tradisional di Bangka Belitung dengan resep autentik turun-temurun.'
+			q: 'Apakah semua produk di Toko Aneka Rasa 99 asli didatangkan dari Bangka?',
+			a: 'Benar sekali! Semua kemplang panggang, getas ikan tenggiri, terasi udang rebon, dan cemilan khas diproduksi langsung oleh sentra pengrajin tradisional di Bangka Belitung dengan resep turun-temurun tanpa bahan pengawet berbahaya.'
 		},
 		{
 			q: 'Di mana alamat toko fisik Toko Aneka Rasa 99?',
-			a: 'Toko fisik kami beralamat di Jl. Raya Poris Indah, RT.007/RW.010, Cipondoh Indah, Kec. Cipondoh, Kota Tangerang, Banten 15122. Buka setiap hari mulai pukul 07.30 hingga 21.30 WIB. Lokasi kami dapat dicari di Google Maps dengan nama "Toko Aneka Rasa 99".'
+			a: 'Toko kami berlokasi strategis di Perumahan Poris Indah Blok B 11 No. 1, Kel. Cipondoh Indah, Kec. Cipondoh, Kota Tangerang. Buka setiap hari mulai pukul 07.30 hingga 21.30 WIB. Anda bisa cari langsung di Google Maps dengan nama "Toko Aneka Rasa 99".'
 		},
 		{
-			q: 'Apakah bisa pesan oleh-oleh khas Bangka secara online?',
-			a: 'Tentu bisa! Anda dapat memesan langsung melalui WhatsApp admin di +62 813-8710-9586 atau berbelanja di toko resmi Shopee kami (shopee.co.id/tokoanekarasa99). Kami siap melayani pengiriman ke seluruh wilayah Indonesia dengan packing kardus dan bubble wrap yang aman.'
+			q: 'Bagaimana cara pemesanan online untuk kirim ke luar kota?',
+			a: 'Sangat mudah! Anda cukup klik tombol WhatsApp di website ini atau pilih produk ke keranjang belanja. Admin kami akan langsung merespons dengan total rincian belanja dan rekomendasi ekspedisi tercepat (JNE, SiCepat, J&T, Paxel, atau Instant Grab/Gojek).'
 		},
 		{
-			q: 'Apakah produk di Toko Aneka Rasa 99 halal dan tanpa pengawet?',
-			a: 'Semua produk camilan dan kerupuk khas Bangka kami terjamin 100% halal, berbahan dasar ikan tenggiri dan udang segar pilihan, serta diolah secara higienis tanpa bahan pengawet berbahaya.'
+			q: 'Bagaimana keamanan packing kerupuk & kemplang saat dikirim?',
+			a: 'Kami memberikan standar packing khusus: setiap produk dilapisi bubble wrap tebal dan dimasukkan ke dalam kardus keras berlapis stiker Fragile/Jangan Dibanting. Kerupuk tiba di tangan Anda tetap utuh, renyah, dan siap dinikmati.'
 		},
 		{
-			q: 'Apa produk oleh-oleh khas Bangka yang paling terlaris?',
-			a: 'Produk paling diminati pelanggan adalah Kemplang Panggang Cap MM (lengkap dengan sambal terasi khas), Getas Bulat Cap Tiga Roda ikan tenggiri super, dan Terasi AB No.1 Asli Bangka.'
+			q: 'Apakah melayani pembelian dalam jumlah besar atau paket hampers?',
+			a: 'Ya, kami melayani pemesanan grosir untuk reseller, oleh-oleh kantor, hajatan, hingga paket hampers Imlek, Lebaran, dan Natal dengan pita eksklusif. Hubungi WhatsApp admin kami untuk penawaran harga spesial!'
 		}
 	];
 </script>
 
 <svelte:head>
-	<title>Toko Aneka Rasa 99 - Toko Oleh-Oleh Khas Bangka Terlengkap di Tangerang</title>
-	<meta name="description" content="Toko Aneka Rasa 99 adalah toko oleh-oleh khas Bangka terlengkap di Poris Tangerang. Sedia kemplang panggang arang, getas ikan tenggiri asli, kerupuk pasir, dan terasi super. Siap kirim ke seluruh Indonesia." />
-	<meta name="keywords" content="toko aneka rasa 99, toko oleh oleh bangka, toko oleh oleh khas bangka, pusat oleh oleh bangka, kemplang bangka tangerang, getas tenggiri poris indah, kerupuk bangka terdekat, terasi bangka asli" />
+	<title>Toko Aneka Rasa 99 | Pusat Oleh-Oleh Khas Bangka Asli di Poris Tangerang</title>
+	<meta name="description" content="Pusat Kemplang Panggang Arang, Getas Ikan Tenggiri Asli Bangka, Terasi AB Super, dan Aneka Oleh-Oleh Khas Bangka Belitung di Poris Tangerang. Renyah, gurih, 100% halal, siap kirim ke seluruh Indonesia." />
+	<meta name="keywords" content="toko aneka rasa 99, kemplang bangka tangerang, getas tenggiri poris indah, oleh oleh khas bangka tangerang, kemplang panggang cipondoh, terasi bangka asli" />
 	<meta name="author" content="Toko Aneka Rasa 99" />
 	<meta name="robots" content="index, follow" />
 	<link rel="canonical" href="https://tokoanekarasa99.my.id/" />
 	<meta property="og:locale" content="id_ID" />
 	<meta property="og:type" content="website" />
-	<meta property="og:title" content="Toko Aneka Rasa 99 - Toko Oleh-Oleh Khas Bangka Terlengkap" />
-	<meta property="og:description" content="Pusat Kemplang Panggang, Getas Ikan Tenggiri Asli Bangka, Terasi Super dan Ratusan Cemilan Khas Bangka di Poris Tangerang." />
+	<meta property="og:title" content="Toko Aneka Rasa 99 | Oleh-Oleh Khas Bangka Asli Siap Kirim Nasional" />
+	<meta property="og:description" content="Pusat Kemplang Panggang Arang, Getas Tenggiri Asli, dan Terasi Super Bangka di Poris Tangerang. Pesan cepat via WhatsApp!" />
 	<meta property="og:url" content="https://tokoanekarasa99.my.id/" />
-	<meta property="og:site_name" content="Toko Aneka Rasa 99" />
 	<meta property="og:image" content="https://tokoanekarasa99.my.id/logo.png" />
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content="Toko Aneka Rasa 99 - Toko Oleh-Oleh Khas Bangka Terlengkap" />
-	<meta name="twitter:description" content="Pusat Kemplang Panggang, Getas Ikan Tenggiri Asli Bangka, Terasi Super di Poris Tangerang." />
-	<meta name="twitter:image" content="https://tokoanekarasa99.my.id/logo.png" />
-	<meta name="geo.region" content="ID-BT" />
-	<meta name="geo.placename" content="Kota Tangerang" />
-	<meta name="geo.position" content="-6.1783;106.6713" />
-	<meta name="ICBM" content="-6.1783, 106.6713" />
-	{@html `<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":["Store","LocalBusiness"],"@id":"https://tokoanekarasa99.my.id/#store","name":"Toko Aneka Rasa 99","alternateName":["Toko Oleh-Oleh Bangka Aneka Rasa 99","Aneka Rasa 99 Poris","Toko Oleh Oleh Khas Bangka Tangerang"],"url":"https://tokoanekarasa99.my.id","telephone":"+6281387109586","description":"Toko Aneka Rasa 99: Toko oleh-oleh khas Bangka terlengkap di Poris Tangerang. Sedia kemplang panggang arang, getas tenggiri asli, kerupuk pasir, dan terasi Bangka super.","image":["https://tokoanekarasa99.my.id/logo.png","https://tokoanekarasa99.my.id/images/banner-toko.png"],"priceRange":"$$","servesCuisine":"Oleh-Oleh Khas Bangka Belitung","address":{"@type":"PostalAddress","streetAddress":"Jl. Raya Poris Indah, RT.007/RW.010, Kel. Cipondoh Indah","addressLocality":"Kota Tangerang","addressRegion":"Banten","postalCode":"15122","addressCountry":"ID"},"geo":{"@type":"GeoCoordinates","latitude":-6.1783,"longitude":106.6713},"hasMap":"https://www.google.com/maps/search/?api=1&query=TOKO+ANEKA+RASA+99,+Jl.+Raya+Poris+Indah,+RT.007/RW.010,+Cipondoh+Indah,+Cipondoh,+Tangerang+City,+Banten+15122","openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"07:30","closes":"21:30"}],"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"128"},"sameAs":["https://shopee.co.id/tokoanekarasa99"]},{"@type":"FAQPage","@id":"https://tokoanekarasa99.my.id/#faq","mainEntity":[{"@type":"Question","name":"Apakah Toko Aneka Rasa 99 menjual oleh-oleh khas Bangka asli?","acceptedAnswer":{"@type":"Answer","text":"Ya, Toko Aneka Rasa 99 adalah toko oleh-oleh khas Bangka resmi dan terlengkap di Tangerang. Semua kemplang panggang, getas ikan tenggiri, terasi udang rebon, kerupuk pasir, dan aneka kue didatangkan langsung dari pengrajin tradisional di Bangka Belitung dengan resep autentik turun-temurun."}},{"@type":"Question","name":"Di mana alamat toko fisik Toko Aneka Rasa 99?","acceptedAnswer":{"@type":"Answer","text":"Toko fisik kami beralamat di Jl. Raya Poris Indah, RT.007/RW.010, Cipondoh Indah, Kec. Cipondoh, Kota Tangerang, Banten 15122. Buka setiap hari mulai pukul 07.30 hingga 21.30 WIB."}},{"@type":"Question","name":"Apakah bisa pesan oleh-oleh khas Bangka secara online?","acceptedAnswer":{"@type":"Answer","text":"Tentu bisa! Anda dapat memesan langsung melalui WhatsApp admin di +62 813-8710-9586 atau berbelanja di toko resmi Shopee kami (shopee.co.id/tokoanekarasa99) dengan pengiriman aman ke seluruh Indonesia."}},{"@type":"Question","name":"Apakah produk di Toko Aneka Rasa 99 halal dan tanpa pengawet?","acceptedAnswer":{"@type":"Answer","text":"Semua produk camilan dan kerupuk khas Bangka kami terjamin 100% halal, berbahan dasar ikan tenggiri dan udang segar pilihan, serta diolah secara higienis tanpa bahan pengawet berbahaya."}},{"@type":"Question","name":"Apa produk oleh-oleh khas Bangka yang paling terlaris?","acceptedAnswer":{"@type":"Answer","text":"Produk paling diminati pelanggan adalah Kemplang Panggang Cap MM (lengkap dengan sambal terasi khas), Getas Bulat Cap Tiga Roda ikan tenggiri super, dan Terasi AB No.1 Asli Bangka."}}]}]}<\/script>`}
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 </svelte:head>
 
-<div class="min-h-screen font-['Plus_Jakarta_Sans',sans-serif] bg-[#FFFDF9] text-gray-800 w-full max-w-full overflow-x-hidden overflow-x-clip">
+<div class="min-h-screen bg-[#FCFAF6] text-slate-800 font-sans selection:bg-red-500 selection:text-white relative overflow-x-clip w-full">
 
-	<!-- ===== FLOATING WHATSAPP BUTTON (ROUND FLOATING / MENGGANTUNG UNTUK SEMUA LAYAR) ===== -->
-	{#if !cartOpen}
-	<a
-		href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin tanya dan pesan oleh-oleh khas Bangka.')}"
-		target="_blank"
-		rel="noopener noreferrer"
-		class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-40 group flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 ring-4 ring-white/95 shrink-0 mb-[env(safe-area-inset-bottom,0px)]"
-		aria-label="Hubungi WhatsApp Toko Aneka Rasa 99"
-	>
-		<!-- Pulse Ping Animation Effect -->
-		<span class="absolute -inset-1 rounded-full bg-[#25D366] opacity-40 animate-ping pointer-events-none"></span>
+	<!-- ===== FLOATING WHATSAPP BUTTON WITH INTERACTIVE SPEECH BUBBLE ===== -->
+	<div class="fixed bottom-5 right-4 sm:right-6 z-40 flex flex-col items-end gap-2 pointer-events-none">
+		{#if waBubbleVisible}
+		<div class="pointer-events-auto bg-white border border-emerald-200/80 rounded-2xl p-3 sm:p-3.5 shadow-xl shadow-emerald-950/10 max-w-[260px] sm:max-w-[290px] animate-in fade-in slide-in-from-bottom-3 duration-300 relative group">
+			<button
+				type="button"
+				onclick={() => waBubbleVisible = false}
+				class="absolute -top-2 -left-2 bg-slate-100 hover:bg-slate-200 text-slate-500 w-5 h-5 rounded-full flex items-center justify-center text-[10px] shadow cursor-pointer transition"
+				aria-label="Tutup pesan"
+			>
+				✕
+			</button>
+			<div class="flex items-start gap-2.5">
+				<div class="relative shrink-0">
+					<img src="/logo.png" alt="Admin Toko" class="w-8 h-8 rounded-full object-cover border border-emerald-300" />
+					<span class="w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white absolute bottom-0 right-0 animate-pulse"></span>
+				</div>
+				<div class="text-xs">
+					<p class="font-extrabold text-slate-900 leading-tight">Admin Toko Aneka Rasa 99</p>
+					<p class="text-slate-600 text-[11px] mt-0.5 leading-snug">Ada yang bisa dibantu kak? Tanya stok kemplang & ongkir di sini yuk! 💬</p>
+				</div>
+			</div>
+		</div>
+		{/if}
 
-		<!-- Official Real WhatsApp Icon -->
-		<svg class="w-7 h-7 sm:w-8 sm:h-8 fill-current relative z-10 shrink-0" viewBox="0 0 24 24">
-			<path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-		</svg>
+		<a
+			href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin tanya seputar produk oleh-oleh Bangka:')}"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="pointer-events-auto group relative flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#25D366] hover:bg-[#20ba5a] text-white shadow-xl shadow-emerald-600/30 hover:shadow-2xl hover:shadow-emerald-600/50 hover:scale-105 active:scale-95 transition-all duration-200"
+			aria-label="Chat WhatsApp Admin Toko"
+		>
+			<svg class="w-7 h-7 sm:w-8 sm:h-8 fill-current transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+				<path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+			</svg>
+		</a>
+	</div>
 
-		<!-- Tooltip on hover (desktop) -->
-		<span class="hidden sm:inline-block absolute right-full mr-3 px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-			Chat WhatsApp Kami
-		</span>
-	</a>
-	{/if}
-
-	<!-- ===== MINI CART PANEL ===== -->
+	<!-- ===== MINI CART SLIDE-OVER PANEL ===== -->
 	{#if cartOpen && cart.length > 0}
-	<!-- Mobile backdrop blur overlay -->
 	<button
 		type="button"
 		onclick={() => cartOpen = false}
-		class="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-xs transition-opacity cursor-default w-full h-full border-none p-0"
-		aria-label="Tutup Keranjang"
+		class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 transition-opacity cursor-default w-full h-full border-none p-0"
+		aria-label="Tutup Keranjang Belanja"
 	></button>
 
-	<div class="fixed inset-x-0 bottom-0 md:left-auto md:right-6 md:bottom-6 md:w-96 z-50 bg-white rounded-t-3xl md:rounded-2xl shadow-2xl border border-gray-200 flex flex-col max-h-[85vh] max-h-[85dvh] w-full md:max-w-md pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
-		<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-red-600 rounded-t-3xl md:rounded-t-2xl text-white shrink-0">
-			<div class="flex items-center gap-2 font-bold min-w-0">
-				<ShoppingCart class="w-5 h-5 shrink-0" />
-				<span class="truncate text-sm sm:text-base">Keranjang ({cartCount} item)</span>
+	<div class="fixed inset-x-0 bottom-0 md:left-auto md:right-6 md:bottom-6 md:w-96 z-50 bg-white rounded-t-3xl md:rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[85vh] w-full md:max-w-md animate-in slide-in-from-bottom duration-200">
+		<div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-t-3xl md:rounded-t-2xl shrink-0">
+			<div class="flex items-center gap-2.5 font-extrabold text-sm sm:text-base">
+				<ShoppingCart class="w-5 h-5" />
+				<span>Keranjang Belanja ({cartCount} item)</span>
 			</div>
-			<button onclick={() => cartOpen = false} class="p-1 hover:bg-red-700 rounded-full transition cursor-pointer shrink-0" aria-label="Tutup Keranjang"><X class="w-5 h-5" /></button>
+			<button onclick={() => cartOpen = false} class="p-1 hover:bg-white/20 rounded-full transition cursor-pointer" aria-label="Tutup Keranjang">
+				<X class="w-5 h-5" />
+			</button>
 		</div>
-		<div class="overflow-y-auto flex-1 px-3 sm:px-4 py-2 divide-y divide-gray-100">
+
+		<div class="overflow-y-auto flex-1 px-4 py-3 divide-y divide-slate-100">
 			{#each cart as item}
-			<div class="flex items-center gap-2.5 sm:gap-3 py-3 min-w-0">
-				<img src={item.image} alt={item.name} class="w-11 h-11 rounded-lg object-cover border border-amber-100 shadow-2xs shrink-0" />
+			<div class="flex items-center gap-3 py-3">
+				<img src={item.image} alt={item.name} class="w-12 h-12 rounded-xl object-cover border border-amber-100 shadow-2xs shrink-0" />
 				<div class="flex-1 min-w-0">
-					<p class="font-semibold text-xs sm:text-sm text-gray-800 truncate">{item.name}</p>
-					<p class="text-[11px] sm:text-xs text-gray-500">Rp {formatCurrency(item.price)} / bks</p>
+					<p class="font-bold text-xs sm:text-sm text-slate-900 truncate">{item.name}</p>
+					<p class="text-[11px] text-slate-500 font-medium">Rp {formatCurrency(item.price)} / {item.weight}</p>
 				</div>
-				<div class="flex items-center gap-1 shrink-0">
-					<button onclick={() => changeQty(item.id, -1)} class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 active:scale-95 transition cursor-pointer" aria-label="Kurangi Qty"><Minus class="w-3.5 h-3.5" /></button>
-					<span class="w-5 sm:w-6 text-center text-xs sm:text-sm font-bold">{item.qty}</span>
-					<button onclick={() => changeQty(item.id, 1)} class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 active:scale-95 transition cursor-pointer" aria-label="Tambah Qty"><Plus class="w-3.5 h-3.5" /></button>
+				<div class="flex items-center gap-1.5 shrink-0 bg-slate-100 p-1 rounded-lg">
+					<button onclick={() => changeQty(item.id, -1)} class="w-6 h-6 rounded-md bg-white border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition active:scale-90" aria-label="Kurang">
+						<Minus class="w-3 h-3 text-slate-700" />
+					</button>
+					<span class="w-5 text-center text-xs font-bold text-slate-900">{item.qty}</span>
+					<button onclick={() => changeQty(item.id, 1)} class="w-6 h-6 rounded-md bg-white border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition active:scale-90" aria-label="Tambah">
+						<Plus class="w-3 h-3 text-slate-700" />
+					</button>
 				</div>
 				<div class="text-right shrink-0">
-					<p class="font-bold text-xs sm:text-sm text-red-600">Rp {formatCurrency(item.price * item.qty)}</p>
-					<button onclick={() => removeFromCart(item.id)} class="text-[10px] sm:text-xs text-gray-400 hover:text-red-500 flex items-center gap-0.5 mt-0.5 ml-auto cursor-pointer"><Trash2 class="w-3 h-3" />Hapus</button>
+					<p class="font-extrabold text-xs sm:text-sm text-red-600">Rp {formatCurrency(item.price * item.qty)}</p>
+					<button onclick={() => removeFromCart(item.id)} class="text-[10px] text-slate-400 hover:text-red-600 flex items-center gap-0.5 mt-0.5 ml-auto transition">
+						<Trash2 class="w-3 h-3" /> Hapus
+					</button>
 				</div>
 			</div>
 			{/each}
 		</div>
-		<div class="px-4 py-3 border-t border-gray-100 bg-gray-50 rounded-b-2xl shrink-0">
-			<div class="flex justify-between items-center mb-3">
-				<span class="text-gray-600 text-sm">Total</span>
-				<span class="font-black text-base sm:text-lg text-red-600">Rp {formatCurrency(cartTotal)}</span>
+
+		<div class="px-5 py-4 border-t border-slate-100 bg-slate-50/80 rounded-b-2xl shrink-0">
+			<div class="flex justify-between items-center mb-3 text-sm">
+				<span class="text-slate-600 font-semibold">Total Estimasi:</span>
+				<span class="font-black text-lg text-red-600">Rp {formatCurrency(cartTotal)}</span>
 			</div>
-			<button onclick={checkoutWhatsApp} class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition text-sm cursor-pointer active:scale-98">
-				<svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-				<span>Pesan via WhatsApp</span>
+			<button
+				onclick={checkoutWhatsApp}
+				class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-98 transition text-sm cursor-pointer"
+			>
+				<svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+				<span>Kirim Pesanan ke WhatsApp</span>
 			</button>
 		</div>
 	</div>
 	{/if}
 
-	<!-- ===== STICKY NAVBAR ===== -->
-	<header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-xs w-full max-w-full">
-		<nav class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-			<div class="flex items-center justify-between h-16">
-				<!-- Brand -->
-				<a href="/" class="flex items-center gap-2 sm:gap-2.5 group min-w-0">
-					<img src="/logo.png" alt="Toko Aneka Rasa 99" class="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-xs group-hover:scale-105 transition-transform shrink-0" />
+	<!-- ===== STICKY NAVBAR WITH GLASS EFFECT ===== -->
+	<header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-2xs transition-all">
+		<nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex items-center justify-between h-16 sm:h-20">
+				<!-- Brand Identity -->
+				<a href="/" class="flex items-center gap-3 group min-w-0">
+					<div class="relative">
+						<img src="/logo.png" alt="Logo Toko Aneka Rasa 99" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-amber-400/80 shadow-xs group-hover:scale-105 transition-transform" />
+						<span class="absolute -bottom-0.5 -right-0.5 bg-red-600 text-[9px] font-black text-white px-1 rounded-full">99</span>
+					</div>
 					<div class="min-w-0">
-						<p class="font-black text-gray-900 text-sm leading-tight truncate">Toko Aneka Rasa 99</p>
-						<p class="text-[11px] text-red-600 font-semibold truncate hidden sm:block">Kemplang & Oleh-Oleh Bangka</p>
+						<span class="font-black text-slate-900 text-sm sm:text-base tracking-tight leading-none block truncate">Toko Aneka Rasa 99</span>
+						<span class="text-[11px] text-red-600 font-bold tracking-wide leading-none mt-1 block truncate">Pusat Oleh-Oleh Khas Bangka</span>
 					</div>
 				</a>
 
-				<!-- Desktop nav links -->
-				<div class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-600">
-					<a href="#produk" class="hover:text-red-600 transition">Produk</a>
-					<a href="#keunggulan" class="hover:text-red-600 transition">Keunggulan</a>
-					<a href="#cara-pesan" class="hover:text-red-600 transition">Cara Pesan</a>
-					<a href="#testimoni" class="hover:text-red-600 transition">Testimoni</a>
-					<a href="#kontak" class="hover:text-red-600 transition">Kontak</a>
-					<a href="#faq" class="hover:text-red-600 transition">FAQ</a>
+				<!-- Desktop Nav Links -->
+				<div class="hidden md:flex items-center gap-7 text-xs lg:text-sm font-bold text-slate-600">
+					<a href="#hero" class="hover:text-red-600 transition-colors">Beranda</a>
+					<a href="#katalog" class="hover:text-red-600 transition-colors">Katalog Oleh-Oleh</a>
+					<a href="#cerita" class="hover:text-red-600 transition-colors">Cerita Kami</a>
+					<a href="#keunggulan" class="hover:text-red-600 transition-colors">Keunggulan</a>
+					<a href="#testimoni" class="hover:text-red-600 transition-colors">Testimoni</a>
+					<a href="#kontak" class="hover:text-red-600 transition-colors">Lokasi & Pesan</a>
 				</div>
 
-				<!-- Right CTAs -->
-				<div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-					<!-- Cart button (visible on BOTH mobile & desktop when items > 0) -->
+				<!-- Right Actions -->
+				<div class="flex items-center gap-2 sm:gap-3">
+					<!-- Cart Badge -->
 					{#if cartCount > 0}
 					<button
 						onclick={() => cartOpen = !cartOpen}
-						class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition cursor-pointer shrink-0"
-						aria-label="Keranjang Belanja"
+						class="relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition active:scale-95 cursor-pointer shadow-xs"
+						aria-label="Buka Keranjang Belanja"
 					>
 						<ShoppingCart class="w-5 h-5" />
-						<span class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-white">{cartCount}</span>
+						<span class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-white animate-bounce">{cartCount}</span>
 					</button>
 					{/if}
 
-					<!-- Desktop Cart button when empty -->
-					{#if cartCount === 0}
-					<button
-						onclick={() => cartOpen = !cartOpen}
-						class="relative hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition text-sm font-semibold text-gray-700 cursor-pointer"
-					>
-						<ShoppingCart class="w-4 h-4" />
-						<span>Keranjang</span>
-					</button>
-					{/if}
-
-					<!-- Desktop WA button -->
+					<!-- WhatsApp Primary CTA -->
 					<a
-						href="https://wa.me/{WA_PHONE}"
+						href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin memesan oleh-oleh khas Bangka:')}"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="hidden md:flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20ba5a] text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm"
+						class="hidden sm:inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white px-4 lg:px-5 py-2.5 rounded-xl text-xs lg:text-sm font-extrabold shadow-sm shadow-emerald-600/20 hover:shadow-md hover:shadow-emerald-600/30 transition-all cursor-pointer active:scale-95"
 					>
 						<svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-						<span>Pesan via WhatsApp</span>
+						<span>Pesan via WA</span>
 					</a>
 
-					<!-- Mobile hamburger -->
-					<button onclick={() => mobileMenuOpen = !mobileMenuOpen} class="md:hidden p-2 rounded-xl hover:bg-gray-100 transition text-gray-600 cursor-pointer shrink-0" aria-label="Menu">
+					<!-- Mobile Menu Toggle -->
+					<button
+						onclick={() => mobileMenuOpen = !mobileMenuOpen}
+						class="md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 transition cursor-pointer"
+						aria-label="Buka Menu Navigasi"
+					>
 						{#if mobileMenuOpen}<X class="w-6 h-6" />{:else}<Menu class="w-6 h-6" />{/if}
 					</button>
 				</div>
@@ -281,39 +476,21 @@
 
 			<!-- Mobile Menu Dropdown -->
 			{#if mobileMenuOpen}
-			<div class="md:hidden pb-5 border-t border-gray-100 pt-3 flex flex-col gap-1 animate-in slide-in-from-top-2 duration-150 w-full">
-				<a href="#produk" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
-					<span>Produk Unggulan</span>
-					<ChevronRight class="w-4 h-4 text-gray-400 shrink-0" />
-				</a>
-				<a href="#keunggulan" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
-					<span>Keunggulan Kami</span>
-					<ChevronRight class="w-4 h-4 text-gray-400 shrink-0" />
-				</a>
-				<a href="#cara-pesan" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
-					<span>Cara Pesan</span>
-					<ChevronRight class="w-4 h-4 text-gray-400 shrink-0" />
-				</a>
-				<a href="#testimoni" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
-					<span>Testimoni Pelanggan</span>
-					<ChevronRight class="w-4 h-4 text-gray-400 shrink-0" />
-				</a>
-				<a href="#kontak" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
-					<span>Lokasi & Kontak Toko</span>
-					<ChevronRight class="w-4 h-4 text-gray-400 shrink-0" />
-				</a>
-				<a href="#faq" onclick={() => mobileMenuOpen = false} class="px-3 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 hover:text-red-600 transition text-sm flex items-center justify-between">
-					<span>Tanya Jawab (FAQ)</span>
-					<ChevronRight class="w-4 h-4 text-gray-400 shrink-0" />
-				</a>
-				<div class="pt-2 flex flex-col gap-2 w-full">
-					<a href="https://wa.me/{WA_PHONE}" target="_blank" rel="noopener noreferrer" class="bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-sm px-4 py-3 rounded-xl flex items-center justify-center gap-2 shadow-xs text-center w-full">
-						<svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-						<span>Pesan via WhatsApp</span>
-					</a>
-					<a href="https://shopee.co.id/tokoanekarasa99" target="_blank" rel="noopener noreferrer" class="bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold text-sm px-4 py-3 rounded-xl flex items-center justify-center gap-2 shadow-xs text-center w-full">
-						<ShoppingBag class="w-4 h-4 shrink-0" />
-						<span>Buka Toko di Shopee</span>
+			<div class="md:hidden py-4 border-t border-slate-100 flex flex-col gap-1.5 animate-in slide-in-from-top-2 duration-150">
+				<a href="#hero" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Beranda</a>
+				<a href="#katalog" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Katalog Produk</a>
+				<a href="#cerita" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Cerita Kami</a>
+				<a href="#keunggulan" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Keunggulan Toko</a>
+				<a href="#testimoni" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Testimoni Pelanggan</a>
+				<a href="#kontak" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Lokasi & Kontak</a>
+				<div class="pt-2 flex flex-col gap-2">
+					<a
+						href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin memesan:')}"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="w-full bg-[#25D366] text-white text-center py-3 rounded-xl font-extrabold text-sm flex items-center justify-center gap-2 shadow"
+					>
+						<span>Chat WhatsApp Sekarang</span>
 					</a>
 				</div>
 			</div>
@@ -321,558 +498,776 @@
 		</nav>
 	</header>
 
-	<!-- ===== HERO SECTION ===== -->
-	<section class="relative overflow-hidden overflow-x-clip w-full max-w-full isolate bg-gradient-to-br from-[#FFF8F0] via-[#FFFDF9] to-[#FFF1E6] pt-6 pb-12 sm:pt-14 sm:pb-20 md:pt-20 md:pb-28">
-		<!-- Decorative blobs (hidden on mobile to guarantee zero overflow) -->
-		<div class="hidden sm:block absolute top-0 left-0 w-72 h-72 bg-red-100/60 rounded-full mix-blend-multiply blur-3xl opacity-40 pointer-events-none"></div>
-		<div class="hidden sm:block absolute bottom-0 right-0 w-72 h-72 bg-amber-100/60 rounded-full mix-blend-multiply blur-3xl opacity-40 pointer-events-none"></div>
+	<!-- ===== 1. HERO SECTION (DYNAMIC & EMOTIONAL REDESIGN) ===== -->
+	<section id="hero" class="relative pt-6 pb-12 sm:pt-14 sm:pb-20 md:pt-20 md:pb-24 overflow-hidden isolate bg-gradient-to-b from-[#FFF5EC] via-[#FFFDF9] to-[#FCFAF6]">
+		<!-- Decorative Ambient Glows -->
+		<div class="absolute -top-24 -left-20 w-96 h-96 bg-red-200/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
+		<div class="absolute top-1/2 -right-24 w-96 h-96 bg-amber-200/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
 
-		<div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10 w-full max-w-full">
-			<div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full max-w-full">
-				<!-- Left: copy -->
-				<div class="text-center lg:text-left min-w-0 w-full max-w-full">
-					<div class="inline-flex items-center gap-2 bg-red-50 border border-red-200/80 px-3 py-1 rounded-full text-xs font-bold text-red-700 mb-3">
-						<span>📍 Toko Aneka Rasa 99 Poris Tangerang</span>
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+				<!-- Left Column: Emotional Pitch & High-Converting CTAs -->
+				<div class="lg:col-span-7 text-center lg:text-left space-y-4 sm:space-y-6">
+					<!-- Live Store Status Badge -->
+					<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs">
+						<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+						<span>Buka Setiap Hari: 07.30 – 21.30 WIB</span>
+						<span class="text-emerald-300">•</span>
+						<span class="text-emerald-700 font-extrabold">Poris Indah, Tangerang</span>
 					</div>
-					<h1 class="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-gray-900 leading-[1.15] sm:leading-tight mb-3 sm:mb-5 tracking-tight break-words">
-						Toko Oleh-Oleh<br />
-						<span class="text-red-600">Khas Bangka</span><br />
-						<span class="text-amber-500">Terlengkap & Asli</span>
-					</h1>
-					<p class="text-xs sm:text-base lg:text-lg text-gray-600 mb-5 sm:mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0 break-words">
-						Pusat Kemplang Panggang, Getas Ikan Tenggiri, Terasi Asli, dan ratusan oleh-oleh khas Bangka Belitung terbaik. Tersedia di Poris Indah, Tangerang — siap kirim ke seluruh Indonesia.
+
+					<!-- Hero Headline -->
+					<div class="space-y-2">
+						<span class="text-xs sm:text-sm font-extrabold tracking-widest text-red-600 uppercase block">
+							✨ Pusat Oleh-Oleh Khas Bangka Belitung Resmi
+						</span>
+						<h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-950 tracking-tight leading-[1.15]">
+							Oleh-Oleh Khas Bangka Asli,
+							<span class="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 bg-clip-text text-transparent block mt-1">
+								Langsung dari Poris, Siap Kirim ke Seluruh Indonesia
+							</span>
+						</h1>
+					</div>
+
+					<!-- Narrative Subtitle -->
+					<p class="text-slate-600 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0">
+						Dipanggang di atas bara arang tradisional, dipadukan dengan daging ikan tenggiri segar pilihan & racikan terasi super Bangka. Renyahnya juara, gurihnya alami tanpa pengawet.
 					</p>
-					<!-- CTA buttons -->
-					<div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mb-5 sm:mb-8 justify-center lg:justify-start w-full max-w-full">
+
+					<!-- Action Buttons -->
+					<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-2">
+						<!-- Primary WhatsApp CTA -->
 						<a
-							href="https://wa.me/{WA_PHONE}"
+							href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin memesan kemplang & oleh-oleh khas Bangka:')}"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold px-4 sm:px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all text-sm active:scale-98 text-center box-border"
+							class="bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-sm sm:text-base px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/35 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2.5 group cursor-pointer"
 						>
 							<svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-							<span class="truncate">Pesan via WhatsApp</span>
+							<span>Pesan Cepat via WhatsApp</span>
+							<ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
 						</a>
+
+						<!-- Secondary Catalog CTA -->
 						<a
-							href="#produk"
-							class="w-full sm:w-auto flex items-center justify-center gap-2 bg-white border-2 border-red-200 hover:border-red-400 text-red-600 font-bold px-4 sm:px-6 py-3.5 rounded-xl transition text-sm active:scale-98 text-center box-border"
+							href="#katalog"
+							class="bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm sm:text-base px-6 sm:px-7 py-3.5 sm:py-4 rounded-xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all flex items-center justify-center gap-2 cursor-pointer"
 						>
-							<span>Lihat Produk</span>
-							<ChevronRight class="w-4 h-4 shrink-0" />
+							<ShoppingBag class="w-4 h-4 text-red-600" />
+							<span>Lihat Katalog Produk</span>
 						</a>
 					</div>
-					<!-- Trust strip -->
-					<div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3 text-xs font-semibold text-gray-600 text-left w-full max-w-full">
-						<div class="flex items-center gap-1 sm:gap-1.5 bg-white/90 px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-lg border border-gray-100 shadow-xs sm:shadow-none min-w-0">
-							<ShieldCheck class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-500 shrink-0" />
-							<span class="text-[10px] sm:text-xs font-bold text-gray-700 truncate">Produk Halal</span>
+
+					<!-- Trust Signals Strip -->
+					<div class="pt-4 border-t border-slate-200/60 flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 text-xs text-slate-600 font-semibold">
+						<div class="flex items-center gap-1.5">
+							<div class="flex text-amber-400">
+								{#each Array(5) as _}
+								<Star class="w-3.5 h-3.5 fill-current" />
+								{/each}
+							</div>
+							<span class="font-extrabold text-slate-900">4.9 / 5.0</span>
+							<span class="text-slate-400">(128+ Ulasan)</span>
 						</div>
-						<div class="flex items-center gap-1 sm:gap-1.5 bg-white/90 px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-lg border border-gray-100 shadow-xs sm:shadow-none min-w-0">
-							<Truck class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500 shrink-0" />
-							<span class="text-[10px] sm:text-xs font-bold text-gray-700 truncate">Kirim Nasional</span>
+						<div class="flex items-center gap-1.5">
+							<ShieldCheck class="w-4 h-4 text-emerald-600" />
+							<span>100% Halal & Tanpa Pengawet</span>
 						</div>
-						<div class="flex items-center gap-1 sm:gap-1.5 bg-white/90 px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-lg border border-gray-100 shadow-xs sm:shadow-none min-w-0">
-							<Award class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
-							<span class="text-[10px] sm:text-xs font-bold text-gray-700 truncate">Mutu Terjamin</span>
-						</div>
-						<div class="flex items-center gap-1 sm:gap-1.5 bg-white/90 px-2 sm:px-2.5 py-1.5 sm:py-2 rounded-lg border border-gray-100 shadow-xs sm:shadow-none min-w-0">
-							<Star class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-yellow-400 shrink-0" />
-							<span class="text-[10px] sm:text-xs font-bold text-gray-700 truncate">4.9★ (128 ulasan)</span>
+						<div class="flex items-center gap-1.5">
+							<Truck class="w-4 h-4 text-blue-600" />
+							<span>Packing Kardus Tebal & Bubble</span>
 						</div>
 					</div>
 				</div>
 
-				<!-- Right: hero card with 3 best sellers -->
-				<div class="relative mt-2 lg:mt-0 w-full max-w-full">
-					<div class="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 p-3.5 sm:p-6 w-full max-w-full">
-						<div class="flex items-center justify-between gap-2 mb-3">
-							<div class="flex items-center gap-1.5 sm:gap-2 min-w-0">
-								<span class="text-lg sm:text-xl shrink-0">🏆</span>
-								<h2 class="font-black text-gray-800 text-sm sm:text-lg truncate">3 Produk Terlaris</h2>
+				<!-- Right Column: Appetizing Featured Hero Showcase -->
+				<div class="lg:col-span-5 relative">
+					<!-- Hero Visual Card Container -->
+					<div class="bg-white rounded-3xl p-5 sm:p-6 shadow-xl shadow-slate-200/60 border border-slate-200/80 relative">
+						<!-- Badge Top -->
+						<div class="flex items-center justify-between pb-4 border-b border-slate-100">
+							<div class="flex items-center gap-2">
+								<span class="px-2.5 py-1 bg-amber-100 text-amber-900 rounded-lg text-xs font-black flex items-center gap-1">
+									<Sparkles class="w-3.5 h-3.5 text-amber-600" />
+									Paling Diminati Minggu Ini
+								</span>
 							</div>
-							<span class="bg-amber-100 text-amber-900 text-[10px] font-black px-2 py-0.5 rounded-full shrink-0">Favorit</span>
+							<span class="text-[11px] font-bold text-slate-400">Stok Segar</span>
 						</div>
-						<div class="space-y-2 sm:space-y-3">
-							{#each FEATURED.slice(0, 3) as item, i}
-							<div class="flex items-center gap-2 sm:gap-3.5 p-2 sm:p-3 rounded-xl {i === 0 ? 'bg-red-50/80 border border-red-100' : 'bg-gray-50'} min-w-0">
-								<img src={item.image} alt="{item.name} - Toko Oleh-Oleh Khas Bangka Aneka Rasa 99" class="w-11 h-11 sm:w-14 sm:h-14 rounded-xl object-cover border border-amber-100 shadow-xs shrink-0" />
-								<div class="flex-1 min-w-0">
-									<p class="font-bold text-xs sm:text-sm text-gray-800 truncate">{item.name}</p>
-									<p class="text-[10px] sm:text-xs text-gray-500">Rp {formatCurrency(item.price)}</p>
+
+						<!-- Featured Top Pick Big Showcase -->
+						<div class="pt-4">
+							<div class="relative rounded-2xl overflow-hidden bg-gradient-to-br from-amber-50 to-orange-50/50 aspect-4/3 border border-amber-100/60 group">
+								<img
+									src="/images/products/kemplang.png"
+									alt="Kemplang Panggang Arang Khas Bangka"
+									class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+								/>
+								<div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-black px-3 py-1 rounded-full shadow-md">
+									🔥 Terlaris #1
+								</div>
+								<div class="absolute bottom-3 inset-x-3 bg-slate-950/75 backdrop-blur-md text-white p-3 rounded-xl flex items-center justify-between">
+									<div>
+										<p class="text-xs font-bold">Kemplang Panggang Cap MM</p>
+										<p class="text-[11px] text-amber-300">Termasuk Sambal Terasi Bangka</p>
+									</div>
+									<p class="text-sm font-black text-white">Rp 37.500</p>
+								</div>
+							</div>
+						</div>
+
+						<!-- Mini list of 2 more hot items -->
+						<div class="mt-4 space-y-2.5">
+							{#each FEATURED.slice(1, 3) as item}
+							<div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50/50 border border-slate-100 transition-colors">
+								<div class="flex items-center gap-3 min-w-0">
+									<img src={item.image} alt={item.name} class="w-12 h-12 rounded-lg object-cover border border-slate-200 shrink-0" />
+									<div class="min-w-0">
+										<p class="font-bold text-xs sm:text-sm text-slate-900 truncate">{item.name}</p>
+										<p class="text-[11px] text-slate-500">{item.weight} • <span class="font-bold text-red-600">Rp {formatCurrency(item.price)}</span></p>
+									</div>
 								</div>
 								<button
 									onclick={() => addToCart(item)}
-									class="shrink-0 bg-red-600 hover:bg-red-700 text-white text-[11px] sm:text-xs font-bold px-2 sm:px-3 py-1.5 rounded-lg transition flex items-center gap-1 active:scale-95 cursor-pointer"
+									class="shrink-0 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-red-200 hover:border-red-600 transition-all flex items-center gap-1 active:scale-95 cursor-pointer"
 								>
-									<Plus class="w-3 h-3 shrink-0" />Tambah
+									<Plus class="w-3.5 h-3.5" />
+									<span>Pesan</span>
 								</button>
 							</div>
 							{/each}
 						</div>
-						<a href="#produk" class="mt-3 flex items-center justify-center gap-1 text-xs font-bold text-red-600 hover:text-red-700 transition">
-							Lihat Semua Produk <ArrowRight class="w-3.5 h-3.5 shrink-0" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== 2. TRUST STATS STRIP ===== -->
+	<section class="border-y border-slate-200/80 bg-white py-8 sm:py-10">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center divide-x-0 lg:divide-x divide-slate-100">
+				<div class="space-y-1">
+					<p class="text-3xl sm:text-4xl font-black text-slate-900">500+</p>
+					<p class="text-xs sm:text-sm font-bold text-slate-500">Varian Camilan & Oleh-Oleh</p>
+				</div>
+				<div class="space-y-1">
+					<p class="text-3xl sm:text-4xl font-black text-red-600">15+ Thn</p>
+					<p class="text-xs sm:text-sm font-bold text-slate-500">Menjaga Resep Autentik</p>
+				</div>
+				<div class="space-y-1">
+					<p class="text-3xl sm:text-4xl font-black text-slate-900">10.000+</p>
+					<p class="text-xs sm:text-sm font-bold text-slate-500">Pelanggan Puas Seluruh RI</p>
+				</div>
+				<div class="space-y-1">
+					<p class="text-3xl sm:text-4xl font-black text-amber-500 flex items-center justify-center gap-1">
+						<span>4.9</span>
+						<Star class="w-6 h-6 fill-current text-amber-400" />
+					</p>
+					<p class="text-xs sm:text-sm font-bold text-slate-500">Rating Google & Shopee</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== 3. KATALOG PRODUK DENGAN FILTER CEPAT (INCREASE DESIRE) ===== -->
+	<section id="katalog" class="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		<!-- Section Header -->
+		<div class="text-center max-w-3xl mx-auto mb-8 sm:mb-12 space-y-3">
+			<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-extrabold uppercase tracking-wide">
+				<Award class="w-3.5 h-3.5" /> Pilihan Terlengkap & Terlezat
+			</span>
+			<h2 class="text-2xl sm:text-4xl font-black text-slate-950 tracking-tight">
+				Katalog Oleh-Oleh <span class="text-red-600">Khas Bangka</span> Favorit
+			</h2>
+			<p class="text-slate-600 text-xs sm:text-sm sm:leading-relaxed">
+				Dibuat dari bahan alami berkualitas tanpa pengawet. Pilih kategori camilan favorit Anda dan pesan dengan mudah via WhatsApp atau tambahkan ke keranjang.
+			</p>
+		</div>
+
+		<!-- Category Filter Pills -->
+		<div class="flex items-center justify-center flex-wrap gap-2 mb-8 sm:mb-12">
+			<button
+				onclick={() => selectedCategory = 'all'}
+				class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer {selectedCategory === 'all' ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'}"
+			>
+				Semua Produk ({FEATURED.length})
+			</button>
+			<button
+				onclick={() => selectedCategory = 'kemplang'}
+				class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer {selectedCategory === 'kemplang' ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'}"
+			>
+				🔥 Kemplang Panggang & Goreng
+			</button>
+			<button
+				onclick={() => selectedCategory = 'getas'}
+				class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer {selectedCategory === 'getas' ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'}"
+			>
+				🐟 Getas Ikan Tenggiri
+			</button>
+			<button
+				onclick={() => selectedCategory = 'terasi'}
+				class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer {selectedCategory === 'terasi' ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'}"
+			>
+				🦐 Terasi Super Bangka
+			</button>
+			<button
+				onclick={() => selectedCategory = 'snack'}
+				class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer {selectedCategory === 'snack' ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'}"
+			>
+				🦑 Kericu & Aneka Snack
+			</button>
+		</div>
+
+		<!-- Product Grid -->
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+			{#each filteredProducts as product (product.id)}
+			<div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col overflow-hidden group">
+				<!-- Product Image Area -->
+				<div class="relative bg-gradient-to-br from-amber-50/50 to-orange-50/50 aspect-square overflow-hidden">
+					<img
+						src={product.image}
+						alt="{product.name} - Oleh-oleh Khas Bangka"
+						class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+						loading="lazy"
+					/>
+					<!-- Badge -->
+					<div class="absolute top-3 left-3 bg-red-600 text-white text-[11px] font-black px-2.5 py-0.5 rounded-full shadow-sm">
+						{product.badge}
+					</div>
+					<!-- Highlight Tag -->
+					<div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-xs text-slate-800 text-[10px] font-extrabold px-2 py-0.5 rounded-md border border-slate-200/60 shadow-2xs">
+						{product.highlight}
+					</div>
+				</div>
+
+				<!-- Product Body -->
+				<div class="p-4 sm:p-5 flex flex-col flex-1">
+					<div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+						<span>Isi: <strong>{product.weight}</strong></span>
+						<div class="flex items-center gap-1 text-amber-500 font-bold">
+							<Star class="w-3.5 h-3.5 fill-current" />
+							<span>{product.rating}</span>
+							<span class="text-slate-400 font-normal">({product.reviewsCount})</span>
+						</div>
+					</div>
+
+					<h3 class="font-black text-slate-900 text-base mb-1.5 group-hover:text-red-600 transition-colors leading-snug">
+						{product.name}
+					</h3>
+					<p class="text-xs text-slate-500 leading-relaxed line-clamp-2 mb-4 flex-1">
+						{product.desc}
+					</p>
+
+					<!-- Pricing & Discount -->
+					<div class="pt-3 border-t border-slate-100 flex items-baseline justify-between mb-4">
+						<div>
+							<p class="text-base sm:text-lg font-black text-red-600 leading-none">
+								Rp {formatCurrency(product.price)}
+							</p>
+							{#if product.originalPrice}
+							<p class="text-[11px] text-slate-400 line-through mt-0.5">
+								Rp {formatCurrency(product.originalPrice)}
+							</p>
+							{/if}
+						</div>
+						{#if product.originalPrice}
+						<span class="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">
+							Hemat Rp {formatCurrency(product.originalPrice - product.price)}
+						</span>
+						{/if}
+					</div>
+
+					<!-- CTAs (Cart & Direct WA) -->
+					<div class="grid grid-cols-2 gap-2">
+						<button
+							onclick={() => addToCart(product)}
+							class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+							title="Tambah ke Keranjang"
+						>
+							<ShoppingCart class="w-3.5 h-3.5" />
+							<span>+ Keranjang</span>
+						</button>
+
+						<a
+							href={productWaLink(product.name, product.price)}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-extrabold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1 shadow-xs cursor-pointer active:scale-95"
+							title="Pesan Langsung via WA"
+						>
+							<MessageCircle class="w-3.5 h-3.5" />
+							<span>Beli Cepat</span>
 						</a>
 					</div>
 				</div>
 			</div>
+			{/each}
 		</div>
 	</section>
 
-	<!-- ===== KEUNGGULAN SECTION ===== -->
-	<section class="py-12 sm:py-16 md:py-20 bg-white overflow-hidden w-full max-w-full" id="keunggulan">
+	<!-- ===== 4. CERITA KAMI / OUR STORY (AUTHENTIC HERITAGE) ===== -->
+	<section id="cerita" class="py-14 sm:py-20 bg-white border-y border-slate-200/80">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="text-center mb-8 sm:mb-12">
-				<span class="inline-block bg-amber-50 text-amber-700 text-xs font-bold px-3 py-1 rounded-full border border-amber-100 mb-2 sm:mb-3">Mengapa Kami?</span>
-				<h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2 sm:mb-3">4 Alasan Pilih <span class="text-red-600">Toko Aneka Rasa 99</span></h2>
-				<p class="text-gray-500 max-w-xl mx-auto text-xs sm:text-sm leading-relaxed">Kami bukan sekadar toko — kami adalah jembatan cita rasa asli Bangka Belitung untuk Anda di manapun berada.</p>
-			</div>
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5 mb-8 sm:mb-14">
-				<div class="bg-gradient-to-br from-red-50 to-red-100 border border-red-100 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center hover:shadow-md transition min-w-0">
-					<div class="w-10 h-10 sm:w-12 sm:h-12 bg-red-600 rounded-xl flex items-center justify-center mx-auto mb-2.5 sm:mb-3 shadow"><ShieldCheck class="w-5 h-5 sm:w-6 sm:h-6 text-white" /></div>
-					<h3 class="font-black text-gray-800 text-xs sm:text-sm mb-1 truncate">Asli & Halal</h3>
-					<p class="text-[11px] sm:text-xs text-gray-500 leading-snug sm:leading-relaxed">Produk asli tanpa pengawet berbahaya, terjamin halal</p>
-				</div>
-				<div class="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-100 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center hover:shadow-md transition min-w-0">
-					<div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-2.5 sm:mb-3 shadow"><Truck class="w-5 h-5 sm:w-6 sm:h-6 text-white" /></div>
-					<h3 class="font-black text-gray-800 text-xs sm:text-sm mb-1 truncate">Kirim Nasional</h3>
-					<p class="text-[11px] sm:text-xs text-gray-500 leading-snug sm:leading-relaxed">Packing aman, kirim ke seluruh pelosok Indonesia</p>
-				</div>
-				<div class="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-100 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center hover:shadow-md transition min-w-0">
-					<div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500 rounded-xl flex items-center justify-center mx-auto mb-2.5 sm:mb-3 shadow"><Award class="w-5 h-5 sm:w-6 sm:h-6 text-white" /></div>
-					<h3 class="font-black text-gray-800 text-xs sm:text-sm mb-1 truncate">Kualitas Premium</h3>
-					<p class="text-[11px] sm:text-xs text-gray-500 leading-snug sm:leading-relaxed">Ikan tenggiri segar pilihan, diproses secara tradisional</p>
-				</div>
-				<div class="bg-gradient-to-br from-green-50 to-green-100 border border-green-100 rounded-xl sm:rounded-2xl p-3.5 sm:p-5 text-center hover:shadow-md transition min-w-0">
-					<div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-600 rounded-xl flex items-center justify-center mx-auto mb-2.5 sm:mb-3 shadow"><ThumbsUp class="w-5 h-5 sm:w-6 sm:h-6 text-white" /></div>
-					<h3 class="font-black text-gray-800 text-xs sm:text-sm mb-1 truncate">Langganan Setia</h3>
-					<p class="text-[11px] sm:text-xs text-gray-500 leading-snug sm:leading-relaxed">Ribuan pelanggan puas dari Tangerang hingga luar negeri</p>
-				</div>
-			</div>
-			<!-- Stats counter -->
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5">
-				<div class="text-center">
-					<p class="text-2xl sm:text-4xl font-black text-red-600 mb-0.5 sm:mb-1">500+</p>
-					<p class="text-[11px] sm:text-xs text-gray-500 font-semibold">Jenis Produk Tersedia</p>
-				</div>
-				<div class="text-center">
-					<p class="text-2xl sm:text-4xl font-black text-red-600 mb-0.5 sm:mb-1">15+</p>
-					<p class="text-[11px] sm:text-xs text-gray-500 font-semibold">Tahun Berpengalaman</p>
-				</div>
-				<div class="text-center">
-					<p class="text-2xl sm:text-4xl font-black text-red-600 mb-0.5 sm:mb-1">10K+</p>
-					<p class="text-[11px] sm:text-xs text-gray-500 font-semibold">Pelanggan Puas</p>
-				</div>
-				<div class="text-center">
-					<p class="text-2xl sm:text-4xl font-black text-red-600 mb-0.5 sm:mb-1">4.9★</p>
-					<p class="text-[11px] sm:text-xs text-gray-500 font-semibold">Rating Rata-Rata</p>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- ===== PRODUK SECTION ===== -->
-	<section class="py-12 sm:py-16 md:py-20 bg-[#FFFDF9] overflow-hidden w-full max-w-full" id="produk">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="text-center mb-8 sm:mb-12">
-				<span class="inline-block bg-red-50 text-red-700 text-xs font-bold px-3 py-1 rounded-full border border-red-100 mb-2 sm:mb-3">Pilihan Terbaik</span>
-				<h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2 sm:mb-3">Produk <span class="text-red-600">Unggulan</span> Kami</h2>
-				<p class="text-gray-500 max-w-xl mx-auto text-xs sm:text-sm leading-relaxed">Kemplang, getas, terasi, dan aneka camilan khas Bangka Belitung yang sudah terbukti lezat dan berkualitas.</p>
-			</div>
-
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-				{#each FEATURED as product}
-				<div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all group overflow-hidden flex flex-col min-w-0">
-					<!-- Product Image Area -->
-					<div class="h-44 sm:h-48 bg-gradient-to-br from-amber-50/60 to-red-50/60 overflow-hidden relative group/img">
-						<img
-							src={product.image}
-							alt="{product.name} - Toko Oleh-Oleh Khas Bangka Aneka Rasa 99"
-							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-							loading="lazy"
-						/>
-						<span class="absolute top-2.5 right-2.5 bg-red-600 text-white text-[11px] font-black px-2.5 py-0.5 rounded-full shadow-xs">{product.badge}</span>
-					</div>
-					<!-- Content -->
-					<div class="p-3.5 sm:p-4 flex flex-col flex-1 min-w-0">
-						<h3 class="font-black text-gray-800 text-sm mb-1.5 leading-tight break-words">{product.name}</h3>
-						<p class="text-xs text-gray-500 leading-relaxed mb-3 flex-1">{product.desc}</p>
-						<div class="flex items-center justify-between mb-3">
-							<p class="font-black text-red-600 text-base">Rp {formatCurrency(product.price)}</p>
-							<span class="text-xs text-gray-400">/ bungkus</span>
-						</div>
-						<!-- Action buttons -->
-						<div class="grid grid-cols-2 gap-2 w-full">
-							<a
-								href={productWaLink(product.name, product.price)}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold py-2.5 px-2 rounded-xl flex items-center justify-center gap-1.5 transition shadow-xs w-full min-w-0"
-							>
-								<svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-								<span class="truncate">WhatsApp</span>
-							</a>
-							<button
-								onclick={() => addToCart(product)}
-								class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2.5 px-2 rounded-xl flex items-center justify-center gap-1.5 transition w-full min-w-0 cursor-pointer"
-							>
-								<Plus class="w-3.5 h-3.5 shrink-0" />
-								<span class="truncate">Keranjang</span>
-							</button>
-						</div>
-					</div>
-				</div>
-				{/each}
-			</div>
-
-			<div class="mt-8 sm:mt-10 flex justify-center">
-				<a
-					href="https://shopee.co.id/tokoanekarasa99"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold px-4 sm:px-8 py-3.5 rounded-xl transition shadow-md hover:shadow-lg text-xs sm:text-sm text-center active:scale-98 max-w-full box-border"
-				>
-					<ShoppingBag class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-					<span class="truncate">Lihat Semua Produk di Shopee</span>
-					<ExternalLink class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-				</a>
-			</div>
-		</div>
-	</section>
-
-	<!-- ===== CARA PESAN SECTION ===== -->
-	<section class="py-12 sm:py-16 md:py-20 bg-white overflow-hidden w-full max-w-full" id="cara-pesan">
-		<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="text-center mb-8 sm:mb-12">
-				<span class="inline-block bg-green-50 text-green-700 text-xs font-bold px-3 py-1 rounded-full border border-green-100 mb-2 sm:mb-3">Mudah & Cepat</span>
-				<h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2 sm:mb-3">Cara <span class="text-red-600">Pesan</span></h2>
-				<p class="text-gray-500 max-w-lg mx-auto text-xs sm:text-sm leading-relaxed">Pesan oleh-oleh khas Bangka dengan mudah, hanya dalam 3 langkah!</p>
-			</div>
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-				<div class="text-center relative min-w-0">
-					<div class="w-12 h-12 sm:w-14 sm:h-14 bg-red-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
-						<span class="text-white font-black text-lg sm:text-xl">1</span>
-					</div>
-					<h3 class="font-black text-gray-800 text-base mb-1.5">Pilih Produk</h3>
-					<p class="text-xs sm:text-sm text-gray-500 leading-relaxed">Lihat katalog produk unggulan kami. Tambahkan ke keranjang atau langsung tanya via WhatsApp.</p>
-					<!-- Connector only on desktop md+ -->
-					<div class="hidden md:block absolute top-7 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-0.5 bg-gradient-to-r from-red-200 to-red-100"></div>
-				</div>
-				<div class="text-center relative min-w-0">
-					<div class="w-12 h-12 sm:w-14 sm:h-14 bg-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
-						<span class="text-white font-black text-lg sm:text-xl">2</span>
-					</div>
-					<h3 class="font-black text-gray-800 text-base mb-1.5">Chat WhatsApp</h3>
-					<p class="text-xs sm:text-sm text-gray-500 leading-relaxed">Kirim pesanan via WhatsApp. Konfirmasi stok, harga, dan ongkir bersama kami langsung.</p>
-					<div class="hidden md:block absolute top-7 left-[calc(50%+2rem)] w-[calc(100%-4rem)] h-0.5 bg-gradient-to-r from-amber-200 to-amber-100"></div>
-				</div>
-				<div class="text-center min-w-0">
-					<div class="w-12 h-12 sm:w-14 sm:h-14 bg-green-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
-						<span class="text-white font-black text-lg sm:text-xl">3</span>
-					</div>
-					<h3 class="font-black text-gray-800 text-base mb-1.5">Terima Pesanan</h3>
-					<p class="text-xs sm:text-sm text-gray-500 leading-relaxed">Bayar & pesanan dikemas rapi. Ambil langsung di toko atau kami kirimkan ke alamat Anda.</p>
-				</div>
-			</div>
-			<div class="mt-8 sm:mt-10 flex justify-center">
-				<a
-					href="https://wa.me/{WA_PHONE}"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all text-sm sm:text-base text-center"
-				>
-					<svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-					<span>Mulai Pesan Sekarang</span>
-					<ArrowRight class="w-4 h-4 shrink-0" />
-				</a>
-			</div>
-		</div>
-	</section>
-
-	<!-- ===== TESTIMONI SECTION ===== -->
-	<section class="py-12 sm:py-16 md:py-20 bg-[#FFFDF9] overflow-hidden w-full max-w-full" id="testimoni">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="text-center mb-8 sm:mb-12">
-				<span class="inline-block bg-yellow-50 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full border border-yellow-100 mb-2 sm:mb-3">Kata Pelanggan</span>
-				<h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2 sm:mb-3">Ribuan Pelanggan <span class="text-red-600">Sudah Puas</span></h2>
-				<p class="text-gray-500 max-w-xl mx-auto text-xs sm:text-sm leading-relaxed">Kepuasan pelanggan adalah prioritas utama kami. Ini kata mereka tentang Toko Aneka Rasa 99.</p>
-			</div>
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-				{#each testimonials as t}
-				<div class="bg-white rounded-2xl border border-gray-100 shadow-xs p-4 sm:p-6 hover:shadow-md transition min-w-0">
-					<div class="flex items-center gap-1 mb-2.5 sm:mb-3">
-						{#each { length: t.stars } as _}
-						<Star class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 fill-yellow-400 shrink-0" />
-						{/each}
-					</div>
-					<p class="text-gray-700 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 italic break-words">"{t.review}"</p>
-					<div class="flex items-center gap-2.5 sm:gap-3">
-						<div class="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center shrink-0">
-							<User class="w-4 h-4 text-red-600" />
-						</div>
-						<div class="flex-1 min-w-0">
-							<p class="font-bold text-gray-800 text-xs sm:text-sm truncate">{t.name}</p>
-							<p class="text-[11px] sm:text-xs text-gray-400 truncate">{t.city} · {t.product}</p>
-						</div>
-					</div>
-				</div>
-				{/each}
-			</div>
-		</div>
-	</section>
-
-	<!-- ===== KONTAK SECTION ===== -->
-	<section class="py-12 sm:py-16 md:py-20 bg-white overflow-hidden w-full max-w-full" id="kontak">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="text-center mb-8 sm:mb-12">
-				<span class="inline-block bg-red-50 text-red-700 text-xs font-bold px-3 py-1 rounded-full border border-red-100 mb-2 sm:mb-3">Hubungi Kami</span>
-				<h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2 sm:mb-3">Temukan & <span class="text-red-600">Hubungi</span> Kami</h2>
-				<p class="text-gray-500 max-w-xl mx-auto text-xs sm:text-sm leading-relaxed">Kunjungi toko kami di Poris Indah Tangerang, atau hubungi via WhatsApp untuk pemesanan dan informasi produk.</p>
-			</div>
-
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10">
-				<!-- Left: contact info + map -->
-				<div class="space-y-4 sm:space-y-5 min-w-0">
-					<div class="flex items-start gap-3 sm:gap-4 p-3.5 sm:p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-xs transition min-w-0">
-						<div class="w-9 h-9 sm:w-10 sm:h-10 bg-red-100 rounded-xl flex items-center justify-center shrink-0"><MapPin class="w-4 h-4 sm:w-5 sm:h-5 text-red-600" /></div>
-						<div class="flex-1 min-w-0">
-							<p class="font-bold text-gray-800 text-xs sm:text-sm mb-0.5">Alamat Toko</p>
-							<p class="text-xs sm:text-sm text-gray-600 leading-relaxed break-words">{STORE_ADDRESS}</p>
-							<a
-								href="https://www.google.com/maps/search/?api=1&query=TOKO+ANEKA+RASA+99,+Jl.+Raya+Poris+Indah,+RT.007/RW.010,+Cipondoh+Indah,+Cipondoh,+Tangerang+City,+Banten+15122"
-								target="_blank"
-								rel="noopener noreferrer"
-								class="inline-flex items-center justify-center gap-1.5 text-[11px] sm:text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg border border-red-200 transition mt-2.5 w-full sm:w-auto text-center"
-							>
-								<MapPin class="w-3.5 h-3.5 shrink-0" />
-								<span class="truncate">Petunjuk Arah Google Maps</span>
-								<ExternalLink class="w-3 h-3 shrink-0 ml-0.5" />
-							</a>
-						</div>
-					</div>
-					<div class="flex items-start gap-3 sm:gap-4 p-3.5 sm:p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-xs transition min-w-0">
-						<div class="w-9 h-9 sm:w-10 sm:h-10 bg-green-100 rounded-xl flex items-center justify-center shrink-0"><Phone class="w-4 h-4 sm:w-5 sm:h-5 text-green-600" /></div>
-						<div class="flex-1 min-w-0">
-							<p class="font-bold text-gray-800 text-xs sm:text-sm mb-0.5">WhatsApp / Telepon</p>
-							<a href="https://wa.me/{WA_PHONE}" target="_blank" rel="noopener noreferrer" class="text-green-600 font-bold text-xs sm:text-sm hover:underline">+62 813-8710-9586</a>
-						</div>
-					</div>
-					<div class="flex items-start gap-3 sm:gap-4 p-3.5 sm:p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-xs transition min-w-0">
-						<div class="w-9 h-9 sm:w-10 sm:h-10 bg-amber-100 rounded-xl flex items-center justify-center shrink-0"><Clock class="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" /></div>
-						<div class="flex-1 min-w-0">
-							<p class="font-bold text-gray-800 text-xs sm:text-sm mb-0.5">Jam Operasional</p>
-							<p class="text-xs sm:text-sm text-gray-600">{STORE_HOURS}</p>
-						</div>
-					</div>
-					<!-- Banner Toko Fisik -->
-					<div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm relative group bg-white">
+			<div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+				<div class="lg:col-span-6 relative">
+					<div class="rounded-3xl overflow-hidden border border-slate-200 shadow-xl relative aspect-4/3">
 						<img
 							src="/images/banner-toko.png"
-							alt="Spanduk Toko Aneka Rasa 99"
-							class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-300"
-							loading="lazy"
+							alt="Suasana Toko Aneka Rasa 99 Poris"
+							class="w-full h-full object-cover"
 						/>
-						<div class="p-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs">
-							<span class="font-bold text-gray-800 flex items-center gap-1.5 min-w-0">
-								<MapPin class="w-3.5 h-3.5 text-red-600 shrink-0" />
-								<span class="truncate">Kios Toko Aneka Rasa 99 - Poris Indah</span>
-							</span>
-							<span class="text-gray-400 text-[11px] shrink-0 ml-2">Kios Resmi</span>
+						<div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent flex items-end p-6">
+							<div class="text-white space-y-1">
+								<p class="text-xs font-extrabold text-amber-300 uppercase tracking-widest">Toko Fisik Kami</p>
+								<p class="text-sm sm:text-base font-bold">Jl. Raya Poris Indah Blok B 11 No. 1, Tangerang</p>
+							</div>
 						</div>
-					</div>
-					<!-- Google Maps embed -->
-					<div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm w-full max-w-full h-48 sm:h-56 relative">
-						<iframe
-							src="https://maps.google.com/maps?q=TOKO+ANEKA+RASA+99,+Jl.+Raya+Poris+Indah,+RT.007/RW.010,+Cipondoh+Indah,+Cipondoh,+Tangerang+City,+Banten+15122&t=&z=16&ie=UTF8&iwloc=&output=embed"
-							style="border:0; width:100%; height:100%; min-width:0; max-width:100%; display:block;"
-							allowfullscreen={true}
-							loading="lazy"
-							referrerpolicy="no-referrer-when-downgrade"
-							title="Lokasi Toko Aneka Rasa 99"
-							class="w-full h-full"
-						></iframe>
 					</div>
 				</div>
 
-				<!-- Right: Quick order form -->
-				<div class="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl sm:rounded-3xl p-4 sm:p-7 text-white shadow-xl w-full max-w-full box-border">
-					<div class="flex items-center gap-2 mb-4 sm:mb-6">
-						<ShoppingBag class="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
-						<h3 class="font-black text-base sm:text-xl">Form Pesan Cepat</h3>
+				<div class="lg:col-span-6 space-y-5">
+					<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold uppercase tracking-wide">
+						<Store class="w-3.5 h-3.5" /> Cerita Dari Dapur Bangka
+					</span>
+					<h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-950 tracking-tight leading-snug">
+						Menghadirkan Cita Rasa Asli Bangka Langsung ke Rumah Anda
+					</h2>
+					<p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+						Bermula dari kerinduan akan renyahnya kemplang panggang arang khas kampung halaman, <strong>Toko Aneka Rasa 99</strong> hadir di kawasan Poris Indah Tangerang untuk menjadi rumah bagi para pecinta kuliner autentik Bangka Belitung.
+					</p>
+					<p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+						Kami bekerja sama langsung dengan para pengrajin pesisir tradisional di Bangka. Setiap butir kemplang dan getas hanya menggunakan daging ikan tenggiri segar tanpa pengawet atau pemutih kimia. Itulah mengapa aroma harum arang dan gurih alaminya selalu dirindukan.
+					</p>
+
+					<div class="pt-2 flex items-center gap-4">
+						<div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-black text-lg shrink-0">
+							99
+						</div>
+						<div>
+							<p class="font-extrabold text-slate-900 text-sm">Hendra & Keluarga</p>
+							<p class="text-xs text-slate-500">Pendiri & Pengelola Toko Aneka Rasa 99</p>
+						</div>
 					</div>
-					<form onsubmit={handleQuickOrderSubmit} class="space-y-3 sm:space-y-4 w-full">
-						<div>
-							<label for="cname" class="block text-xs font-bold text-red-100 mb-1">Nama Anda</label>
-							<input
-								id="cname"
-								type="text"
-								bind:value={customerName}
-								placeholder="Contoh: Ibu Sari"
-								class="w-full px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/15 border border-white/20 text-white placeholder-white/50 text-base focus:outline-none focus:ring-2 focus:ring-white/40 transition box-border"
-							/>
-						</div>
-						<div>
-							<label for="ccity" class="block text-xs font-bold text-red-100 mb-1">Kota Pengiriman</label>
-							<input
-								id="ccity"
-								type="text"
-								bind:value={customerCity}
-								placeholder="Contoh: Jakarta Selatan"
-								class="w-full px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/15 border border-white/20 text-white placeholder-white/50 text-base focus:outline-none focus:ring-2 focus:ring-white/40 transition box-border"
-							/>
-						</div>
-						<div>
-							<label for="cprod" class="block text-xs font-bold text-red-100 mb-1">Produk yang Diminati</label>
-							<div class="relative w-full">
-								<select
-									id="cprod"
-									bind:value={selectedQuickProduct}
-									class="w-full px-3.5 py-2.5 sm:py-3 pr-10 rounded-xl bg-white/15 border border-white/20 text-white text-base focus:outline-none focus:ring-2 focus:ring-white/40 transition appearance-none box-border cursor-pointer"
-								>
-									<option value="" class="text-gray-800">-- Pilih Produk --</option>
-									{#each FEATURED as p}
-									<option value={p.name} class="text-gray-800">{p.name} - Rp {formatCurrency(p.price)}</option>
-									{/each}
-									<option value="Hampers / Paket Oleh-Oleh" class="text-gray-800">Hampers / Paket Oleh-Oleh</option>
-									<option value="Lainnya (tanyakan via WA)" class="text-gray-800">Lainnya (tanyakan via WA)</option>
-								</select>
-								<ChevronRight class="w-4 h-4 text-white/80 absolute right-3.5 top-1/2 -translate-y-1/2 rotate-90 pointer-events-none shrink-0" />
-							</div>
-						</div>
-						<div>
-							<label for="cnotes" class="block text-xs font-bold text-red-100 mb-1">Catatan Tambahan (Opsional)</label>
-							<textarea
-								id="cnotes"
-								bind:value={orderNotes}
-								rows={2}
-								placeholder="Jumlah, variasi, atau permintaan khusus..."
-								class="w-full px-3.5 py-2.5 sm:py-3 rounded-xl bg-white/15 border border-white/20 text-white placeholder-white/50 text-base focus:outline-none focus:ring-2 focus:ring-white/40 transition resize-none box-border"
-							></textarea>
-						</div>
-						<button
-							type="submit"
-							class="w-full bg-white hover:bg-gray-50 text-emerald-700 font-black py-3 sm:py-4 px-3 rounded-xl flex items-center justify-center gap-2 transition shadow-lg text-xs sm:text-sm cursor-pointer active:scale-98 box-border max-w-full"
-						>
-							<svg class="w-4 h-4 sm:w-5 sm:h-5 fill-[#25D366] shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-							<span class="truncate">Kirim Pesanan via WhatsApp</span>
-						</button>
-					</form>
-					<p class="text-center text-red-100 text-xs mt-3 sm:mt-4 flex items-center justify-center gap-1">
-						<CheckCircle2 class="w-3.5 h-3.5 shrink-0" />
-						<span>Pesanan langsung diterima oleh admin toko</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== 5. MENGAPA KAMI (4 PILAR KEUNGGULAN) ===== -->
+	<section id="keunggulan" class="py-14 sm:py-20 bg-[#FCFAF6]">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-3">
+				<span class="inline-block bg-amber-100 text-amber-900 text-xs font-black px-3 py-1 rounded-full">
+					Standar Kualitas Tertinggi
+				</span>
+				<h2 class="text-2xl sm:text-4xl font-black text-slate-950 tracking-tight">
+					4 Alasan Mengapa Pelanggan Selalu Kembali ke <span class="text-red-600">Aneka Rasa 99</span>
+				</h2>
+				<p class="text-slate-600 text-xs sm:text-sm">
+					Komitmen kami adalah menyajikan produk terbaik dengan rasa yang selalu konsisten dan pelayanan yang ramah.
+				</p>
+			</div>
+
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow">
+					<div class="w-12 h-12 rounded-xl bg-red-600 text-white flex items-center justify-center mb-4 shadow-sm">
+						<ShieldCheck class="w-6 h-6" />
+					</div>
+					<h3 class="font-black text-slate-900 text-base mb-2">100% Ikan Tenggiri Asli</h3>
+					<p class="text-xs text-slate-500 leading-relaxed">
+						Menggunakan komposisi ikan tenggiri melimpah, bukan cuma tepung. Terasa gurih mantap di setiap gigitan.
+					</p>
+				</div>
+
+				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow">
+					<div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center mb-4 shadow-sm">
+						<Truck class="w-6 h-6" />
+					</div>
+					<h3 class="font-black text-slate-900 text-base mb-2">Siap Kirim ke Seluruh RI</h3>
+					<p class="text-xs text-slate-500 leading-relaxed">
+						Melayani kirim ke Sumatera, Jawa, Bali, Kalimantan hingga Papua. Menggunakan ekspedisi cepat dan terpercaya.
+					</p>
+				</div>
+
+				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow">
+					<div class="w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center mb-4 shadow-sm">
+						<Package class="w-6 h-6" />
+					</div>
+					<h3 class="font-black text-slate-900 text-base mb-2">Garansi Packing Aman</h3>
+					<p class="text-xs text-slate-500 leading-relaxed">
+						Setiap pesanan dilapisi bubble wrap tebal dan kardus kuat. Bebas cemas kemplang remuk di perjalanan.
+					</p>
+				</div>
+
+				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow">
+					<div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center mb-4 shadow-sm">
+						<Clock class="w-6 h-6" />
+					</div>
+					<h3 class="font-black text-slate-900 text-base mb-2">Buka Setiap Hari</h3>
+					<p class="text-xs text-slate-500 leading-relaxed">
+						Toko fisik buka non-stop dari 07.30 hingga 21.30 WIB. Kapanpun butuh oleh-oleh mendadak, kami selalu siap melayani!
 					</p>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- ===== FAQ SECTION (SEO & Customer Trust) ===== -->
-	<section class="py-12 sm:py-16 md:py-20 bg-amber-50/40 border-t border-amber-100/60 overflow-hidden w-full max-w-full" id="faq">
-		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full">
-			<div class="text-center mb-8 sm:mb-12">
-				<span class="inline-flex items-center gap-1.5 bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full mb-2 sm:mb-3">
-					<HelpCircle class="w-3.5 h-3.5" /> Tanya Jawab Seputar Produk
+	<!-- ===== 6. CARA PESAN (3 LANGKAH MUDAH) ===== -->
+	<section class="py-14 sm:py-20 bg-white border-y border-slate-200/80">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center max-w-2xl mx-auto mb-10 sm:mb-14 space-y-2">
+				<span class="text-xs font-extrabold text-red-600 uppercase tracking-widest">Praktis & Bebas Ribet</span>
+				<h2 class="text-2xl sm:text-4xl font-black text-slate-950">Cara Mudah Memesan Oleh-Oleh</h2>
+				<p class="text-xs sm:text-sm text-slate-500">Cukup 3 langkah sederhana, paket oleh-oleh sampai di depan pintu Anda.</p>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 relative">
+				<div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 relative text-center">
+					<div class="w-10 h-10 rounded-full bg-red-600 text-white font-black text-sm flex items-center justify-center mx-auto mb-4 shadow">
+						1
+					</div>
+					<h3 class="font-black text-slate-900 text-base mb-2">Pilih Produk Favorit</h3>
+					<p class="text-xs text-slate-500 leading-relaxed">
+						Telusuri kemplang panggang, getas, atau terasi yang Anda inginkan dari katalog produk di atas.
+					</p>
+				</div>
+
+				<div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 relative text-center">
+					<div class="w-10 h-10 rounded-full bg-red-600 text-white font-black text-sm flex items-center justify-center mx-auto mb-4 shadow">
+						2
+					</div>
+					<h3 class="font-black text-slate-900 text-base mb-2">Hubungi via WhatsApp</h3>
+					<p class="text-xs text-slate-500 leading-relaxed">
+						Kirim daftar pesanan Anda ke WhatsApp admin. Kami akan hitungkan total ongkos kirim termurah.
+					</p>
+				</div>
+
+				<div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 relative text-center">
+					<div class="w-10 h-10 rounded-full bg-red-600 text-white font-black text-sm flex items-center justify-center mx-auto mb-4 shadow">
+						3
+					</div>
+					<h3 class="font-black text-slate-900 text-base mb-2">Paket Tiba & Nikmati</h3>
+					<p class="text-xs text-slate-500 leading-relaxed">
+						Pesanan dipacking kardus tebal dan dikirim hari itu juga. Nikmati kerenyahannya bersama keluarga!
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== 7. TESTIMONI INTERAKTIF CAROUSEL ===== -->
+	<section id="testimoni" class="py-14 sm:py-20 bg-[#FCFAF6] overflow-hidden">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-8 sm:mb-12 space-y-2">
+				<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black uppercase">
+					<ThumbsUp class="w-3.5 h-3.5" /> Ulasan Jujur Pelanggan
 				</span>
-				<h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-2 sm:mb-3">
-					Pertanyaan <span class="text-red-600">Sering Diajukan</span>
+				<h2 class="text-2xl sm:text-4xl font-black text-slate-950">
+					Kata Mereka yang Sudah Menikmati
 				</h2>
-				<p class="text-gray-600 max-w-xl mx-auto text-xs sm:text-sm leading-relaxed">
-					Informasi lengkap seputar pemesanan, keaslian, dan pengiriman oleh-oleh khas Bangka dari Toko Aneka Rasa 99.
+				<p class="text-xs sm:text-sm text-slate-500">
+					Ribuan pelanggan dari Jakarta, Surabaya, Bandung hingga luar pulau mempercayakan oleh-olehnya pada kami.
 				</p>
 			</div>
 
-			<div class="space-y-3 sm:space-y-4 w-full max-w-full">
-				{#each faqs as faq, idx}
-				<div class="bg-white rounded-xl sm:rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden transition">
+			<!-- Carousel Card Frame -->
+			<div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-xl relative transition-all">
+				<div class="flex items-center justify-between mb-6">
+					<div class="flex items-center gap-3">
+						<div class="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-rose-600 text-white font-black flex items-center justify-center shadow-md">
+							{testimonials[activeTestimonial].avatar}
+						</div>
+						<div>
+							<h3 class="font-black text-slate-900 text-base">{testimonials[activeTestimonial].name}</h3>
+							<p class="text-xs text-slate-500 font-medium">{testimonials[activeTestimonial].city} • <span class="text-emerald-700 font-bold">{testimonials[activeTestimonial].tag}</span></p>
+						</div>
+					</div>
+
+					<!-- Stars -->
+					<div class="flex text-amber-400">
+						{#each Array(testimonials[activeTestimonial].stars) as _}
+						<Star class="w-4 h-4 fill-current" />
+						{/each}
+					</div>
+				</div>
+
+				<blockquote class="text-slate-700 text-sm sm:text-base leading-relaxed italic mb-6">
+					"{testimonials[activeTestimonial].review}"
+				</blockquote>
+
+				<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-slate-100">
+					<div class="text-xs text-slate-500">
+						Produk dibeli: <strong class="text-slate-800">{testimonials[activeTestimonial].product}</strong>
+					</div>
+
+					<!-- Carousel Controls -->
+					<div class="flex items-center gap-2 self-end sm:self-auto">
+						<button
+							onclick={prevTestimonial}
+							class="w-10 h-10 rounded-full border border-slate-200 hover:bg-slate-100 flex items-center justify-center transition active:scale-95 cursor-pointer"
+							aria-label="Testimoni Sebelumnya"
+						>
+							<ChevronLeft class="w-5 h-5 text-slate-600" />
+						</button>
+
+						<div class="flex gap-1.5 px-2">
+							{#each testimonials as _, i}
+							<button
+								onclick={() => activeTestimonial = i}
+								class="w-2.5 h-2.5 rounded-full transition-all cursor-pointer {activeTestimonial === i ? 'w-6 bg-red-600' : 'bg-slate-300'}"
+								aria-label="Pilih testimoni {i + 1}"
+							></button>
+							{/each}
+						</div>
+
+						<button
+							onclick={nextTestimonial}
+							class="w-10 h-10 rounded-full border border-slate-200 hover:bg-slate-100 flex items-center justify-center transition active:scale-95 cursor-pointer"
+							aria-label="Testimoni Selanjutnya"
+						>
+							<ChevronRight class="w-5 h-5 text-slate-600" />
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== 8. LOKASI TOKO & FORM PESAN CEPAT (MINIMALIS & HUMANIS) ===== -->
+	<section id="kontak" class="py-14 sm:py-20 bg-white border-y border-slate-200/80">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="grid lg:grid-cols-12 gap-8 lg:gap-12">
+				<!-- Left: Lokasi Toko & Google Maps -->
+				<div class="lg:col-span-7 space-y-6">
+					<div class="space-y-2">
+						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-black uppercase">
+							<MapPin class="w-3.5 h-3.5" /> Toko Fisik Kami
+						</span>
+						<h2 class="text-2xl sm:text-3xl font-black text-slate-950">Kunjungi Toko Fisik Kami di Poris</h2>
+						<p class="text-xs sm:text-sm text-slate-600">
+							Bagi Anda yang berdomisili di Tangerang, Jakarta Barat, atau sekitarnya, silakan mampir langsung untuk mencicipi dan memilih kemplang arang segar langsung dari toples!
+						</p>
+					</div>
+
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+						<div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+							<div class="flex items-center gap-2 text-xs font-bold text-slate-500 mb-1">
+								<Clock class="w-4 h-4 text-amber-500" /> Jam Operasional
+							</div>
+							<p class="font-extrabold text-sm text-slate-900">{STORE_HOURS}</p>
+							<p class="text-[11px] text-emerald-700 font-semibold mt-0.5">● Buka Setiap Hari (Termasuk Hari Libur)</p>
+						</div>
+
+						<div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+							<div class="flex items-center gap-2 text-xs font-bold text-slate-500 mb-1">
+								<Phone class="w-4 h-4 text-emerald-500" /> Kontak WhatsApp
+							</div>
+							<p class="font-extrabold text-sm text-slate-900">+62 813-8710-9586</p>
+							<p class="text-[11px] text-slate-500 mt-0.5">Respon Cepat & Ramah</p>
+						</div>
+					</div>
+
+					<!-- Google Maps Embed -->
+					<div class="rounded-2xl overflow-hidden border border-slate-200 shadow-sm h-56 sm:h-64 relative">
+						<iframe
+							src="https://maps.google.com/maps?q=TOKO+ANEKA+RASA+99,+Jl.+Raya+Poris+Indah,+RT.007/RW.010,+Cipondoh+Indah,+Cipondoh,+Tangerang+City,+Banten+15122&t=&z=16&ie=UTF8&iwloc=&output=embed"
+							style="border:0; width:100%; height:100%; display:block;"
+							allowfullscreen={true}
+							loading="lazy"
+							referrerpolicy="no-referrer-when-downgrade"
+							title="Lokasi Toko Aneka Rasa 99 di Google Maps"
+						></iframe>
+					</div>
+				</div>
+
+				<!-- Right: Elegant White Quick Order Form (No Screaming Red!) -->
+				<div class="lg:col-span-5">
+					<div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl relative">
+						<div class="flex items-center gap-3 pb-4 mb-4 border-b border-slate-100">
+							<div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold">
+								<ShoppingBag class="w-5 h-5" />
+							</div>
+							<div>
+								<h3 class="font-black text-slate-900 text-lg">Form Pesan Cepat</h3>
+								<p class="text-xs text-slate-500">Kirim format pesanan langsung ke WhatsApp admin</p>
+							</div>
+						</div>
+
+						<form onsubmit={handleQuickOrderSubmit} class="space-y-4">
+							<div>
+								<label for="cname" class="block text-xs font-bold text-slate-700 mb-1">Nama Pemesan</label>
+								<input
+									id="cname"
+									type="text"
+									bind:value={customerName}
+									placeholder="Contoh: Ibu Ratna"
+									required
+									class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-red-500 focus:ring-1 focus:ring-red-500 text-sm outline-none transition"
+								/>
+							</div>
+
+							<div>
+								<label for="ccity" class="block text-xs font-bold text-slate-700 mb-1">Kota / Kecamatan Tujuan</label>
+								<input
+									id="ccity"
+									type="text"
+									bind:value={customerCity}
+									placeholder="Contoh: Surabaya Gubeng"
+									required
+									class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-red-500 focus:ring-1 focus:ring-red-500 text-sm outline-none transition"
+								/>
+							</div>
+
+							<div>
+								<label for="cprod" class="block text-xs font-bold text-slate-700 mb-1">Produk yang Diinginkan</label>
+								<select
+									id="cprod"
+									bind:value={selectedQuickProduct}
+									class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-red-500 focus:ring-1 focus:ring-red-500 text-sm outline-none transition bg-white"
+								>
+									<option value="">-- Pilih Produk Utama --</option>
+									{#each FEATURED as p}
+									<option value={p.name}>{p.name} (Rp {formatCurrency(p.price)})</option>
+									{/each}
+									<option value="Paket Campur Oleh-Oleh">Paket Campur Oleh-Oleh</option>
+									<option value="Lainnya (Tanya via WA)">Lainnya (Tanya via WA)</option>
+								</select>
+							</div>
+
+							<div>
+								<label for="cnotes" class="block text-xs font-bold text-slate-700 mb-1">Catatan Tambahan (Jumlah / Permintaan)</label>
+								<textarea
+									id="cnotes"
+									bind:value={orderNotes}
+									rows={2}
+									placeholder="Contoh: Kemplang 3 bks + Getas 2 bks, sambal ditambah ya..."
+									class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-red-500 focus:ring-1 focus:ring-red-500 text-sm outline-none transition resize-none"
+								></textarea>
+							</div>
+
+							<button
+								type="submit"
+								class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-black py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition active:scale-98 cursor-pointer text-sm"
+							>
+								<svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+								<span>Kirim Pesanan ke WhatsApp</span>
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== 9. FAQ ACCORDION SECTION ===== -->
+	<section class="py-14 sm:py-20 bg-[#FCFAF6] border-b border-slate-200/80">
+		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-10 space-y-2">
+				<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200/80 text-slate-800 text-xs font-black uppercase">
+					<HelpCircle class="w-3.5 h-3.5" /> Pertanyaan Populer
+				</span>
+				<h2 class="text-2xl sm:text-4xl font-black text-slate-950">Tanya Jawab Seputar Produk</h2>
+				<p class="text-xs sm:text-sm text-slate-500">Semua yang perlu Anda ketahui sebelum memesan oleh-oleh khas Bangka di toko kami.</p>
+			</div>
+
+			<div class="space-y-3">
+				{#each faqs as faq, i}
+				<div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden transition-all">
 					<button
-						type="button"
-						onclick={() => toggleFaq(idx)}
-						class="w-full text-left px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-3 font-bold text-gray-900 text-sm sm:text-base hover:text-red-600 transition cursor-pointer box-border"
-						aria-expanded={openFaq === idx}
+						onclick={() => toggleFaq(i)}
+						class="w-full px-5 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-slate-900 hover:text-red-600 transition cursor-pointer"
 					>
-						<span class="leading-snug">{faq.q}</span>
-						<ChevronDown class="w-5 h-5 text-gray-400 shrink-0 transition-transform duration-200 {openFaq === idx ? 'rotate-180 text-red-600' : ''}" />
+						<span>{faq.q}</span>
+						<ChevronDown class="w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200 {openFaq === i ? 'rotate-180 text-red-600' : ''}" />
 					</button>
-					{#if openFaq === idx}
-					<div class="px-4 sm:px-6 pb-4 sm:pb-5 text-xs sm:text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
+					{#if openFaq === i}
+					<div class="px-5 sm:px-6 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3 animate-in fade-in duration-150">
 						{faq.a}
 					</div>
 					{/if}
 				</div>
 				{/each}
 			</div>
-
-			<div class="mt-8 text-center bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 shadow-sm w-full max-w-full">
-				<p class="text-xs sm:text-sm font-semibold text-gray-700 mb-2">Masih punya pertanyaan lain seputar pesanan oleh-oleh Bangka?</p>
-				<a
-					href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin tanya info seputar oleh-oleh Bangka:')}"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#25D366] hover:underline"
-				>
-					<MessageCircle class="w-4 h-4 shrink-0" /> Hubungi Customer Service via WhatsApp
-				</a>
-			</div>
 		</div>
 	</section>
 
-	<!-- ===== FOOTER ===== -->
-	<footer class="bg-gray-900 text-gray-400 pt-10 sm:pt-12 pb-24 sm:pb-12 overflow-hidden w-full max-w-full">
+	<!-- ===== 10. FOOTER ===== -->
+	<footer class="bg-slate-950 text-slate-400 pt-12 pb-16">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-10">
-				<!-- Brand -->
-				<div class="min-w-0">
-					<div class="flex items-center gap-2.5 mb-3 sm:mb-4">
-						<img src="/logo.png" alt="Toko Aneka Rasa 99" class="w-10 h-10 rounded-full object-cover border border-slate-700 shadow-md shrink-0" />
-						<div class="min-w-0">
-							<p class="font-black text-white text-sm truncate">Toko Aneka Rasa 99</p>
-							<p class="text-xs text-red-400 truncate">Kemplang & Oleh-Oleh Bangka</p>
+			<div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-800/80">
+				<!-- Brand Col -->
+				<div class="md:col-span-2 space-y-4">
+					<div class="flex items-center gap-3">
+						<img src="/logo.png" alt="Toko Aneka Rasa 99" class="w-11 h-11 rounded-full object-cover border border-slate-700" />
+						<div>
+							<p class="text-white font-black text-base">Toko Aneka Rasa 99</p>
+							<p class="text-xs text-red-400 font-bold">Pusat Oleh-Oleh Khas Bangka Belitung</p>
 						</div>
 					</div>
-					<p class="text-xs leading-relaxed mb-4 break-words">Pusat oleh-oleh khas Bangka Belitung terlengkap di Poris Indah, Tangerang. Kemplang, getas, terasi, dan ratusan produk pilihan.</p>
-					<a
-						href="https://wa.me/{WA_PHONE}"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition"
-					>
-						<MessageCircle class="w-3.5 h-3.5 shrink-0" />Chat WhatsApp
-					</a>
+					<p class="text-xs text-slate-400 leading-relaxed max-w-md">
+						Menyediakan aneka kemplang panggang arang, getas ikan tenggiri, terasi super, kerupuk pasir, dan ratusan oleh-oleh khas Bangka Belitung berkualitas premium.
+					</p>
+					<div class="flex items-center gap-3 pt-1">
+						<a
+							href="https://wa.me/{WA_PHONE}"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-1.5 bg-[#25D366] text-white text-xs font-bold px-3.5 py-2 rounded-lg hover:bg-[#20ba5a] transition"
+						>
+							<MessageCircle class="w-3.5 h-3.5" /> Chat WhatsApp
+						</a>
+						<a
+							href="https://shopee.co.id/tokoanekarasa99"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-1.5 bg-[#EE4D2D] text-white text-xs font-bold px-3.5 py-2 rounded-lg hover:bg-[#d73211] transition"
+						>
+							<ShoppingBag class="w-3.5 h-3.5" /> Toko Shopee
+						</a>
+					</div>
 				</div>
 
-				<!-- Navigation -->
-				<div>
-					<h4 class="font-black text-white text-sm mb-3 sm:mb-4">Navigasi</h4>
-					<ul class="space-y-2 text-sm">
-						<li><a href="#produk" class="hover:text-white transition flex items-center gap-1.5"><ChevronRight class="w-3.5 h-3.5 text-red-400 shrink-0" />Produk Unggulan</a></li>
-						<li><a href="#keunggulan" class="hover:text-white transition flex items-center gap-1.5"><ChevronRight class="w-3.5 h-3.5 text-red-400 shrink-0" />Keunggulan Kami</a></li>
-						<li><a href="#cara-pesan" class="hover:text-white transition flex items-center gap-1.5"><ChevronRight class="w-3.5 h-3.5 text-red-400 shrink-0" />Cara Pesan</a></li>
-						<li><a href="#testimoni" class="hover:text-white transition flex items-center gap-1.5"><ChevronRight class="w-3.5 h-3.5 text-red-400 shrink-0" />Testimoni</a></li>
-						<li><a href="#kontak" class="hover:text-white transition flex items-center gap-1.5"><ChevronRight class="w-3.5 h-3.5 text-red-400 shrink-0" />Kontak & Lokasi</a></li>
-						<li class="pt-2 border-t border-gray-800/80">
-							<a href="/login" class="text-gray-400 hover:text-white transition flex items-center gap-1.5 font-medium">
-								<ChevronRight class="w-3.5 h-3.5 text-amber-400 shrink-0" />
-								<User class="w-3.5 h-3.5 shrink-0 text-amber-400" />Login Sistem (Owner & Kasir)
-							</a>
-						</li>
+				<!-- Nav Links -->
+				<div class="space-y-3">
+					<p class="text-white font-extrabold text-sm uppercase tracking-wider">Navigasi</p>
+					<ul class="space-y-2 text-xs">
+						<li><a href="#hero" class="hover:text-white transition">Beranda</a></li>
+						<li><a href="#katalog" class="hover:text-white transition">Katalog Produk</a></li>
+						<li><a href="#cerita" class="hover:text-white transition">Cerita Toko</a></li>
+						<li><a href="#keunggulan" class="hover:text-white transition">Keunggulan Kami</a></li>
+						<li><a href="#testimoni" class="hover:text-white transition">Testimoni Pelanggan</a></li>
+						<li><a href="#kontak" class="hover:text-white transition">Lokasi & Kontak</a></li>
 					</ul>
 				</div>
 
-				<!-- Info -->
-				<div class="min-w-0">
-					<h4 class="font-black text-white text-sm mb-3 sm:mb-4">Info Toko</h4>
-					<ul class="space-y-3 text-xs">
-						<li class="flex items-start gap-2 min-w-0"><MapPin class="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" /><span class="break-words leading-relaxed">{STORE_ADDRESS}</span></li>
-						<li class="flex items-center gap-2 min-w-0"><Clock class="w-3.5 h-3.5 text-amber-400 shrink-0" /><span class="break-words">{STORE_HOURS}</span></li>
-						<li class="flex items-center gap-2 min-w-0"><Phone class="w-3.5 h-3.5 text-green-400 shrink-0" /><a href="https://wa.me/{WA_PHONE}" class="hover:text-white transition">+62 813-8710-9586</a></li>
-					</ul>
+				<!-- Store Info -->
+				<div class="space-y-3">
+					<p class="text-white font-extrabold text-sm uppercase tracking-wider">Alamat & Jam Buka</p>
+					<div class="space-y-2.5 text-xs">
+						<p class="leading-relaxed flex items-start gap-2">
+							<MapPin class="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+							<span>{STORE_ADDRESS}</span>
+						</p>
+						<p class="flex items-center gap-2">
+							<Clock class="w-4 h-4 text-amber-500 shrink-0" />
+							<span>{STORE_HOURS}</span>
+						</p>
+						<p class="flex items-center gap-2">
+							<Phone class="w-4 h-4 text-emerald-500 shrink-0" />
+							<span>+62 813-8710-9586</span>
+						</p>
+					</div>
 				</div>
 			</div>
 
-			<div class="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-center sm:text-left">
-				<p>© {new Date().getFullYear()} Toko Aneka Rasa 99. Semua Hak Dilindungi.</p>
+			<!-- Bottom Bar -->
+			<div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+				<p>© {new Date().getFullYear()} Toko Aneka Rasa 99. Seluruh Hak Cipta Dilindungi.</p>
 				<div class="flex items-center gap-4">
-					<a href="https://tokoanekarasa99.my.id/" class="hover:text-white transition">tokoanekarasa99.my.id</a>
-					<a href="/login" class="text-gray-500 hover:text-gray-300 transition flex items-center gap-1"><User class="w-3 h-3" />Login Sistem</a>
+					<a href="/login" class="hover:text-slate-300 flex items-center gap-1 transition">
+						<User class="w-3.5 h-3.5" /> Login Portal Kasir & Owner
+					</a>
 				</div>
 			</div>
 		</div>
