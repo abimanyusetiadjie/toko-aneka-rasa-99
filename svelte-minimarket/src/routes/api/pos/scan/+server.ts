@@ -60,7 +60,7 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 
 		// 2. Fallback: Jika belum ada di product_units, cari di tabel products (barcode, SKU, ID, atau nama)
 		if (units.length === 0) {
-			const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(barcode);
+			const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(barcode);
 			let matched: any[] = [];
 			if (isUuid) {
 				matched = await query<any>(

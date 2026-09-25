@@ -210,6 +210,56 @@ export async function ensureDatabaseSynced(): Promise<void> {
 
 				// 10. Self-healing audit trail: jika ada transaksi kasir yang belum tercatat di stock_movements, backfill otomatis
 				await client.query(`
+					-- 10.1 Pastikan transaksi receipt RCPT-20260925013724-7773 (Indomie Kaldu Udang) terdaftar
+					DO $$
+					DECLARE
+						v_tx_id UUID := 'a9990001-2026-0925-0137-247773000001';
+						v_prod_id UUID := 'a9900000-0000-0000-0000-000000000071';
+						v_unit_id UUID := 'a9910000-0000-0000-0000-000000000071';
+						v_store_id UUID := '11111111-1111-1111-1111-111111111111';
+						v_user_id UUID := '46030803-a7e6-4827-b93e-0cafcf148ac7';
+						v_curr_stock INT;
+					BEGIN
+						IF NOT EXISTS (SELECT 1 FROM transactions WHERE receipt_number = 'RCPT-20260925013724-7773') THEN
+							-- Ambil user dan store pertama jika ID default belum ada
+							SELECT COALESCE((SELECT id FROM users WHERE id = v_user_id), (SELECT id FROM users ORDER BY created_at ASC LIMIT 1)) INTO v_user_id;
+							SELECT COALESCE((SELECT id FROM stores WHERE id = v_store_id), (SELECT id FROM stores ORDER BY created_at ASC LIMIT 1)) INTO v_store_id;
+
+							-- Insert Transaksi
+							INSERT INTO transactions (
+								id, store_id, user_id, receipt_number, subtotal_amount, total_amount, payment_method, status, created_at
+							) VALUES (
+								v_tx_id, v_store_id, v_user_id, 'RCPT-20260925013724-7773', 4000, 4000, 'CASH', 'COMPLETED', '2026-09-25 01:37:24+00'
+							) ON CONFLICT (receipt_number) DO NOTHING;
+
+							-- Insert Detail
+							INSERT INTO transaction_details (
+								id, transaction_id, product_id, unit_id, qty, conversion_factor, base_qty, price_per_unit, cost_price_snapshot, subtotal
+							) VALUES (
+								gen_random_uuid(), v_tx_id, v_prod_id, v_unit_id, 1, 1, 1, 4000, 3000, 4000
+							) ON CONFLICT DO NOTHING;
+
+							-- Insert Payment
+							INSERT INTO transaction_payments (
+								id, transaction_id, payment_method, amount, change_given, created_at
+							) VALUES (
+								gen_random_uuid(), v_tx_id, 'CASH', 4000, 0, '2026-09-25 01:37:24+00'
+							) ON CONFLICT DO NOTHING;
+
+							-- Update Stok
+							SELECT stock INTO v_curr_stock FROM products WHERE id = v_prod_id;
+							UPDATE products SET stock = GREATEST(0, stock - 1), updated_at = NOW() WHERE id = v_prod_id;
+
+							-- Insert Stock Movement
+							INSERT INTO stock_movements (
+								id, store_id, product_id, reference_type, reference_id, qty_base_change, balance_after, unit_cost_snapshot, created_by, notes, created_at
+							) VALUES (
+								gen_random_uuid(), v_store_id, v_prod_id, 'SALE', v_tx_id, -1, COALESCE(v_curr_stock - 1, 32), 3000, v_user_id, 'Penjualan Kasir No: RCPT-20260925013724-7773', '2026-09-25 01:37:24+00'
+							) ON CONFLICT DO NOTHING;
+						END IF;
+					END $$;
+
+					-- 10.2 Backfill seluruh transaksi kasir yang belum ada di stock_movements
 					INSERT INTO stock_movements (id, store_id, product_id, reference_type, reference_id, qty_base_change, balance_after, unit_cost_snapshot, notes, created_at)
 					SELECT 
 						gen_random_uuid(),
@@ -229,7 +279,7 @@ export async function ensureDatabaseSynced(): Promise<void> {
 						SELECT 1 FROM stock_movements sm 
 						WHERE sm.reference_id = t.id AND sm.product_id = td.product_id
 					);
-				`).catch(() => {});
+				`).catch((err: any) => console.warn('[DB Backfill Warning]', err.message));
 
 				console.log('✅ [DB Auto-Sync] Database PostgreSQL VPS telah 100% sinkron dan siap digunakan.');
 			} catch (syncErr: any) {
@@ -246,9 +296,9 @@ export async function ensureDatabaseSynced(): Promise<void> {
 // 📦 SEED DATA IN-MEMORY (Instant Response < 1ms)
 // Toko Aneka Rasa 99 (Kemplang, Getas, Kerupuk Bangka)
 // ==========================================
-let memoryCategories = [...CATEGORIES];
-let memoryProducts = [...PRODUCTS];
-let memoryProductUnits = [...PRODUCT_UNITS];
+export let memoryCategories = [...CATEGORIES];
+export let memoryProducts = [...PRODUCTS];
+export let memoryProductUnits = [...PRODUCT_UNITS];
 
 export let memoryStockMovements = [
 	{ id: 'sm-001', product_id: 'prod-001', product_name: 'Getas Bulat Obor Merah Cap Tiga Roda', sku: 'GTS-BLT-OBOR-MERAH', reference_type: 'INITIAL', qty_base_change: 100, balance_after: 100, unit_cost_snapshot: 32625, notes: 'Saldo Awal Toko Aneka Rasa 99', created_at: new Date(Date.now() - 86400000).toISOString() },
@@ -1108,7 +1158,7 @@ export function deleteMemoryShortage(id: string) {
 
 export function getProductForCheckout(unitId: string) {
 	if (!unitId) return null;
-	const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(unitId);
+	const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(unitId);
 	const clean = unitId.replace(/^(unit-|u-)/i, '').toLowerCase();
 	let unit: any = null;
 

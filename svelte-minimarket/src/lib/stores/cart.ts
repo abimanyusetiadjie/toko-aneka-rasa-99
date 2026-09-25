@@ -3,7 +3,7 @@ import type { CartItem, Product, ProductUnit, PaymentMethod } from '$lib/types';
 
 const CART_DRAFT_STORAGE_KEY = 'smartpos_active_cart_draft';
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // Inisialisasi dari localStorage jika kasir reload / mati lampu
 let initialCart: CartItem[] = [];

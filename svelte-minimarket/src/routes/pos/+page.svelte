@@ -31,6 +31,7 @@
 	} from '$lib/stores/local-catalog.svelte';
 	import { BarcodeScannerListener } from '$lib/scanner/usb-hid';
 	import { calculatePointDiscount } from '$lib/services/points';
+	import type { Product, ProductUnit } from '$lib/types';
 	import {
 		ShoppingCart,
 		Barcode,
@@ -470,7 +471,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 
 	interface PosAppNotification {
 		id: string;
-		type: 'TRANSACTION' | 'SHOPEE';
+		type: 'TRANSACTION' | 'SHOPEE' | 'INFO';
 		title: string;
 		message: string;
 		orderSn?: string;
@@ -600,7 +601,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 	}
 
 	function addAppNotification(notif: {
-		type: 'TRANSACTION' | 'SHOPEE';
+		type: 'TRANSACTION' | 'SHOPEE' | 'INFO';
 		title: string;
 		message: string;
 		orderSn?: string;
@@ -1439,7 +1440,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 		}
 
 		// Bersihkan keranjang otomatis jika ada sisa data dummy / non-UUID dari sesi lama
-		const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+		const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 		cart.update((items) => items.filter((item) => UUID_REGEX.test(item.unit_id)));
 
 		scannerDriver = new BarcodeScannerListener({

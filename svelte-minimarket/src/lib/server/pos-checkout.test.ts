@@ -26,4 +26,18 @@ describe('POS Resilient Lookup and Stock Sync', () => {
 		const unit = getProductForCheckout('100751');
 		expect(unit?.stock).toBe(25);
 	});
+
+	it('should lookup Indomie Kaldu Udang Bangka via deterministic UUID', () => {
+		const unit = getProductForCheckout('a9900000-0000-0000-0000-000000000071');
+		expect(unit).not.toBeNull();
+		expect(unit?.product_name).toContain('Indomie Kaldu Udang');
+		expect(unit?.price).toBe(4000);
+	});
+
+	it('should lookup Indomie Kaldu Udang Bangka via 6-digit barcode 700005', () => {
+		const unit = getProductForCheckout('700005');
+		expect(unit).not.toBeNull();
+		expect(unit?.product_name).toContain('Indomie Kaldu Udang');
+		expect(unit?.price).toBe(4000);
+	});
 });

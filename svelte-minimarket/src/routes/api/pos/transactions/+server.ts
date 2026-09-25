@@ -1,6 +1,6 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { pool, updateMemoryProductStock, getProductForCheckout, recordMemoryTransaction, memoryTransactions, memoryStockMovements } from '$lib/server/db';
+import { pool, updateMemoryProductStock, getProductForCheckout, recordMemoryTransaction, memoryTransactions, memoryStockMovements, memoryProducts, memoryProductUnits } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import { pushStockToShopee } from '$lib/server/shopee-service';
 import { CreateTransactionSchema } from '$lib/schemas/transaction.schema';
@@ -134,8 +134,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			for (const item of sortedItems) {
 				const rawUnitId = String(item.unit_id || '').trim();
 				const cleanCode = rawUnitId.replace(/^(unit-|u-)/i, '').trim();
-				const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(rawUnitId);
-				const isCleanUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(cleanCode);
+				const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawUnitId);
+				const isCleanUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanCode);
 
 				let unitRes;
 				if (isUuid) {
@@ -231,22 +231,42 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 						throw new Error(`Stok fisik tidak mencukupi untuk "${unit.product_name}". Tersedia: ${unit.stock} Pcs, Diminta: ${baseQty} Pcs.`);
 					}
 
-					let validUnitId = unit.unit_id;
+					let validUnitId: string | null = null;
+					// 1. Verifikasi jika unit.unit_id benar-benar ada di tabel product_units
+					if (unit.unit_id) {
+						const puCheck = await client.query(`SELECT id FROM product_units WHERE id = $1 LIMIT 1`, [unit.unit_id]);
+						if (puCheck.rows.length > 0) {
+							validUnitId = puCheck.rows[0].id;
+						}
+					}
+
+					// 2. Jika belum valid, cari unit default produk ini di product_units
 					if (!validUnitId) {
-						// Buat baris unit baru di database jika produk belum memiliki product_units
-						const genUnitId = crypto.randomUUID();
-						await client.query(
-							`INSERT INTO product_units (id, product_id, unit_name, conversion_factor, price, barcode)
-							 VALUES ($1, $2, $3, 1, $4, $5)
-							 ON CONFLICT DO NOTHING`,
-							[genUnitId, unit.prod_id, unit.unit_name || 'Pcs', unit.price, cleanCode || unit.prod_id]
+						const puMatch = await client.query(
+							`SELECT id FROM product_units WHERE product_id = $1 ORDER BY conversion_factor ASC LIMIT 1`,
+							[unit.prod_id]
 						);
-						// Verifikasi apakah insert berhasil atau ada conflict
-						const verifyRes = await client.query(
-							`SELECT id FROM product_units WHERE id = $1 OR (product_id = $2 AND conversion_factor = 1) ORDER BY created_at DESC LIMIT 1`,
-							[genUnitId, unit.prod_id]
-						);
-						validUnitId = verifyRes.rows[0]?.id || genUnitId;
+						if (puMatch.rows.length > 0) {
+							validUnitId = puMatch.rows[0].id;
+						} else {
+							// 3. Buat baris unit baru jika belum ada
+							const genUnitId = crypto.randomUUID();
+							try {
+								await client.query(
+									`INSERT INTO product_units (id, product_id, unit_name, conversion_factor, price, barcode)
+									 VALUES ($1, $2, $3, 1, $4, $5)
+									 ON CONFLICT DO NOTHING`,
+									[genUnitId, unit.prod_id, unit.unit_name || 'Pcs', unit.price, cleanCode || unit.prod_id]
+								);
+								const verifyRes = await client.query(
+									`SELECT id FROM product_units WHERE id = $1 OR product_id = $2 ORDER BY CASE WHEN id = $1 THEN 0 ELSE 1 END LIMIT 1`,
+									[genUnitId, unit.prod_id]
+								);
+								validUnitId = verifyRes.rows[0]?.id || null;
+							} catch {
+								validUnitId = null;
+							}
+						}
 					}
 
 					const pricePerUnit = Math.round(isOfflineSync && item.price_snapshot !== undefined ? item.price_snapshot : Number(unit.price));
@@ -453,17 +473,21 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			}
 		} catch (dbErr: any) {
 			try { await client.query('ROLLBACK'); } catch {}
-			console.warn('Database query error:', dbErr.message);
+			console.error('[POS Checkout PostgreSQL Error]', {
+				message: dbErr.message,
+				detail: dbErr.detail,
+				constraint: dbErr.constraint,
+				table: dbErr.table,
+				code: dbErr.code
+			});
 			// Semua error bisnis (stok, pembayaran, produk tidak ditemukan) harus langsung dikembalikan ke kasir
-			// JANGAN pernah jatuh ke Jalur 2 untuk error bisnis — itu hanya menyembunyikan masalah
 			if (dbErr.message.includes('Stok fisik tidak mencukupi') || 
 			    dbErr.message.includes('Pembayaran tidak mencukupi') ||
 			    dbErr.message.includes('Produk tidak ditemukan') ||
 			    dbErr.message.includes('Saldo poin member')) {
 				throw error(400, dbErr.message);
 			}
-			// Untuk error koneksi/SQL murni, baru jatuh ke Jalur 2 sebagai cadangan
-			console.warn('Falling back to circuit-breaker for non-business DB error');
+			throw error(500, `Gagal memproses transaksi ke database: ${dbErr.message}`);
 		} finally {
 			try { client.release(); } catch {}
 		}

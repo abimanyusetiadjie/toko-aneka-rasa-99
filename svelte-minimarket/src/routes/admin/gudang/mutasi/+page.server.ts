@@ -37,7 +37,7 @@ export const load: PageServerLoad = async ({ url, setHeaders, locals }) => {
 			paramIdx++;
 		}
 
-		sql += ` ORDER BY sm.created_at DESC LIMIT 150`;
+		sql += ` ORDER BY CASE WHEN sm.reference_type = 'INITIAL' THEN 2 ELSE 1 END, sm.created_at DESC LIMIT 150`;
 
 		const rawMovements = await query(sql, params);
 		const movements = (rawMovements || []).map((m: any) => ({
