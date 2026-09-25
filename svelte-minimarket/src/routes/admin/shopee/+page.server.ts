@@ -51,21 +51,26 @@ export const load: PageServerLoad = async ({ url }) => {
 			total_escrow: 0
 		};
 
+		const connStatus = getShopeeConnectionStatus();
 		return {
 			orders: orders || [],
 			stats,
 			connectionStatus: {
-				...getShopeeConnectionStatus(),
-				shopId: shopIdFromUrl || getShopeeConnectionStatus().shopId
+				...connStatus,
+				shopId: shopIdFromUrl || connStatus.shopId || '1075726207'
 			},
 			authSuccess: shopIdFromUrl ? { shopId: shopIdFromUrl, code: codeFromUrl } : null,
 			authUrl
 		};
 	} catch (err: any) {
+		const connStatus = getShopeeConnectionStatus();
 		return {
 			orders: [],
 			stats: { ready_to_ship: 0, shipped: 0, completed: 0, cancelled: 0, total_revenue: 0, total_escrow: 0 },
-			connectionStatus: getShopeeConnectionStatus(),
+			connectionStatus: {
+				...connStatus,
+				shopId: shopIdFromUrl || connStatus.shopId || '1075726207'
+			},
 			authSuccess: shopIdFromUrl ? { shopId: shopIdFromUrl, code: codeFromUrl } : null,
 			authUrl,
 			error: err.message

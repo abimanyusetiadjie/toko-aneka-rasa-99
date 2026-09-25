@@ -216,7 +216,7 @@
 			<div>
 				<div class="flex items-center gap-2">
 					<span class="font-bold text-slate-900 text-sm">Shopee • Toko Aneka Rasa 99</span>
-					<span class="text-[11px] text-slate-500 font-medium">(Shop ID: {data.connectionStatus?.shopId || '99281729'})</span>
+					<span class="text-[11px] text-slate-500 font-medium">(Shop ID: {data.connectionStatus?.shopId || '1075726207'})</span>
 				</div>
 				<p class="text-slate-500 text-xs mt-0.5">
 					Pesanan Shopee otomatis memotong inventori gudang. Kasir offline dan online berbagi kuota stok real-time.
