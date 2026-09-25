@@ -563,3 +563,16 @@ export function getShopeeConnectionStatus() {
 	};
 }
 
+/**
+ * Generate Link Otorisasi Resmi Shopee Open Platform API v2
+ */
+export function getShopeeAuthUrl(redirectUrl: string): string {
+	const partnerId = process.env.SHOPEE_PARTNER_ID || '1234567';
+	const partnerKey = process.env.SHOPEE_PARTNER_KEY || 'sample';
+	const timestamp = Math.floor(Date.now() / 1000);
+	const path = '/api/v2/shop/auth_partner';
+	const baseString = `${partnerId}${path}${timestamp}`;
+	const sign = crypto.createHmac('sha256', partnerKey).update(baseString).digest('hex');
+	return `https://partner.shopeemobile.com${path}?partner_id=${partnerId}&timestamp=${timestamp}&sign=${sign}&redirect=${encodeURIComponent(redirectUrl)}`;
+}
+

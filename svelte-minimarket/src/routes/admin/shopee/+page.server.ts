@@ -4,7 +4,8 @@ import {
 	simulateRandomShopeeOrder,
 	updateShopeeOrderStatus,
 	cancelShopeeOrder,
-	getShopeeConnectionStatus
+	getShopeeConnectionStatus,
+	getShopeeAuthUrl
 } from '$lib/server/shopee-service';
 import type { ShopeeOrder } from '$lib/types';
 
@@ -14,6 +15,9 @@ export const load: PageServerLoad = async ({ url }) => {
 	if (shopIdFromUrl) {
 		process.env.SHOPEE_SHOP_ID = shopIdFromUrl;
 	}
+
+	const redirectUrl = `${url.origin}/admin/shopee`;
+	const authUrl = getShopeeAuthUrl(redirectUrl);
 
 	try {
 		const [orders, statsRows] = await Promise.all([
@@ -54,7 +58,8 @@ export const load: PageServerLoad = async ({ url }) => {
 				...getShopeeConnectionStatus(),
 				shopId: shopIdFromUrl || getShopeeConnectionStatus().shopId
 			},
-			authSuccess: shopIdFromUrl ? { shopId: shopIdFromUrl, code: codeFromUrl } : null
+			authSuccess: shopIdFromUrl ? { shopId: shopIdFromUrl, code: codeFromUrl } : null,
+			authUrl
 		};
 	} catch (err: any) {
 		return {
@@ -62,6 +67,7 @@ export const load: PageServerLoad = async ({ url }) => {
 			stats: { ready_to_ship: 0, shipped: 0, completed: 0, cancelled: 0, total_revenue: 0, total_escrow: 0 },
 			connectionStatus: getShopeeConnectionStatus(),
 			authSuccess: shopIdFromUrl ? { shopId: shopIdFromUrl, code: codeFromUrl } : null,
+			authUrl,
 			error: err.message
 		};
 	}

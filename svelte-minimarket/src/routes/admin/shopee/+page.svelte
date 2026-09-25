@@ -148,8 +148,21 @@
 			</p>
 		</div>
 
-		<!-- Action: Simulasi Order Shopee Baru -->
-		<div class="flex items-center gap-2 self-start sm:self-center">
+		<!-- Action: Otorisasi & Simulasi Order Shopee -->
+		<div class="flex items-center gap-2 self-start sm:self-center flex-wrap">
+			{#if (data as any)?.authUrl}
+				<a
+					href={(data as any).authUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-white bg-orange-600 hover:bg-orange-700 shadow-2xs transition-colors cursor-pointer"
+					title="Buka Halaman Otorisasi Resmi Shopee Open Platform Seller Centre"
+				>
+					<ExternalLink class="w-3.5 h-3.5" />
+					<span>Hubungkan / Otorisasi Shopee</span>
+				</a>
+			{/if}
+
 			<form
 				method="POST"
 				action="?/simulate"
@@ -211,10 +224,14 @@
 			</div>
 		</div>
 
-		<div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
+		<div class="flex items-center gap-2 self-start sm:self-auto shrink-0 flex-wrap">
+			<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold {data.connectionStatus?.mode === 'PRODUCTION_LIVE' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-orange-50 text-orange-700 border border-orange-200'}">
+				<span class="w-1.5 h-1.5 rounded-full {data.connectionStatus?.mode === 'PRODUCTION_LIVE' ? 'bg-emerald-500 animate-pulse' : 'bg-orange-500'}"></span>
+				{data.connectionStatus?.mode === 'PRODUCTION_LIVE' ? 'Shopee Live Terkoneksi' : 'Terhubung (API Siap)'}
+			</span>
 			<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
 				<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-				Sinkronisasi Otomatis Aktif
+				Webhook Otomatis Aktif
 			</span>
 		</div>
 	</div>
