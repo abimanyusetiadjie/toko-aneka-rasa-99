@@ -133,19 +133,13 @@
 
 	// Petty Cash (Pengeluaran Kasir) State
 	const EXPENSE_CATEGORIES = [
-		{ label: 'Kantong Kresek', emoji: '🛍️', desc: 'Plastik & kantong belanja' },
-		{ label: 'Galon Air Minum', emoji: '💧', desc: 'Isi ulang galon toko' },
-		{ label: 'Makan Kasir', emoji: '🍱', desc: 'Uang makan/minum shift' },
-		{ label: 'Token Listrik', emoji: '⚡', desc: 'Beli token PLN toko' },
-		{ label: 'Bensin & Ongkir', emoji: '🚚', desc: 'Bensin kurir / antar pesanan' },
-		{ label: 'Kebersihan', emoji: '🧼', desc: 'Sabun, pel, plastik sampah' },
-		{ label: 'Lakban & ATK', emoji: '📦', desc: 'Lakban, spidol, kertas nota' },
-		{ label: 'Lain-lain', emoji: '✏️', desc: 'Keperluan mendesak lain' }
+		{ label: 'Kantong / Plastik', emoji: '🛍️', desc: 'Beli plastik kresek' },
+		{ label: 'Ongkir / Ekspedisi', emoji: '🛵', desc: 'Bensin kurir / ongkir' }
 	];
 
 	let showExpenseModal = $state(false);
 	let expenseAmount = $state<number | null>(null);
-	let expenseCategory = $state('Kantong Kresek');
+	let expenseCategory = $state('Kantong / Plastik');
 	let expenseNotes = $state('');
 	let isSubmittingExpense = $state(false);
 	let dailyExpenses = $state<PettyCashExpense[]>([]);
