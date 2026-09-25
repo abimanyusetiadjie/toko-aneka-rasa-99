@@ -1151,6 +1151,63 @@
 					</div>
 				</div>
 
+				<!-- 4. Riwayat Tutup Kasir (Z-Report Shift) -->
+				<div class="mt-6 mb-8">
+					<h3 class="text-xs font-black uppercase tracking-wider text-slate-700 mb-2">
+						4. RIWAYAT TUTUP KASIR (Z-REPORT SHIFT)
+					</h3>
+					{#if data.recentShifts && data.recentShifts.length > 0}
+						<div class="overflow-x-auto">
+							<table class="w-full border-collapse border border-slate-300 text-[11px]">
+								<thead>
+									<tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-300">
+										<th class="p-1.5 text-center border-r border-slate-300 w-8">No</th>
+										<th class="p-1.5 text-left border-r border-slate-300">Tutup Shift</th>
+										<th class="p-1.5 text-left border-r border-slate-300">Kasir</th>
+										<th class="p-1.5 text-right border-r border-slate-300">Penjualan Kasir</th>
+										<th class="p-1.5 text-right border-r border-slate-300">Pengeluaran</th>
+										<th class="p-1.5 text-right border-r border-slate-300">Wajib Laci</th>
+										<th class="p-1.5 text-right border-r border-slate-300">Fisik Dihitung</th>
+										<th class="p-1.5 text-right">Selisih Kas</th>
+									</tr>
+								</thead>
+								<tbody class="divide-y divide-slate-200 font-mono">
+									{#each data.recentShifts as shift, idx}
+										<tr class="hover:bg-slate-50">
+											<td class="p-1.5 text-center text-slate-500 border-r border-slate-200">{idx + 1}</td>
+											<td class="p-1.5 text-slate-700 font-sans border-r border-slate-200">
+												{new Date(shift.closed_at).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' })} {new Date(shift.closed_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+											</td>
+											<td class="p-1.5 text-left font-sans text-slate-600 border-r border-slate-200 truncate max-w-[90px]">{shift.cashier_name.split(' ')[0]}</td>
+											<td class="p-1.5 text-right text-slate-900 border-r border-slate-200">{Number(shift.total_cash_sales).toLocaleString('id-ID')}</td>
+											<td class="p-1.5 text-right text-red-700 border-r border-slate-200">{Number(shift.total_expenses).toLocaleString('id-ID')}</td>
+											<td class="p-1.5 text-right text-blue-800 font-bold border-r border-slate-200">{Number(shift.expected_drawer_cash).toLocaleString('id-ID')}</td>
+											<td class="p-1.5 text-right text-slate-900 font-bold border-r border-slate-200">
+												{#if shift.actual_physical_cash !== null}
+													{Number(shift.actual_physical_cash).toLocaleString('id-ID')}
+												{:else}
+													<span class="text-slate-400 italic text-[10px]">Belum Dihitung</span>
+												{/if}
+											</td>
+											<td class="p-1.5 text-right font-bold {Number(shift.cash_difference) < 0 ? 'text-red-600' : (Number(shift.cash_difference) > 0 ? 'text-emerald-600' : 'text-slate-500')}">
+												{#if shift.cash_difference !== null}
+													{Number(shift.cash_difference) > 0 ? '+' : ''}{Number(shift.cash_difference).toLocaleString('id-ID')}
+												{:else}
+													-
+												{/if}
+											</td>
+										</tr>
+									{/each}
+								</tbody>
+							</table>
+						</div>
+					{:else}
+						<div class="p-4 text-center border border-slate-300 bg-slate-50 rounded-lg text-slate-500 italic text-xs">
+							Belum ada riwayat tutup kasir yang diarsipkan.
+						</div>
+					{/if}
+				</div>
+
 				<!-- Lembar Pengesahan Resmi -->
 				<div class="pt-6 border-t border-slate-200 flex justify-end">
 					<div class="text-center font-sans w-56 space-y-1">

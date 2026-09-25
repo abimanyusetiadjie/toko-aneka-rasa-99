@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { query } from '$lib/server/db';
+import { query, getDbRecentShifts } from '$lib/server/db';
 
 export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 	setHeaders({
@@ -343,6 +343,8 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 
 		paymentMethods.sort((a, b) => b.amount - a.amount);
 
+		const recentShifts = await getDbRecentShifts();
+
 		return {
 			period,
 			totalTransactions,
@@ -367,6 +369,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 			slowMovingProducts: finalSlowMoving,
 			dailyTrend,
 			paymentMethods,
+			recentShifts,
 			user: locals.user
 		};
 	} catch (e: any) {
@@ -390,6 +393,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 			slowMovingProducts: [],
 			dailyTrend: [],
 			paymentMethods: [],
+			recentShifts: [],
 			user: locals.user,
 			error: e.message
 		};
