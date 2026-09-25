@@ -103,8 +103,8 @@ export const actions: Actions = {
 			// In a real app, we fetch from /api/v2/order/get_order_list
 			// Since we're bridging it, let's just throw a simulated success 
 			// Wait, we can actually call callShopeeApi here if we want!
-			const { callShopeeApi } = await import('/server/shopee-service');
-			const { query } = await import('/server/db');
+			const { callShopeeApi } = await import('$lib/server/shopee-service');
+			const { query } = await import('$lib/server/db');
 			
 			// Get order list (Last 15 days for demo)
 			const timeTo = Math.floor(Date.now() / 1000);
@@ -136,7 +136,7 @@ export const actions: Actions = {
 			// Upsert to DB
 			for (const o of detailRes.order_list) {
 				// Cek apakah sudah ada
-				const existing = await query(\SELECT id FROM shopee_orders WHERE order_sn = \, [o.order_sn]);
+				const existing = await query(`SELECT id FROM shopee_orders WHERE order_sn = $1`, [o.order_sn]);
 				if (existing.length === 0) {
 					// Insert new order
 					const items = o.item_list.map((i: any) => ({
@@ -148,11 +148,11 @@ export const actions: Actions = {
 					}));
 					
 					await query(
-						\INSERT INTO shopee_orders (
+						`INSERT INTO shopee_orders (
 							order_sn, store_id, buyer_username, order_status, shipping_carrier,
 							tracking_number, total_amount, shopee_escrow_amount, items,
 							shopee_created_at
-						) VALUES (\, '11111111-1111-1111-1111-111111111111', \, \, \, \, \, \, \, TO_TIMESTAMP(\))\,
+						) VALUES ($1, '11111111-1111-1111-1111-111111111111', $2, $3, $4, $5, $6, $7, $8, TO_TIMESTAMP($9))`,
 						[
 							o.order_sn,
 							o.buyer_user_id || 'shopee_user',
@@ -169,7 +169,7 @@ export const actions: Actions = {
 				}
 			}
 			
-			return { success: true, message: \Berhasil menarik \ pesanan baru dari Shopee!\ };
+			return { success: true, message: `Berhasil menarik ${newOrdersCount} pesanan baru dari Shopee!` };
 		} catch (err: any) {
 			return { success: false, message: 'Gagal menarik pesanan: ' + err.message };
 		}

@@ -749,10 +749,10 @@ export async function syncShopeeStock(items: { product_id?: string; sku?: string
 		try {
 			let productRow = null;
 			if (itm.product_id) {
-				const rows = await query(\SELECT shopee_item_id, shopee_model_id, name FROM products WHERE id = \, [itm.product_id]);
+				const rows = await query(`SELECT shopee_item_id, shopee_model_id, name FROM products WHERE id = $1`, [itm.product_id]);
 				productRow = rows[0];
 			} else if (itm.sku) {
-				const rows = await query(\SELECT shopee_item_id, shopee_model_id, name FROM products WHERE sku = \, [itm.sku]);
+				const rows = await query(`SELECT shopee_item_id, shopee_model_id, name FROM products WHERE sku = $1`, [itm.sku]);
 				productRow = rows[0];
 			}
 
@@ -769,7 +769,7 @@ export async function syncShopeeStock(items: { product_id?: string; sku?: string
 				synced_count++;
 			}
 		} catch (err: any) {
-			console.error(\[Shopee Sync Error] Gagal update stok untuk item:\, err.message);
+			console.error(`[Shopee Sync Error] Gagal update stok untuk item:`, err.message);
 		}
 	}
 	return { success: true, synced_count };
