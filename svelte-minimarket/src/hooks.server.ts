@@ -20,7 +20,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	// 2. Filter ketat: Proteksi API internal (/api/pos, /api/shopee non-webhook)
 	const isInternalApi =
 		path.startsWith('/api/pos') ||
-		(path.startsWith('/api/shopee') && !path.startsWith('/api/webhooks/shopee'));
+		(path.startsWith('/api/shopee') && !path.startsWith('/api/webhooks/shopee') && !path.startsWith('/api/shopee/status'));
 
 	if (isInternalApi && !event.locals.user) {
 		return new Response(
