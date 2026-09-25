@@ -3,7 +3,7 @@ import { query } from '$lib/server/db';
 
 export const load: PageServerLoad = async ({ url, setHeaders, locals }) => {
 	setHeaders({
-		'cache-control': 'private, max-age=15, stale-while-revalidate=30'
+		'cache-control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
 	});
 	const isOwner = locals.user?.role_id === 1 || locals.user?.username?.toLowerCase().includes('owner');
 	const filterType = url.searchParams.get('type') || 'ALL';
@@ -13,9 +13,11 @@ export const load: PageServerLoad = async ({ url, setHeaders, locals }) => {
 		let sql = `
 			SELECT 
 				sm.id, sm.created_at, sm.reference_type, sm.qty_base_change, sm.balance_after,
-				sm.unit_cost_snapshot, sm.notes, p.name as product_name, p.sku
+				sm.unit_cost_snapshot, sm.notes, 
+				COALESCE(p.name, sm.notes, 'Produk') as product_name, 
+				COALESCE(p.sku, '-') as sku
 			FROM stock_movements sm
-			JOIN products p ON sm.product_id = p.id
+			LEFT JOIN products p ON sm.product_id = p.id
 			WHERE 1=1
 		`;
 
@@ -35,7 +37,7 @@ export const load: PageServerLoad = async ({ url, setHeaders, locals }) => {
 			paramIdx++;
 		}
 
-		sql += ` ORDER BY sm.created_at DESC LIMIT 100`;
+		sql += ` ORDER BY sm.created_at DESC LIMIT 150`;
 
 		const rawMovements = await query(sql, params);
 		const movements = (rawMovements || []).map((m: any) => ({

@@ -144,6 +144,93 @@ export async function ensureDatabaseSynced(): Promise<void> {
 					  AND p.barcode != '';
 				`);
 
+				// 8. Pastikan tabel stores, roles, users terpasang untuk mencegah foreign key error
+				await client.query(`
+					CREATE TABLE IF NOT EXISTS stores (
+						id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+						code VARCHAR(50) NOT NULL UNIQUE,
+						name VARCHAR(150) NOT NULL,
+						address TEXT,
+						phone VARCHAR(50),
+						created_at TIMESTAMPTZ DEFAULT NOW(),
+						updated_at TIMESTAMPTZ DEFAULT NOW()
+					);
+					INSERT INTO stores (id, code, name, address, phone)
+					VALUES ('11111111-1111-1111-1111-111111111111', 'STR-001', 'Toko Aneka Rasa 99', 'Perumahan Poris Indah Blok B 11 No. 1, Tangerang', '081387109586')
+					ON CONFLICT (id) DO NOTHING;
+
+					CREATE TABLE IF NOT EXISTS roles (
+						id SERIAL PRIMARY KEY,
+						name VARCHAR(50) NOT NULL UNIQUE
+					);
+					INSERT INTO roles (id, name) VALUES (1, 'owner'), (2, 'kasir'), (3, 'admin') ON CONFLICT (id) DO NOTHING;
+
+					CREATE TABLE IF NOT EXISTS users (
+						id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+						store_id UUID,
+						role_id INT NOT NULL,
+						username VARCHAR(50) NOT NULL UNIQUE,
+						password_hash VARCHAR(255) NOT NULL,
+						full_name VARCHAR(100) NOT NULL,
+						is_active BOOLEAN DEFAULT TRUE,
+						created_at TIMESTAMPTZ DEFAULT NOW()
+					);
+					INSERT INTO users (id, store_id, role_id, username, password_hash, full_name, is_active)
+					VALUES 
+					('46030803-a7e6-4827-b93e-0cafcf148ac7', '11111111-1111-1111-1111-111111111111', 1, 'owner_revaldo', '$2b$10$h84T5kvlFfE12VjokpzEP.tvSw6WLxMMYTVHq.OeE75A4PAq0Ka4K', 'Revaldo Julian (Owner)', true),
+					('11111111-2222-3333-4444-555555555555', '11111111-1111-1111-1111-111111111111', 1, 'owner', '$2b$10$h84T5kvlFfE12VjokpzEP.tvSw6WLxMMYTVHq.OeE75A4PAq0Ka4K', 'Owner Toko', true),
+					('932ba9fe-2627-463b-898a-62a4c2b5ae41', '11111111-1111-1111-1111-111111111111', 2, 'kasir_siti', '$2b$10$iS7SfEKSMAuTiSdZDsrYq.go2JWGQs.pXZaKTaPQ70I58ubPmdZCm', 'Siti Aminah (Kasir)', true),
+					('33333333-4444-5555-6666-777777777777', '11111111-1111-1111-1111-111111111111', 2, 'kasir', '$2b$10$iS7SfEKSMAuTiSdZDsrYq.go2JWGQs.pXZaKTaPQ70I58ubPmdZCm', 'Kasir Toko', true)
+					ON CONFLICT (id) DO NOTHING;
+				`).catch((err: any) => console.warn('[DB User/Store Sync Warning]', err.message));
+
+				// 9. Pastikan tabel stock_movements lengkap dan sinkron
+				await client.query(`
+					CREATE TABLE IF NOT EXISTS stock_movements (
+						id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+						store_id UUID,
+						product_id UUID NOT NULL,
+						reference_type VARCHAR(50) NOT NULL,
+						reference_id UUID NULL,
+						qty_base_change INT NOT NULL,
+						balance_after INT NOT NULL,
+						unit_cost_snapshot NUMERIC(12, 2) DEFAULT 0.00,
+						created_by UUID NULL,
+						notes TEXT,
+						created_at TIMESTAMPTZ DEFAULT NOW()
+					);
+					ALTER TABLE stock_movements ADD COLUMN IF NOT EXISTS reference_id UUID NULL;
+					ALTER TABLE stock_movements ADD COLUMN IF NOT EXISTS created_by UUID NULL;
+					ALTER TABLE stock_movements ADD COLUMN IF NOT EXISTS notes TEXT;
+					ALTER TABLE stock_movements ADD COLUMN IF NOT EXISTS unit_cost_snapshot NUMERIC(12, 2) DEFAULT 0.00;
+					ALTER TABLE stock_movements ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();
+					CREATE INDEX IF NOT EXISTS idx_stock_movements_created ON stock_movements(created_at DESC);
+					CREATE INDEX IF NOT EXISTS idx_stock_movements_prod ON stock_movements(product_id);
+				`).catch((err: any) => console.warn('[DB Stock Movements Sync Warning]', err.message));
+
+				// 10. Self-healing audit trail: jika ada transaksi kasir yang belum tercatat di stock_movements, backfill otomatis
+				await client.query(`
+					INSERT INTO stock_movements (id, store_id, product_id, reference_type, reference_id, qty_base_change, balance_after, unit_cost_snapshot, notes, created_at)
+					SELECT 
+						gen_random_uuid(),
+						t.store_id,
+						td.product_id,
+						'SALE',
+						t.id,
+						-td.base_qty,
+						p.stock,
+						COALESCE(td.cost_price_snapshot, p.base_hpp, 0),
+						'Penjualan Kasir No: ' || t.receipt_number,
+						t.created_at
+					FROM transaction_details td
+					JOIN transactions t ON td.transaction_id = t.id
+					JOIN products p ON td.product_id = p.id
+					WHERE NOT EXISTS (
+						SELECT 1 FROM stock_movements sm 
+						WHERE sm.reference_id = t.id AND sm.product_id = td.product_id
+					);
+				`).catch(() => {});
+
 				console.log('✅ [DB Auto-Sync] Database PostgreSQL VPS telah 100% sinkron dan siap digunakan.');
 			} catch (syncErr: any) {
 				console.warn('[DB Auto-Sync Error]', syncErr.message);
@@ -163,7 +250,7 @@ let memoryCategories = [...CATEGORIES];
 let memoryProducts = [...PRODUCTS];
 let memoryProductUnits = [...PRODUCT_UNITS];
 
-let memoryStockMovements = [
+export let memoryStockMovements = [
 	{ id: 'sm-001', product_id: 'prod-001', product_name: 'Getas Bulat Obor Merah Cap Tiga Roda', sku: 'GTS-BLT-OBOR-MERAH', reference_type: 'INITIAL', qty_base_change: 100, balance_after: 100, unit_cost_snapshot: 32625, notes: 'Saldo Awal Toko Aneka Rasa 99', created_at: new Date(Date.now() - 86400000).toISOString() },
 	{ id: 'sm-002', product_id: 'prod-033', product_name: 'Kemplang Panggang Cap MM Asli Bangka', sku: 'KMP-PANG-MM-BLT', reference_type: 'RESTOCK', qty_base_change: 80, balance_after: 80, unit_cost_snapshot: 35625, notes: 'Penerimaan Pabrik Kemplang Bangka', created_at: new Date(Date.now() - 43200000).toISOString() },
 	{ id: 'sm-003', product_id: 'prod-041', product_name: 'Kerupuk Keriting Mawar 1 Ball 5kg', sku: 'KRP-MTH-MWR-5KG', reference_type: 'SALE', qty_base_change: -2, balance_after: 38, unit_cost_snapshot: 93750, notes: 'Penjualan Kasir Toko No: RCPT-20260913-001', created_at: new Date(Date.now() - 7200000).toISOString() },
@@ -325,17 +412,24 @@ function executeInMemoryFallback<T>(text: string, params: any[] = []): T[] {
 
 	// 3. SELECT stock_movements
 	if (sql.includes('FROM stock_movements')) {
+		let list = [...memoryStockMovements];
 		if (sql.includes('reference_type IN')) {
-			return memoryStockMovements.filter(m => m.reference_type === 'RESTOCK' || m.reference_type === 'INITIAL') as any;
-		}
-		if (sql.includes('reference_type = $1')) {
+			list = list.filter(m => m.reference_type === 'SHOPEE_ORDER' || m.reference_type === 'SHOPEE_CANCEL' || m.reference_type === 'RESTOCK' || m.reference_type === 'INITIAL');
+		} else if (sql.includes('reference_type = $1')) {
 			const filterType = params[0];
-			return memoryStockMovements.filter(m => m.reference_type === filterType) as any;
+			list = list.filter(m => m.reference_type === filterType);
 		}
-		if (sql.includes('reference_type = \'ADJUSTMENT\'')) {
-			return memoryStockMovements.filter(m => m.reference_type === 'ADJUSTMENT') as any;
+		if (sql.includes('ILIKE')) {
+			const q = (params[params.length - 1] || '').replace(/%/g, '').toLowerCase();
+			if (q) {
+				list = list.filter(m => 
+					(m.product_name?.toLowerCase().includes(q) || 
+					 m.sku?.toLowerCase().includes(q) || 
+					 m.notes?.toLowerCase().includes(q))
+				);
+			}
 		}
-		return memoryStockMovements as any;
+		return list.slice(0, 150) as any;
 	}
 
 	// 4. SELECT users

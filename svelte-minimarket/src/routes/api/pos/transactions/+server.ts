@@ -1,6 +1,6 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { pool, updateMemoryProductStock, getProductForCheckout, recordMemoryTransaction, memoryTransactions } from '$lib/server/db';
+import { pool, updateMemoryProductStock, getProductForCheckout, recordMemoryTransaction, memoryTransactions, memoryStockMovements } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import { pushStockToShopee } from '$lib/server/shopee-service';
 import { CreateTransactionSchema } from '$lib/schemas/transaction.schema';
@@ -61,8 +61,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const transactionId = crypto.randomUUID();
 	const receiptNumber = `RCPT-${new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 14)}-${Math.floor(1000 + Math.random() * 9000)}`;
 
-	const userId = locals.user?.id || '46030803-a7e6-4827-b93e-0cafcf148ac7';
-	const storeId = locals.user?.store_id || '11111111-1111-1111-1111-111111111111';
+	let userId = locals.user?.id || '46030803-a7e6-4827-b93e-0cafcf148ac7';
+	let storeId: string | null = locals.user?.store_id || '11111111-1111-1111-1111-111111111111';
 
 	let client: any = null;
 	try {
@@ -88,6 +88,23 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					is_duplicate: true
 				});
 			}
+
+			// Pastikan userId dan storeId valid di database untuk mencegah foreign key violation
+			try {
+				const userCheck = await client.query(`SELECT id FROM users WHERE id = $1 LIMIT 1`, [userId]);
+				if (userCheck.rows.length === 0) {
+					const anyUser = await client.query(`SELECT id FROM users ORDER BY created_at ASC LIMIT 1`);
+					if (anyUser.rows.length > 0) userId = anyUser.rows[0].id;
+				}
+			} catch {}
+
+			try {
+				const storeCheck = await client.query(`SELECT id FROM stores WHERE id = $1 LIMIT 1`, [storeId]);
+				if (storeCheck.rows.length === 0) {
+					const anyStore = await client.query(`SELECT id FROM stores ORDER BY created_at ASC LIMIT 1`);
+					storeId = anyStore.rows.length > 0 ? anyStore.rows[0].id : null;
+				}
+			} catch {}
 
 			await client.query('BEGIN');
 
@@ -319,22 +336,40 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					const newBalance = detail.currentStock - detail.baseQty;
 					await client.query(`UPDATE products SET stock = $1, updated_at = NOW() WHERE id = $2`, [newBalance, detail.productId]);
 
-					await client.query(
-						`INSERT INTO stock_movements (
-							id, store_id, product_id, reference_type, reference_id, qty_base_change, balance_after, unit_cost_snapshot, created_by, notes, created_at
-						) VALUES ($1, $2, $3, 'SALE', $4, $5, $6, $7, $8, $9, NOW())`,
-						[
-							crypto.randomUUID(),
-							storeId,
-							detail.productId,
-							transactionId,
-							-detail.baseQty,
-							newBalance,
-							detail.baseHpp,
-							userId,
-							`Penjualan Kasir No: ${receiptNumber}`
-						]
-					);
+					try {
+						await client.query(
+							`INSERT INTO stock_movements (
+								id, store_id, product_id, reference_type, reference_id, qty_base_change, balance_after, unit_cost_snapshot, created_by, notes, created_at
+							) VALUES ($1, $2, $3, 'SALE', $4, $5, $6, $7, $8, $9, NOW())`,
+							[
+								crypto.randomUUID(),
+								storeId,
+								detail.productId,
+								transactionId,
+								-detail.baseQty,
+								newBalance,
+								detail.baseHpp,
+								userId,
+								`Penjualan Kasir No: ${receiptNumber}`
+							]
+						);
+					} catch (smErr: any) {
+						console.warn('[POS] Retrying stock_movements insert with basic columns:', smErr.message);
+						await client.query(
+							`INSERT INTO stock_movements (
+								id, store_id, product_id, reference_type, qty_base_change, balance_after, unit_cost_snapshot, notes
+							) VALUES ($1, $2, $3, 'SALE', $4, $5, $6, $7)`,
+							[
+								crypto.randomUUID(),
+								storeId,
+								detail.productId,
+								-detail.baseQty,
+								newBalance,
+								detail.baseHpp,
+								`Penjualan Kasir No: ${receiptNumber}`
+							]
+						);
+					}
 				}
 
 				for (const pay of data.payments) {
@@ -492,10 +527,24 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const actualFinalTotal = isOfflineSync ? totalPaid : calculatedFinalTotal;
 	const pointsEarned = data.member_id ? Math.round(calculatePointsEarned(calculatedSubtotal)) : 0;
 
-	// Potong stok in-memory
+	// Potong stok in-memory & catat riwayat mutasi
 	// Biarkan stok menjadi negatif jika ini adalah offline sync, agar sinkron dengan database PostgreSQL
 	for (const detail of preparedDetails) {
-		updateMemoryProductStock(detail.productId, detail.currentStock - detail.baseQty);
+		const newBalance = detail.currentStock - detail.baseQty;
+		updateMemoryProductStock(detail.productId, newBalance);
+
+		memoryStockMovements.unshift({
+			id: `sm-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
+			product_id: detail.productId,
+			product_name: detail.productName,
+			sku: (detail as any).sku || 'SKU',
+			reference_type: 'SALE',
+			qty_base_change: -detail.baseQty,
+			balance_after: Math.max(0, newBalance),
+			unit_cost_snapshot: detail.baseHpp || 0,
+			notes: `Penjualan Kasir No: ${receiptNumber}`,
+			created_at: new Date().toISOString()
+		});
 	}
 
 	// Catat riwayat transaksi in-memory
@@ -513,7 +562,23 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		items: preparedDetails
 	});
 
-	// Broadcast realtime event
+	// Broadcast realtime events
+	try {
+		broadcastRealtimeEvent({
+			type: 'STOCK_CHANGED',
+			data: {
+				items: preparedDetails.map(d => ({
+					productId: d.productId,
+					qty: d.qty,
+					baseQty: d.baseQty,
+					newBalance: Math.max(0, d.currentStock - d.baseQty)
+				})),
+				timestamp: new Date().toISOString(),
+				message: `Penjualan Kasir No: ${receiptNumber}`
+			}
+		});
+	} catch {}
+
 	try {
 		broadcastRealtimeEvent({
 			type: 'TRANSACTION_COMPLETED',

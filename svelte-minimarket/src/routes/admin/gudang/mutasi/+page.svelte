@@ -1,9 +1,30 @@
 <script lang="ts">
-	import { History, Filter, ArrowDownLeft, ArrowUpRight, Search, ShoppingBag, Truck, Package, RotateCcw, X } from 'lucide-svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
+	import {
+		History,
+		Filter,
+		ArrowDownLeft,
+		ArrowUpRight,
+		Search,
+		ShoppingBag,
+		Truck,
+		Package,
+		RotateCcw,
+		X,
+		RefreshCw,
+		CheckCircle2,
+		Radio
+	} from 'lucide-svelte';
 
 	let { data } = $props();
 
 	let searchQuery = $state(data.searchQuery || '');
+	let sseSource = $state<EventSource | null>(null);
+	let isConnected = $state(false);
+	let isRefreshing = $state(false);
+	let lastEventMessage = $state<string | null>(null);
+	let toastTimer: any = null;
 
 	function formatCurrency(val: number): string {
 		return new Intl.NumberFormat('id-ID', {
@@ -33,6 +54,70 @@
 				return { label: type, color: 'bg-slate-100 text-slate-700 border-slate-200' };
 		}
 	}
+
+	async function refreshData(fromEvent = false) {
+		isRefreshing = true;
+		try {
+			await invalidateAll();
+		} catch (err) {
+			console.warn('[Mutasi Refresh Error]', err);
+		} finally {
+			setTimeout(() => {
+				isRefreshing = false;
+			}, 400);
+		}
+	}
+
+	function showLiveAlert(msg: string) {
+		lastEventMessage = msg;
+		if (toastTimer) clearTimeout(toastTimer);
+		toastTimer = setTimeout(() => {
+			lastEventMessage = null;
+		}, 4000);
+	}
+
+	onMount(() => {
+		if (typeof window !== 'undefined' && 'EventSource' in window) {
+			try {
+				sseSource = new EventSource('/api/realtime/events');
+
+				sseSource.onopen = () => {
+					isConnected = true;
+				};
+
+				sseSource.addEventListener('TRANSACTION_COMPLETED', async (e: MessageEvent) => {
+					try {
+						const evt = JSON.parse(e.data || '{}');
+						showLiveAlert(evt.message || `Transaksi Kasir Baru: ${evt.receiptNumber || ''}`);
+						await refreshData(true);
+					} catch {
+						await refreshData(true);
+					}
+				});
+
+				sseSource.addEventListener('STOCK_CHANGED', async (e: MessageEvent) => {
+					try {
+						const evt = JSON.parse(e.data || '{}');
+						showLiveAlert(evt.message || 'Perubahan stok baru terdeteksi');
+						await refreshData(true);
+					} catch {
+						await refreshData(true);
+					}
+				});
+
+				sseSource.onerror = () => {
+					isConnected = false;
+				};
+			} catch (err) {
+				console.warn('[Mutasi SSE Connection Error]', err);
+			}
+		}
+	});
+
+	onDestroy(() => {
+		if (sseSource) sseSource.close();
+		if (toastTimer) clearTimeout(toastTimer);
+	});
 </script>
 
 <svelte:head>
@@ -40,6 +125,18 @@
 </svelte:head>
 
 <div class="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+	<!-- Toast Notifikasi Realtime Event -->
+	{#if lastEventMessage}
+		<div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-900 shadow-sm flex items-center justify-between gap-3 text-xs font-semibold animate-in fade-in slide-in-from-top-2 duration-200">
+			<div class="flex items-center gap-2">
+				<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+				<CheckCircle2 class="w-4 h-4 text-emerald-600 shrink-0" />
+				<span>{lastEventMessage} — Tabel mutasi otomatis diperbarui detik ini!</span>
+			</div>
+			<button onclick={() => (lastEventMessage = null)} class="text-emerald-700 hover:text-emerald-900 cursor-pointer">✕</button>
+		</div>
+	{/if}
+
 	<!-- Header -->
 	<header class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 pb-4 border-b border-slate-200">
 		<div>
@@ -54,7 +151,24 @@
 			<p class="text-xs text-slate-500 mt-0.5">Catatan lengkap setiap pergerakan stok: transaksi kasir, Shopee, restock barang masuk, dan koreksi manual.</p>
 		</div>
 
-		<div class="flex items-center gap-2">
+		<div class="flex items-center gap-2 flex-wrap">
+			<!-- Indikator Realtime SSE -->
+			<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold {isConnected ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-600 border border-slate-200'}">
+				<span class="w-2 h-2 rounded-full {isConnected ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}"></span>
+				<span>{isConnected ? 'Realtime Aktif' : 'Menghubungkan...'}</span>
+			</span>
+
+			<!-- Tombol Segarkan Manual -->
+			<button
+				type="button"
+				onclick={() => refreshData()}
+				class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs transition-all cursor-pointer"
+				title="Segarkan data mutasi stok"
+			>
+				<RefreshCw class="w-3.5 h-3.5 {isRefreshing ? 'animate-spin text-purple-600' : 'text-slate-500'}" />
+				<span>Segarkan</span>
+			</button>
+
 			<a
 				href="/admin/inventory"
 				class="text-xs font-semibold px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
@@ -174,7 +288,7 @@
 							</td>
 							<td class="py-3 px-4">
 								<div class="font-bold text-slate-900">{m.product_name}</div>
-								{#if m.sku}
+								{#if m.sku && m.sku !== '-'}
 									<div class="text-[10px] text-slate-400 font-mono">{m.sku}</div>
 								{/if}
 							</td>
@@ -194,7 +308,7 @@
 									{formatCurrency(m.unit_cost_snapshot)}
 								</td>
 							{/if}
-							<td class="py-3 px-4 text-slate-600 text-xs">
+							<td class="py-3 px-4 text-slate-600 text-xs font-mono">
 								{m.notes || '-'}
 							</td>
 						</tr>
@@ -216,7 +330,7 @@
 		<!-- Footer info -->
 		<div class="p-3 border-t border-slate-100 bg-slate-50/50 flex justify-between items-center text-xs text-slate-500">
 			<span>Menampilkan {data.movements.length} mutasi terbaru</span>
-			<span>Audit Trail Double-Entry Otomatis</span>
+			<span>Audit Trail Double-Entry Otomatis • Terhubung Real-Time</span>
 		</div>
 	</div>
 </div>
