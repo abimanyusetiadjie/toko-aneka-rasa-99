@@ -702,9 +702,15 @@ export async function getValidShopeeToken(shopId: string): Promise<string> {
 	return data.access_token;
 }
 export async function callShopeeApi(path: string, payload: any = {}, method = 'POST') {
-	const shopId = getShopeeEnv('SHOPEE_SHOP_ID', '1075726207');
 	const partnerId = getShopeeEnv('SHOPEE_PARTNER_ID', '2045588');
 	const partnerKey = getShopeeEnv('SHOPEE_PARTNER_KEY', 'shpk714e4d6841764d6f614753694f5752754e4855664e456e5176794f594170');
+	
+	// Cek DB untuk shop_id riil yang sudah diotorisasi (mengabaikan .env jika beda)
+	const settings = await query(`SELECT shop_id FROM shopee_settings ORDER BY updated_at DESC LIMIT 1`);
+	if (settings.length === 0) {
+		throw new Error('Toko Shopee belum dihubungkan. Silakan lakukan Otorisasi di menu Admin.');
+	}
+	const shopId = settings[0].shop_id;
 	
 	const access_token = await getValidShopeeToken(shopId);
 	const timestamp = Math.floor(Date.now() / 1000);
