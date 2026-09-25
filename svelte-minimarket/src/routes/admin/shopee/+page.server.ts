@@ -124,7 +124,8 @@ export const actions: Actions = {
 			
 			const orderSns = listRes.order_list.map((o: any) => o.order_sn).join(',');
 			const detailRes = await callShopeeApi('/api/v2/order/get_order_detail', {
-				order_sn_list: orderSns
+				order_sn_list: orderSns,
+				response_optional_fields: 'item_list,buyer_user_id,buyer_username,estimated_shipping_fee,shipping_carrier'
 			}, 'GET');
 			
 			if (!detailRes || !detailRes.order_list) {
@@ -139,12 +140,13 @@ export const actions: Actions = {
 				const existing = await query(`SELECT id FROM shopee_orders WHERE order_sn = $1`, [o.order_sn]);
 				if (existing.length === 0) {
 					// Insert new order
-					const items = o.item_list.map((i: any) => ({
+										const itemList = o.item_list || [];
+					const items = itemList.map((i: any) => ({
 						product_id: null,
-						sku: i.item_sku,
-						name: i.item_name,
-						qty: i.model_quantity_purchased,
-						price: i.model_discounted_price
+						sku: i.item_sku || '',
+						name: i.item_name || '',
+						qty: i.model_quantity_purchased || 0,
+						price: i.model_discounted_price || 0
 					}));
 					
 					await query(
