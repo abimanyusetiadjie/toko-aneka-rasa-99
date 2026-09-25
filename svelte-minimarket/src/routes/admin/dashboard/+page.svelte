@@ -288,9 +288,28 @@
 	}
 
 	function getPeriodLabel(p: string): string {
+		if (p === 'daily') return 'Hari Ini';
 		if (p === 'weekly') return '7 Hari Terakhir';
 		if (p === 'monthly') return 'Bulan Ini';
+		if (p === 'custom') {
+			const f = data.dateFrom || '';
+			const t = data.dateTo || '';
+			if (f && t && f !== t) return `${f} s/d ${t}`;
+			if (f) return f;
+			return 'Tanggal Khusus';
+		}
 		return 'Semua Waktu';
+	}
+
+	let showDatePicker = $state(false);
+	let customFrom = $state(data.dateFrom || new Date().toISOString().slice(0, 10));
+	let customTo = $state(data.dateTo || new Date().toISOString().slice(0, 10));
+
+	function applyCustomDate() {
+		if (customFrom) {
+			const to = customTo || customFrom;
+			window.location.href = `?period=custom&from=${customFrom}&to=${to}`;
+		}
 	}
 
 	function exportToExcel() {
@@ -476,43 +495,100 @@
 		</div>
 	</header>
 
-	<!-- Filter Periode Menonjol -->
-	<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-2.5 sm:p-3 rounded-xl border border-slate-200 shadow-xs">
-		<div class="flex items-center gap-2">
-			<Calendar class="w-4 h-4 text-slate-400 ml-1 shrink-0" />
-			<span class="text-xs font-semibold text-slate-700">Periode:</span>
-			<div class="inline-flex rounded-lg bg-slate-100 p-1 text-xs font-bold gap-1">
-				<a
-					href="?period=weekly"
-					class="px-3 py-1.5 rounded-md transition-all {data.period === 'weekly'
-						? 'bg-white text-blue-700 shadow-xs font-extrabold'
-						: 'text-slate-600 hover:text-slate-900'}"
+	<!-- Filter Periode -->
+	<div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-xs space-y-3">
+		<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+			<div class="flex items-center gap-3 flex-wrap">
+				<div class="flex items-center gap-1.5">
+					<Calendar class="w-4 h-4 text-blue-600 shrink-0" />
+					<span class="text-xs font-bold text-slate-700">Periode:</span>
+				</div>
+				<div class="inline-flex rounded-lg bg-slate-100 p-1 text-xs font-bold gap-0.5">
+					<a
+						href="?period=daily"
+						class="px-3 py-1.5 rounded-md transition-all {data.period === 'daily'
+							? 'bg-blue-600 text-white shadow-sm'
+							: 'text-slate-600 hover:text-slate-900 hover:bg-white'}"
+					>
+						Hari Ini
+					</a>
+					<a
+						href="?period=weekly"
+						class="px-3 py-1.5 rounded-md transition-all {data.period === 'weekly'
+							? 'bg-blue-600 text-white shadow-sm'
+							: 'text-slate-600 hover:text-slate-900 hover:bg-white'}"
+					>
+						7 Hari
+					</a>
+					<a
+						href="?period=monthly"
+						class="px-3 py-1.5 rounded-md transition-all {data.period === 'monthly'
+							? 'bg-blue-600 text-white shadow-sm'
+							: 'text-slate-600 hover:text-slate-900 hover:bg-white'}"
+					>
+						1 Bulan
+					</a>
+					<a
+						href="?period=all"
+						class="px-3 py-1.5 rounded-md transition-all {data.period === 'all'
+							? 'bg-blue-600 text-white shadow-sm'
+							: 'text-slate-600 hover:text-slate-900 hover:bg-white'}"
+					>
+						Semua
+					</a>
+				</div>
+				<button
+					type="button"
+					onclick={() => (showDatePicker = !showDatePicker)}
+					class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer {data.period === 'custom'
+						? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+						: 'bg-white text-slate-600 border-slate-300 hover:border-blue-400 hover:text-blue-700'}"
 				>
-					7 Hari Terakhir
-				</a>
-				<a
-					href="?period=monthly"
-					class="px-3 py-1.5 rounded-md transition-all {data.period === 'monthly'
-						? 'bg-white text-blue-700 shadow-xs font-extrabold'
-						: 'text-slate-600 hover:text-slate-900'}"
-				>
-					Bulan Ini
-				</a>
-				<a
-					href="?period=all"
-					class="px-3 py-1.5 rounded-md transition-all {data.period === 'all'
-						? 'bg-white text-blue-700 shadow-xs font-extrabold'
-						: 'text-slate-600 hover:text-slate-900'}"
-				>
-					Semua Waktu
-				</a>
+					<Calendar class="w-3.5 h-3.5" />
+					{#if data.period === 'custom'}
+						{getPeriodLabel('custom')}
+					{:else}
+						Pilih Tanggal
+					{/if}
+				</button>
+			</div>
+
+			<div class="text-xs text-slate-500 flex items-center gap-2 px-1 shrink-0">
+				<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+				<span>Menampilkan: <strong class="text-slate-700">{getPeriodLabel(data.period)}</strong></span>
 			</div>
 		</div>
 
-		<div class="text-xs text-slate-500 flex items-center gap-2 self-start sm:self-auto px-1">
-			<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
-			<span>Menampilkan data: <strong>{getPeriodLabel(data.period)}</strong></span>
-		</div>
+		<!-- Custom Date Picker Panel -->
+		{#if showDatePicker}
+			<div class="flex flex-col sm:flex-row items-end gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg animate-in fade-in slide-in-from-top-1 duration-150">
+				<div class="flex-1 w-full sm:w-auto">
+					<label for="dash-date-from" class="block text-[11px] font-bold text-slate-700 mb-1">Dari Tanggal:</label>
+					<input
+						id="dash-date-from"
+						type="date"
+						bind:value={customFrom}
+						class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+					/>
+				</div>
+				<div class="flex-1 w-full sm:w-auto">
+					<label for="dash-date-to" class="block text-[11px] font-bold text-slate-700 mb-1">Sampai Tanggal:</label>
+					<input
+						id="dash-date-to"
+						type="date"
+						bind:value={customTo}
+						class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+					/>
+				</div>
+				<button
+					type="button"
+					onclick={applyCustomDate}
+					class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+				>
+					<ArrowRight class="w-3.5 h-3.5" /> Tampilkan Data
+				</button>
+			</div>
+		{/if}
 	</div>
 
 	<!-- Error Message Alert -->

@@ -11,13 +11,19 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 		throw redirect(303, '/admin/inventory');
 	}
 
-	const period = url.searchParams.get('period') || 'weekly'; // 'weekly' | 'monthly' | 'all'
+	const period = url.searchParams.get('period') || 'weekly'; // 'daily' | 'weekly' | 'monthly' | 'all' | 'custom'
+	const dateFrom = url.searchParams.get('from') || '';
+	const dateTo = url.searchParams.get('to') || '';
 
 	let txFilterSql = '';
 	let shopeeFilterSql = '';
 	let rawDateFilter = '';
 
-	if (period === 'weekly') {
+	if (period === 'daily') {
+		txFilterSql = "AND t.created_at >= CURRENT_DATE";
+		shopeeFilterSql = "AND created_at >= CURRENT_DATE";
+		rawDateFilter = "AND created_at >= CURRENT_DATE";
+	} else if (period === 'weekly') {
 		txFilterSql = "AND t.created_at >= NOW() - INTERVAL '7 days'";
 		shopeeFilterSql = "AND created_at >= NOW() - INTERVAL '7 days'";
 		rawDateFilter = "AND created_at >= NOW() - INTERVAL '7 days'";
@@ -25,6 +31,12 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 		txFilterSql = "AND t.created_at >= DATE_TRUNC('month', NOW())";
 		shopeeFilterSql = "AND created_at >= DATE_TRUNC('month', NOW())";
 		rawDateFilter = "AND created_at >= DATE_TRUNC('month', NOW())";
+	} else if (period === 'custom' && dateFrom) {
+		const safeFrom = dateFrom.replace(/[^0-9-]/g, '');
+		const safeTo = dateTo ? dateTo.replace(/[^0-9-]/g, '') : new Date().toISOString().slice(0, 10);
+		txFilterSql = `AND t.created_at >= '${safeFrom}'::date AND t.created_at < ('${safeTo}'::date + INTERVAL '1 day')`;
+		shopeeFilterSql = `AND created_at >= '${safeFrom}'::date AND created_at < ('${safeTo}'::date + INTERVAL '1 day')`;
+		rawDateFilter = `AND created_at >= '${safeFrom}'::date AND created_at < ('${safeTo}'::date + INTERVAL '1 day')`;
 	}
 
 	try {
@@ -347,6 +359,8 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 
 		return {
 			period,
+			dateFrom,
+			dateTo,
 			totalTransactions,
 			totalRevenue,
 			totalCogs,
