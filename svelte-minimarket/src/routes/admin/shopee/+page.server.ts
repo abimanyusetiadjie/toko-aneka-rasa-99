@@ -125,7 +125,7 @@ export const actions: Actions = {
 			const orderSns = listRes.order_list.map((o: any) => o.order_sn).join(',');
 			const detailRes = await callShopeeApi('/api/v2/order/get_order_detail', {
 				order_sn_list: orderSns,
-				response_optional_fields: 'item_list,buyer_user_id,buyer_username,estimated_shipping_fee,shipping_carrier'
+				response_optional_fields: 'item_list,buyer_user_id,buyer_username,estimated_shipping_fee,shipping_carrier,total_amount,tracking_no'
 			}, 'GET');
 			
 			if (!detailRes || !detailRes.order_list) {
@@ -149,7 +149,7 @@ export const actions: Actions = {
 						price: i.model_discounted_price || 0
 					}));
 					
-					await query(
+										await query(
 						`INSERT INTO shopee_orders (
 							order_sn, store_id, buyer_username, order_status, shipping_carrier,
 							tracking_number, total_amount, shopee_escrow_amount, items,
@@ -157,14 +157,14 @@ export const actions: Actions = {
 						) VALUES ($1, '11111111-1111-1111-1111-111111111111', $2, $3, $4, $5, $6, $7, $8, TO_TIMESTAMP($9))`,
 						[
 							o.order_sn,
-							o.buyer_user_id || 'shopee_user',
-							o.order_status,
+							o.buyer_username || o.buyer_user_id || 'shopee_user',
+							o.order_status || 'UNKNOWN',
 							o.shipping_carrier || 'Reguler',
 							o.tracking_no || '',
-							o.total_amount,
+							o.total_amount || 0,
 							o.estimated_shipping_fee || 0,
 							JSON.stringify(items),
-							o.create_time
+							o.create_time || Math.floor(Date.now() / 1000)
 						]
 					);
 					newOrdersCount++;
