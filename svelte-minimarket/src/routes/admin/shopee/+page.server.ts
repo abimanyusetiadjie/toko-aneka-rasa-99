@@ -98,6 +98,82 @@ export const load: PageServerLoad = async ({ url }) => {
 };
 
 export const actions: Actions = {
+	pullOrders: async () => {
+		try {
+			// In a real app, we fetch from /api/v2/order/get_order_list
+			// Since we're bridging it, let's just throw a simulated success 
+			// Wait, we can actually call callShopeeApi here if we want!
+			const { callShopeeApi } = await import('/server/shopee-service');
+			const { query } = await import('/server/db');
+			
+			// Get order list (Last 15 days for demo)
+			const timeTo = Math.floor(Date.now() / 1000);
+			const timeFrom = timeTo - (15 * 86400); // 15 days ago
+			
+			const listRes = await callShopeeApi('/api/v2/order/get_order_list', {
+				time_range_field: 'create_time',
+				time_from: timeFrom,
+				time_to: timeTo,
+				page_size: 50,
+				cursor: ''
+			}, 'GET');
+			
+			if (!listRes || !listRes.order_list || listRes.order_list.length === 0) {
+				return { success: true, message: 'Tidak ada pesanan baru dari Shopee.' };
+			}
+			
+			const orderSns = listRes.order_list.map((o: any) => o.order_sn).join(',');
+			const detailRes = await callShopeeApi('/api/v2/order/get_order_detail', {
+				order_sn_list: orderSns
+			}, 'GET');
+			
+			if (!detailRes || !detailRes.order_list) {
+				return { success: true, message: 'Gagal mengambil detail pesanan.' };
+			}
+			
+			let newOrdersCount = 0;
+			
+			// Upsert to DB
+			for (const o of detailRes.order_list) {
+				// Cek apakah sudah ada
+				const existing = await query(\SELECT id FROM shopee_orders WHERE order_sn = \, [o.order_sn]);
+				if (existing.length === 0) {
+					// Insert new order
+					const items = o.item_list.map((i: any) => ({
+						product_id: null,
+						sku: i.item_sku,
+						name: i.item_name,
+						qty: i.model_quantity_purchased,
+						price: i.model_discounted_price
+					}));
+					
+					await query(
+						\INSERT INTO shopee_orders (
+							order_sn, store_id, buyer_username, order_status, shipping_carrier,
+							tracking_number, total_amount, shopee_escrow_amount, items,
+							shopee_created_at
+						) VALUES (\, '11111111-1111-1111-1111-111111111111', \, \, \, \, \, \, \, TO_TIMESTAMP(\))\,
+						[
+							o.order_sn,
+							o.buyer_user_id || 'shopee_user',
+							o.order_status,
+							o.shipping_carrier || 'Reguler',
+							o.tracking_no || '',
+							o.total_amount,
+							o.estimated_shipping_fee || 0,
+							JSON.stringify(items),
+							o.create_time
+						]
+					);
+					newOrdersCount++;
+				}
+			}
+			
+			return { success: true, message: \Berhasil menarik \ pesanan baru dari Shopee!\ };
+		} catch (err: any) {
+			return { success: false, message: 'Gagal menarik pesanan: ' + err.message };
+		}
+	},
 	simulate: async () => {
 		try {
 			const order = await simulateRandomShopeeOrder();

@@ -155,6 +155,21 @@
 				<span>Tautkan Produk (Mapping)</span>
 			</a>
 
+			<form method="POST" action="?/pullOrders" use:enhance={() => {
+				return async ({ update }) => {
+					await update();
+				};
+			}}>
+				<button
+					type="submit"
+					class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-2xs transition-colors cursor-pointer"
+					title="Tarik pesanan baru dari Shopee ke sistem"
+				>
+					<Search class="w-3.5 h-3.5" />
+					<span>Tarik Order</span>
+				</button>
+			</form>
+
 			{#if (data as any)?.authUrl}
 				<a
 					href={(data as any).authUrl}

@@ -2,7 +2,7 @@ import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { pool, ensureDatabaseSynced, updateMemoryProductStock, getProductForCheckout, recordMemoryTransaction, memoryTransactions, memoryStockMovements, memoryProducts, memoryProductUnits } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
-import { pushStockToShopee } from '$lib/server/shopee-service';
+import { syncShopeeStock } from '$lib/server/shopee-service';
 import { CreateTransactionSchema } from '$lib/schemas/transaction.schema';
 import { calculatePointsEarned } from '$lib/services/points';
 

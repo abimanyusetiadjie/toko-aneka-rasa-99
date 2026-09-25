@@ -740,3 +740,37 @@ export async function callShopeeApi(path: string, payload: any = {}, method = 'P
 
 	return data.response;
 }
+
+export async function syncShopeeStock(items: { product_id?: string; sku?: string; newStock: number }[]) {
+	if (!items || items.length === 0) return { success: true, synced_count: 0 };
+	let synced_count = 0;
+
+	for (const itm of items) {
+		try {
+			let productRow = null;
+			if (itm.product_id) {
+				const rows = await query(\SELECT shopee_item_id, shopee_model_id, name FROM products WHERE id = \, [itm.product_id]);
+				productRow = rows[0];
+			} else if (itm.sku) {
+				const rows = await query(\SELECT shopee_item_id, shopee_model_id, name FROM products WHERE sku = \, [itm.sku]);
+				productRow = rows[0];
+			}
+
+			if (productRow && productRow.shopee_item_id) {
+				await callShopeeApi('/api/v2/product/update_stock', {
+					item_id: Number(productRow.shopee_item_id),
+					stock_list: [
+						{
+							model_id: productRow.shopee_model_id ? Number(productRow.shopee_model_id) : 0,
+							normal_stock: itm.newStock
+						}
+					]
+				}, 'POST');
+				synced_count++;
+			}
+		} catch (err: any) {
+			console.error(\[Shopee Sync Error] Gagal update stok untuk item:\, err.message);
+		}
+	}
+	return { success: true, synced_count };
+}
