@@ -53,7 +53,7 @@
 			weight: '250 gr',
 			rating: 5.0,
 			reviewsCount: 142,
-			image: '/images/products/kemplang.png',
+			image: '/images/products/kemplang-mm.jpg',
 			badge: '🔥 Paling Laris',
 			highlight: 'Sambal Terasi Asli'
 		},
@@ -73,17 +73,17 @@
 		},
 		{
 			id: 'p3',
-			name: 'Kemplang Goreng Pasir Tjokro',
+			name: 'Steak Telor Cumi Kuda Laut (Kericu)',
 			category: 'khas-bangka',
-			desc: 'Digoreng menggunakan media pasir bersih khas Bangka tanpa minyak berlebih. Ekstra renyah krispi dengan rasa gurih ikan tenggiri yang kuat.',
-			price: 32000,
-			originalPrice: 37000,
-			weight: '250 gr',
-			rating: 4.8,
-			reviewsCount: 84,
-			image: '/images/products/kemplang.png',
-			badge: '✨ Extra Krispi',
-			highlight: 'Goreng Pasir Bebas Minyak'
+			desc: 'Keripik dari telur cumi segar khas Bangka. Gurih, renyah, dan aroma cumi yang khas. Camilan premium dengan cita rasa otentik.',
+			price: 30000,
+			originalPrice: 35000,
+			weight: '200 gr',
+			rating: 4.9,
+			reviewsCount: 92,
+			image: '/images/products/steak-cumi-kuda-laut.jpg',
+			badge: '🦑 Premium',
+			highlight: 'Telur Cumi Segar'
 		},
 		{
 			id: 'p4',
@@ -95,7 +95,7 @@
 			weight: '250 gr',
 			rating: 4.9,
 			reviewsCount: 76,
-			image: '/images/products/getas-tenggiri.png',
+			image: '/images/products/getes-lonceng-mas.jpg',
 			badge: '🐟 Gurih Maksimal',
 			highlight: 'Ikan Tenggiri Murni'
 		},
