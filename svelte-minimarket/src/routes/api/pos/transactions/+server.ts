@@ -373,8 +373,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 						[detail.detailId, transactionId, detail.productId, detail.unitId, detail.qty, detail.conversionFactor, detail.baseQty, detail.pricePerUnit, detail.baseHpp, detail.subtotal]
 					);
 
-					const newBalance = detail.currentStock - detail.baseQty;
-					await client.query(`UPDATE products SET stock = $1, updated_at = NOW() WHERE id = $2`, [newBalance, detail.productId]);
+					const updateRes = await client.query(`UPDATE products SET stock = GREATEST(0, stock - $1), updated_at = NOW() WHERE id = $2 RETURNING stock`, [detail.baseQty, detail.productId]);
+					const exactNewBalance = Number(updateRes.rows[0]?.stock || 0);
 
 					try {
 						await client.query(
@@ -387,7 +387,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 								detail.productId,
 								transactionId,
 								-detail.baseQty,
-								newBalance,
+								exactNewBalance,
 								detail.baseHpp,
 								userId,
 								`Penjualan Kasir No: ${receiptNumber}`
@@ -397,14 +397,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 						console.warn('[POS] Retrying stock_movements insert with basic columns:', smErr.message);
 						await client.query(
 							`INSERT INTO stock_movements (
-								id, store_id, product_id, reference_type, qty_base_change, balance_after, unit_cost_snapshot, notes
-							) VALUES ($1, $2, $3, 'SALE', $4, $5, $6, $7)`,
+								id, store_id, product_id, reference_type, reference_id, qty_base_change, balance_after, unit_cost_snapshot, notes
+							) VALUES ($1, $2, $3, 'SALE', $4, $5, $6, $7, $8)`,
 							[
 								crypto.randomUUID(),
 								storeId,
 								detail.productId,
+								transactionId,
 								-detail.baseQty,
-								newBalance,
+								exactNewBalance,
 								detail.baseHpp,
 								`Penjualan Kasir No: ${receiptNumber}`
 							]

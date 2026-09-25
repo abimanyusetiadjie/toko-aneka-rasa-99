@@ -57,6 +57,7 @@
 	}
 
 	async function refreshData(fromEvent = false) {
+		if (isRefreshing) return;
 		isRefreshing = true;
 		try {
 			await invalidateAll();

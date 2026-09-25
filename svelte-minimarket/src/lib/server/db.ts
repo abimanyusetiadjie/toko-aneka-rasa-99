@@ -307,6 +307,20 @@ export async function ensureDatabaseSynced(): Promise<void> {
 					CREATE INDEX IF NOT EXISTS idx_stock_movements_prod ON stock_movements(product_id);
 				`).catch((err: any) => console.warn('[DB Stock Movements Sync Warning]', err.message));
 
+				// Bersihkan duplikat mutasi akibat bug backfill (jika reference_id kosong dari transaksi yg sama)
+				await client.query(`
+					DELETE FROM stock_movements sm1
+					WHERE sm1.reference_type = 'SALE' AND sm1.reference_id IS NULL 
+					AND EXISTS (
+						SELECT 1 FROM stock_movements sm2 
+						WHERE sm2.reference_type = 'SALE' AND sm2.product_id = sm1.product_id 
+						AND sm2.created_at >= (sm1.created_at - interval '5 seconds')
+						AND sm2.created_at <= (sm1.created_at + interval '5 seconds')
+						AND sm2.reference_id IS NOT NULL
+					)
+				`).catch(() => {});
+
+
 				// 10. Self-healing audit trail: jika ada transaksi kasir yang belum tercatat di stock_movements, backfill otomatis
 				await client.query(`
 					-- 10.1 Pastikan transaksi receipt RCPT-20260925013724-7773 (Indomie Kaldu Udang) terdaftar
