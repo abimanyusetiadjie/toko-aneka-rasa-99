@@ -450,31 +450,8 @@
 	</div>
 	{/if}
 
-	<!-- ===== FLOATING WHATSAPP BUTTON WITH INTERACTIVE SPEECH BUBBLE ===== -->
+	<!-- ===== FLOATING WHATSAPP BUTTON ===== -->
 	<div class="fixed bottom-5 right-4 sm:right-6 z-40 flex flex-col items-end gap-2 pointer-events-none">
-		{#if waBubbleVisible}
-		<div class="pointer-events-auto bg-white border border-emerald-200/90 rounded-2xl p-3 sm:p-3.5 shadow-xl shadow-emerald-950/15 max-w-[270px] sm:max-w-[300px] animate-in fade-in slide-in-from-bottom-3 duration-300 relative group">
-			<button
-				type="button"
-				onclick={() => waBubbleVisible = false}
-				class="absolute -top-2 -left-2 bg-slate-100 hover:bg-slate-200 text-slate-500 w-5 h-5 rounded-full flex items-center justify-center text-[10px] shadow cursor-pointer transition"
-				aria-label="Tutup pesan"
-			>
-				✕
-			</button>
-			<div class="flex items-start gap-2.5">
-				<div class="relative shrink-0">
-					<img src="/logo.png" alt="Admin Toko" class="w-9 h-9 rounded-full object-cover border-2 border-emerald-400" />
-					<span class="w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white absolute bottom-0 right-0 animate-pulse"></span>
-				</div>
-				<div class="text-xs">
-					<p class="font-extrabold text-slate-900 leading-tight">Admin Toko Aneka Rasa 99</p>
-					<p class="text-slate-600 text-[11px] mt-0.5 leading-snug">Ada yang bisa dibantu kak? Tanya grosir kerupuk mentah atau oleh-oleh Bangka disini yuk! 💬</p>
-				</div>
-			</div>
-		</div>
-		{/if}
-
 		<a
 			href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin tanya seputar produk oleh-oleh Bangka:')}"
 			target="_blank"
@@ -563,7 +540,7 @@
 					</div>
 					<div class="min-w-0">
 						<span class="font-black text-slate-900 text-sm sm:text-base tracking-tight leading-none block truncate">Toko Aneka Rasa 99</span>
-						<span class="text-[11px] text-red-600 font-bold tracking-wide leading-none mt-1 block truncate">Pusat Oleh-Oleh Khas Bangka</span>
+						<span class="hidden sm:block text-[11px] text-red-600 font-bold tracking-wide leading-none mt-1 truncate">Pusat Oleh-Oleh Khas Bangka</span>
 					</div>
 				</a>
 
@@ -634,7 +611,7 @@
 	</header>
 
 	<!-- ===== 1. HERO SECTION (DYNAMIC & EMOTIONAL REDESIGN) ===== -->
-	<section id="hero" class="relative pt-6 pb-12 sm:pt-14 sm:pb-20 md:pt-20 md:pb-24 overflow-hidden isolate bg-gradient-to-b from-[#FFF5EC] via-[#FFFDF9] to-[#FCFAF6]">
+	<section id="hero" class="relative pt-10 pb-16 sm:pt-14 sm:pb-20 md:pt-20 md:pb-24 overflow-hidden isolate bg-gradient-to-b from-[#FFF5EC] via-[#FFFDF9] to-[#FCFAF6]">
 		<!-- Decorative Ambient Glows -->
 		<div class="absolute -top-24 -left-20 w-96 h-96 bg-red-200/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
 		<div class="absolute top-1/2 -right-24 w-96 h-96 bg-amber-200/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
@@ -644,7 +621,7 @@
 				<!-- Left Column: Emotional Pitch & High-Converting CTAs -->
 				<div class="lg:col-span-7 text-center lg:text-left space-y-4 sm:space-y-6">
 					<!-- Live Store Status Badge -->
-					<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs">
+					<div class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs">
 						<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
 						<span>Buka Setiap Hari: 07.30 – 21.30 WIB</span>
 						<span class="text-emerald-300">•</span>
@@ -810,10 +787,10 @@
 			</div>
 
 			<!-- Bento Grid (3 Cards) -->
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+			<div class="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 gap-5 md:gap-8 pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
 				
 				<!-- Bento Card 1: Makanan Khas Bangka -->
-				<div class="bg-white rounded-3xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
+				<div class="bg-white rounded-3xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group shrink-0 w-[85%] snap-center md:w-auto">
 					<div class="relative aspect-square overflow-hidden bg-slate-950 cursor-pointer" onclick={() => activePosterModal = '/images/banners/poster-khas-bangka.jpg'}>
 						<img
 							src="/images/banners/poster-khas-bangka.jpg"
@@ -852,7 +829,7 @@
 				</div>
 
 				<!-- Bento Card 2: Agen Kerupuk Mentah -->
-				<div class="bg-white rounded-3xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
+				<div class="bg-white rounded-3xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group shrink-0 w-[85%] snap-center md:w-auto">
 					<div class="relative aspect-square overflow-hidden bg-slate-950 cursor-pointer" onclick={() => activePosterModal = '/images/banners/poster-kerupuk-mentah.jpg'}>
 						<img
 							src="/images/banners/poster-kerupuk-mentah.jpg"
@@ -893,7 +870,7 @@
 				</div>
 
 				<!-- Bento Card 3: Aneka Kue Khas Bangka -->
-				<div class="bg-white rounded-3xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
+				<div class="bg-white rounded-3xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group shrink-0 w-[85%] snap-center md:w-auto">
 					<div class="relative aspect-square overflow-hidden bg-slate-950 cursor-pointer" onclick={() => activePosterModal = '/images/banners/poster-aneka-kue.jpg'}>
 						<img
 							src="/images/banners/poster-aneka-kue.jpg"
@@ -984,11 +961,11 @@
 			{#each filteredProducts as product (product.id)}
 			<div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col overflow-hidden group">
 				<!-- Product Image Area -->
-				<div class="relative bg-gradient-to-br from-amber-50/50 to-orange-50/50 aspect-square overflow-hidden">
+				<div class="relative bg-white aspect-[4/3] sm:aspect-square overflow-hidden p-2">
 					<img
 						src={product.image}
 						alt="{product.name} - Aneka Rasa 99"
-						class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+						class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
 						loading="lazy"
 					/>
 					<!-- Badge -->
@@ -1039,13 +1016,13 @@
 					</div>
 
 					<!-- CTAs (Cart & Direct WA) -->
-					<div class="grid grid-cols-2 gap-2">
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
 						<button
 							onclick={() => addToCart(product)}
-							class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+							class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs sm:text-sm font-bold py-3 sm:py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
 							title="Tambah ke Keranjang"
 						>
-							<ShoppingCart class="w-3.5 h-3.5" />
+							<ShoppingCart class="w-4 h-4" />
 							<span>+ Keranjang</span>
 						</button>
 
@@ -1053,10 +1030,10 @@
 							href={productWaLink(product.name, product.price)}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-extrabold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1 shadow-xs cursor-pointer active:scale-95"
+							class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs sm:text-sm font-extrabold py-3 sm:py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
 							title="Pesan Langsung via WA"
 						>
-							<MessageCircle class="w-3.5 h-3.5" />
+							<MessageCircle class="w-4 h-4" />
 							<span>Beli Cepat</span>
 						</a>
 					</div>
