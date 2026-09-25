@@ -23,8 +23,8 @@
 	let activePosterModal = $state<string | null>(null);
 
 	// Category filter state
-	type ProductCategory = 'all' | 'khas-bangka' | 'kerupuk-mentah' | 'kue-tradisional' | 'terasi-kopi';
-	let selectedCategory = $state<ProductCategory>('all');
+	type ProductCategory = 'khas-bangka' | 'kerupuk-mentah' | 'kue-tradisional' | 'terasi-kopi';
+	let selectedCategory = $state<ProductCategory>('khas-bangka');
 
 	interface FeaturedProduct {
 		id: string;
@@ -233,11 +233,7 @@
 		}
 	];
 
-	let filteredProducts = $derived(
-		selectedCategory === 'all'
-			? PRODUCTS
-			: PRODUCTS.filter(p => p.category === selectedCategory)
-	);
+	let filteredProducts = $derived(PRODUCTS.filter(p => p.category === selectedCategory));
 
 	interface CartItem extends FeaturedProduct { qty: number; }
 	let cart = $state<CartItem[]>([]);
@@ -574,9 +570,7 @@
 				<!-- Desktop Nav Links -->
 				<div class="hidden md:flex items-center gap-6 lg:gap-7 text-xs lg:text-sm font-bold text-slate-600">
 					<a href="#hero" class="hover:text-red-600 transition-colors">Beranda</a>
-					<a href="#lini-produk" class="hover:text-red-600 transition-colors">3 Lini Produk</a>
-					<a href="#katalog" class="hover:text-red-600 transition-colors">Katalog Lengkap</a>
-					<a href="#cerita" class="hover:text-red-600 transition-colors">Cerita Toko</a>
+					<a href="#katalog" class="hover:text-red-600 transition-colors">Katalog & Produk</a>
 					<a href="#testimoni" class="hover:text-red-600 transition-colors">Testimoni</a>
 					<a href="#kontak" class="hover:text-red-600 transition-colors">Lokasi & Pesan</a>
 				</div>
@@ -621,11 +615,9 @@
 			{#if mobileMenuOpen}
 			<div class="md:hidden py-4 border-t border-slate-100 flex flex-col gap-1.5 animate-in slide-in-from-top-2 duration-150">
 				<a href="#hero" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Beranda</a>
-				<a href="#lini-produk" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">3 Lini Produk</a>
-				<a href="#katalog" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Katalog Lengkap</a>
-				<a href="#cerita" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Cerita Toko</a>
-				<a href="#testimoni" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Testimoni Pelanggan</a>
-				<a href="#kontak" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Lokasi & Kontak</a>
+				<a href="#katalog" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Katalog & Produk</a>
+				<a href="#testimoni" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Testimoni</a>
+				<a href="#kontak" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Lokasi & Pesan</a>
 				<div class="pt-2 flex flex-col gap-2">
 					<a
 						href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin memesan:')}"
@@ -960,12 +952,7 @@
 
 		<!-- Category Filter Pills -->
 		<div class="flex items-center justify-center flex-wrap gap-2 mb-8 sm:mb-12">
-			<button
-				onclick={() => selectedCategory = 'all'}
-				class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer {selectedCategory === 'all' ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'}"
-			>
-				Semua ({PRODUCTS.length})
-			</button>
+
 			<button
 				onclick={() => selectedCategory = 'khas-bangka'}
 				class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer {selectedCategory === 'khas-bangka' ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'}"
