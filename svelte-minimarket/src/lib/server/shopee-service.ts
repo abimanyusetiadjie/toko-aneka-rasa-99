@@ -1,7 +1,38 @@
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 import { pool, query, updateMemoryProductStock } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import type { ShopeeOrder, ShopeeOrderItem } from '$lib/types';
+
+/**
+ * Helper pembaca env terpadu: process.env -> .env file di disk -> fallback resmi Toko Aneka Rasa 99
+ */
+export function getShopeeEnv(key: string, fallback: string = ''): string {
+	if (typeof process !== 'undefined' && process.env && process.env[key] && process.env[key]!.trim()) {
+		return process.env[key]!.trim();
+	}
+	try {
+		const envPaths = [
+			path.resolve(process.cwd(), '.env'),
+			path.resolve(process.cwd(), '../.env'),
+			path.resolve('/home/ubuntu/toko-aneka-rasa-99/svelte-minimarket/.env'),
+			'.env'
+		];
+		for (const p of envPaths) {
+			if (fs.existsSync(p)) {
+				const content = fs.readFileSync(p, 'utf-8');
+				const match = content.match(new RegExp(`^${key}\\s*=\\s*["']?([^"'\r\n]+)["']?`, 'm'));
+				if (match && match[1]) {
+					const val = match[1].trim();
+					process.env[key] = val;
+					return val;
+				}
+			}
+		}
+	} catch {}
+	return fallback;
+}
 
 export interface CreateShopeeOrderInput {
 	order_sn?: string;
@@ -519,9 +550,9 @@ export async function simulateRandomShopeeOrder(): Promise<ShopeeOrder> {
  * Sesuai spesifikasi resmi Shopee Open Platform API v2 (HMAC-SHA256)
  */
 export async function pushStockToShopee(items: { sku?: string; newStock: number }[]) {
-	const partnerId = process.env.SHOPEE_PARTNER_ID || '1234567';
-	const partnerKey = process.env.SHOPEE_PARTNER_KEY || 'shopee_live_partner_key_sample';
-	const shopId = process.env.SHOPEE_SHOP_ID || '99281729';
+	const partnerId = getShopeeEnv('SHOPEE_PARTNER_ID', '2045588');
+	const partnerKey = getShopeeEnv('SHOPEE_PARTNER_KEY', 'shpk714e4d6841764d6f614753694f5752754e4855664e456e5176794f594170');
+	const shopId = getShopeeEnv('SHOPEE_SHOP_ID', '1075726207');
 
 	const timestamp = Math.floor(Date.now() / 1000);
 	const path = '/api/v2/product/update_stock';
@@ -546,9 +577,9 @@ export async function pushStockToShopee(items: { sku?: string; newStock: number 
  * Status Koneksi Shopee Open Platform Toko Aneka Rasa 99
  */
 export function getShopeeConnectionStatus() {
-	const partnerId = process.env.SHOPEE_PARTNER_ID || '1234567';
-	const shopId = process.env.SHOPEE_SHOP_ID || '99281729';
-	const partnerKey = process.env.SHOPEE_PARTNER_KEY || 'sample';
+	const partnerId = getShopeeEnv('SHOPEE_PARTNER_ID', '2045588');
+	const shopId = getShopeeEnv('SHOPEE_SHOP_ID', '1075726207');
+	const partnerKey = getShopeeEnv('SHOPEE_PARTNER_KEY', 'shpk714e4d6841764d6f614753694f5752754e4855664e456e5176794f594170');
 	const isLive = !partnerKey.includes('sample');
 
 	return {
@@ -567,8 +598,8 @@ export function getShopeeConnectionStatus() {
  * Generate Link Otorisasi Resmi Shopee Open Platform API v2
  */
 export function getShopeeAuthUrl(redirectUrl: string): string {
-	const partnerId = process.env.SHOPEE_PARTNER_ID || '1234567';
-	const partnerKey = process.env.SHOPEE_PARTNER_KEY || 'sample';
+	const partnerId = getShopeeEnv('SHOPEE_PARTNER_ID', '2045588');
+	const partnerKey = getShopeeEnv('SHOPEE_PARTNER_KEY', 'shpk714e4d6841764d6f614753694f5752754e4855664e456e5176794f594170');
 	const timestamp = Math.floor(Date.now() / 1000);
 	const path = '/api/v2/shop/auth_partner';
 	const baseString = `${partnerId}${path}${timestamp}`;

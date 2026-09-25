@@ -1,11 +1,11 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { getShopeeConnectionStatus } from '$lib/server/shopee-service';
+import { getShopeeConnectionStatus, getShopeeEnv } from '$lib/server/shopee-service';
 
 export const GET: RequestHandler = async () => {
-	const partnerId = process.env.SHOPEE_PARTNER_ID || '';
-	const partnerKey = process.env.SHOPEE_PARTNER_KEY || '';
-	const shopId = process.env.SHOPEE_SHOP_ID || '';
+	const partnerId = getShopeeEnv('SHOPEE_PARTNER_ID', '2045588');
+	const partnerKey = getShopeeEnv('SHOPEE_PARTNER_KEY', 'shpk714e4d6841764d6f614753694f5752754e4855664e456e5176794f594170');
+	const shopId = getShopeeEnv('SHOPEE_SHOP_ID', '1075726207');
 
 	const maskedKey = partnerKey.length > 10 
 		? `${partnerKey.slice(0, 7)}...${partnerKey.slice(-6)} (Total: ${partnerKey.length} karakter)`
