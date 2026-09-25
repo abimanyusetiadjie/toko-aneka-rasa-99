@@ -2583,506 +2583,203 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 <!-- Modal Tutup Kasir / Rekap Harian Shift (Z-Report) -->
 {#if showClosingModal}
 	<div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
-		<div class="pos-panel bg-white border-slate-300 w-full max-w-2xl max-h-[92vh] overflow-y-auto p-4 sm:p-6 space-y-4 shadow-2xl">
+		<div class="pos-panel bg-white border-slate-300 w-full max-w-2xl max-h-[92vh] overflow-y-auto p-4 sm:p-6 space-y-5 shadow-2xl">
+			
 			<!-- Modal Header -->
 			<div class="flex justify-between items-center pb-3 border-b border-slate-200">
-				<div class="flex items-center gap-2.5">
-					<div class="p-2.5 bg-blue-100 text-blue-800 rounded-xl border border-blue-300 shadow-2xs">
-						<FileSpreadsheet class="w-6 h-6 text-blue-700" />
+				<div class="flex items-center gap-3">
+					<div class="p-2.5 bg-red-100 text-red-800 rounded-xl border border-red-300 shadow-2xs">
+						<CheckCheck class="w-6 h-6 text-red-700" />
 					</div>
 					<div>
-						<h3 class="font-black text-slate-900 text-sm sm:text-base flex items-center gap-2">
+						<h3 class="font-black text-slate-900 text-base sm:text-lg flex items-center gap-2">
 							<span>Tutup Kasir & Rekap Shift</span>
 							<span class="text-[10px] font-semibold text-blue-800 bg-blue-100 border border-blue-300 px-2 py-0.5 rounded-full">Z-Report</span>
 						</h3>
-						<p class="text-[11px] text-slate-500 font-mono">
-							{storeName} • {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })} • Kasir: <strong class="text-slate-800">{cashierName}</strong>
+						<p class="text-[11px] text-slate-500 font-mono mt-0.5">
+							Kasir: <strong class="text-slate-800">{cashierName}</strong> &bull; {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}
 						</p>
 					</div>
 				</div>
-				<button onclick={() => (showClosingModal = false)} class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg text-lg cursor-pointer hover:bg-slate-100 transition-colors">✕</button>
+				<button onclick={() => (showClosingModal = false)} class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl text-xl cursor-pointer transition-colors">✕</button>
 			</div>
 
-			<!-- 4 KPI Summary Cards -->
-			<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-				<div class="p-2.5 bg-blue-50 border border-blue-200 rounded-xl shadow-2xs">
-					<span class="text-[10px] text-blue-700 font-bold block uppercase tracking-wide">Total Omzet</span>
-					<span class="text-sm sm:text-base font-black text-blue-950 font-mono block mt-0.5">{formatCurrency(totalGrossSales)}</span>
-					<span class="text-[10px] text-blue-600 block mt-0.5">{todayTransactions.length} Struk Selesai</span>
-				</div>
-
-				<div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl shadow-2xs">
-					<span class="text-[10px] text-emerald-700 font-bold block uppercase tracking-wide">Penjualan Tunai</span>
-					<span class="text-sm sm:text-base font-black text-emerald-950 font-mono block mt-0.5">{formatCurrency(totalCashSales)}</span>
-					<span class="text-[10px] text-emerald-600 block mt-0.5">Uang Masuk ke Laci</span>
-				</div>
-
-				<div class="p-2.5 bg-purple-50 border border-purple-200 rounded-xl shadow-2xs">
-					<span class="text-[10px] text-purple-700 font-bold block uppercase tracking-wide">Non-Tunai (QRIS)</span>
-					<span class="text-sm sm:text-base font-black text-purple-950 font-mono block mt-0.5">{formatCurrency(totalQrisSales + totalTransferSales)}</span>
-					<span class="text-[10px] text-purple-600 block mt-0.5">Masuk Rekening Bank</span>
-				</div>
-
-				<div class="p-2.5 bg-amber-50 border border-amber-200 rounded-xl shadow-2xs">
-					<span class="text-[10px] text-amber-700 font-bold block uppercase tracking-wide">Kas Pengeluaran</span>
-					<span class="text-sm sm:text-base font-black text-red-600 font-mono block mt-0.5">-{formatCurrency(totalExpenses)}</span>
-					<span class="text-[10px] text-amber-700 block mt-0.5">{dailyExpenses.length} Uang Keluar Laci</span>
-				</div>
-			</div>
-
-			<!-- Notice Box: Penjelasan Uang Non-Tunai (Mencegah Kasir Bingung) -->
-			<div class="p-3 bg-purple-50/90 border border-purple-200 rounded-xl text-xs flex items-start gap-2.5 shadow-2xs">
-				<Info class="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
-				<div class="space-y-0.5">
-					<div class="font-bold text-purple-950 flex items-center gap-1.5">
-						<span>Penjualan Non-Tunai: {formatCurrency(totalQrisSales + totalTransferSales)}</span>
-						<span class="text-[10px] bg-purple-200/80 text-purple-800 px-1.5 py-0.2 rounded font-mono">QRIS & Transfer</span>
-					</div>
-					<p class="text-[11px] text-purple-800 leading-relaxed">
-						Uang QRIS & Transfer langsung masuk otomatis ke rekening toko/ShopeePay. Uang ini <strong>TIDAK PERLU dicari di laci kasir</strong> fisik.
-					</p>
-				</div>
-			</div>
-
-			<!-- Drawer Cash Breakdown Calculation Box (Rumus Laci Sangat Gamblang) -->
-			<div class="p-4 bg-slate-50 border border-slate-300 rounded-2xl space-y-3 shadow-2xs">
-				<div class="flex items-center justify-between font-bold text-slate-900 text-xs">
-					<div class="flex items-center gap-2">
-						<div class="p-1 bg-amber-100 rounded text-amber-700">
-							<Coins class="w-4 h-4" />
-						</div>
-						<span class="text-sm font-black">Hitung Uang Kas di Laci Kasir</span>
-					</div>
-					<span class="text-[10px] text-slate-500 font-mono uppercase bg-white border border-slate-200 px-2 py-0.5 rounded-full">Alur Kas Laci</span>
-				</div>
-
-				<div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-slate-800 text-xs">
-					<!-- Step 1: Modal Awal -->
-					<div class="p-3 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1">
-						<span class="text-[10px] text-slate-500 font-bold block uppercase tracking-wide">1. MODAL AWAL LACI</span>
-						<div class="flex items-center gap-1">
-							<span class="font-bold text-slate-500 font-mono text-sm">Rp</span>
-							<input
-								type="number"
-								step="10000"
-								bind:value={startingCash}
-								oninput={(e) => {
-									const val = Number((e.target as HTMLInputElement).value) || 0;
-									if (typeof window !== 'undefined') localStorage.setItem('aneka_pos_starting_cash', String(val));
-								}}
-								class="w-full bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 font-mono font-bold text-slate-900 outline-none focus:border-blue-600 text-sm"
-								title="Uang kembalian yang disiapkan di awal shift"
-							/>
-						</div>
-						<span class="text-[10px] text-slate-400 block">Uang kembalian pagi</span>
-					</div>
-
-					<!-- Step 2: Tambah Penjualan Tunai -->
-					<div class="p-3 bg-white rounded-xl border border-emerald-200 shadow-2xs space-y-1">
-						<span class="text-[10px] text-emerald-700 font-bold block uppercase tracking-wide">2. (+) PENJUALAN TUNAI</span>
-						<span class="font-mono font-black text-emerald-700 text-sm sm:text-base block mt-1">+{formatCurrency(totalCashSales)}</span>
-						<span class="text-[10px] text-emerald-600 block">Uang tunai dari pembeli</span>
-					</div>
-
-					<!-- Step 3: Kurang Kas Keluar -->
-					<div class="p-3 bg-white rounded-xl border border-amber-200 shadow-2xs space-y-1">
-						<div class="flex justify-between items-center">
-							<span class="text-[10px] text-red-700 font-bold block uppercase tracking-wide">3. (-) PENGELUARAN TOKO</span>
-							{#if dailyExpenses.length > 0}
-								<button
-									type="button"
-									onclick={() => { showClosingModal = false; showExpenseModal = true; }}
-									class="text-[10px] text-blue-600 hover:underline cursor-pointer"
-								>
-									Lihat ({dailyExpenses.length})
-								</button>
-							{/if}
-						</div>
-						<span class="font-mono font-black text-red-700 text-sm sm:text-base block mt-1">-{formatCurrency(totalExpenses)}</span>
-						<span class="text-[10px] text-red-600 block">Belanja keperluan toko</span>
-					</div>
-				</div>
-
+			<!-- BAGIAN UTAMA: FOKUS MENGHITUNG UANG LACI -->
+			<div class="p-4 sm:p-5 bg-blue-50/50 border-2 border-blue-100 rounded-2xl space-y-4">
+				
 				<!-- Target Wajib di Laci -->
-				<div class="p-3.5 bg-gradient-to-r from-blue-900 to-indigo-950 text-white rounded-xl flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 shadow-md">
+				<div class="flex flex-col sm:flex-row justify-between items-center bg-gradient-to-r from-blue-900 to-indigo-950 p-4 sm:p-5 rounded-xl text-white shadow-lg gap-4">
 					<div>
-						<span class="text-[11px] text-amber-300 font-black block tracking-wider uppercase">UANG TUNAI WAJIB ADA DI LACI:</span>
-						<span class="text-xs text-blue-200">Modal Awal ({formatCurrency(startingCash)}) + Tunai Masuk ({formatCurrency(totalCashSales)}) - Pengeluaran ({formatCurrency(totalExpenses)})</span>
+						<span class="text-[11px] text-amber-300 font-black block tracking-wider uppercase mb-1.5 opacity-90">TARGET UANG TUNAI WAJIB DI LACI:</span>
+						<span class="text-[11px] text-blue-200 block leading-relaxed font-medium">
+							Modal Awal Pagi <strong class="text-white">({formatCurrency(startingCash)})</strong><br/>
+							+ Penjualan Tunai <strong class="text-white">({formatCurrency(totalCashSales)})</strong><br/>
+							- Kas Keluar <strong class="text-white">({formatCurrency(totalExpenses)})</strong>
+						</span>
 					</div>
-					<div class="text-left sm:text-right">
-						<span class="text-xl sm:text-2xl font-black text-amber-300 font-mono tracking-tight">{formatCurrency(expectedDrawerCash)}</span>
+					<div class="text-center sm:text-right bg-black/40 px-5 py-3 rounded-xl border border-white/10 shadow-inner">
+						<span class="text-3xl sm:text-4xl font-black text-amber-400 font-mono tracking-tight">{formatCurrency(expectedDrawerCash)}</span>
 					</div>
 				</div>
-			</div>
 
-			<!-- Fitur Baru: Kalkulator Hitung Uang Pecahan (Denomination Counter) -->
-			<div class="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-2xs">
-				<button
-					type="button"
-					onclick={() => (showDenomCalc = !showDenomCalc)}
-					class="w-full p-3.5 bg-slate-50 hover:bg-slate-100 flex items-center justify-between text-xs font-bold text-slate-800 transition-colors cursor-pointer"
-				>
-					<div class="flex items-center gap-2">
-						<div class="p-1 bg-emerald-100 text-emerald-800 rounded">
-							<Calculator class="w-4 h-4" />
-						</div>
-						<div class="text-left">
-							<span class="text-xs font-bold block text-slate-900">Kalkulator Hitung Uang Pecahan (Lembaran & Koin)</span>
-							<span class="text-[10px] font-normal text-slate-500">Bantu hitung cepat jumlah lembar Rp 100rb, 50rb, 20rb, dll.</span>
-						</div>
-					</div>
-					<div class="flex items-center gap-2">
-						{#if calculatedDenomTotal > 0}
-							<span class="px-2 py-0.5 bg-emerald-600 text-white rounded-md font-mono text-xs font-bold">
-								{formatCurrency(calculatedDenomTotal)}
-							</span>
-						{/if}
-						{#if showDenomCalc}
-							<ChevronUp class="w-4 h-4 text-slate-400" />
-						{:else}
-							<ChevronDown class="w-4 h-4 text-slate-400" />
-						{/if}
-					</div>
-				</button>
-
-				{#if showDenomCalc}
-					<div class="p-3.5 bg-slate-50/50 border-t border-slate-200 space-y-3">
-						<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-							<!-- 100k -->
-							<div class="p-2 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1">
-								<div class="flex justify-between items-center text-[11px] font-bold text-slate-700">
-									<span class="text-red-700 font-mono">Rp 100.000</span>
-									<span class="text-[10px] text-slate-400 font-normal">lembar</span>
-								</div>
-								<input
-									type="number"
-									min="0"
-									bind:value={denom100k}
-									placeholder="0"
-									class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono font-bold text-center text-sm outline-none focus:border-blue-600"
-								/>
-								<span class="text-[10px] text-slate-500 font-mono block text-right font-medium">
-									= {formatCurrency(denom100k * 100000)}
-								</span>
-							</div>
-
-							<!-- 50k -->
-							<div class="p-2 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1">
-								<div class="flex justify-between items-center text-[11px] font-bold text-slate-700">
-									<span class="text-blue-700 font-mono">Rp 50.000</span>
-									<span class="text-[10px] text-slate-400 font-normal">lembar</span>
-								</div>
-								<input
-									type="number"
-									min="0"
-									bind:value={denom50k}
-									placeholder="0"
-									class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono font-bold text-center text-sm outline-none focus:border-blue-600"
-								/>
-								<span class="text-[10px] text-slate-500 font-mono block text-right font-medium">
-									= {formatCurrency(denom50k * 50000)}
-								</span>
-							</div>
-
-							<!-- 20k -->
-							<div class="p-2 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1">
-								<div class="flex justify-between items-center text-[11px] font-bold text-slate-700">
-									<span class="text-emerald-700 font-mono">Rp 20.000</span>
-									<span class="text-[10px] text-slate-400 font-normal">lembar</span>
-								</div>
-								<input
-									type="number"
-									min="0"
-									bind:value={denom20k}
-									placeholder="0"
-									class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono font-bold text-center text-sm outline-none focus:border-blue-600"
-								/>
-								<span class="text-[10px] text-slate-500 font-mono block text-right font-medium">
-									= {formatCurrency(denom20k * 20000)}
-								</span>
-							</div>
-
-							<!-- 10k -->
-							<div class="p-2 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1">
-								<div class="flex justify-between items-center text-[11px] font-bold text-slate-700">
-									<span class="text-purple-700 font-mono">Rp 10.000</span>
-									<span class="text-[10px] text-slate-400 font-normal">lembar</span>
-								</div>
-								<input
-									type="number"
-									min="0"
-									bind:value={denom10k}
-									placeholder="0"
-									class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono font-bold text-center text-sm outline-none focus:border-blue-600"
-								/>
-								<span class="text-[10px] text-slate-500 font-mono block text-right font-medium">
-									= {formatCurrency(denom10k * 10000)}
-								</span>
-							</div>
-
-							<!-- 5k -->
-							<div class="p-2 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1">
-								<div class="flex justify-between items-center text-[11px] font-bold text-slate-700">
-									<span class="text-amber-700 font-mono">Rp 5.000</span>
-									<span class="text-[10px] text-slate-400 font-normal">lembar</span>
-								</div>
-								<input
-									type="number"
-									min="0"
-									bind:value={denom5k}
-									placeholder="0"
-									class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono font-bold text-center text-sm outline-none focus:border-blue-600"
-								/>
-								<span class="text-[10px] text-slate-500 font-mono block text-right font-medium">
-									= {formatCurrency(denom5k * 5000)}
-								</span>
-							</div>
-
-							<!-- 2k -->
-							<div class="p-2 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1">
-								<div class="flex justify-between items-center text-[11px] font-bold text-slate-700">
-									<span class="text-slate-700 font-mono">Rp 2.000</span>
-									<span class="text-[10px] text-slate-400 font-normal">lembar</span>
-								</div>
-								<input
-									type="number"
-									min="0"
-									bind:value={denom2k}
-									placeholder="0"
-									class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono font-bold text-center text-sm outline-none focus:border-blue-600"
-								/>
-								<span class="text-[10px] text-slate-500 font-mono block text-right font-medium">
-									= {formatCurrency(denom2k * 2000)}
-								</span>
-							</div>
-
-							<!-- 1k -->
-							<div class="p-2 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1">
-								<div class="flex justify-between items-center text-[11px] font-bold text-slate-700">
-									<span class="text-teal-700 font-mono">Rp 1.000</span>
-									<span class="text-[10px] text-slate-400 font-normal">lembar</span>
-								</div>
-								<input
-									type="number"
-									min="0"
-									bind:value={denom1k}
-									placeholder="0"
-									class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono font-bold text-center text-sm outline-none focus:border-blue-600"
-								/>
-								<span class="text-[10px] text-slate-500 font-mono block text-right font-medium">
-									= {formatCurrency(denom1k * 1000)}
-								</span>
-							</div>
-
-							<!-- Koin -->
-							<div class="p-2 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1">
-								<div class="flex justify-between items-center text-[11px] font-bold text-slate-700">
-									<span class="text-amber-800 font-mono">Koin / Logam</span>
-									<span class="text-[10px] text-slate-400 font-normal">total Rp</span>
-								</div>
-								<input
-									type="number"
-									min="0"
-									step="100"
-									bind:value={denomCoins}
-									placeholder="0"
-									class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono font-bold text-center text-sm outline-none focus:border-blue-600"
-								/>
-								<span class="text-[10px] text-slate-500 font-mono block text-right font-medium">
-									= {formatCurrency(denomCoins || 0)}
-								</span>
-							</div>
-						</div>
-
-						<!-- Denom Actions -->
-						<div class="flex flex-wrap items-center justify-between pt-2 border-t border-slate-200 gap-2">
-							<div class="text-xs">
-								<span class="text-slate-500 font-medium">Total Uang Dihitung:</span>
-								<strong class="font-mono text-emerald-800 text-sm ml-1">{formatCurrency(calculatedDenomTotal)}</strong>
-							</div>
-							<div class="flex gap-2">
-								<button
-									type="button"
-									onclick={resetDenomCalc}
-									class="px-2.5 py-1 text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg cursor-pointer transition-colors"
-								>
-									Reset Hitungan
-								</button>
-								<button
-									type="button"
-									onclick={applyDenomTotal}
-									class="px-3 py-1 text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg cursor-pointer shadow-xs transition-colors flex items-center gap-1"
-								>
-									<Check class="w-3.5 h-3.5" /> Salin ke Kolom Laci
-								</button>
-							</div>
-						</div>
-					</div>
-				{/if}
-			</div>
-
-			<!-- Input Hitungan Kasir & Realtime Status Selisih -->
-			<div class="space-y-2.5 bg-white p-4 border border-slate-200 rounded-2xl shadow-2xs">
-				<div class="flex justify-between items-center">
-					<label for="pos-physical-cash" class="text-xs font-bold text-slate-900 flex items-center gap-2">
-						<span class="p-1 bg-blue-100 text-blue-700 rounded"><Coins class="w-4 h-4" /></span>
-						<span>Total Uang Fisik yang Ada di Laci Sekarang:</span>
-					</label>
-					{#if countedPhysicalCash !== null}
-						<button
-							onclick={() => (countedPhysicalCash = null)}
-							class="text-[11px] text-slate-500 hover:text-red-600 underline cursor-pointer"
-						>
-							Kosongkan
-						</button>
-					{/if}
-				</div>
-
-				<div class="flex gap-2 items-center">
-					<div class="relative flex-1">
-						<span class="absolute left-3 top-2.5 text-slate-400 font-mono font-bold text-base">Rp</span>
-						<input
-							id="pos-physical-cash"
-							type="number"
-							min="0"
-							step="1000"
-							bind:value={countedPhysicalCash}
-							placeholder="Masukkan jumlah uang hasil hitung fisik di laci..."
-							class="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:border-blue-600 text-slate-900 font-mono font-black text-base sm:text-lg"
-						/>
-					</div>
+				<!-- Kalkulator Hitung Pecahan (Opsional & Disederhanakan) -->
+				<div class="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-2xs">
 					<button
 						type="button"
-						onclick={() => (countedPhysicalCash = expectedDrawerCash)}
-						class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-bold rounded-xl shrink-0 cursor-pointer transition-colors active:scale-95"
-						title="Isi otomatis sama dengan nominal yang seharusnya di laci"
+						onclick={() => (showDenomCalc = !showDenomCalc)}
+						class="w-full p-3.5 hover:bg-slate-50 flex items-center justify-between transition-colors cursor-pointer"
 					>
-						Set Pas Sesuai Laci
+						<div class="flex items-center gap-2.5">
+							<div class="p-1.5 bg-emerald-100 text-emerald-800 rounded-lg">
+								<Calculator class="w-4 h-4" />
+							</div>
+							<span class="text-[13px] font-bold text-slate-800">Kalkulator Uang Pecahan (Bantu Hitung)</span>
+						</div>
+						<div class="flex items-center gap-3">
+							{#if calculatedDenomTotal > 0}
+								<span class="px-2.5 py-0.5 bg-emerald-600 text-white rounded-md font-mono text-[11px] font-bold">
+									{formatCurrency(calculatedDenomTotal)}
+								</span>
+							{/if}
+							{#if showDenomCalc}<ChevronUp class="w-5 h-5 text-slate-400" />{:else}<ChevronDown class="w-5 h-5 text-slate-400" />{/if}
+						</div>
 					</button>
+
+					{#if showDenomCalc}
+						<div class="p-3.5 bg-slate-50/80 border-t border-slate-200">
+							<div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+								<div class="p-2 bg-white rounded-lg border border-slate-200 space-y-1.5 shadow-2xs"><div class="flex justify-between text-[11px] font-bold"><span class="text-red-700">100.000</span><span class="text-slate-400">lbr</span></div><input type="number" min="0" bind:value={denom100k} class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-center text-sm font-mono font-bold outline-none" /></div>
+								<div class="p-2 bg-white rounded-lg border border-slate-200 space-y-1.5 shadow-2xs"><div class="flex justify-between text-[11px] font-bold"><span class="text-blue-700">50.000</span><span class="text-slate-400">lbr</span></div><input type="number" min="0" bind:value={denom50k} class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-center text-sm font-mono font-bold outline-none" /></div>
+								<div class="p-2 bg-white rounded-lg border border-slate-200 space-y-1.5 shadow-2xs"><div class="flex justify-between text-[11px] font-bold"><span class="text-emerald-700">20.000</span><span class="text-slate-400">lbr</span></div><input type="number" min="0" bind:value={denom20k} class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-center text-sm font-mono font-bold outline-none" /></div>
+								<div class="p-2 bg-white rounded-lg border border-slate-200 space-y-1.5 shadow-2xs"><div class="flex justify-between text-[11px] font-bold"><span class="text-purple-700">10.000</span><span class="text-slate-400">lbr</span></div><input type="number" min="0" bind:value={denom10k} class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-center text-sm font-mono font-bold outline-none" /></div>
+								<div class="p-2 bg-white rounded-lg border border-slate-200 space-y-1.5 shadow-2xs"><div class="flex justify-between text-[11px] font-bold"><span class="text-amber-700">5.000</span><span class="text-slate-400">lbr</span></div><input type="number" min="0" bind:value={denom5k} class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-center text-sm font-mono font-bold outline-none" /></div>
+								<div class="p-2 bg-white rounded-lg border border-slate-200 space-y-1.5 shadow-2xs"><div class="flex justify-between text-[11px] font-bold"><span class="text-slate-700">2.000</span><span class="text-slate-400">lbr</span></div><input type="number" min="0" bind:value={denom2k} class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-center text-sm font-mono font-bold outline-none" /></div>
+								<div class="p-2 bg-white rounded-lg border border-slate-200 space-y-1.5 shadow-2xs"><div class="flex justify-between text-[11px] font-bold"><span class="text-slate-700">1.000</span><span class="text-slate-400">lbr</span></div><input type="number" min="0" bind:value={denom1k} class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-center text-sm font-mono font-bold outline-none" /></div>
+								<div class="p-2 bg-white rounded-lg border border-slate-200 space-y-1.5 shadow-2xs"><div class="flex justify-between text-[11px] font-bold"><span class="text-slate-700">Koin</span><span class="text-slate-400">Total</span></div><input type="number" min="0" step="100" bind:value={denomCoins} class="w-full p-1.5 bg-slate-50 border border-slate-300 rounded focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-center text-sm font-mono font-bold outline-none" /></div>
+							</div>
+							<div class="mt-3 pt-3 border-t border-slate-200 flex justify-end gap-2.5">
+								<button type="button" onclick={() => { denom100k=0; denom50k=0; denom20k=0; denom10k=0; denom5k=0; denom2k=0; denom1k=0; denomCoins=0; }} class="px-4 py-1.5 bg-slate-200 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-300 transition-colors">Reset</button>
+								<button type="button" onclick={() => { countedPhysicalCash = calculatedDenomTotal; showDenomCalc = false; }} class="px-4 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-500 flex items-center gap-1.5 shadow-sm transition-colors"><Check class="w-3.5 h-3.5" /> Salin Hasil Hitungan</button>
+							</div>
+						</div>
+					{/if}
 				</div>
 
-				<!-- Variance Badge (Keterangan Selisih Ramah Orang Awam) -->
-				{#if countedPhysicalCash === null}
-					<div class="p-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-600 text-xs flex items-center gap-2">
-						<AlertCircle class="w-4 h-4 text-slate-400 shrink-0" />
-						<span>Ketikkan nominal uang fisik di atas (atau pakai kalkulator pecahan) untuk mengecek apakah uang kas di laci pas atau selisih.</span>
-					</div>
-				{:else if cashDifference === 0}
-					<div class="p-3.5 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-950 flex items-center justify-between text-xs shadow-2xs">
-						<div class="flex items-center gap-2.5">
-							<CheckCircle2 class="w-6 h-6 text-emerald-600 shrink-0" />
-							<div>
-								<span class="font-black text-sm block text-emerald-900">✅ UANG KAS PAS & SEIMBANG (Rp 0)</span>
-								<span class="text-[11px] text-emerald-700">Alhamdulillah! Uang fisik di laci kasir cocok tepat sesuai dengan seluruh catatan sistem.</span>
-							</div>
+				<!-- Input Utama: Total Uang Fisik Aktual -->
+				<div class="pt-2">
+					<label for="pos-physical-cash" class="text-[11px] font-black tracking-wider text-slate-700 flex items-center gap-2 mb-2">
+						<Coins class="w-4 h-4 text-emerald-600" /> TOTAL UANG FISIK YANG ADA DI LACI SEKARANG:
+					</label>
+					
+					<div class="flex flex-col sm:flex-row gap-2.5 items-stretch">
+						<div class="relative flex-1">
+							<span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-mono font-bold text-xl">Rp</span>
+							<input
+								id="pos-physical-cash"
+								type="number"
+								min="0"
+								step="1000"
+								bind:value={countedPhysicalCash}
+								placeholder="0"
+								class="w-full pl-12 pr-4 py-3 sm:py-4 bg-white border-2 border-emerald-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 rounded-xl outline-none text-slate-900 font-mono font-black text-2xl sm:text-3xl shadow-inner transition-all placeholder:text-slate-300"
+							/>
 						</div>
-						<span class="px-3 py-1 bg-emerald-600 text-white rounded-lg font-black font-mono text-xs shadow-xs">PAS</span>
-					</div>
-				{:else if cashDifference && cashDifference > 0}
-					<div class="p-3.5 bg-blue-50 border border-blue-300 rounded-xl text-blue-950 flex items-center justify-between text-xs shadow-2xs">
-						<div class="flex items-center gap-2.5">
-							<AlertCircle class="w-6 h-6 text-blue-600 shrink-0" />
-							<div>
-								<span class="font-black text-sm block text-blue-900">🔵 UANG KAS LEBIH (+{formatCurrency(cashDifference)})</span>
-								<span class="text-[11px] text-blue-800">Uang fisik di laci lebih banyak Rp {new Intl.NumberFormat('id-ID').format(cashDifference)} dari catatan. Periksa apakah ada barang terjual belum ter-scan.</span>
-							</div>
+						<div class="flex gap-2 shrink-0">
+							{#if countedPhysicalCash === null}
+								<button type="button" onclick={() => (countedPhysicalCash = expectedDrawerCash)} class="px-5 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-bold rounded-xl transition-colors shadow-sm" title="Isi dengan nominal yang seharusnya">Isi Pas</button>
+							{:else}
+								<button type="button" onclick={() => (countedPhysicalCash = null)} class="px-5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 text-xs font-bold rounded-xl transition-colors shadow-sm">Ulang</button>
+							{/if}
 						</div>
-						<span class="px-3 py-1 bg-blue-600 text-white rounded-lg font-black font-mono text-xs shadow-xs">LEBIH</span>
 					</div>
-				{:else if cashDifference && cashDifference < 0}
-					<div class="p-3.5 bg-red-50 border border-red-300 rounded-xl text-red-950 flex items-center justify-between text-xs shadow-2xs">
-						<div class="flex items-center gap-2.5">
-							<AlertTriangle class="w-6 h-6 text-red-600 shrink-0" />
-							<div>
-								<span class="font-black text-sm block text-red-900">⚠️ UANG KAS TEKOR / KURANG (-{formatCurrency(Math.abs(cashDifference))})</span>
-								<span class="text-[11px] text-red-800">Uang fisik di laci kurang Rp {new Intl.NumberFormat('id-ID').format(Math.abs(cashDifference))} dari seharusnya. Periksa uang kembalian atau pengeluaran yang belum dicatat.</span>
-							</div>
-						</div>
-						<span class="px-3 py-1 bg-red-600 text-white rounded-lg font-black font-mono text-xs shadow-xs">TEKOR</span>
-					</div>
-				{/if}
-			</div>
 
-			<!-- Catatan Tambahan Kasir -->
-			<div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs">
-				<label for="pos-shift-notes" class="block text-slate-700 font-bold mb-1 text-xs">
-					CATATAN KASIR UNTUK OWNER (OPSIONAL):
-				</label>
-				<input
-					id="pos-shift-notes"
-					type="text"
-					bind:value={shiftNotes}
-					placeholder="Misal: Uang tekor Rp 1.000 karena pembeli kurang uang receh..."
-					class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 outline-none focus:border-blue-600 text-slate-900 text-xs"
-				/>
-			</div>
-
-			<!-- No WA Owner Input (Bisa diatur) -->
-			<div class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs">
-				<div class="flex items-center gap-2">
-					<MessageCircle class="w-4 h-4 text-emerald-600 shrink-0" />
-					<span class="text-slate-800 font-medium">Nomor WhatsApp Pemilik Toko (Tujuan Laporan):</span>
+					<!-- Status Selisih Kas -->
+					{#if countedPhysicalCash !== null}
+						<div class="mt-3 animate-in fade-in slide-in-from-top-2 duration-200">
+							{#if cashDifference === 0}
+								<div class="p-3.5 bg-emerald-100 border border-emerald-400 rounded-xl text-emerald-950 flex items-center gap-3 shadow-xs">
+									<CheckCircle2 class="w-8 h-8 text-emerald-600 shrink-0" />
+									<div><span class="font-black text-sm block text-emerald-900 tracking-tight">STATUS: PAS (TIDAK ADA SELISIH)</span><span class="text-[11px] text-emerald-700 font-medium">Luar biasa! Hitungan akurat 100%. Silakan tutup shift.</span></div>
+								</div>
+							{:else if cashDifference && cashDifference > 0}
+								<div class="p-3.5 bg-blue-100 border border-blue-400 rounded-xl text-blue-950 flex items-center gap-3 shadow-xs">
+									<AlertCircle class="w-8 h-8 text-blue-600 shrink-0" />
+									<div><span class="font-black text-sm block text-blue-900 tracking-tight">STATUS: UANG LEBIH (+{formatCurrency(cashDifference)})</span><span class="text-[11px] text-blue-800 font-medium">Uang fisik lebih banyak dari catatan. Ada transaksi tak tercatat?</span></div>
+								</div>
+							{:else if cashDifference && cashDifference < 0}
+								<div class="p-3.5 bg-red-100 border border-red-400 rounded-xl text-red-950 flex items-center gap-3 shadow-xs">
+									<AlertTriangle class="w-8 h-8 text-red-600 shrink-0" />
+									<div><span class="font-black text-sm block text-red-900 tracking-tight">STATUS: UANG TEKOR (-{formatCurrency(Math.abs(cashDifference))})</span><span class="text-[11px] text-red-800 font-medium">Uang fisik kurang. Cek kembalian atau kas keluar yang terlewat.</span></div>
+								</div>
+							{/if}
+						</div>
+					{/if}
 				</div>
-				<input
-					type="text"
-					bind:value={ownerWhatsApp}
-					oninput={(e) => {
-						const val = (e.target as HTMLInputElement).value;
-						if (typeof window !== 'undefined') localStorage.setItem('aneka_pos_owner_wa', val);
-					}}
-					placeholder="081234567890"
-					class="w-36 bg-white border border-slate-300 rounded-lg px-2.5 py-1 font-mono text-xs text-slate-800 outline-none focus:border-emerald-600 text-right font-bold"
-				/>
 			</div>
 
-			<!-- Action Buttons -->
-			<div class="pt-2 border-t border-slate-200 flex flex-wrap gap-2">
-				<!-- Cetak Struk Rekap 80mm -->
-				<button
-					type="button"
-					onclick={printShiftReport}
-					class="flex-1 min-w-[140px] py-2.5 sm:py-3 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors active:scale-95"
-				>
-					<Printer class="w-4 h-4 text-slate-600" /> Cetak Struk Rekap (80mm)
-				</button>
+			<!-- Rincian Penjualan (Disembunyikan dlm Accordion agar tidak pusing) -->
+			<details class="border border-slate-200 rounded-xl bg-slate-50 group shadow-2xs">
+				<summary class="p-3.5 text-xs font-bold text-slate-700 cursor-pointer flex items-center justify-between outline-none hover:bg-slate-100 transition-colors rounded-xl">
+					<span class="flex items-center gap-2.5"><FileSpreadsheet class="w-4 h-4 text-blue-600"/> Lihat Detail Omzet Sistem (Termasuk Non-Tunai)</span>
+					<ChevronDown class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" />
+				</summary>
+				<div class="p-4 border-t border-slate-200 space-y-4 bg-white rounded-b-xl">
+					<div class="grid grid-cols-2 gap-3 text-xs">
+						<div class="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+							<span class="text-[10px] text-slate-500 font-bold block uppercase tracking-wide">Total Keseluruhan</span>
+							<span class="text-sm font-black text-slate-900 font-mono block mt-0.5">{formatCurrency(totalGrossSales)}</span>
+							<span class="text-[10px] text-slate-500 mt-1 block">Dari {todayTransactions.length} Struk Selesai</span>
+						</div>
+						<div class="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+							<span class="text-[10px] text-purple-700 font-bold block uppercase tracking-wide">Non-Tunai (QRIS/Trf)</span>
+							<span class="text-sm font-black text-purple-950 font-mono block mt-0.5">{formatCurrency(totalQrisSales + totalTransferSales)}</span>
+							<span class="text-[10px] text-purple-700 leading-tight block mt-1 font-medium">Uang ini masuk ke rekening bank otomatis.</span>
+						</div>
+					</div>
+				</div>
+			</details>
 
-				<!-- Kirim WA ke Owner -->
-				<button
-					type="button"
-					onclick={sendWhatsAppReport}
-					class="flex-1 min-w-[140px] py-2.5 sm:py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors active:scale-95"
-				>
-					<MessageCircle class="w-4 h-4" /> Kirim Rekap ke WA Owner
-				</button>
+			<!-- Catatan & Info Laporan WA -->
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+				<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
+					<label for="pos-shift-notes" class="block text-slate-700 font-bold mb-1.5 text-[11px] tracking-wide">CATATAN SHIFT (OPSIONAL):</label>
+					<input id="pos-shift-notes" type="text" bind:value={shiftNotes} placeholder="Tulis catatan jika ada selisih tekor..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 outline-none focus:border-blue-600 text-slate-900 text-xs" />
+				</div>
+				<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
+					<label class="block text-slate-700 font-bold mb-1.5 text-[11px] tracking-wide flex items-center gap-1.5"><MessageCircle class="w-3.5 h-3.5 text-emerald-600"/> NO. WA OWNER (LAPORAN):</label>
+					<input type="text" bind:value={ownerWhatsApp} oninput={(e) => { const val = (e.target as HTMLInputElement).value; if (typeof window !== 'undefined') localStorage.setItem('aneka_pos_owner_wa', val); }} placeholder="08123..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 outline-none focus:border-emerald-600 text-slate-900 text-xs font-mono font-bold" />
+				</div>
+			</div>
 
-				<!-- Selesaikan Shift & Arsipkan ke Database -->
+			<!-- Action Buttons (Tutup Shift Paling Menonjol) -->
+			<div class="pt-2 flex flex-col sm:flex-row gap-2.5">
 				<button
 					type="button"
-					disabled={isClosingShift}
+					disabled={isClosingShift || countedPhysicalCash === null}
 					onclick={handleResetShift}
-					class="py-2.5 sm:py-3 px-3.5 bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-sm transition-colors active:scale-95"
-					title="Selesaikan shift dan simpan permanen ke database toko"
+					class="flex-1 py-3 sm:py-4 px-4 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-red-600 text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98] order-1 sm:order-2"
 				>
 					{#if isClosingShift}
-						<RefreshCw class="w-3.5 h-3.5 animate-spin" />
-						<span>Mengarsipkan...</span>
+						<RefreshCw class="w-5 h-5 animate-spin" /> MENGARSIPKAN...
 					{:else}
-						<CheckCheck class="w-4 h-4" />
-						<span>Tutup & Selesaikan Shift</span>
+						<CheckCheck class="w-5 h-5" /> TUTUP & SELESAIKAN SHIFT
 					{/if}
 				</button>
-
-				<button
-					type="button"
-					onclick={() => (showClosingModal = false)}
-					class="py-2.5 sm:py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl cursor-pointer"
-				>
-					Batal
-				</button>
+				
+				<div class="flex gap-2.5 flex-1 order-2 sm:order-1">
+					<button type="button" onclick={printShiftReport} class="flex-1 py-3 px-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-sm">
+						<Printer class="w-4 h-4" /> Cetak Rekap
+					</button>
+					<button type="button" onclick={sendWhatsAppReport} class="flex-1 py-3 px-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-sm">
+						<MessageCircle class="w-4 h-4" /> WA Owner
+					</button>
+				</div>
 			</div>
+
 		</div>
 	</div>
 {/if}
+
 
 <!-- Thermal Shift Closing Report 80mm Print Component (Hidden from screen view) -->
 <div id="closing-print-area" class="{isPrintingClosing ? 'is-printing' : 'hidden'} text-black font-mono text-xs max-w-[80mm] w-[76mm] mx-auto p-1">
