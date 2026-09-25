@@ -2242,13 +2242,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 						<CheckCircle2 class="w-4 h-4" /> Konfirmasi Bayar & Cetak Struk
 					</button>
 
-					<!-- Tombol Simulasi Demo (Untuk Presentasi) -->
-					<button
-						onclick={simulateQRISPayment}
-						class="w-full bg-purple-50 hover:bg-purple-100 text-purple-800 text-[11px] font-bold py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-purple-200"
-					>
-						<Zap class="w-3.5 h-3.5 text-purple-600" /> Mode Demo: Simulasikan Pembeli Scan & Bayar
-					</button>
+					<!-- Tombol Konfirmasi Manual Saja -->
 				</div>
 			{/if}
 		</div>
