@@ -308,45 +308,6 @@
 		}
 	}
 
-	async function fetchTodayShiftData() {
-		try {
-			const [expRes, txRes] = await Promise.all([
-				fetch('/api/pos/expenses').then(r => r.ok ? r.json() : null).catch(() => null),
-				fetch('/api/pos/transactions').then(r => r.ok ? r.json() : null).catch(() => null)
-			]);
-
-			if (expRes?.expenses && Array.isArray(expRes.expenses)) {
-				const existingIds = new Set(dailyExpenses.map(e => e.id));
-				const merged = [...dailyExpenses];
-				for (const exp of expRes.expenses) {
-					if (!existingIds.has(exp.id)) {
-						merged.push(exp);
-					}
-				}
-				dailyExpenses = merged;
-				if (typeof window !== 'undefined') {
-					localStorage.setItem('aneka_pos_expenses', JSON.stringify(dailyExpenses));
-				}
-			}
-
-			if (txRes?.transactions && Array.isArray(txRes.transactions)) {
-				const existingRec = new Set(todayTransactions.map(t => t.receipt_number));
-				const merged = [...todayTransactions];
-				for (const tx of txRes.transactions) {
-					if (!existingRec.has(tx.receipt_number)) {
-						merged.push(tx);
-					}
-				}
-				todayTransactions = merged;
-				if (typeof window !== 'undefined') {
-					localStorage.setItem('aneka_pos_today_tx', JSON.stringify(todayTransactions));
-				}
-			}
-		} catch (e) {
-			console.error('Failed to sync shift data', e);
-		}
-	}
-
 	function printShiftReport() {
 		isPrintingClosing = true;
 		tick().then(() => {
@@ -1457,7 +1418,6 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 			}
 
 			// Sinkronkan data shift hari ini & seluruh katalog produk dari database VPS
-			fetchTodayShiftData();
 			fetchCatalog();
 		}
 
