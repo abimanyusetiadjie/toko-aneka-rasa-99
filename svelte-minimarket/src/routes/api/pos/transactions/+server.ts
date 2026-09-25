@@ -331,7 +331,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 			// Seluruh item berhasil ditemukan di database
 			if (preparedDetails.length === data.items.length) {
-				const calculatedFinalTotal = Math.max(0, calculatedSubtotal - Math.round(data.points_discount || 0));
+				const totalDiscount = Math.round(data.points_discount || 0) + Math.round(data.manual_discount || 0);
+				const calculatedFinalTotal = Math.max(0, calculatedSubtotal - totalDiscount);
 				const totalPaid = Math.round(data.payments.reduce((sum, p) => sum + Number(p.amount), 0));
 
 				if (!isOfflineSync && totalPaid < calculatedFinalTotal) {
@@ -360,7 +361,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'COMPLETED', $13, $14)`,
 					[
 						transactionId, storeId, activeShiftId, userId, data.member_id || null, receiptNumber, data.idempotency_key,
-						calculatedSubtotal, Math.round(data.points_discount || 0), actualFinalTotal, pointsEarned, data.points_redeemed || 0,
+						calculatedSubtotal, totalDiscount, actualFinalTotal, pointsEarned, data.points_redeemed || 0,
 						data.payments[0]?.payment_method || 'CASH', txCreatedAt
 					]
 				);
@@ -574,7 +575,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		});
 	}
 
-	const calculatedFinalTotal = Math.max(0, calculatedSubtotal - Math.round(data.points_discount || 0));
+	const fallbackTotalDiscount = Math.round(data.points_discount || 0) + Math.round(data.manual_discount || 0);
+	const calculatedFinalTotal = Math.max(0, calculatedSubtotal - fallbackTotalDiscount);
 	const totalPaid = Math.round(data.payments.reduce((sum, p) => sum + Number(p.amount), 0));
 
 	if (!isOfflineSync && totalPaid < calculatedFinalTotal) {
@@ -610,7 +612,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		receipt_number: receiptNumber,
 		idempotency_key: data.idempotency_key,
 		subtotal_amount: calculatedSubtotal,
-		discount_amount: Math.round(data.points_discount || 0),
+		discount_amount: fallbackTotalDiscount,
 		total_amount: actualFinalTotal,
 		payment_method: data.payments[0]?.payment_method || 'CASH',
 		points_earned: pointsEarned,

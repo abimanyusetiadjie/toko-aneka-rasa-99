@@ -20,6 +20,7 @@ export const CreateTransactionSchema = z.object({
 	member_id: z.string().optional().nullable(),
 	points_redeemed: z.number().int().min(0).optional().default(0),
 	points_discount: z.number().min(0).optional().default(0),
+	manual_discount: z.number().min(0).optional().default(0),
 	total_amount: z.number().min(0, 'Total transaksi tidak boleh negatif'),
 	items: z.array(TransactionItemSchema).min(1, 'Keranjang belanja tidak boleh kosong'),
 	payments: z.array(TransactionPaymentSchema).min(1, 'Minimal satu metode pembayaran harus dipilih'),

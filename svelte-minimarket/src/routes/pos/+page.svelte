@@ -81,7 +81,8 @@
 		Receipt,
 		CheckCheck,
 		ChevronDown,
-		ChevronUp
+		ChevronUp,
+		Pen
 	} from 'lucide-svelte';
 	import type { PettyCashExpense } from '$lib/types';
 
@@ -855,8 +856,21 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 		cameraError = '';
 	}
 
+	// Diskon Manual (Edit Total)
+	let isEditingTotal = $state(false);
+	let customTotalOverride = $state<number | null>(null);
+	let manualDiscountAmount = $derived(
+		customTotalOverride !== null 
+			? Math.max(0, $total - pointDiscountAmount - customTotalOverride)
+			: 0
+	);
+
 	// Nominal tagihan final
-	let finalPayTotal = $derived(Math.max(0, $total - pointDiscountAmount));
+	let finalPayTotal = $derived(
+		customTotalOverride !== null 
+			? customTotalOverride
+			: Math.max(0, $total - pointDiscountAmount)
+	);
 
 	function formatCurrency(val: number): string {
 		return new Intl.NumberFormat('id-ID', {
@@ -1207,6 +1221,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 			member_id: currentMember?.id || null,
 			points_redeemed: pointsToRedeem,
 			points_discount: pointDiscountAmount,
+			manual_discount: manualDiscountAmount,
 			total_amount: finalPayTotal,
 			items: $cart.map((i) => ({ unit_id: i.unit_id, qty: i.qty, price_snapshot: i.price })),
 			payments: paymentsList,
@@ -1346,6 +1361,8 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 		resetCart();
 		currentMember = null;
 		pointDiscountAmount = 0;
+		customTotalOverride = null;
+		isEditingTotal = false;
 		barcodeInput?.focus();
 	}
 
@@ -1832,11 +1849,31 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 						</div>
 					{/if}
 
-					<div class="border-t border-slate-200 pt-2 flex justify-between items-baseline">
-						<span class="text-xs font-bold text-slate-700 uppercase font-mono">TOTAL TAGIHAN</span>
-						<span class="font-mono text-3xl font-black text-slate-900 tracking-tight">
-							{formatCurrency(finalPayTotal)}
-						</span>
+					<div class="border-t border-slate-200 pt-2 flex justify-between items-baseline group">
+						<div class="flex items-center gap-1.5">
+							<span class="text-xs font-bold text-slate-700 uppercase font-mono">TOTAL TAGIHAN</span>
+							{#if !isEditingTotal}
+								<button type="button" onclick={() => { isEditingTotal = true; customTotalOverride = customTotalOverride || Math.max(0, $total - pointDiscountAmount); }} class="text-slate-300 hover:text-blue-600 transition-colors p-1" title="Diskon Manual (Edit Total)">
+									<Pen class="w-3.5 h-3.5" />
+								</button>
+							{/if}
+						</div>
+						{#if isEditingTotal}
+							<div class="flex items-center gap-1.5 animate-in fade-in slide-in-from-right-2">
+								<span class="text-sm font-bold text-slate-600">Rp</span>
+								<input type="number" min="0" bind:value={customTotalOverride} class="w-32 px-2 py-1 bg-blue-50 border border-blue-300 rounded-lg text-right font-mono text-xl font-black text-blue-800 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none" placeholder={Math.max(0, $total - pointDiscountAmount).toString()} />
+								<button type="button" onclick={() => isEditingTotal = false} class="bg-blue-600 text-white p-1.5 rounded-lg hover:bg-blue-700 transition-colors shadow-sm cursor-pointer" title="Simpan Harga"><CheckCircle2 class="w-4 h-4" /></button>
+							</div>
+						{:else}
+							<div class="flex flex-col items-end">
+								<span class="font-mono text-3xl font-black text-slate-900 tracking-tight cursor-pointer hover:text-blue-700 transition-colors" onclick={() => { isEditingTotal = true; customTotalOverride = customTotalOverride || Math.max(0, $total - pointDiscountAmount); }} title="Klik untuk mengedit total (Diskon Manual)">
+									{formatCurrency(finalPayTotal)}
+								</span>
+								{#if manualDiscountAmount > 0}
+									<span class="text-[10px] text-orange-600 font-bold bg-orange-100 border border-orange-200 px-1.5 py-0.5 rounded-md mt-1 animate-in fade-in zoom-in-95">Diskon Manual: -{formatCurrency(manualDiscountAmount)}</span>
+								{/if}
+							</div>
+						{/if}
 					</div>
 
 					<!-- Transparansi Pajak (Include PPN) -->
