@@ -19,7 +19,11 @@ export const GET: RequestHandler = async () => {
 			stock_list: [
 				{
 					model_id: product.shopee_model_id ? Number(product.shopee_model_id) : 0,
-					normal_stock: product.stock
+					seller_stock: [
+						{
+							stock: product.stock
+						}
+					]
 				}
 			]
 		};
