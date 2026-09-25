@@ -701,3 +701,42 @@ export async function getValidShopeeToken(shopId: string): Promise<string> {
 
 	return data.access_token;
 }
+export async function callShopeeApi(path: string, payload: any = {}, method = 'POST') {
+	const shopId = getShopeeEnv('SHOPEE_SHOP_ID', '1075726207');
+	const partnerId = getShopeeEnv('SHOPEE_PARTNER_ID', '2045588');
+	const partnerKey = getShopeeEnv('SHOPEE_PARTNER_KEY', 'shpk714e4d6841764d6f614753694f5752754e4855664e456e5176794f594170');
+	
+	const access_token = await getValidShopeeToken(shopId);
+	const timestamp = Math.floor(Date.now() / 1000);
+	
+	const baseString = `${partnerId}${path}${timestamp}${access_token}${shopId}`;
+	const sign = crypto.createHmac('sha256', partnerKey).update(baseString).digest('hex');
+	
+	let url = `https://partner.shopeemobile.com${path}?partner_id=${partnerId}&timestamp=${timestamp}&access_token=${access_token}&shop_id=${shopId}&sign=${sign}`;
+	
+	const options: RequestInit = {
+		method,
+		headers: { 'Content-Type': 'application/json' }
+	};
+
+	if (method === 'GET') {
+		if (Object.keys(payload).length > 0) {
+			const queryParams = new URLSearchParams();
+			for (const key in payload) {
+				queryParams.append(key, String(payload[key]));
+			}
+			url += '&' + queryParams.toString();
+		}
+	} else {
+		options.body = JSON.stringify(payload);
+	}
+
+	const res = await fetch(url, options);
+	const data = await res.json();
+
+	if (data.error) {
+		throw new Error(`Shopee API Error (${path}): ${data.message || data.error}`);
+	}
+
+	return data.response;
+}

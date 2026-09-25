@@ -351,7 +351,13 @@ export async function ensureDatabaseSynced(): Promise<void> {
 					);
 				`).catch((err: any) => console.warn('[DB Shopee Tables Warning]', err.message));
 
-				// 11. Self-healing audit trail: jika ada transaksi kasir yang belum tercatat di stock_movements, backfill otomatis
+				// 11. Tambahkan kolom mapping shopee_item_id pada tabel products
+				await client.query(`
+					ALTER TABLE products ADD COLUMN IF NOT EXISTS shopee_item_id BIGINT;
+					ALTER TABLE products ADD COLUMN IF NOT EXISTS shopee_model_id BIGINT;
+				`).catch(() => {});
+
+				// 12. Self-healing audit trail: jika ada transaksi kasir yang belum tercatat di stock_movements, backfill otomatis
 				await client.query(`
 					-- 10.1 Pastikan transaksi receipt RCPT-20260925013724-7773 (Indomie Kaldu Udang) terdaftar
 					DO $$

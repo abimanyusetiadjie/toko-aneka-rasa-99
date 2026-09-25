@@ -150,6 +150,11 @@
 
 		<!-- Action: Otorisasi & Simulasi Order Shopee -->
 		<div class="flex items-center gap-2 self-start sm:self-center flex-wrap">
+			<a href="/admin/shopee/mapping" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 shadow-2xs transition-colors cursor-pointer">
+				<Store class="w-3.5 h-3.5 text-emerald-600" />
+				<span>Tautkan Produk (Mapping)</span>
+			</a>
+
 			{#if (data as any)?.authUrl}
 				<a
 					href={(data as any).authUrl}
