@@ -1,20 +1,37 @@
 import type { PageServerLoad, Actions } from './$types';
 import { query } from '$lib/server/db';
+import { redirect } from '@sveltejs/kit';
 import {
 	simulateRandomShopeeOrder,
 	updateShopeeOrderStatus,
 	cancelShopeeOrder,
 	getShopeeConnectionStatus,
-	getShopeeAuthUrl
+	getShopeeAuthUrl,
+	exchangeShopeeToken
 } from '$lib/server/shopee-service';
 import type { ShopeeOrder } from '$lib/types';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const shopIdFromUrl = url.searchParams.get('shop_id');
 	const codeFromUrl = url.searchParams.get('code');
+	
 	if (shopIdFromUrl) {
 		process.env.SHOPEE_SHOP_ID = shopIdFromUrl;
 	}
+
+	let exchangeError = null;
+	if (shopIdFromUrl && codeFromUrl) {
+		try {
+			await exchangeShopeeToken(codeFromUrl, shopIdFromUrl);
+			// Redirect untuk membuang code dari URL (mencegah error double-exchange jika di-reload)
+			throw redirect(302, `/admin/shopee?auth_success=1&shop_id=${shopIdFromUrl}`);
+		} catch (err: any) {
+			if (err.status === 302) throw err; // Biarkan redirect dari sveltejs/kit lewat
+			exchangeError = err.message;
+		}
+	}
+
+	const isAuthSuccess = url.searchParams.get('auth_success') === '1';
 
 	const redirectUrl = `${url.origin}/admin/shopee`;
 	const authUrl = getShopeeAuthUrl(redirectUrl);
@@ -59,8 +76,9 @@ export const load: PageServerLoad = async ({ url }) => {
 				...connStatus,
 				shopId: shopIdFromUrl || connStatus.shopId || '1075726207'
 			},
-			authSuccess: shopIdFromUrl ? { shopId: shopIdFromUrl, code: codeFromUrl } : null,
-			authUrl
+			authSuccess: isAuthSuccess && !exchangeError ? { shopId: shopIdFromUrl } : null,
+			authUrl,
+			exchangeError
 		};
 	} catch (err: any) {
 		const connStatus = getShopeeConnectionStatus();
@@ -71,9 +89,10 @@ export const load: PageServerLoad = async ({ url }) => {
 				...connStatus,
 				shopId: shopIdFromUrl || connStatus.shopId || '1075726207'
 			},
-			authSuccess: shopIdFromUrl ? { shopId: shopIdFromUrl, code: codeFromUrl } : null,
+			authSuccess: isAuthSuccess && !exchangeError ? { shopId: shopIdFromUrl } : null,
 			authUrl,
-			error: err.message
+			error: err.message,
+			exchangeError
 		};
 	}
 };

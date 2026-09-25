@@ -607,3 +607,97 @@ export function getShopeeAuthUrl(redirectUrl: string): string {
 	return `https://partner.shopeemobile.com${path}?partner_id=${partnerId}&timestamp=${timestamp}&sign=${sign}&redirect=${encodeURIComponent(redirectUrl)}`;
 }
 
+
+/**
+ * Tukar kode otorisasi (code) dari Shopee OAuth menjadi Access Token.
+ */
+export async function exchangeShopeeToken(code: string, shopId: string) {
+	const partnerId = getShopeeEnv('SHOPEE_PARTNER_ID', '2045588');
+	const partnerKey = getShopeeEnv('SHOPEE_PARTNER_KEY', 'shpk714e4d6841764d6f614753694f5752754e4855664e456e5176794f594170');
+	const timestamp = Math.floor(Date.now() / 1000);
+	const path = '/api/v2/auth/token/get';
+	
+	const baseString = partnerId + path + timestamp;
+	const sign = crypto.createHmac('sha256', partnerKey).update(baseString).digest('hex');
+	const url = `https://partner.shopeemobile.com${path}?partner_id=${partnerId}&timestamp=${timestamp}&sign=${sign}`;
+
+	const res = await fetch(url, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			code,
+			shop_id: Number(shopId),
+			partner_id: Number(partnerId)
+		})
+	});
+
+	const data = await res.json();
+	if (data.error) {
+		throw new Error(data.message || data.error);
+	}
+
+	// Simpan ke database
+	await query(
+		`INSERT INTO shopee_settings (id, shop_id, access_token, refresh_token, token_expired_at) 
+		 VALUES ($1, $2, $3, $4, TO_TIMESTAMP($5))
+		 ON CONFLICT (shop_id) DO UPDATE SET 
+			access_token = $3, 
+			refresh_token = $4, 
+			token_expired_at = TO_TIMESTAMP($5),
+			updated_at = NOW()`,
+		[crypto.randomUUID(), shopId, data.access_token, data.refresh_token, timestamp + data.expire_in]
+	);
+
+	return data;
+}
+
+/**
+ * Dapatkan Access Token yang masih berlaku (Otomatis perpanjang jika akan expired).
+ */
+export async function getValidShopeeToken(shopId: string): Promise<string> {
+	const settings = await query(`SELECT access_token, refresh_token, EXTRACT(EPOCH FROM token_expired_at) as expired_epoch FROM shopee_settings WHERE shop_id = $1 LIMIT 1`, [shopId]);
+	
+	if (settings.length === 0) {
+		throw new Error('Toko Shopee belum dihubungkan. Silakan lakukan Otorisasi di menu Admin.');
+	}
+
+	const { access_token, refresh_token, expired_epoch } = settings[0];
+	const now = Math.floor(Date.now() / 1000);
+
+	// Jika masih berlaku lebih dari 10 menit, gunakan token yang ada
+	if (expired_epoch > now + 600) {
+		return access_token;
+	}
+
+	// Jika hampir/sudah expired, lakukan Refresh Token
+	const partnerId = getShopeeEnv('SHOPEE_PARTNER_ID', '2045588');
+	const partnerKey = getShopeeEnv('SHOPEE_PARTNER_KEY', 'shpk714e4d6841764d6f614753694f5752754e4855664e456e5176794f594170');
+	const timestamp = Math.floor(Date.now() / 1000);
+	const path = '/api/v2/auth/access_token/get';
+	
+	const baseString = partnerId + path + timestamp;
+	const sign = crypto.createHmac('sha256', partnerKey).update(baseString).digest('hex');
+	const url = `https://partner.shopeemobile.com${path}?partner_id=${partnerId}&timestamp=${timestamp}&sign=${sign}`;
+
+	const res = await fetch(url, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			refresh_token,
+			shop_id: Number(shopId),
+			partner_id: Number(partnerId)
+		})
+	});
+
+	const data = await res.json();
+	if (data.error) {
+		throw new Error('Gagal memperpanjang sesi Shopee: ' + (data.message || data.error));
+	}
+
+	await query(
+		`UPDATE shopee_settings SET access_token = $1, refresh_token = $2, token_expired_at = TO_TIMESTAMP($3), updated_at = NOW() WHERE shop_id = $4`,
+		[data.access_token, data.refresh_token, timestamp + data.expire_in, shopId]
+	);
+
+	return data.access_token;
+}

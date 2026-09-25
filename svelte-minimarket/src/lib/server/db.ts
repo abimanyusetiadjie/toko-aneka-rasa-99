@@ -321,7 +321,37 @@ export async function ensureDatabaseSynced(): Promise<void> {
 				`).catch(() => {});
 
 
-				// 10. Self-healing audit trail: jika ada transaksi kasir yang belum tercatat di stock_movements, backfill otomatis
+				// 10. Tambahkan Tabel Shopee Integration
+				await client.query(`
+					CREATE TABLE IF NOT EXISTS shopee_settings (
+						id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+						shop_id VARCHAR(50) UNIQUE NOT NULL,
+						access_token TEXT,
+						refresh_token TEXT,
+						token_expired_at TIMESTAMPTZ,
+						created_at TIMESTAMPTZ DEFAULT NOW(),
+						updated_at TIMESTAMPTZ DEFAULT NOW()
+					);
+					
+					CREATE TABLE IF NOT EXISTS shopee_orders (
+						id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+						order_sn VARCHAR(100) UNIQUE NOT NULL,
+						store_id UUID,
+						buyer_username VARCHAR(100),
+						order_status VARCHAR(50),
+						shipping_carrier VARCHAR(100),
+						tracking_number VARCHAR(100),
+						total_amount NUMERIC(12, 2),
+						shopee_escrow_amount NUMERIC(12, 2),
+						items JSONB,
+						stock_deducted BOOLEAN DEFAULT FALSE,
+						shopee_created_at TIMESTAMPTZ,
+						created_at TIMESTAMPTZ DEFAULT NOW(),
+						updated_at TIMESTAMPTZ DEFAULT NOW()
+					);
+				`).catch((err: any) => console.warn('[DB Shopee Tables Warning]', err.message));
+
+				// 11. Self-healing audit trail: jika ada transaksi kasir yang belum tercatat di stock_movements, backfill otomatis
 				await client.query(`
 					-- 10.1 Pastikan transaksi receipt RCPT-20260925013724-7773 (Indomie Kaldu Udang) terdaftar
 					DO $$

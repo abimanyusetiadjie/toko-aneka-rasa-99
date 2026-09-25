@@ -187,6 +187,20 @@
 		</div>
 	</header>
 
+	{#if (data as any)?.exchangeError}
+		<div class="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-950 flex items-start gap-3 shadow-xs">
+			<div class="w-9 h-9 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+				<AlertCircle class="w-5 h-5" />
+			</div>
+			<div>
+				<p class="font-bold text-sm">Gagal Menghubungkan Toko Shopee</p>
+				<p class="text-xs text-red-800 mt-0.5">
+					Pesan Error: <strong>{(data as any).exchangeError}</strong>
+				</p>
+			</div>
+		</div>
+	{/if}
+
 	<!-- Otorisasi Shopee Berhasil (Bila diarahkan dari live Shopee) -->
 	{#if (data as any)?.authSuccess}
 		<div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
