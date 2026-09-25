@@ -47,6 +47,7 @@ export const load: PageServerLoad = async ({ url, setHeaders, locals }) => {
 
 		return { movements, filterType, searchQuery, isOwner: !!isOwner };
 	} catch (e: any) {
+		console.error('[Mutasi PageServerLoad Error]', e?.message || e);
 		return { movements: [], filterType, searchQuery, isOwner: !!isOwner, error: e.message };
 	}
 };

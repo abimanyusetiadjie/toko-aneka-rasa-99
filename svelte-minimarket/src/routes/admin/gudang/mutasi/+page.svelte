@@ -14,7 +14,8 @@
 		X,
 		RefreshCw,
 		CheckCircle2,
-		Radio
+		Radio,
+		AlertCircle
 	} from 'lucide-svelte';
 
 	let { data } = $props();
@@ -134,6 +135,18 @@
 				<span>{lastEventMessage} — Tabel mutasi otomatis diperbarui detik ini!</span>
 			</div>
 			<button onclick={() => (lastEventMessage = null)} class="text-emerald-700 hover:text-emerald-900 cursor-pointer">✕</button>
+		</div>
+	{/if}
+
+	<!-- Alert Peringatan Database Error -->
+	{#if data.error}
+		<div class="p-4 rounded-2xl bg-rose-50 border border-rose-300 text-rose-900 shadow-sm flex items-start gap-3 text-xs font-semibold animate-in fade-in">
+			<AlertCircle class="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+			<div class="space-y-1">
+				<p class="font-bold text-rose-800">Peringatan Akses Database Mutasi Stok:</p>
+				<p class="text-rose-700 font-normal">{data.error}</p>
+				<p class="text-slate-600 font-normal mt-1">Pastikan service PostgreSQL di VPS berjalan dan jalankan perintah sinkronisasi skema.</p>
+			</div>
 		</div>
 	{/if}
 

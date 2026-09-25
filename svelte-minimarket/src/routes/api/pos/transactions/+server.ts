@@ -1,6 +1,6 @@
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { pool, updateMemoryProductStock, getProductForCheckout, recordMemoryTransaction, memoryTransactions, memoryStockMovements, memoryProducts, memoryProductUnits } from '$lib/server/db';
+import { pool, ensureDatabaseSynced, updateMemoryProductStock, getProductForCheckout, recordMemoryTransaction, memoryTransactions, memoryStockMovements, memoryProducts, memoryProductUnits } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import { pushStockToShopee } from '$lib/server/shopee-service';
 import { CreateTransactionSchema } from '$lib/schemas/transaction.schema';
@@ -64,11 +64,31 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	let userId = locals.user?.id || '46030803-a7e6-4827-b93e-0cafcf148ac7';
 	let storeId: string | null = locals.user?.store_id || '11111111-1111-1111-1111-111111111111';
 
+	// 1. Pastikan tabel & skema database 100% tersinkronisasi
+	try {
+		await ensureDatabaseSynced();
+	} catch (syncErr: any) {
+		console.warn('[POS Transactions] ensureDatabaseSynced error:', syncErr?.message);
+	}
+
 	let client: any = null;
 	try {
 		client = await pool.connect();
-	} catch (connErr) {
-		client = null;
+	} catch (connErr: any) {
+		console.warn('[POS Transactions] Initial connection error:', connErr?.message);
+		// Retry 1x setelah delay 150ms
+		try {
+			await new Promise((r) => setTimeout(r, 150));
+			client = await pool.connect();
+		} catch (retryErr: any) {
+			console.error('[POS Transactions] Connection retry failed:', retryErr?.message);
+			client = null;
+		}
+	}
+
+	// Jika di server Node.js VPS dengan konfigurasi PostgreSQL, jangan biarkan transaksi jatuh diam-diam ke RAM tanpa tersimpan ke PostgreSQL
+	if (!client && (process.env.DATABASE_URL || process.env.NODE_ENV === 'production')) {
+		throw error(500, 'Koneksi ke Database PostgreSQL di server gagal terhubung. Mohon pastikan service PostgreSQL berjalan di VPS.');
 	}
 
 	// JALUR 1: Jika database PostgreSQL/Supabase terkoneksi aktif
@@ -425,6 +445,18 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 				for (const detail of preparedDetails) {
 					updateMemoryProductStock(detail.productId, detail.currentStock - detail.baseQty);
+					memoryStockMovements.unshift({
+						id: `sm-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
+						product_id: detail.productId,
+						product_name: detail.productName,
+						sku: (detail as any).sku || 'SKU',
+						reference_type: 'SALE',
+						qty_base_change: -detail.baseQty,
+						balance_after: Math.max(0, detail.currentStock - detail.baseQty),
+						unit_cost_snapshot: detail.baseHpp || 0,
+						notes: `Penjualan Kasir No: ${receiptNumber}`,
+						created_at: new Date().toISOString()
+					});
 				}
 
 				try {

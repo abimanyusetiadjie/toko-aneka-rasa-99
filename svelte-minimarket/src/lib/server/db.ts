@@ -184,6 +184,105 @@ export async function ensureDatabaseSynced(): Promise<void> {
 					ON CONFLICT (id) DO NOTHING;
 				`).catch((err: any) => console.warn('[DB User/Store Sync Warning]', err.message));
 
+				// 8.5 Pastikan tabel members, cashier_shifts, transactions, transaction_details, transaction_payments terpasang
+				await client.query(`
+					CREATE TABLE IF NOT EXISTS members (
+						id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+						name VARCHAR(100) NOT NULL,
+						phone VARCHAR(30) UNIQUE NOT NULL,
+						points_balance INT NOT NULL DEFAULT 0,
+						total_spend NUMERIC(15, 2) NOT NULL DEFAULT 0.00,
+						created_at TIMESTAMPTZ DEFAULT NOW()
+					);
+					ALTER TABLE members ADD COLUMN IF NOT EXISTS phone VARCHAR(30);
+					ALTER TABLE members ADD COLUMN IF NOT EXISTS name VARCHAR(100);
+					ALTER TABLE members ADD COLUMN IF NOT EXISTS points_balance INT DEFAULT 0;
+					ALTER TABLE members ADD COLUMN IF NOT EXISTS total_spend NUMERIC(15, 2) DEFAULT 0.00;
+
+					CREATE TABLE IF NOT EXISTS cashier_shifts (
+						id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+						store_id UUID,
+						user_id UUID NOT NULL,
+						opened_at TIMESTAMPTZ DEFAULT NOW(),
+						closed_at TIMESTAMPTZ NULL,
+						starting_cash NUMERIC(15, 2) DEFAULT 0.00,
+						expected_cash NUMERIC(15, 2) DEFAULT 0.00,
+						actual_cash NUMERIC(15, 2) NULL,
+						cash_difference NUMERIC(15, 2) NULL,
+						status VARCHAR(20) DEFAULT 'OPEN'
+					);
+					ALTER TABLE cashier_shifts ADD COLUMN IF NOT EXISTS store_id UUID;
+					ALTER TABLE cashier_shifts ADD COLUMN IF NOT EXISTS expected_cash NUMERIC(15, 2) DEFAULT 0.00;
+					ALTER TABLE cashier_shifts ADD COLUMN IF NOT EXISTS actual_cash NUMERIC(15, 2) NULL;
+					ALTER TABLE cashier_shifts ADD COLUMN IF NOT EXISTS cash_difference NUMERIC(15, 2) NULL;
+					ALTER TABLE cashier_shifts ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'OPEN';
+
+					CREATE TABLE IF NOT EXISTS transactions (
+						id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+						store_id UUID,
+						user_id UUID NOT NULL,
+						member_id UUID,
+						shift_id UUID,
+						receipt_number VARCHAR(60) NOT NULL UNIQUE,
+						total_amount NUMERIC(15, 2) NOT NULL,
+						subtotal_amount NUMERIC(15, 2) NOT NULL DEFAULT 0.00,
+						discount_amount NUMERIC(15, 2) DEFAULT 0.00,
+						payment_method VARCHAR(30) NOT NULL DEFAULT 'CASH',
+						payment_reference VARCHAR(100),
+						points_earned INT DEFAULT 0,
+						points_redeemed INT DEFAULT 0,
+						status VARCHAR(20) NOT NULL DEFAULT 'COMPLETED',
+						idempotency_key VARCHAR(100) NULL,
+						channel VARCHAR(30) DEFAULT 'POS',
+						external_order_sn VARCHAR(100) NULL,
+						created_at TIMESTAMPTZ DEFAULT NOW()
+					);
+					ALTER TABLE transactions ADD COLUMN IF NOT EXISTS store_id UUID;
+					ALTER TABLE transactions ADD COLUMN IF NOT EXISTS shift_id UUID;
+					ALTER TABLE transactions ADD COLUMN IF NOT EXISTS member_id UUID;
+					ALTER TABLE transactions ADD COLUMN IF NOT EXISTS idempotency_key VARCHAR(100);
+					ALTER TABLE transactions ADD COLUMN IF NOT EXISTS points_earned INT DEFAULT 0;
+					ALTER TABLE transactions ADD COLUMN IF NOT EXISTS points_redeemed INT DEFAULT 0;
+					ALTER TABLE transactions ADD COLUMN IF NOT EXISTS discount_amount NUMERIC(15, 2) DEFAULT 0.00;
+					ALTER TABLE transactions ADD COLUMN IF NOT EXISTS subtotal_amount NUMERIC(15, 2) DEFAULT 0.00;
+					ALTER TABLE transactions ADD COLUMN IF NOT EXISTS channel VARCHAR(30) DEFAULT 'POS';
+					ALTER TABLE transactions ADD COLUMN IF NOT EXISTS external_order_sn VARCHAR(100) NULL;
+					CREATE INDEX IF NOT EXISTS idx_transactions_created ON transactions(created_at DESC);
+					CREATE INDEX IF NOT EXISTS idx_transactions_receipt ON transactions(receipt_number);
+
+					CREATE TABLE IF NOT EXISTS transaction_details (
+						id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+						transaction_id UUID NOT NULL REFERENCES transactions(id) ON DELETE CASCADE,
+						product_id UUID NOT NULL,
+						unit_id UUID NULL,
+						qty INT NOT NULL,
+						conversion_factor INT NOT NULL DEFAULT 1,
+						base_qty INT NOT NULL DEFAULT 1,
+						price_per_unit NUMERIC(12, 2) NOT NULL,
+						cost_price_snapshot NUMERIC(12, 2) DEFAULT 0.00,
+						subtotal NUMERIC(15, 2) NOT NULL
+					);
+					ALTER TABLE transaction_details ADD COLUMN IF NOT EXISTS unit_id UUID NULL;
+					ALTER TABLE transaction_details ADD COLUMN IF NOT EXISTS conversion_factor INT DEFAULT 1;
+					ALTER TABLE transaction_details ADD COLUMN IF NOT EXISTS base_qty INT DEFAULT 1;
+					ALTER TABLE transaction_details ADD COLUMN IF NOT EXISTS cost_price_snapshot NUMERIC(12, 2) DEFAULT 0.00;
+					CREATE INDEX IF NOT EXISTS idx_transaction_details_tx ON transaction_details(transaction_id);
+					CREATE INDEX IF NOT EXISTS idx_transaction_details_prod ON transaction_details(product_id);
+
+					CREATE TABLE IF NOT EXISTS transaction_payments (
+						id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+						transaction_id UUID NOT NULL REFERENCES transactions(id) ON DELETE CASCADE,
+						payment_method VARCHAR(30) NOT NULL,
+						amount NUMERIC(15, 2) NOT NULL,
+						payment_reference VARCHAR(100),
+						change_given NUMERIC(15, 2) DEFAULT 0.00,
+						created_at TIMESTAMPTZ DEFAULT NOW()
+					);
+					ALTER TABLE transaction_payments ADD COLUMN IF NOT EXISTS change_given NUMERIC(15, 2) DEFAULT 0.00;
+					ALTER TABLE transaction_payments ADD COLUMN IF NOT EXISTS payment_reference VARCHAR(100);
+					CREATE INDEX IF NOT EXISTS idx_transaction_payments_tx ON transaction_payments(transaction_id);
+				`).catch((err: any) => console.warn('[DB Pos Tables Sync Warning]', err.message));
+
 				// 9. Pastikan tabel stock_movements lengkap dan sinkron
 				await client.query(`
 					CREATE TABLE IF NOT EXISTS stock_movements (
