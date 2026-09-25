@@ -564,21 +564,31 @@
 			<div class="flex flex-col sm:flex-row items-end gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg animate-in fade-in slide-in-from-top-1 duration-150">
 				<div class="flex-1 w-full sm:w-auto">
 					<label for="dash-date-from" class="block text-[11px] font-bold text-slate-700 mb-1">Dari Tanggal:</label>
-					<input
-						id="dash-date-from"
-						type="date"
-						bind:value={customFrom}
-						class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-					/>
+					<div class="relative cursor-pointer">
+						<input
+							id="dash-date-from"
+							type="date"
+							bind:value={customFrom}
+							onclick={(e) => { try { e.currentTarget.showPicker() } catch(err){} }}
+							onkeydown={(e) => e.preventDefault()}
+							class="w-full pl-9 pr-3 py-2 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors"
+						/>
+						<Calendar class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+					</div>
 				</div>
 				<div class="flex-1 w-full sm:w-auto">
 					<label for="dash-date-to" class="block text-[11px] font-bold text-slate-700 mb-1">Sampai Tanggal:</label>
-					<input
-						id="dash-date-to"
-						type="date"
-						bind:value={customTo}
-						class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-					/>
+					<div class="relative cursor-pointer">
+						<input
+							id="dash-date-to"
+							type="date"
+							bind:value={customTo}
+							onclick={(e) => { try { e.currentTarget.showPicker() } catch(err){} }}
+							onkeydown={(e) => e.preventDefault()}
+							class="w-full pl-9 pr-3 py-2 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono font-bold text-slate-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer transition-colors"
+						/>
+						<Calendar class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+					</div>
 				</div>
 				<button
 					type="button"
