@@ -2203,10 +2203,10 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 					<span class="text-[10px] font-black tracking-wider text-rose-600 font-mono">QRIS</span>
 					<span class="text-[9px] font-bold text-slate-700 truncate max-w-[150px]">{storeName}</span>
 				</div>
-				<div class="w-48 h-48 bg-white border border-slate-300 rounded-lg flex flex-col items-center justify-center mx-auto p-2 shadow-inner relative overflow-hidden">
+				<div class="w-64 h-64 sm:w-80 sm:h-80 bg-white border border-slate-300 rounded-xl flex flex-col items-center justify-center mx-auto p-1 shadow-inner relative overflow-hidden">
 					{#if qrisQRString}
 						<img
-							src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={encodeURIComponent(qrisQRString)}"
+							src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data={encodeURIComponent(qrisQRString)}"
 							alt="Barcode QRIS {formatCurrency(finalPayTotal)}"
 							class="w-full h-full object-contain"
 						/>
