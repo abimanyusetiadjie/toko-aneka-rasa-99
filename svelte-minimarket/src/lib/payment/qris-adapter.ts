@@ -127,8 +127,9 @@ export class MockQRISGateway implements PaymentGatewayAdapter {
 	async generateQRIS(request: QRISRequest): Promise<QRISResponse> {
 		const refId = `QRIS-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
 		
-		// Standard EMVCo QRIS Payload Format
-		const qrString = `00020101021226600016ID.CO.MINIMARKET.WWW011893600999${request.transactionId.slice(0, 10)}520454115303360540${request.amount}5802ID5919SMARTPOS MINIMARKET6007JAKARTA6304ABCD`;
+		// Generate REAL Dynamic QRIS using Toko Aneka Rasa 99 Static QR string
+		const { generateDynamicQris, BASE_QRIS_STATIC } = await import('$lib/utils/qris');
+		const qrString = generateDynamicQris(BASE_QRIS_STATIC, request.amount);
 
 		this.transactions.set(refId, 'PENDING');
 
