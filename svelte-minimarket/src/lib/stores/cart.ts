@@ -88,6 +88,7 @@ export const change = derived([total, amountPaid, paymentMethod], ([$total, $amo
 });
 
 export function addItem(product: Product, scannedUnit: ProductUnit, allUnits: ProductUnit[]) {
+	currentCheckoutSessionKey.set('');
 	cart.update((items) => {
 		const existingIndex = items.findIndex(
 			(i) => i.product_id === product.id && i.unit_id === scannedUnit.id
@@ -126,6 +127,7 @@ export function addItem(product: Product, scannedUnit: ProductUnit, allUnits: Pr
 }
 
 export function updateQty(index: number, newQty: number) {
+	currentCheckoutSessionKey.set('');
 	cart.update((items) => {
 		if (items[index]) {
 			items[index].qty = Math.max(1, newQty);
@@ -136,6 +138,7 @@ export function updateQty(index: number, newQty: number) {
 }
 
 export function updateUnit(index: number, newUnitId: string) {
+	currentCheckoutSessionKey.set('');
 	cart.update((items) => {
 		const item = items[index];
 		if (item) {
@@ -153,6 +156,7 @@ export function updateUnit(index: number, newUnitId: string) {
 }
 
 export function removeItem(index: number) {
+	currentCheckoutSessionKey.set('');
 	cart.update((items) => {
 		items.splice(index, 1);
 		persistCartDraft();

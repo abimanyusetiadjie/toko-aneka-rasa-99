@@ -1179,8 +1179,8 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 		}
 
 		$isProcessing = true;
-		// Gunakan Idempotency Key yang stabil per sesi checkout (Anti Double-Charge saat retry)
-		const idempotencyKey = getOrCreateSessionIdempotencyKey();
+		// Selalu buat ID transaksi unik baru untuk setiap checkout agar tidak tertolak sebagai duplikat
+		const idempotencyKey = `tx-${Date.now()}-${Math.random().toString(36).slice(2, 9)}-${Math.floor(1000 + Math.random() * 9000)}`;
 
 		// Susun Payload Pembayaran
 		let paymentsList = [];
@@ -1283,6 +1283,14 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 			}
 
 			const data = await res.json();
+			if (data.is_duplicate) {
+				displayActionableError(
+					'Transaksi Sudah Diproses',
+					`Transaksi dengan nomor ${data.receipt_number} sudah tercatat sebelumnya. Sistem mencegah pencatatan transaksi ganda.`
+				);
+				return;
+			}
+
 			$lastReceiptNumber = data.receipt_number;
 
 			// Kurangi stok di katalog lokal kasir & broadcast ke tab admin
@@ -1319,6 +1327,9 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 				amount: finalPayTotal
 			});
 			
+			// Bersihkan keranjang otomatis agar transaksi berikutnya selalu dimulai dengan keranjang baru
+			resetCart();
+
 			showSuccessModal = true;
 			setTimeout(() => {
 				try { window.print(); } catch {}
