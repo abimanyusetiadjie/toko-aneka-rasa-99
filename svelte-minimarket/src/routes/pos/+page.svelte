@@ -2197,13 +2197,13 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 				<button onclick={closeQRISModal} class="text-slate-400 hover:text-slate-700 text-base cursor-pointer">✕</button>
 			</div>
 
-			<!-- Kartu Standar QRIS Indonesia (Cocok untuk QRIS Midtrans / BCA / GoPay / ShopeePay) -->
-			<div class="p-3.5 bg-slate-50 border-2 border-dashed border-purple-200 rounded-xl inline-block shadow-xs mx-auto w-full max-w-[260px]">
-				<div class="flex items-center justify-between pb-1.5 border-b border-slate-200 mb-2">
-					<span class="text-[10px] font-black tracking-wider text-rose-600 font-mono">QRIS</span>
-					<span class="text-[9px] font-bold text-slate-700 truncate max-w-[150px]">{storeName}</span>
+			<!-- Kartu Standar QRIS Indonesia -->
+			<div class="p-4 bg-slate-50 border-2 border-dashed border-purple-200 rounded-xl shadow-xs mx-auto w-[280px] sm:w-[320px]">
+				<div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-3">
+					<span class="text-[11px] font-black tracking-wider text-rose-600 font-mono">QRIS</span>
+					<span class="text-[10px] font-bold text-slate-700 truncate max-w-[150px]">{storeName}</span>
 				</div>
-				<div class="w-64 h-64 sm:w-80 sm:h-80 bg-white border border-slate-300 rounded-xl flex flex-col items-center justify-center mx-auto p-1 shadow-inner relative overflow-hidden">
+				<div class="w-full aspect-square bg-white border border-slate-300 rounded-xl flex flex-col items-center justify-center mx-auto p-1.5 shadow-inner relative overflow-hidden">
 					{#if qrisQRString}
 						<img
 							src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data={encodeURIComponent(qrisQRString)}"
