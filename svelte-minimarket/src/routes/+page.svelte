@@ -19,6 +19,7 @@
 	let mobileMenuOpen = $state(false);
 	let cartOpen = $state(false);
 	let waBubbleVisible = $state(true);
+	let activeSection = $state('hero');
 
 	// Lightbox Modal for Posters
 	let activePosterModal = $state<string | null>(null);
@@ -354,7 +355,7 @@
 		}
 	];
 
-	onMount(() => {
+onMount(() => {
 		const observer = new IntersectionObserver((entries) => {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
@@ -364,8 +365,17 @@
 		}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
 		document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
-	});
 
+		const sectionObserver = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+					activeSection = entry.target.id;
+				}
+			});
+		}, { threshold: 0.3, rootMargin: '-10% 0px -50% 0px' });
+		
+		document.querySelectorAll('section[id]').forEach(el => sectionObserver.observe(el));
+	});
 </script>
 
 <svelte:head>
@@ -619,10 +629,10 @@
 
 				<!-- Desktop Nav Links -->
 				<div class="hidden md:flex items-center gap-6 lg:gap-7 text-xs lg:text-sm font-bold text-slate-600">
-					<a href="#hero" class="hover:text-red-600 transition-colors">Beranda</a>
-					<a href="#katalog" class="hover:text-red-600 transition-colors">Katalog & Produk</a>
-					<a href="#testimoni" class="hover:text-red-600 transition-colors">Testimoni</a>
-					<a href="#kontak" class="hover:text-red-600 transition-colors">Lokasi & Pesan</a>
+					<a href="#hero" class="{activeSection === 'hero' ? 'text-red-600' : 'hover:text-red-600'} transition-colors">Beranda</a>
+					<a href="#katalog" class="{activeSection === 'katalog' ? 'text-red-600' : 'hover:text-red-600'} transition-colors">Katalog & Produk</a>
+					<a href="#testimoni" class="{activeSection === 'testimoni' ? 'text-red-600' : 'hover:text-red-600'} transition-colors">Testimoni</a>
+					<a href="#kontak" class="{activeSection === 'kontak' ? 'text-red-600' : 'hover:text-red-600'} transition-colors">Lokasi & Pesan</a>
 				</div>
 
 				<!-- Right Actions -->
@@ -646,7 +656,7 @@
 						rel="noopener noreferrer"
 						class="shimmer-btn hidden sm:inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white px-4 lg:px-5 py-2.5 rounded-xl text-xs lg:text-sm font-extrabold shadow-md shadow-emerald-600/25 hover:shadow-lg hover:shadow-emerald-600/35 transition-all cursor-pointer active:scale-95"
 					>
-						<svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+						<svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
 						<span>Pesan via WA</span>
 					</a>
 
@@ -664,10 +674,10 @@
 			<!-- Mobile Menu Dropdown -->
 			{#if mobileMenuOpen}
 			<div class="md:hidden py-4 border-t border-slate-100 flex flex-col gap-1.5 animate-in slide-in-from-top-2 duration-150">
-				<a href="#hero" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Beranda</a>
-				<a href="#katalog" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Katalog & Produk</a>
-				<a href="#testimoni" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Testimoni</a>
-				<a href="#kontak" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-slate-700 hover:bg-slate-50 hover:text-red-600 text-sm">Lokasi & Pesan</a>
+				<a href="#hero" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-sm transition-colors {activeSection === 'hero' ? 'bg-red-50 text-red-600' : 'text-slate-700 hover:bg-slate-50 hover:text-red-600'}">Beranda</a>
+				<a href="#katalog" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-sm transition-colors {activeSection === 'katalog' ? 'bg-red-50 text-red-600' : 'text-slate-700 hover:bg-slate-50 hover:text-red-600'}">Katalog & Produk</a>
+				<a href="#testimoni" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-sm transition-colors {activeSection === 'testimoni' ? 'bg-red-50 text-red-600' : 'text-slate-700 hover:bg-slate-50 hover:text-red-600'}">Testimoni</a>
+				<a href="#kontak" onclick={() => mobileMenuOpen = false} class="px-3 py-2 rounded-lg font-bold text-sm transition-colors {activeSection === 'kontak' ? 'bg-red-50 text-red-600' : 'text-slate-700 hover:bg-slate-50 hover:text-red-600'}">Lokasi & Pesan</a>
 				<div class="pt-2 flex flex-col gap-2">
 					<a
 						href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin memesan:')}"
@@ -789,13 +799,13 @@
 
 	<!-- ===== INFINITE MARQUEE TICKER ===== -->
 	<div class="bg-red-600 text-white overflow-hidden py-3 shadow-inner relative z-10 flex border-y border-red-700">
-		<div class="animate-marquee whitespace-nowrap flex items-center gap-8 font-extrabold text-sm tracking-wider uppercase">
+		<div class="animate-marquee flex flex-nowrap items-center gap-8 min-w-max font-extrabold text-sm tracking-wider uppercase">
 			<!-- Repeat content a few times for smooth infinite effect -->
 			{#each Array(4) as _}
-			<span class="flex items-center gap-2"><Flame class="w-4 h-4 text-amber-400" /> 100% Tenggiri Asli</span>
-			<span class="flex items-center gap-2"><Truck class="w-4 h-4 text-amber-400" /> Pengiriman Seluruh Nusantara</span>
-			<span class="flex items-center gap-2"><Award class="w-4 h-4 text-amber-400" /> Resep Tradisional Bangka</span>
-			<span class="flex items-center gap-2"><Package class="w-4 h-4 text-amber-400" /> Garansi Packing Aman</span>
+			<span class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap"><Flame class="w-4 h-4 text-amber-400 shrink-0" /> 100% Tenggiri Asli</span>
+			<span class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap"><Truck class="w-4 h-4 text-amber-400 shrink-0" /> Pengiriman Seluruh Nusantara</span>
+			<span class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap"><Award class="w-4 h-4 text-amber-400 shrink-0" /> Resep Tradisional Bangka</span>
+			<span class="inline-flex shrink-0 items-center gap-2 whitespace-nowrap"><Package class="w-4 h-4 text-amber-400 shrink-0" /> Garansi Packing Aman</span>
 			{/each}
 		</div>
 	</div>
@@ -1075,7 +1085,7 @@
 							class="w-full bg-[#EE4D2D] hover:bg-[#d74326] text-white text-xs sm:text-sm font-extrabold py-3 sm:py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-xs cursor-pointer active:scale-95 shimmer-btn"
 							title="Beli di Shopee"
 						>
-							<img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg" alt="Shopee Logo" class="w-4 h-4 object-contain brightness-0 invert" />
+							<img src="/shopee-icon.png" alt="Shopee Logo" class="w-5 h-5 object-contain rounded-sm" />
 							<span>Shopee</span>
 						</a>
 
@@ -1086,7 +1096,7 @@
 							class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs sm:text-sm font-extrabold py-3 sm:py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-xs cursor-pointer active:scale-95 shimmer-btn"
 							title="Pesan Langsung via WA"
 						>
-							<svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+							<svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
 							<span>WhatsApp</span>
 						</a>
 					</div>
@@ -1096,50 +1106,6 @@
 		</div>
 	</section>
 
-	<!-- ===== 5. CERITA KAMI / OUR STORY (AUTHENTIC HERITAGE) ===== -->
-	<section id="cerita" class="py-14 sm:py-20 bg-white border-y border-slate-200/80">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-				<div class="lg:col-span-6 relative">
-					<div class="rounded-3xl overflow-hidden border border-slate-200 shadow-xl relative aspect-4/3">
-						<img
-							src="/images/banner-toko.png"
-							alt="Suasana Toko Aneka Rasa 99 Poris"
-							class="w-full h-full object-cover"
-						/>
-						<div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent flex items-end p-6">
-							<div class="text-white space-y-1">
-								<p class="text-xs font-extrabold text-amber-300 uppercase tracking-widest">Toko Fisik Kami</p>
-								<p class="text-sm sm:text-base font-bold">Jl. Raya Poris Indah Blok B 11 No. 1, Tangerang</p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="lg:col-span-6 space-y-5">
-					<h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-950 tracking-tight leading-snug">
-						Menghadirkan Cita Rasa Asli Bangka Langsung ke Rumah Anda
-					</h2>
-					<p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-						Bermula dari kerinduan akan renyahnya kemplang panggang arang khas kampung halaman, <strong>Toko Aneka Rasa 99</strong> hadir di kawasan Poris Indah Tangerang untuk menjadi rumah bagi para pecinta kuliner autentik Bangka Belitung.
-					</p>
-					<p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-						Kami bekerja sama langsung dengan para pengrajin pesisir tradisional di Bangka. Setiap butir kemplang dan getas hanya menggunakan daging ikan tenggiri segar tanpa pengawet atau pemutih kimia. Itulah mengapa aroma harum arang dan gurih alaminya selalu dirindukan.
-					</p>
-
-					<div class="pt-2 flex items-center gap-4">
-						<div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-black text-lg shrink-0">
-							99
-						</div>
-						<div>
-							<p class="font-extrabold text-slate-900 text-sm">Hendra & Keluarga</p>
-							<p class="text-xs text-slate-500">Pendiri & Pengelola Toko Aneka Rasa 99</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
 
 	<!-- ===== 6. MENGAPA KAMI (4 PILAR KEUNGGULAN) ===== -->
 	<section id="keunggulan" class="py-14 sm:py-20 bg-[#FCFAF6]">
@@ -1467,6 +1433,19 @@
 					{/if}
 				</div>
 				{/each}
+			</div>
+		</div>
+	</section>
+
+	<!-- ===== WIDE BANNER (CERITA KAMI REPLACEMENT) ===== -->
+	<section class="w-full bg-slate-950">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+			<div class="rounded-3xl overflow-hidden shadow-2xl relative w-full reveal-on-scroll">
+				<img
+					src="/images/banner-toko.png"
+					alt="Toko Aneka Rasa 99"
+					class="w-full h-auto object-cover max-h-[400px]"
+				/>
 			</div>
 		</div>
 	</section>
