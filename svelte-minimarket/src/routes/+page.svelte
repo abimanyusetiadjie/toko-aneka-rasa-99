@@ -734,13 +734,13 @@ onMount(() => {
 							<ArrowRight class="w-4 h-4 group-hover:translate-x-1 transition-transform" />
 						</a>
 
-						<!-- Secondary 3 Lini Produk CTA -->
+						<!-- Secondary CTA -->
 						<a
-							href="#lini-produk"
+							href="#katalog"
 							class="bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm sm:text-base px-6 py-3 sm:px-7 sm:py-3.5 rounded-xl border border-slate-200 shadow-xs hover:border-slate-300 transition-all flex items-center justify-center gap-2 cursor-pointer"
 						>
 							<Package class="w-4 h-4 text-amber-600" />
-							<span>Lihat 3 Lini Produk Utama</span>
+							<span>Lihat Katalog Lengkap</span>
 						</a>
 					</div>
 
@@ -833,145 +833,6 @@ onMount(() => {
 					</p>
 					<p class="text-xs sm:text-sm font-bold text-slate-500">Rating Google & Shopee</p>
 				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- ===== 3. NEW BENTO SHOWCASE: 3 LINI PRODUK UTAMA TOKO ===== -->
-	<section id="lini-produk" class="py-14 sm:py-20 bg-[#F9F6F0] border-b border-slate-200/80">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<!-- Section Header -->
-			<div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-3">
-				<h2 class="text-2xl sm:text-4xl font-black text-slate-950 tracking-tight">
-					Pilihan Terlengkap untuk Segala Kebutuhan Oleh-Oleh
-				</h2>
-				<p class="text-slate-600 text-xs sm:text-sm sm:leading-relaxed">
-					Dari camilan matang siap santap, agen grosir kerupuk mentah untuk resto & reseller, hingga aneka kue kering tradisional legendaris. Klik kartu untuk melihat banner detail!
-				</p>
-			</div>
-
-			<!-- Bento Grid (3 Cards) -->
-			<div class="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 gap-5 md:gap-8 pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
-				
-				<!-- Bento Card 1: Makanan Khas Bangka -->
-				<div class="bg-white rounded-3xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group shrink-0 w-[85%] snap-center md:w-auto">
-					<div class="relative aspect-square overflow-hidden bg-slate-950 cursor-pointer" onclick={() => activePosterModal = '/images/banners/poster-khas-bangka.jpg'}>
-						<img
-							src="/images/banners/poster-khas-bangka.jpg"
-							alt="Makanan Khas Bangka"
-							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-						/>
-						<div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-5">
-							<div class="text-white">
-								<span class="px-2.5 py-1 bg-red-600 text-white rounded-full text-[10px] font-black uppercase">Paling Favorit</span>
-								<h3 class="text-lg font-black mt-1">Makanan Khas Bangka</h3>
-							</div>
-						</div>
-						<div class="absolute top-3 right-3 bg-black/50 text-white px-2.5 py-1 rounded-full text-[11px] font-bold backdrop-blur-xs flex items-center gap-1">
-							<Eye class="w-3.5 h-3.5" /> Lihat Detail
-						</div>
-					</div>
-					<div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-						<div class="space-y-2">
-							<p class="text-xs text-slate-600 leading-relaxed">
-								Kemplang Panggang Cap MM, Getas Super Cap Obor, Terasi AB Toboali, Kopi Cap 1, dan Getas Lonceng Mas. Resep warisan asli kepulauan Bangka.
-							</p>
-							<div class="flex flex-wrap gap-1.5 pt-1">
-								<span class="text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">Panggang Arang</span>
-								<span class="text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">Sambal Terasi</span>
-								<span class="text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">Tenggiri Segar</span>
-							</div>
-						</div>
-						<button
-							onclick={() => { selectedCategory = 'khas-bangka'; document.getElementById('katalog')?.scrollIntoView({ behavior: 'smooth' }); }}
-							class="w-full py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer active:scale-98 shadow-sm"
-						>
-							<span>Pilih Produk Khas Bangka</span>
-							<ArrowRight class="w-4 h-4" />
-						</button>
-					</div>
-				</div>
-
-				<!-- Bento Card 2: Agen Kerupuk Mentah -->
-				<div class="bg-white rounded-3xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group shrink-0 w-[85%] snap-center md:w-auto">
-					<div class="relative aspect-square overflow-hidden bg-slate-950 cursor-pointer" onclick={() => activePosterModal = '/images/banners/poster-kerupuk-mentah.jpg'}>
-						<img
-							src="/images/banners/poster-kerupuk-mentah.jpg"
-							alt="Agen Kerupuk Mentah Aneka Rasa 99 Poris"
-							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-						/>
-						<div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-5">
-							<div class="text-white">
-								<span class="px-2.5 py-1 bg-amber-500 text-slate-950 rounded-full text-[10px] font-black uppercase">Grosir & Eceran</span>
-								<h3 class="text-lg font-black mt-1">Pusat Kerupuk Mentah</h3>
-							</div>
-						</div>
-						<div class="absolute top-3 right-3 bg-black/50 text-white px-2.5 py-1 rounded-full text-[11px] font-bold backdrop-blur-xs flex items-center gap-1">
-							<Eye class="w-3.5 h-3.5" /> Lihat Detail
-						</div>
-					</div>
-					<div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-						<div class="space-y-2">
-							<p class="text-xs text-slate-600 leading-relaxed">
-								Kerupuk ikan mentah, udang mentah, kerupuk jengkol, bawang putih, cap Dakota & Lapter 99. Siap kirim bal-balan untuk reseller & rumah makan.
-							</p>
-							<div class="flex flex-wrap gap-1.5 pt-1">
-								<span class="text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200 px-2 py-0.5 rounded-md">Harga Grosir Pabrik</span>
-								<span class="text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200 px-2 py-0.5 rounded-md">Mekar Sempurna</span>
-								<span class="text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200 px-2 py-0.5 rounded-md">Stok Terlengkap</span>
-							</div>
-						</div>
-						<a
-							href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya tertarik dengan informasi Grosir / Reseller Kerupuk Mentah. Mohon info pricelistnya ya:')}"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer active:scale-98 shadow-sm"
-						>
-							<span>Tanya Grosir Kerupuk via WA</span>
-							<ArrowRight class="w-4 h-4" />
-						</a>
-					</div>
-				</div>
-
-				<!-- Bento Card 3: Aneka Kue Khas Bangka -->
-				<div class="bg-white rounded-3xl border border-slate-200/80 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group shrink-0 w-[85%] snap-center md:w-auto">
-					<div class="relative aspect-square overflow-hidden bg-slate-950 cursor-pointer" onclick={() => activePosterModal = '/images/banners/poster-aneka-kue.jpg'}>
-						<img
-							src="/images/banners/poster-aneka-kue.jpg"
-							alt="Aneka Kue Tradisional Khas Bangka"
-							class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-						/>
-						<div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-5">
-							<div class="text-white">
-								<span class="px-2.5 py-1 bg-emerald-600 text-white rounded-full text-[10px] font-black uppercase">Resep Tradisional</span>
-								<h3 class="text-lg font-black mt-1">Aneka Kue Kering Bangka</h3>
-							</div>
-						</div>
-						<div class="absolute top-3 right-3 bg-black/50 text-white px-2.5 py-1 rounded-full text-[11px] font-bold backdrop-blur-xs flex items-center gap-1">
-							<Eye class="w-3.5 h-3.5" /> Lihat Detail
-						</div>
-					</div>
-					<div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-						<div class="space-y-2">
-							<p class="text-xs text-slate-600 leading-relaxed">
-								Kue Semprong arang, Roti Kering / Roker Mr. Jo, Kue Sempret Cap ED, dan Kue Rintak sagu murni. Renyah, gurih, dan legit khas masa lalu.
-							</p>
-							<div class="flex flex-wrap gap-1.5 pt-1">
-								<span class="text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-md">Teman Santai Kopi</span>
-								<span class="text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-md">Tanpa Pengawet</span>
-								<span class="text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-md">Cocok Buat Hampers</span>
-							</div>
-						</div>
-						<button
-							onclick={() => { selectedCategory = 'kue-tradisional'; document.getElementById('katalog')?.scrollIntoView({ behavior: 'smooth' }); }}
-							class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer active:scale-98 shadow-sm"
-						>
-							<span>Pilih Aneka Kue Kering</span>
-							<ArrowRight class="w-4 h-4" />
-						</button>
-					</div>
-				</div>
-
 			</div>
 		</div>
 	</section>
@@ -1438,7 +1299,7 @@ onMount(() => {
 	</section>
 
 	<!-- ===== WIDE BANNER (CERITA KAMI REPLACEMENT) ===== -->
-	<section class="w-full bg-slate-950">
+	<section class="w-full bg-[#FCFAF6] pt-10">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
 			<div class="rounded-3xl overflow-hidden shadow-2xl relative w-full reveal-on-scroll">
 				<img
@@ -1451,19 +1312,19 @@ onMount(() => {
 	</section>
 
 	<!-- ===== 11. FOOTER ===== -->
-	<footer class="bg-slate-950 text-slate-400 pt-12 pb-16">
+	<footer class="bg-[#FCFAF6] text-slate-600 pt-8 pb-16">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-800/80">
+			<div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-200/80">
 				<!-- Brand Col -->
 				<div class="md:col-span-2 space-y-4">
 					<div class="flex items-center gap-3">
-						<img src="/logo.png" alt="Toko Aneka Rasa 99" class="w-11 h-11 rounded-full object-cover border border-slate-700" />
+						<img src="/logo.png" alt="Toko Aneka Rasa 99" class="w-11 h-11 rounded-full object-cover border border-slate-200 shadow-sm" />
 						<div>
-							<p class="text-white font-black text-base">Toko Aneka Rasa 99 Poris</p>
-							<p class="text-xs text-red-400 font-bold">Pusat Makanan Khas Bangka & Agen Kerupuk Mentah</p>
+							<p class="text-slate-900 font-black text-base">Toko Aneka Rasa 99 Poris</p>
+							<p class="text-xs text-red-600 font-bold">Pusat Makanan Khas Bangka & Agen Kerupuk Mentah</p>
 						</div>
 					</div>
-					<p class="text-xs text-slate-400 leading-relaxed max-w-md">
+					<p class="text-xs text-slate-600 leading-relaxed max-w-md">
 						Pusat Kemplang Panggang Arang MM, Getas Super Tenggiri Obor, Terasi Toboali, Kopi Cap 1, Grosir Kerupuk Mentah, dan Aneka Kue Tradisional Bangka. Melayani eceran dan pesanan partai besar ke seluruh Indonesia.
 					</p>
 					<div class="flex items-center gap-3 pt-1">
@@ -1471,40 +1332,40 @@ onMount(() => {
 							href="https://wa.me/{WA_PHONE}"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="inline-flex items-center gap-1.5 bg-[#25D366] text-white text-xs font-bold px-3.5 py-2 rounded-lg hover:bg-[#20ba5a] transition"
+							class="inline-flex items-center gap-1.5 bg-[#25D366] text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-[#20ba5a] transition shadow-md shadow-emerald-500/20"
 						>
-							<MessageCircle class="w-3.5 h-3.5" /> Chat WhatsApp
+							<svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+							Chat WhatsApp
 						</a>
 						<a
 							href="https://shopee.co.id/tokoanekarasa99"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="inline-flex items-center gap-1.5 bg-[#EE4D2D] text-white text-xs font-bold px-3.5 py-2 rounded-lg hover:bg-[#d73211] transition"
+							class="inline-flex items-center gap-1.5 bg-[#EE4D2D] text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-[#d73211] transition shadow-md shadow-orange-500/20"
 						>
-							<ShoppingBag class="w-3.5 h-3.5" /> Toko Shopee
+							<img src="/shopee-icon.png" class="w-3.5 h-3.5 object-contain rounded-sm" alt="Shopee" />
+							Toko Shopee
 						</a>
 					</div>
 				</div>
 
 				<!-- Nav Links -->
 				<div class="space-y-3">
-					<p class="text-white font-extrabold text-sm uppercase tracking-wider">Navigasi</p>
+					<p class="text-slate-900 font-extrabold text-sm uppercase tracking-wider">Navigasi</p>
 					<ul class="space-y-2 text-xs">
-						<li><a href="#hero" class="hover:text-white transition">Beranda</a></li>
-						<li><a href="#lini-produk" class="hover:text-white transition">3 Lini Produk</a></li>
-						<li><a href="#katalog" class="hover:text-white transition">Katalog Lengkap</a></li>
-						<li><a href="#cerita" class="hover:text-white transition">Cerita Toko</a></li>
-						<li><a href="#testimoni" class="hover:text-white transition">Testimoni</a></li>
-						<li><a href="#kontak" class="hover:text-white transition">Lokasi & Kontak</a></li>
+						<li><a href="#hero" class="hover:text-red-600 transition">Beranda</a></li>
+						<li><a href="#katalog" class="hover:text-red-600 transition">Katalog Lengkap</a></li>
+						<li><a href="#testimoni" class="hover:text-red-600 transition">Testimoni</a></li>
+						<li><a href="#kontak" class="hover:text-red-600 transition">Lokasi & Kontak</a></li>
 					</ul>
 				</div>
 
 				<!-- Store Info -->
 				<div class="space-y-3">
-					<p class="text-white font-extrabold text-sm uppercase tracking-wider">Alamat & Jam Buka</p>
+					<p class="text-slate-900 font-extrabold text-sm uppercase tracking-wider">Alamat & Jam Buka</p>
 					<div class="space-y-2.5 text-xs">
 						<p class="leading-relaxed flex items-start gap-2">
-							<MapPin class="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+							<MapPin class="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
 							<span>{STORE_ADDRESS}</span>
 						</p>
 						<p class="flex items-center gap-2">
@@ -1523,7 +1384,7 @@ onMount(() => {
 			<div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
 				<p>© {new Date().getFullYear()} Toko Aneka Rasa 99. Seluruh Hak Cipta Dilindungi.</p>
 				<div class="flex items-center gap-4">
-					<a href="/login" class="hover:text-slate-300 flex items-center gap-1 transition">
+					<a href="/login" class="hover:text-red-600 flex items-center gap-1 transition">
 						<User class="w-3.5 h-3.5" /> Login Portal Kasir & Owner
 					</a>
 				</div>
