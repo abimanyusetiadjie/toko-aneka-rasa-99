@@ -813,6 +813,160 @@ onMount(() => {
 		</div>
 	</section>
 
+	<!-- ===== 3. AGEN KERUPUK MENTAH SHOWCASE (PUSAT GROSIR & ECERAN) ===== -->
+	<section class="py-14 sm:py-20 bg-gradient-to-b from-[#FCFAF6] via-amber-50/30 to-white relative overflow-hidden border-b border-slate-200/70">
+		<!-- Subtle Luxury Background Elements -->
+		<div class="absolute -top-24 -right-24 w-96 h-96 bg-amber-200/20 rounded-full blur-3xl pointer-events-none"></div>
+		<div class="absolute -bottom-24 -left-24 w-96 h-96 bg-red-200/20 rounded-full blur-3xl pointer-events-none"></div>
+
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+			<!-- Big Bold Luxury Header -->
+			<div class="text-center max-w-4xl mx-auto mb-10 sm:mb-14 space-y-3.5">
+				<div class="inline-flex items-center gap-2 bg-[#FFF7E8] border border-[#FFC24C]/60 text-slate-900 text-xs sm:text-sm font-black px-4 py-1.5 rounded-full shadow-xs uppercase tracking-wider">
+					<span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+					<span>Pusat Grosir & Distributor Utama Tangerang</span>
+				</div>
+				<h2 class="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight leading-tight">
+					Toko Aneka Rasa 99 adalah <br class="hidden sm:block" />
+					<span class="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 bg-clip-text text-transparent underline decoration-[#FFC24C]/40 decoration-wavy">
+						Agen Resmi Kerupuk Mentah
+					</span>
+				</h2>
+				<p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+					Menyediakan aneka ragam kerupuk mentah khas Nusantara kualitas premium untuk kebutuhan rumah tangga, warung makan, katering, hingga pesanan partai besar (bal-balan) dengan harga langsung tangan pertama.
+				</p>
+			</div>
+
+			<!-- Main 2-Column Banner & Key Benefits Showcase -->
+			<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+				<!-- Left Column: The Big Luxury Poster Visual with Click-to-Zoom -->
+				<div class="lg:col-span-6 relative">
+					<div class="relative group">
+						<!-- Glow Ambient Aura -->
+						<div class="absolute -inset-1 bg-gradient-to-r from-red-600 to-amber-500 rounded-3xl blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+
+						<!-- Poster Card -->
+						<div
+							class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-950 aspect-square sm:aspect-[4/3] lg:aspect-square cursor-pointer transition-transform duration-500 group-hover:scale-[1.01]"
+							onclick={() => activePosterModal = '/images/banners/poster-kerupuk-mentah.jpg'}
+							role="button"
+							tabindex="0"
+							onkeydown={(e) => e.key === 'Enter' && (activePosterModal = '/images/banners/poster-kerupuk-mentah.jpg')}
+							title="Klik untuk memperbesar gambar poster agen kerupuk"
+						>
+							<picture class="w-full h-full">
+								<source srcset="/images/banners/poster-kerupuk-mentah.webp" type="image/webp" />
+								<img
+									src="/images/banners/poster-kerupuk-mentah.jpg"
+									alt="Agen Kerupuk Mentah Aneka Rasa 99 Poris"
+									class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+									loading="lazy"
+									decoding="async"
+								/>
+							</picture>
+
+							<!-- Gradient Overlay for Contrast -->
+							<div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-70 group-hover:opacity-90 transition-opacity"></div>
+
+							<!-- Floating Bottom Caption & Badge -->
+							<div class="absolute bottom-4 inset-x-4 flex items-center justify-between text-white">
+								<div>
+									<span class="px-2.5 py-0.5 bg-[#FFC24C] text-slate-950 text-[10px] font-black rounded-full uppercase tracking-wider mb-1 inline-block shadow-xs">
+										★ Katalog Agen Kerupuk
+									</span>
+									<p class="font-black text-sm sm:text-base">Grosir & Eceran Kerupuk Mentah</p>
+									<p class="text-[11px] text-amber-200">Klik untuk melihat detail varian</p>
+								</div>
+								<div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:bg-red-600 transition-colors shadow-md">
+									<Eye class="w-5 h-5 text-white" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Right Column: 4 Luxury Value Cards & Fast Action -->
+				<div class="lg:col-span-6 space-y-6">
+					<div class="space-y-3">
+						<span class="text-xs font-black text-red-600 uppercase tracking-widest">Keunggulan Agen Aneka Rasa 99</span>
+						<h3 class="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+							Pasokan Kerupuk Mentah Terbaik untuk Usaha & Kebutuhan Anda
+						</h3>
+						<p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+							Kami dipercaya oleh ratusan pelaku usaha kuliner, warung seblak, katering pesta, dan agen distributor di Jabodetabek hingga luar pulau karena konsistensi mutu rasa dan kerenyahannya.
+						</p>
+					</div>
+
+					<!-- 4 Grid Features -->
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 pt-1">
+						<!-- Feature 1 -->
+						<div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-red-200 hover:shadow-md transition">
+							<div class="w-9 h-9 rounded-xl bg-red-100 text-red-600 flex items-center justify-center mb-2.5 font-black text-sm">
+								📦
+							</div>
+							<h4 class="font-extrabold text-slate-900 text-sm mb-1">Varian Super Lengkap</h4>
+							<p class="text-xs text-slate-500 leading-relaxed">
+								Kerupuk Ikan Ampera, Udang Angin Laut, Bawang Dakota, Jengkol, Bawang Putih, hingga Kerupuk Mawar Warna-Warni.
+							</p>
+						</div>
+
+						<!-- Feature 2 -->
+						<div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-red-200 hover:shadow-md transition">
+							<div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-2.5 font-black text-sm">
+								💰
+							</div>
+							<h4 class="font-extrabold text-slate-900 text-sm mb-1">Harga Pabrik Langsung</h4>
+							<p class="text-xs text-slate-500 leading-relaxed">
+								Skema harga grosir bal-balan (karung 5 kg) dengan selisih margin menguntungkan untuk pedagang dan reseller.
+							</p>
+						</div>
+
+						<!-- Feature 3 -->
+						<div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-red-200 hover:shadow-md transition">
+							<div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-2.5 font-black text-sm">
+								✨
+							</div>
+							<h4 class="font-extrabold text-slate-900 text-sm mb-1">Pasti Mekar & Gurih</h4>
+							<p class="text-xs text-slate-500 leading-relaxed">
+								Formula adonan tradisional khas Bangka, mengembang sempurna saat digoreng tanpa perlu dijemur berhari-hari.
+							</p>
+						</div>
+
+						<!-- Feature 4 -->
+						<div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-red-200 hover:shadow-md transition">
+							<div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-2.5 font-black text-sm">
+								🚚
+							</div>
+							<h4 class="font-extrabold text-slate-900 text-sm mb-1">Kirim Seluruh Indonesia</h4>
+							<p class="text-xs text-slate-500 leading-relaxed">
+								Bekerjasama dengan kargo darat dan laut berbiaya hemat. Packing dobel lapis rapi anti hancur.
+							</p>
+						</div>
+					</div>
+
+					<!-- Direct Order CTA Strip -->
+					<div class="p-4 sm:p-5 rounded-2xl bg-[#FFFDF9] border border-amber-200/80 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+						<div class="text-center sm:text-left">
+							<p class="text-xs font-black text-slate-900">Butuh Pricelist Grosir / Pengambilan Partai?</p>
+							<p class="text-[11px] text-slate-500">Hubungi langsung bagian grosir Toko Aneka Rasa 99</p>
+						</div>
+						<div class="flex items-center gap-2 w-full sm:w-auto">
+							<a
+								href="https://wa.me/{WA_PHONE}?text={encodeURIComponent('Halo Toko Aneka Rasa 99, saya ingin tanya harga grosir kerupuk mentah (partai/bal-balan):')}"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-extrabold px-5 py-2.5 rounded-xl transition shadow-md shadow-emerald-500/20 active:scale-95 whitespace-nowrap"
+							>
+								<MessageCircle class="w-4 h-4 shrink-0" />
+								<span>Chat Grosir via WhatsApp</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<!-- ===== 4. KATALOG PRODUK DINAMIS (DENGAN FILTER CEPAT) ===== -->
 	<section id="katalog" class="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 		<!-- Section Header -->
