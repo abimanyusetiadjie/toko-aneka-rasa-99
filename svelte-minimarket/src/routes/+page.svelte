@@ -25,9 +25,7 @@
 	let activePosterModal = $state<string | null>(null);
 
 	// Category filter state
-	type ProductCategory = 'khas-bangka' | 'kerupuk-mentah' | 'kue-tradisional' | 'terasi-kopi';
-	let selectedCategory = $state<ProductCategory>('khas-bangka');
-
+	type ProductCategory = string;
 	interface FeaturedProduct {
 		id: string;
 		name: string;
@@ -44,14 +42,13 @@
 	}
 
 	const PRODUCTS: FeaturedProduct[] = [
-		// 1. Khas Bangka Matang
 		{
 			id: 'p1',
-			name: 'Kemplang Panggang Cap MM',
+			name: 'Kemplang Panggang Cap MM Asli Bangka',
 			category: 'khas-bangka',
-			desc: 'Dipanggang tradisional arang kelapa. Gurih renyah di luar, empuk gurih daging ikan tenggiri di dalam. Sudah lengkap dengan sambal terasi Bangka autentik.',
-			price: 37500,
-			originalPrice: 43000,
+			desc: 'Dipanggang tradisional arang kelapa. Gurih renyah di luar, empuk gurih daging ikan tenggiri di dalam.',
+			price: 47500,
+			originalPrice: 50000,
 			weight: '250 gr',
 			rating: 5.0,
 			reviewsCount: 142,
@@ -59,170 +56,107 @@
 			badge: '🔥 Paling Laris',
 			highlight: 'Sambal Terasi Asli'
 		},
-
+		{
+			id: 'p2',
+			name: 'Steak Telor Cumi/Kericu cap Kuda Laut 250 gram',
+			category: 'khas-bangka',
+			desc: 'Camilan khas Bangka berbahan dasar telur cumi pilihan. Bentuk stik yang sangat renyah dan gurih.',
+			price: 45000,
+			originalPrice: 50000,
+			weight: '250 gr',
+			rating: 4.9,
+			reviewsCount: 89,
+			image: '/images/products/getas-obor.jpg',
+			badge: '🦑 Terlaris',
+			highlight: 'Asli Telur Cumi'
+		},
 		{
 			id: 'p3',
-			name: 'Steak Telor Cumi Kuda Laut (Kericu)',
+			name: 'Getas Lonceng Mas Panjang @250g',
 			category: 'khas-bangka',
-			desc: 'Keripik dari telur cumi segar khas Bangka. Gurih, renyah, dan aroma cumi yang khas. Camilan premium dengan cita rasa otentik.',
-			price: 30000,
-			originalPrice: 35000,
-			weight: '200 gr',
+			desc: 'Getas ikan tenggiri super berbentuk lonjong. Tekstur renyah, rasa ikannya sangat pekat.',
+			price: 66000,
+			originalPrice: 70000,
+			weight: '250 gr',
 			rating: 4.9,
-			reviewsCount: 92,
-			image: '/images/products/steak-cumi-kuda-laut.jpg',
-			badge: '🦑 Premium',
-			highlight: 'Telur Cumi Segar'
+			reviewsCount: 115,
+			image: '/images/products/getas-obor.jpg',
+			badge: '⭐ Favorit',
+			highlight: 'Super Renyah'
 		},
 		{
 			id: 'p4',
-			name: 'Getas Lonceng Mas Khas Bangka',
-			category: 'khas-bangka',
-			desc: 'Getas butir bulat renyah kualitas super khas kepulauan Bangka. Sangat cocok untuk teman makan bakso, mie kuah, maupun camilan santai keluarga.',
-			price: 38000,
-			originalPrice: 43000,
-			weight: '250 gr',
-			rating: 4.9,
-			reviewsCount: 76,
-			image: '/images/products/getes-lonceng-mas.jpg',
-			badge: '🐟 Gurih Maksimal',
-			highlight: 'Ikan Tenggiri Murni'
+			name: 'Terasi AB No. 1 Pulau Bangka 500g',
+			category: 'bumbu',
+			desc: 'Terasi udang rebon asli dari Toboali Bangka. Kualitas nomor 1, wangi khas dan tanpa pewarna buatan.',
+			price: 60000,
+			originalPrice: 65000,
+			weight: '500 gr',
+			rating: 5.0,
+			reviewsCount: 231,
+			image: '/images/products/terasi-ab.jpg',
+			badge: '🌶️ Bumbu Wajib',
+			highlight: 'Wangi Khas'
 		},
-
-		// 2. Terasi & Kopi Bangka
 		{
 			id: 'p5',
-			name: 'Terasi No. 1 Pulau Bangka AB Toboali',
-			category: 'terasi-kopi',
-			desc: 'Terasi udang rebon asli Toboali Bangka Selatan. Tanpa pewarna buatan, wangi harum semerbak, rahasia kelezatan sambal dan tumisan khas Bangka.',
+			name: 'Kopi Kingkong Merah 200g',
+			category: 'bumbu',
+			desc: 'Kopi legendaris khas Bangka. Aroma pekat yang nikmat disajikan panas maupun dingin.',
 			price: 35000,
 			originalPrice: 40000,
-			weight: '250 gr',
-			rating: 5.0,
-			reviewsCount: 95,
-			image: '/images/products/terasi.png',
-			badge: '🦐 Terasi Toboali',
-			highlight: 'Udang Rebon Super'
+			weight: '200 gr',
+			rating: 4.8,
+			reviewsCount: 76,
+			image: '/images/products/kopi-cap1.jpg',
+			badge: '☕ Legendaris',
+			highlight: 'Aroma Kuat'
 		},
 		{
 			id: 'p6',
-			name: 'Kopi Bubuk Cap 1 (Legendaris 1968)',
-			category: 'terasi-kopi',
-			desc: 'Kopi legendaris khas Sungailiat Bangka yang diproduksi sejak tahun 1968. Aroma harum khas roastery tradisional, pekat nikmat tiada tara.',
-			price: 25000,
-			originalPrice: 29000,
-			weight: '200 gr',
-			rating: 4.9,
-			reviewsCount: 68,
-			image: '/images/banners/poster-khas-bangka.jpg',
-			badge: '☕ Sejak 1968',
-			highlight: 'Aroma Sangrai Autentik'
-		},
-		{
-			id: 'p7',
-			name: 'Kopi Asli Cap Kingkong',
-			category: 'terasi-kopi',
-			desc: 'Kopi hitam khas Bangka dengan citarasa robusta kuat dan aroma khas warung kopi peranakan Bangka. Favorit pecinta kopi mantap.',
-			price: 22000,
-			originalPrice: 26000,
-			weight: '200 gr',
-			rating: 4.8,
-			reviewsCount: 52,
-			image: '/images/banners/poster-khas-bangka.jpg',
-			badge: '🦍 Khas Warkop',
-			highlight: 'Citarasa Pekat Mantap'
-		},
-
-		// 3. Agen Kerupuk Mentah (Grosir & Eceran)
-		{
-			id: 'p8',
-			name: 'Kerupuk Ikan Mentah Khas Bangka',
-			category: 'kerupuk-mentah',
-			desc: 'Kerupuk mentah kualitas istimewa langsung dari pengrajin. Sangat mudah digoreng, mekar sempurna hingga 3x lipat, renyah dan gurih alami.',
-			price: 35000,
-			originalPrice: 40000,
-			weight: '500 gr',
-			rating: 4.9,
-			reviewsCount: 88,
-			image: '/images/products/kerupuk-mentah.png',
-			badge: '🍳 Mekar Sempurna',
-			highlight: 'Grosir & Eceran'
-		},
-		{
-			id: 'p9',
-			name: 'Kerupuk Udang Mentah Super',
-			category: 'kerupuk-mentah',
-			desc: 'Kerupuk udang mentah beraroma gurih renyah. Cocok untuk pelengkap catering, warung makan, hajatan, maupun digoreng sendiri di rumah.',
-			price: 38000,
-			originalPrice: 44000,
-			weight: '500 gr',
-			rating: 4.8,
-			reviewsCount: 62,
-			image: '/images/banners/poster-kerupuk-mentah.jpg',
-			badge: '🦐 Udang Berasa',
-			highlight: 'Pilihan Rumah Makan'
-		},
-		{
-			id: 'p10',
-			name: 'Kerupuk Jengkol & Bawang Mentah',
-			category: 'kerupuk-mentah',
-			desc: 'Kerupuk mentah varian jengkol dan bawang putih. Renyah garing khas nusantara, rasa gurih sedap untuk teman nasi hangat.',
-			price: 40000,
-			originalPrice: 46000,
-			weight: '500 gr',
-			rating: 4.8,
-			reviewsCount: 47,
-			image: '/images/banners/poster-kerupuk-mentah.jpg',
-			badge: '🧄 Gurih Sedap',
-			highlight: 'Bumbu Alami Pilihan'
-		},
-
-		// 4. Aneka Kue Tradisional Bangka
-		{
-			id: 'p11',
-			name: 'Kue Semprong Arang Tradisional',
-			category: 'kue-tradisional',
-			desc: 'Kue semprong gulung yang dipanggang dengan cetakan arang tradisional. Renyah rapuh, manis gurih dengan aroma wangi kelapa panggang.',
-			price: 30000,
-			originalPrice: 35000,
-			weight: '250 gr',
-			rating: 4.9,
-			reviewsCount: 71,
-			image: '/images/banners/poster-aneka-kue.jpg',
-			badge: '🥥 Panggang Arang',
-			highlight: 'Renyah & Manis Legit'
-		},
-		{
-			id: 'p12',
-			name: 'Roti Kering / Roker Mr. Jo',
-			category: 'kue-tradisional',
-			desc: 'Roti kering renyah khas Bangka dengan olesan mentega dan gula gurih. Teman paling serasi untuk dicelup ke kopi hitam atau teh panas.',
-			price: 28000,
-			originalPrice: 33000,
-			weight: '200 gr',
-			rating: 4.8,
-			reviewsCount: 54,
-			image: '/images/banners/poster-aneka-kue.jpg',
-			badge: '🍞 Sahabat Kopi',
-			highlight: 'Krispi Tahan Lama'
-		},
-		{
-			id: 'p13',
-			name: 'Kue Sempret Cap ED & Kue Rintak',
-			category: 'kue-tradisional',
-			desc: 'Kue sempret dan kue rintak sagu asli resep turun-temurun Bangka. Meleleh empuk di lidah dengan rasa gurih manis santan asli.',
+			name: 'Kopi Cap 1 Biru 250g',
+			category: 'bumbu',
+			desc: 'Kopi bubuk tradisional khas Bangka sejak 1968. Rasanya mantap dan aromanya sangat wangi.',
 			price: 28000,
 			originalPrice: 32000,
 			weight: '250 gr',
 			rating: 4.9,
-			reviewsCount: 63,
-			image: '/images/banners/poster-aneka-kue.jpg',
-			badge: '🍪 Resep Autentik',
-			highlight: 'Sagu Bangka Murni'
+			reviewsCount: 104,
+			image: '/images/products/kopi-cap1.jpg',
+			badge: '🏆 Klasik',
+			highlight: 'Sejak 1968'
+		},
+		{
+			id: 'p7',
+			name: 'Kerupuk Mentah Bangka Ikan Tenggiri Yoyo 500g',
+			category: 'kerupuk-mentah',
+			desc: 'Kerupuk mentah kualitas super. Mengembang sempurna dan rasa ikan tenggirinya sangat terasa setelah digoreng.',
+			price: 45000,
+			originalPrice: 50000,
+			weight: '500 gr',
+			rating: 4.9,
+			reviewsCount: 88,
+			image: '/images/products/kerupuk-mentah.jpg',
+			badge: '🟡 Premium',
+			highlight: 'Mengembang Sempurna'
+		},
+		{
+			id: 'p8',
+			name: 'Kerupuk Bawang Mentah Polos 1kg',
+			category: 'kerupuk-mentah',
+			desc: 'Kerupuk mentah rasa bawang yang gurih. Sangat mudah digoreng, cocok untuk lauk pauk.',
+			price: 25500,
+			originalPrice: 28000,
+			weight: '1 kg',
+			rating: 4.7,
+			reviewsCount: 56,
+			image: '/images/products/kerupuk-mentah.jpg',
+			badge: '📦 Hemat',
+			highlight: 'Praktis'
 		}
 	];
 
-	let filteredProducts = $derived(PRODUCTS.filter(p => p.category === selectedCategory));
+	let filteredProducts = $derived(PRODUCTS);
 
 	interface CartItem extends FeaturedProduct { qty: number; }
 	let cart = $state<CartItem[]>([]);
@@ -880,35 +814,6 @@ onMount(() => {
 			<p class="text-slate-600 text-xs sm:text-sm sm:leading-relaxed">
 				Pilih kategori di bawah untuk menemukan camilan dan oleh-oleh impian Anda. Pesan satuan maupun partai besar langsung dikirim dengan packing aman!
 			</p>
-		</div>
-
-		<!-- Category Filter Pills -->
-		<div class="flex items-center justify-center flex-wrap gap-2 mb-8 sm:mb-12">
-
-			<button
-				onclick={() => selectedCategory = 'khas-bangka'}
-				class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer {selectedCategory === 'khas-bangka' ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'}"
-			>
-				🔥 Kemplang & Getas Panggang
-			</button>
-			<button
-				onclick={() => selectedCategory = 'kerupuk-mentah'}
-				class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer {selectedCategory === 'kerupuk-mentah' ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'}"
-			>
-				📦 Kerupuk Mentah (Grosir/Ecer)
-			</button>
-			<button
-				onclick={() => selectedCategory = 'terasi-kopi'}
-				class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer {selectedCategory === 'terasi-kopi' ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'}"
-			>
-				🦐 Terasi & Kopi Bangka
-			</button>
-			<button
-				onclick={() => selectedCategory = 'kue-tradisional'}
-				class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer {selectedCategory === 'kue-tradisional' ? 'bg-red-600 text-white shadow-md shadow-red-600/20' : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'}"
-			>
-				🍪 Aneka Kue Tradisional
-			</button>
 		</div>
 
 		<!-- Product Grid -->
