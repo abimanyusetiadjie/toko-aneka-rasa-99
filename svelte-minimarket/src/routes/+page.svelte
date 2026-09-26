@@ -631,9 +631,6 @@
 
 					<!-- Hero Headline -->
 					<div class="space-y-2">
-						<span class="text-xs sm:text-sm font-extrabold tracking-widest text-red-600 uppercase block">
-							✨ Pusat Oleh-Oleh Khas Bangka & Agen Kerupuk Mentah
-						</span>
 						<h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-950 tracking-tight leading-[1.15]">
 							Oleh-Oleh Khas Bangka Asli,
 							<span class="bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 bg-clip-text text-transparent block mt-1">
@@ -756,9 +753,6 @@
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<!-- Section Header -->
 			<div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-3">
-				<span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-black uppercase tracking-wider">
-					<Sparkles class="w-3.5 h-3.5 text-amber-600" /> 3 Pilar Kekuatan Toko Kami
-				</span>
 				<h2 class="text-2xl sm:text-4xl font-black text-slate-950 tracking-tight">
 					Pilihan Terlengkap untuk Segala Kebutuhan Oleh-Oleh
 				</h2>
