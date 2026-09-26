@@ -16,7 +16,7 @@ export const load: PageServerLoad = async () => {
 			FROM products p
 			LEFT JOIN categories c ON p.category_id = c.id
 			LEFT JOIN LATERAL (
-				SELECT barcode
+				SELECT barcode, price
 				FROM product_units
 				WHERE product_id = p.id AND (conversion_factor = 1 OR conversion_factor IS NULL)
 				ORDER BY CASE WHEN barcode ~ '^[0-9]{6}$' THEN 1 ELSE 2 END, created_at DESC
