@@ -608,13 +608,7 @@
 			<div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 				<!-- Left Column: Emotional Pitch & High-Converting CTAs -->
 				<div class="lg:col-span-7 text-center lg:text-left space-y-4 sm:space-y-6">
-					<!-- Live Store Status Badge -->
-					<div class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs">
-						<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-						<span>Buka Setiap Hari: 07.30 – 21.30 WIB</span>
-						<span class="text-emerald-300">•</span>
-						<span class="text-emerald-700 font-extrabold">Poris Indah, Tangerang</span>
-					</div>
+
 
 					<!-- Hero Headline -->
 					<div class="space-y-2">
