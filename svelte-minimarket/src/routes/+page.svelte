@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { onMount } from 'svelte';
 	import {
 		Phone, MapPin, Clock, Star, ShoppingBag, ShieldCheck,
 		ChevronRight, ChevronLeft, Menu, X, ArrowRight, Truck, Award, Sparkles,
@@ -352,6 +353,19 @@
 			a: 'Anda cukup klik tombol WhatsApp di website ini atau masukkan produk ke keranjang belanja lalu klik checkout WA. Admin kami langsung merespons dengan total rincian belanja dan rekomendasi ongkos kirim termurah.'
 		}
 	];
+
+	onMount(() => {
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('is-revealed');
+				}
+			});
+		}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+		document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+	});
+
 </script>
 
 <svelte:head>
@@ -403,6 +417,77 @@
 		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
 		animation: shimmer-sweep 3.5s infinite;
 	}
+
+	/* Scroll Reveal Animations */
+	:global(.reveal-on-scroll) {
+		opacity: 0;
+		transform: translateY(30px);
+		transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+		will-change: opacity, transform;
+	}
+	:global(.reveal-on-scroll.is-revealed) {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	/* Sequential Delays for Grid items */
+	:global(.delay-1) { transition-delay: 100ms; }
+	:global(.delay-2) { transition-delay: 200ms; }
+	:global(.delay-3) { transition-delay: 300ms; }
+	:global(.delay-4) { transition-delay: 400ms; }
+
+	/* Infinite Marquee Animation */
+	@keyframes marquee {
+		0% { transform: translateX(0%); }
+		100% { transform: translateX(-50%); }
+	}
+	.animate-marquee {
+		display: inline-block;
+		white-space: nowrap;
+		animation: marquee 25s linear infinite;
+	}
+	.animate-marquee:hover {
+		animation-play-state: paused;
+	}
+
+	/* Shimmer Sweep Effect */
+	:global(.shimmer-btn) {
+		position: relative;
+		overflow: hidden;
+	}
+	:global(.shimmer-btn::after) {
+		content: "";
+		position: absolute;
+		top: -50%;
+		left: -50%;
+		width: 200%;
+		height: 200%;
+		background: linear-gradient(
+			to right,
+			rgba(255, 255, 255, 0) 0%,
+			rgba(255, 255, 255, 0.4) 50%,
+			rgba(255, 255, 255, 0) 100%
+		);
+		transform: rotate(30deg) translateX(-150%);
+		animation: shimmer 4.5s infinite ease-in-out;
+	}
+	@keyframes shimmer {
+		0%, 60% { transform: rotate(30deg) translateX(-150%); }
+		100% { transform: rotate(30deg) translateX(150%); }
+	}
+
+	/* Breathing Glow */
+	@keyframes breathe {
+		0%, 100% { transform: scale(1); opacity: 0.4; }
+		50% { transform: scale(1.15); opacity: 0.7; }
+	}
+	.animate-breathe {
+		animation: breathe 8s ease-in-out infinite;
+	}
+	.animate-breathe-delayed {
+		animation: breathe 8s ease-in-out infinite 4s;
+	}
+
 </style>
 
 <div class="min-h-screen bg-[#FCFAF6] text-slate-800 font-sans selection:bg-red-500 selection:text-white relative overflow-x-clip w-full">
@@ -601,8 +686,8 @@
 	<!-- ===== 1. HERO SECTION (DYNAMIC & EMOTIONAL REDESIGN) ===== -->
 	<section id="hero" class="relative pt-10 pb-16 sm:pt-14 sm:pb-20 md:pt-20 md:pb-24 overflow-hidden isolate bg-gradient-to-b from-[#FFF5EC] via-[#FFFDF9] to-[#FCFAF6]">
 		<!-- Decorative Ambient Glows -->
-		<div class="absolute -top-24 -left-20 w-96 h-96 bg-red-200/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
-		<div class="absolute top-1/2 -right-24 w-96 h-96 bg-amber-200/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
+		<div class="absolute -top-24 -left-20 w-96 h-96 bg-red-200/40 rounded-full blur-3xl pointer-events-none -z-10 animate-breathe"></div>
+		<div class="absolute top-1/2 -right-24 w-96 h-96 bg-amber-200/40 rounded-full blur-3xl pointer-events-none -z-10 animate-breathe-delayed"></div>
 
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -702,10 +787,23 @@
 		</div>
 	</section>
 
+	<!-- ===== INFINITE MARQUEE TICKER ===== -->
+	<div class="bg-red-600 text-white overflow-hidden py-3 shadow-inner relative z-10 flex border-y border-red-700">
+		<div class="animate-marquee whitespace-nowrap flex items-center gap-8 font-extrabold text-sm tracking-wider uppercase">
+			<!-- Repeat content a few times for smooth infinite effect -->
+			{#each Array(4) as _}
+			<span class="flex items-center gap-2"><Flame class="w-4 h-4 text-amber-400" /> 100% Tenggiri Asli</span>
+			<span class="flex items-center gap-2"><Truck class="w-4 h-4 text-amber-400" /> Pengiriman Seluruh Nusantara</span>
+			<span class="flex items-center gap-2"><Award class="w-4 h-4 text-amber-400" /> Resep Tradisional Bangka</span>
+			<span class="flex items-center gap-2"><Package class="w-4 h-4 text-amber-400" /> Garansi Packing Aman</span>
+			{/each}
+		</div>
+	</div>
+
 	<!-- ===== 2. TRUST STATS STRIP ===== -->
 	<section class="border-y border-slate-200/80 bg-white py-8 sm:py-10">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center divide-x-0 lg:divide-x divide-slate-100">
+			<div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center divide-x-0 lg:divide-x divide-slate-100 reveal-on-scroll delay-1">
 				<div class="space-y-1">
 					<p class="text-3xl sm:text-4xl font-black text-slate-900">500+</p>
 					<p class="text-xs sm:text-sm font-bold text-slate-500">Varian Camilan & Oleh-Oleh</p>
@@ -911,8 +1009,8 @@
 
 		<!-- Product Grid -->
 		<div class="flex flex-wrap justify-center gap-5 sm:gap-6">
-			{#each filteredProducts as product (product.id)}
-			<div class="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col overflow-hidden group">
+			{#each filteredProducts as product, i (product.id)}
+			<div class="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col overflow-hidden group reveal-on-scroll delay-{(i % 4) + 1}">
 				<!-- Product Image Area -->
 				<div class="relative bg-white aspect-[4/3] sm:aspect-square overflow-hidden p-2">
 					<img
@@ -974,7 +1072,7 @@
 							href="https://shopee.co.id/search?keyword=toko%20aneka%20rasa%2099"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="w-full bg-[#EE4D2D] hover:bg-[#d74326] text-white text-xs sm:text-sm font-extrabold py-3 sm:py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+							class="w-full bg-[#EE4D2D] hover:bg-[#d74326] text-white text-xs sm:text-sm font-extrabold py-3 sm:py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-xs cursor-pointer active:scale-95 shimmer-btn"
 							title="Beli di Shopee"
 						>
 							<img src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Shopee.svg" alt="Shopee Logo" class="w-4 h-4 object-contain brightness-0 invert" />
@@ -985,7 +1083,7 @@
 							href={productWaLink(product.name, product.price)}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs sm:text-sm font-extrabold py-3 sm:py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+							class="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs sm:text-sm font-extrabold py-3 sm:py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-xs cursor-pointer active:scale-95 shimmer-btn"
 							title="Pesan Langsung via WA"
 						>
 							<svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
@@ -1059,7 +1157,7 @@
 			</div>
 
 			<div class="flex overflow-x-auto snap-x snap-mandatory lg:grid lg:grid-cols-4 gap-5 sm:gap-6 pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
-				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-auto snap-center">
+				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-auto snap-center reveal-on-scroll delay-1">
 					<div class="w-12 h-12 rounded-xl bg-red-600 text-white flex items-center justify-center mb-4 shadow-sm">
 						<ShieldCheck class="w-6 h-6" />
 					</div>
@@ -1069,7 +1167,7 @@
 					</p>
 				</div>
 
-				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-auto snap-center">
+				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-auto snap-center reveal-on-scroll delay-2">
 					<div class="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center mb-4 shadow-sm">
 						<Truck class="w-6 h-6" />
 					</div>
@@ -1079,7 +1177,7 @@
 					</p>
 				</div>
 
-				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-auto snap-center">
+				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-auto snap-center reveal-on-scroll delay-3">
 					<div class="w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center mb-4 shadow-sm">
 						<Package class="w-6 h-6" />
 					</div>
@@ -1089,7 +1187,7 @@
 					</p>
 				</div>
 
-				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-auto snap-center">
+				<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-shadow shrink-0 w-[85%] sm:w-[calc(50%-12px)] lg:w-auto snap-center reveal-on-scroll delay-4">
 					<div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center mb-4 shadow-sm">
 						<Clock class="w-6 h-6" />
 					</div>
@@ -1112,7 +1210,7 @@
 			</div>
 
 			<div class="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 gap-5 md:gap-8 pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide relative">
-				<div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 relative text-center shrink-0 w-[85%] sm:w-[calc(50%-12px)] md:w-auto snap-center">
+				<div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 relative text-center shrink-0 w-[85%] sm:w-[calc(50%-12px)] md:w-auto snap-center reveal-on-scroll delay-1">
 					<div class="w-10 h-10 rounded-full bg-red-600 text-white font-black text-sm flex items-center justify-center mx-auto mb-4 shadow">
 						1
 					</div>
@@ -1122,7 +1220,7 @@
 					</p>
 				</div>
 
-				<div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 relative text-center shrink-0 w-[85%] sm:w-[calc(50%-12px)] md:w-auto snap-center">
+				<div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 relative text-center shrink-0 w-[85%] sm:w-[calc(50%-12px)] md:w-auto snap-center reveal-on-scroll delay-2">
 					<div class="w-10 h-10 rounded-full bg-red-600 text-white font-black text-sm flex items-center justify-center mx-auto mb-4 shadow">
 						2
 					</div>
@@ -1132,7 +1230,7 @@
 					</p>
 				</div>
 
-				<div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 relative text-center shrink-0 w-[85%] sm:w-[calc(50%-12px)] md:w-auto snap-center">
+				<div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 relative text-center shrink-0 w-[85%] sm:w-[calc(50%-12px)] md:w-auto snap-center reveal-on-scroll delay-3">
 					<div class="w-10 h-10 rounded-full bg-red-600 text-white font-black text-sm flex items-center justify-center mx-auto mb-4 shadow">
 						3
 					</div>
@@ -1158,7 +1256,7 @@
 			</div>
 
 			<!-- Carousel Card Frame -->
-			<div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-xl relative transition-all">
+			<div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/90 shadow-xl relative transition-all reveal-on-scroll">
 				<div class="flex items-center justify-between mb-6">
 					<div class="flex items-center gap-3">
 						<div class="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-rose-600 text-white font-black flex items-center justify-center shadow-md">
@@ -1225,7 +1323,7 @@
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="grid lg:grid-cols-12 gap-8 lg:gap-12">
 				<!-- Left: Lokasi Toko & Google Maps -->
-				<div class="lg:col-span-7 space-y-6">
+				<div class="lg:col-span-7 space-y-6 reveal-on-scroll delay-1">
 					<div class="space-y-2">
 						<h2 class="text-2xl sm:text-3xl font-black text-slate-950">Kunjungi Toko Fisik Kami di Poris</h2>
 						<p class="text-xs sm:text-sm text-slate-600">
@@ -1265,7 +1363,7 @@
 				</div>
 
 				<!-- Right: Elegant White Quick Order Form (No Screaming Red!) -->
-				<div class="lg:col-span-5">
+				<div class="lg:col-span-5 reveal-on-scroll delay-2">
 					<div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl relative">
 						<div class="flex items-center gap-3 pb-4 mb-4 border-b border-slate-100">
 							<div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold">
@@ -1352,7 +1450,7 @@
 				<p class="text-xs sm:text-sm text-slate-500">Semua yang perlu Anda ketahui sebelum memesan oleh-oleh khas Bangka di toko kami.</p>
 			</div>
 
-			<div class="space-y-3">
+			<div class="space-y-3 reveal-on-scroll delay-1">
 				{#each faqs as faq, i}
 				<div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden transition-all">
 					<button
@@ -1455,3 +1553,5 @@
 	</footer>
 
 </div>
+
+
