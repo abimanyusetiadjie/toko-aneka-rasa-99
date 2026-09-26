@@ -37,6 +37,7 @@
 		rating: number;
 		reviewsCount: number;
 		image: string;
+		webp?: string;
 		badge: string;
 		highlight: string;
 	}
@@ -53,6 +54,7 @@
 			rating: 5.0,
 			reviewsCount: 142,
 			image: '/images/products/kemplang-mm.jpg',
+			webp: '/images/products/kemplang-mm.webp',
 			badge: '🔥 Paling Laris',
 			highlight: 'Sambal Terasi Asli'
 		},
@@ -66,7 +68,8 @@
 			weight: '250 gr',
 			rating: 4.9,
 			reviewsCount: 89,
-			image: '/images/products/getas-obor.jpg',
+			image: '/images/products/steak-cumi-kuda-laut.jpg',
+			webp: '/images/products/steak-cumi-kuda-laut.webp',
 			badge: '🦑 Terlaris',
 			highlight: 'Asli Telur Cumi'
 		},
@@ -80,7 +83,8 @@
 			weight: '250 gr',
 			rating: 4.9,
 			reviewsCount: 115,
-			image: '/images/products/getas-obor.jpg',
+			image: '/images/products/getes-lonceng-mas.jpg',
+			webp: '/images/products/getes-lonceng-mas.webp',
 			badge: '⭐ Favorit',
 			highlight: 'Super Renyah'
 		},
@@ -94,7 +98,8 @@
 			weight: '500 gr',
 			rating: 5.0,
 			reviewsCount: 231,
-			image: '/images/products/terasi-ab.jpg',
+			image: '/images/products/terasi.png',
+			webp: '/images/products/terasi.webp',
 			badge: '🌶️ Bumbu Wajib',
 			highlight: 'Wangi Khas'
 		},
@@ -108,7 +113,8 @@
 			weight: '200 gr',
 			rating: 4.8,
 			reviewsCount: 76,
-			image: '/images/products/kopi-cap1.jpg',
+			image: '/images/products/kopi kingkong.png',
+			webp: '/images/products/kopi-kingkong.webp',
 			badge: '☕ Legendaris',
 			highlight: 'Aroma Kuat'
 		},
@@ -122,7 +128,8 @@
 			weight: '250 gr',
 			rating: 4.9,
 			reviewsCount: 104,
-			image: '/images/products/kopi-cap1.jpg',
+			image: '/images/products/kopi cap 1 biru.png',
+			webp: '/images/products/kopi-cap-1-biru.webp',
 			badge: '🏆 Klasik',
 			highlight: 'Sejak 1968'
 		},
@@ -136,7 +143,8 @@
 			weight: '500 gr',
 			rating: 4.9,
 			reviewsCount: 88,
-			image: '/images/products/kerupuk-mentah.jpg',
+			image: '/images/products/kerupuk mentah  tenggiri.png',
+			webp: '/images/products/kerupuk-mentah-tenggiri.webp',
 			badge: '🟡 Premium',
 			highlight: 'Mengembang Sempurna'
 		},
@@ -150,7 +158,8 @@
 			weight: '1 kg',
 			rating: 4.7,
 			reviewsCount: 56,
-			image: '/images/products/kerupuk-mentah.jpg',
+			image: '/images/products/kerupuk bawang mentah.png',
+			webp: '/images/products/kerupuk-bawang-mentah.webp',
 			badge: '📦 Hemat',
 			highlight: 'Praktis'
 		}
@@ -822,12 +831,20 @@ onMount(() => {
 			<div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group">
 				<!-- Product Image Area (1:1 Aspect Ratio) -->
 				<div class="relative bg-white aspect-square w-full p-2.5 sm:p-3 overflow-hidden flex items-center justify-center border-b border-slate-50">
-					<img
-						src={product.image}
-						alt="{product.name} - Toko Aneka Rasa 99"
-						class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
-						loading="lazy"
-					/>
+					<picture class="w-full h-full flex items-center justify-center">
+						{#if product.webp}
+						<source srcset={product.webp} type="image/webp" />
+						{/if}
+						<img
+							src={product.image}
+							alt="{product.name} - Toko Aneka Rasa 99"
+							class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+							loading="lazy"
+							decoding="async"
+							width="400"
+							height="400"
+						/>
+					</picture>
 					<!-- Badge di pojok kiri atas warna #FFC24C -->
 					<div class="absolute top-2 left-2 sm:top-2.5 sm:left-2.5 bg-[#FFC24C] text-slate-950 text-[10px] sm:text-xs font-black px-2 sm:px-2.5 py-0.5 rounded-full shadow-xs tracking-tight flex items-center gap-1">
 						<span>⭐</span>
