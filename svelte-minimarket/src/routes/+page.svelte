@@ -57,20 +57,7 @@
 			badge: '🔥 Paling Laris',
 			highlight: 'Sambal Terasi Asli'
 		},
-		{
-			id: 'p2',
-			name: 'Getas Super Cap Obor (Tiga Roda)',
-			category: 'khas-bangka',
-			desc: 'Getas bulat lonjong dari daging ikan tenggiri segar pilihan. Tekstur renyah empuk, tidak keras saat digigit, dan rasa gurih alami yang bikin nagih.',
-			price: 42500,
-			originalPrice: 48000,
-			weight: '250 gr',
-			rating: 4.9,
-			reviewsCount: 118,
-			image: '/images/products/getas.png',
-			badge: '⭐ Favorit Pembeli',
-			highlight: 'Ikan Tenggiri Super'
-		},
+
 		{
 			id: 'p3',
 			name: 'Steak Telor Cumi Kuda Laut (Kericu)',
@@ -891,9 +878,6 @@
 	<section id="katalog" class="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 		<!-- Section Header -->
 		<div class="text-center max-w-3xl mx-auto mb-8 sm:mb-12 space-y-3">
-			<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-extrabold uppercase tracking-wide">
-				<Award class="w-3.5 h-3.5" /> Daftar Produk Lengkap
-			</span>
 			<h2 class="text-2xl sm:text-4xl font-black text-slate-950 tracking-tight">
 				Katalog Oleh-Oleh & Kerupuk <span class="text-red-600">Aneka Rasa 99</span>
 			</h2>
@@ -1039,9 +1023,6 @@
 				</div>
 
 				<div class="lg:col-span-6 space-y-5">
-					<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold uppercase tracking-wide">
-						<Store class="w-3.5 h-3.5" /> Cerita Dari Dapur Bangka
-					</span>
 					<h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-950 tracking-tight leading-snug">
 						Menghadirkan Cita Rasa Asli Bangka Langsung ke Rumah Anda
 					</h2>
@@ -1172,9 +1153,6 @@
 	<section id="testimoni" class="py-14 sm:py-20 bg-[#FCFAF6] overflow-hidden">
 		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="text-center mb-8 sm:mb-12 space-y-2">
-				<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black uppercase">
-					<ThumbsUp class="w-3.5 h-3.5" /> Ulasan Jujur Pelanggan
-				</span>
 				<h2 class="text-2xl sm:text-4xl font-black text-slate-950">
 					Kata Mereka yang Sudah Menikmati
 				</h2>
@@ -1253,9 +1231,6 @@
 				<!-- Left: Lokasi Toko & Google Maps -->
 				<div class="lg:col-span-7 space-y-6">
 					<div class="space-y-2">
-						<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-black uppercase">
-							<MapPin class="w-3.5 h-3.5" /> Toko Fisik Kami
-						</span>
 						<h2 class="text-2xl sm:text-3xl font-black text-slate-950">Kunjungi Toko Fisik Kami di Poris</h2>
 						<p class="text-xs sm:text-sm text-slate-600">
 							Bagi Anda yang berdomisili di Tangerang, Jakarta Barat, atau sekitarnya, silakan mampir langsung untuk memilih kemplang arang segar, getas, dan aneka kerupuk mentah langsung dari toples!
@@ -1377,9 +1352,6 @@
 	<section class="py-14 sm:py-20 bg-[#FCFAF6] border-b border-slate-200/80">
 		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="text-center mb-10 space-y-2">
-				<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200/80 text-slate-800 text-xs font-black uppercase">
-					<HelpCircle class="w-3.5 h-3.5" /> Pertanyaan Populer
-				</span>
 				<h2 class="text-2xl sm:text-4xl font-black text-slate-950">Tanya Jawab Seputar Produk</h2>
 				<p class="text-xs sm:text-sm text-slate-500">Semua yang perlu Anda ketahui sebelum memesan oleh-oleh khas Bangka di toko kami.</p>
 			</div>
