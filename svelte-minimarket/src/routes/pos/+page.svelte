@@ -65,6 +65,7 @@
 		Coins,
 		Calendar,
 		AlertCircle,
+		Store,
 		Bell,
 		BellRing,
 		BellOff,
@@ -147,7 +148,9 @@
 
 	// Tutup Kasir / Rekap Harian (Z-Report Shift) State
 	let showClosingModal = $state(false);
-	let startingCash = $state(200000); // Default Modal Awal Laci Rp 200.000
+	let startingCash = $state(250000); // Default Modal Awal Laci Rp 250.000
+	let isShiftOpen = $state(false);
+	let showOpeningModal = $state(false);
 	let countedPhysicalCash = $state<number | null>(null);
 	let todayTransactions = $state<any[]>([]);
 	let ownerWhatsApp = $state('081234567890');
@@ -410,6 +413,8 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 				localStorage.removeItem('aneka_pos_today_tx');
 			}
 			showClosingModal = false;
+			isShiftOpen = false;
+			showOpeningModal = true; // Langsung minta buka shift baru untuk kasir berikutnya
 			alert('✅ Shift berhasil diselesaikan dan diarsipkan ke database!\nLayar kasir telah bersih untuk shift berikutnya.');
 		}
 	}
@@ -1212,7 +1217,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 					receiptNumber: offlineReceipt,
 					items: receiptItems,
 					subtotal: $subtotal,
-					discount: pointDiscountAmount + $discount,
+					discount: pointDiscountAmount + $discount + manualDiscountAmount,
 					total: finalPayTotal,
 					ppn: $totalPPN,
 					paidAmount: $paymentMethod === 'CASH' ? $amountPaid || finalPayTotal : finalPayTotal,
@@ -1274,7 +1279,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 				receiptNumber: data.receipt_number,
 				items: receiptItems,
 				subtotal: $subtotal,
-				discount: pointDiscountAmount + $discount,
+				discount: pointDiscountAmount + $discount + manualDiscountAmount,
 				total: finalPayTotal,
 				ppn: $totalPPN,
 				paidAmount: $paymentMethod === 'CASH' ? $amountPaid || finalPayTotal : finalPayTotal,
@@ -1397,9 +1402,18 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 				if (savedTodayTx) {
 					todayTransactions = JSON.parse(savedTodayTx);
 				}
+				
+				const savedShiftStatus = localStorage.getItem('aneka_pos_shift_open');
+				if (savedShiftStatus === 'true') {
+					isShiftOpen = true;
+				} else {
+					isShiftOpen = false;
+					showOpeningModal = true;
+				}
+				
 				const savedStartingCash = localStorage.getItem('aneka_pos_starting_cash');
 				if (savedStartingCash) {
-					startingCash = Number(savedStartingCash) || 200000;
+					startingCash = Number(savedStartingCash) || 250000;
 				}
 				const savedOwnerWa = localStorage.getItem('aneka_pos_owner_wa');
 				if (savedOwnerWa) {
@@ -2577,6 +2591,44 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 	</div>
 {/if}
 
+
+<!-- Modal Buka Kasir -->
+{#if showOpeningModal}
+	<div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
+		<div class="bg-white rounded-2xl w-full max-w-md shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+			<div class="p-5 border-b border-slate-100 bg-blue-50/50">
+				<h3 class="font-black text-blue-900 text-xl flex items-center gap-2">
+					<Store class="w-6 h-6 text-blue-600" /> Buka Shift Kasir Baru
+				</h3>
+				<p class="text-slate-500 text-xs mt-1 font-medium">Sistem mewajibkan pencatatan modal awal laci sebelum transaksi pertama.</p>
+			</div>
+			
+			<div class="p-5 space-y-4">
+				<div>
+					<label class="block text-slate-700 font-bold mb-1.5 text-xs">Uang Kas Modal Awal (Laci)</label>
+					<div class="relative">
+						<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Rp</span>
+						<input type="number" bind:value={startingCash} class="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 rounded-xl font-mono font-bold text-lg outline-none transition-all" />
+					</div>
+					<p class="text-[10px] text-amber-600 mt-1.5 flex items-center gap-1 font-medium"><AlertCircle class="w-3 h-3"/> Default disarankan Rp 250.000 untuk kembalian kasir.</p>
+				</div>
+				
+				<button 
+					type="button"
+					onclick={() => {
+						localStorage.setItem('aneka_pos_shift_open', 'true');
+						localStorage.setItem('aneka_pos_starting_cash', startingCash.toString());
+						isShiftOpen = true;
+						showOpeningModal = false;
+					}}
+					class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black text-sm py-3.5 rounded-xl transition-colors shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2 mt-4 cursor-pointer active:scale-95">
+					<CheckCircle2 class="w-5 h-5" /> BUKA KASIR SEKARANG
+				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+
 <!-- Modal Tutup Kasir / Rekap Harian Shift (Z-Report) -->
 {#if showClosingModal}
 	<div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
@@ -3213,8 +3265,8 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 
 	<div class="border-t-2 border-black border-dashed pt-2 text-[11px] space-y-1">
 		<div class="flex justify-between"><span>Subtotal Belanja:</span><span>{formatCurrency(completedTxData?.subtotal ?? $subtotal)}</span></div>
-		{#if (completedTxData?.discount ?? (pointDiscountAmount + $discount)) > 0}
-			<div class="flex justify-between"><span>Diskon:</span><span>- {formatCurrency(completedTxData?.discount ?? (pointDiscountAmount + $discount))}</span></div>
+		{#if (completedTxData?.discount ?? (pointDiscountAmount + $discount + manualDiscountAmount)) > 0}
+			<div class="flex justify-between"><span>Diskon:</span><span>- {formatCurrency(completedTxData?.discount ?? (pointDiscountAmount + $discount + manualDiscountAmount))}</span></div>
 		{/if}
 		<div class="flex justify-between font-black text-sm pt-1.5 border-t border-black border-dotted">
 			<span>TOTAL TRANSAKSI:</span><span>{formatCurrency(completedTxData?.total ?? finalPayTotal)}</span>
