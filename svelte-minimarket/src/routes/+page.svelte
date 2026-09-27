@@ -331,6 +331,7 @@ onMount(() => {
 	<meta property="og:title" content="Toko Aneka Rasa 99 Poris | Makanan Khas Bangka & Agen Kerupuk Mentah" />
 	<meta property="og:description" content="Pusat Grosir & Eceran Kemplang Panggang, Getas Tenggiri, Terasi Super, dan Aneka Kerupuk Mentah Siap Kirim Seluruh Indonesia!" />
 	<meta property="og:image" content="https://tokoanekarasa99.my.id/images/banners/poster-khas-bangka.jpg" />
+	<link rel="preload" as="image" href="/images/banners/poster-khas-bangka.webp" type="image/webp" fetchpriority="high" />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -560,8 +561,11 @@ onMount(() => {
 			<div class="flex items-center justify-between h-16 sm:h-20">
 				<!-- Brand Identity -->
 				<a href="/" class="flex items-center gap-3 group min-w-0">
-					<div class="relative">
-						<img src="/logo.png" alt="Logo Toko Aneka Rasa 99" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-amber-400/80 shadow-xs group-hover:scale-105 transition-transform" />
+					<div class="relative shrink-0">
+						<picture>
+							<source srcset="/logo.webp" type="image/webp" />
+							<img src="/logo.png" alt="Logo Toko Aneka Rasa 99" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-amber-400/80 shadow-xs group-hover:scale-105 transition-transform" width="48" height="48" />
+						</picture>
 						<span class="absolute -bottom-0.5 -right-0.5 bg-red-600 text-[9px] font-black text-white px-1 rounded-full">99</span>
 					</div>
 					<div class="min-w-0">
@@ -599,7 +603,7 @@ onMount(() => {
 						rel="noopener noreferrer"
 						class="hidden sm:inline-flex items-center gap-2 bg-[#EE4D2D] hover:bg-[#d73211] text-white px-4 lg:px-5 py-2.5 rounded-xl text-xs lg:text-sm font-extrabold shadow-md shadow-orange-600/25 hover:shadow-lg hover:shadow-orange-600/35 transition-all cursor-pointer active:scale-95"
 					>
-						<img src="/shopee-icon.png" class="w-5 h-5 object-contain rounded-sm" alt="Shopee" />
+						<img src="/shopee-icon.webp" class="w-5 h-5 object-contain rounded-sm" alt="Shopee" />
 						<span>Toko Shopee</span>
 					</a>
 
@@ -639,7 +643,7 @@ onMount(() => {
 						rel="noopener noreferrer"
 						class="w-full bg-[#EE4D2D] text-white text-center py-3 rounded-xl font-extrabold text-sm flex items-center justify-center gap-2 shadow"
 					>
-						<img src="/shopee-icon.png" class="w-4 h-4 object-contain rounded-sm" alt="Shopee" />
+						<img src="/shopee-icon.webp" class="w-4 h-4 object-contain rounded-sm" alt="Shopee" />
 						<span>Buka Toko Shopee</span>
 					</a>
 					<a
@@ -705,7 +709,7 @@ onMount(() => {
 								rel="noopener noreferrer"
 								class="shimmer-btn bg-[#EE4D2D] hover:bg-[#d73211] text-white font-black text-xs sm:text-sm px-2 py-3 sm:px-6 sm:py-3.5 rounded-xl shadow-lg shadow-orange-600/30 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all flex flex-col sm:flex-row items-center justify-center gap-1.5 group cursor-pointer text-center"
 							>
-								<img src="/shopee-icon.png" class="w-6 h-6 sm:w-5 sm:h-5 object-contain rounded-sm shadow-sm" alt="Shopee" />
+								<img src="/shopee-icon.webp" class="w-6 h-6 sm:w-5 sm:h-5 object-contain rounded-sm shadow-sm" alt="Shopee" />
 								<span>Toko Shopee</span>
 							</a>
 						</div>
@@ -746,12 +750,26 @@ onMount(() => {
 				<div class="lg:col-span-5 relative">
 					<div class="relative group">
 						<!-- Outer Warm Glow Card -->
-						<div class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 aspect-square relative cursor-pointer" onclick={() => activePosterModal = '/images/banners/poster-khas-bangka.jpg'}>
-							<img
-								src="/images/banners/poster-khas-bangka.jpg"
-								alt="Katalog Makanan Khas Bangka Toko Aneka Rasa 99"
-								class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-							/>
+						<div
+							class="rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 aspect-square relative cursor-pointer"
+							onclick={() => activePosterModal = '/images/banners/poster-khas-bangka.jpg'}
+							role="button"
+							tabindex="0"
+							onkeydown={(e) => e.key === 'Enter' && (activePosterModal = '/images/banners/poster-khas-bangka.jpg')}
+							title="Klik untuk perbesar banner"
+						>
+							<picture class="w-full h-full block">
+								<source srcset="/images/banners/poster-khas-bangka.webp" type="image/webp" />
+								<img
+									src="/images/banners/poster-khas-bangka.jpg"
+									alt="Katalog Makanan Khas Bangka Toko Aneka Rasa 99"
+									class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+									width="959"
+									height="1024"
+									fetchpriority="high"
+									decoding="async"
+								/>
+							</picture>
 							<div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
 							
 							<div class="absolute bottom-4 inset-x-4 flex items-center justify-between text-white">
@@ -1060,7 +1078,7 @@ onMount(() => {
 							class="w-8 h-8 sm:w-9 sm:h-9 bg-[#EE4D2D] hover:bg-[#d74326] text-white rounded-xl flex items-center justify-center transition shadow-2xs shrink-0 active:scale-95"
 							title="Beli di Shopee"
 						>
-							<img src="/shopee-icon.png" alt="Shopee" class="w-4 h-4 object-contain rounded-xs" />
+							<img src="/shopee-icon.webp" alt="Shopee" class="w-4 h-4 object-contain rounded-xs" />
 						</a>
 
 						<!-- Add to Cart Button -->
@@ -1413,11 +1431,18 @@ onMount(() => {
 	<section class="w-full bg-[#FCFAF6] pt-10">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
 			<div class="rounded-3xl overflow-hidden shadow-2xl relative w-full reveal-on-scroll">
-				<img
-					src="/images/banner-toko.png"
-					alt="Toko Aneka Rasa 99"
-					class="w-full h-auto object-cover max-h-[400px]"
-				/>
+				<picture class="w-full h-auto block">
+					<source srcset="/images/banner-toko.webp" type="image/webp" />
+					<img
+						src="/images/banner-toko.png"
+						alt="Toko Aneka Rasa 99"
+						class="w-full h-auto object-cover max-h-[400px]"
+						loading="lazy"
+						decoding="async"
+						width="970"
+						height="355"
+					/>
+				</picture>
 			</div>
 		</div>
 	</section>
@@ -1429,7 +1454,10 @@ onMount(() => {
 				<!-- Brand Col -->
 				<div class="md:col-span-2 space-y-4">
 					<div class="flex items-center gap-3">
-						<img src="/logo.png" alt="Toko Aneka Rasa 99" class="w-12 h-12 rounded-full object-cover border-2 border-[#FFC24C] shadow-md" />
+						<picture class="shrink-0">
+							<source srcset="/logo.webp" type="image/webp" />
+							<img src="/logo.png" alt="Toko Aneka Rasa 99" class="w-12 h-12 rounded-full object-cover border-2 border-[#FFC24C] shadow-md" width="48" height="48" loading="lazy" decoding="async" />
+						</picture>
 						<div>
 							<p class="text-[#FFF7E8] font-black text-lg tracking-tight">Toko Aneka Rasa 99 Poris</p>
 							<p class="text-xs text-[#FFC24C] font-bold">Pusat Makanan Khas Bangka & Agen Kerupuk Mentah</p>
@@ -1455,7 +1483,7 @@ onMount(() => {
 							rel="noopener noreferrer"
 							class="inline-flex items-center gap-1.5 bg-[#EE4D2D] hover:bg-[#d73211] text-white text-xs font-black px-4 py-2.5 rounded-xl transition shadow-md shadow-black/20 active:scale-95"
 						>
-							<img src="/shopee-icon.png" class="w-3.5 h-3.5 object-contain rounded-xs" alt="Shopee" />
+							<img src="/shopee-icon.webp" class="w-3.5 h-3.5 object-contain rounded-xs" alt="Shopee" />
 							Toko Shopee
 						</a>
 					</div>
