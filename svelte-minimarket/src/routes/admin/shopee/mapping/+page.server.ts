@@ -15,36 +15,49 @@ export const load: PageServerLoad = async () => {
 			ORDER BY name ASC
 		`);
 
-		// 2. Ambil produk Shopee (hanya 50 pertama untuk contoh ini)
-		const itemListRes = await callShopeeApi('/api/v2/product/get_item_list', {
-			offset: 0,
-			page_size: 50,
-			item_status: 'NORMAL'
-		}, 'GET');
-
-		let shopeeProducts: any[] = [];
 		
-		if (itemListRes && itemListRes.item) {
-			const itemIds = itemListRes.item.map((i: any) => i.item_id);
+		// 2. Ambil seluruh produk Shopee secara rekursif (live dari Seller Center)
+		let allItemIds = [];
+		let offset = 0;
+		const pageSize = 50;
+		let hasNext = true;
+
+		while (hasNext && offset < 1000) { // Safety limit 1000 produk
+			const itemListRes = await callShopeeApi('/api/v2/product/get_item_list', {
+				offset: offset,
+				page_size: pageSize,
+				item_status: 'NORMAL'
+			}, 'GET');
 			
-			if (itemIds.length > 0) {
-				const baseInfoRes = await callShopeeApi('/api/v2/product/get_item_base_info', {
-					item_id_list: itemIds.join(',')
-				}, 'GET');
-				
-				if (baseInfoRes && baseInfoRes.item_list) {
-					shopeeProducts = baseInfoRes.item_list.map((item: any) => ({
-						item_id: item.item_id,
-						item_name: item.item_name,
-						item_sku: item.item_sku,
-						has_model: item.has_model,
-						models: item.has_model ? item.model_list : [] // Shopee Open Platform API v2 returns models if we query model info, but base_info doesn't include it directly unless requested. Wait, get_model_list is a separate API. We'll just map at the item_id level for now to keep it simple!
-					}));
-				}
+			if (itemListRes && itemListRes.item && itemListRes.item.length > 0) {
+				allItemIds.push(...itemListRes.item.map((i: any) => i.item_id));
+				offset += pageSize;
+				if (!itemListRes.has_next_page) hasNext = false;
+			} else {
+				hasNext = false;
 			}
 		}
 
-		return {
+		let shopeeProducts: any[] = [];
+		
+		// Ambil base info per batch (max 50 per request menurut dokumentasi Shopee)
+		for (let i = 0; i < allItemIds.length; i += 50) {
+			const batchIds = allItemIds.slice(i, i + 50);
+			const baseInfoRes = await callShopeeApi('/api/v2/product/get_item_base_info', {
+				item_id_list: batchIds.join(',')
+			}, 'GET');
+			
+			if (baseInfoRes && baseInfoRes.item_list) {
+				shopeeProducts.push(...baseInfoRes.item_list.map((item: any) => ({
+					item_id: item.item_id,
+					item_name: item.item_name,
+					item_sku: item.item_sku,
+					has_model: item.has_model,
+					models: item.has_model ? item.model_list : []
+				})));
+			}
+		}
+return {
 			localProducts,
 			shopeeProducts
 		};
@@ -78,21 +91,32 @@ export const actions: Actions = {
 	},
 	autoMap: async () => {
 		try {
+			
 			// Auto map based on exact SKU match
 			const localProducts = await query(`SELECT id, sku FROM products WHERE shopee_item_id IS NULL AND sku IS NOT NULL AND sku != ''`);
 			
-			const itemListRes = await callShopeeApi('/api/v2/product/get_item_list', { offset: 0, page_size: 100, item_status: 'NORMAL' }, 'GET');
+			let allItemIds = [];
+			let offset = 0;
+			let hasNext = true;
+			while (hasNext && offset < 1000) {
+				const itemListRes = await callShopeeApi('/api/v2/product/get_item_list', { offset, page_size: 50, item_status: 'NORMAL' }, 'GET');
+				if (itemListRes && itemListRes.item && itemListRes.item.length > 0) {
+					allItemIds.push(...itemListRes.item.map((i: any) => i.item_id));
+					offset += 50;
+					if (!itemListRes.has_next_page) hasNext = false;
+				} else {
+					hasNext = false;
+				}
+			}
+
 			let mappedCount = 0;
-			
-			if (itemListRes && itemListRes.item && itemListRes.item.length > 0) {
-				const itemIds = itemListRes.item.map((i: any) => i.item_id);
-				const baseInfoRes = await callShopeeApi('/api/v2/product/get_item_base_info', { item_id_list: itemIds.join(',') }, 'GET');
-				
+			for (let i = 0; i < allItemIds.length; i += 50) {
+				const batchIds = allItemIds.slice(i, i + 50);
+				const baseInfoRes = await callShopeeApi('/api/v2/product/get_item_base_info', { item_id_list: batchIds.join(',') }, 'GET');
 				if (baseInfoRes && baseInfoRes.item_list) {
 					for (const sp of baseInfoRes.item_list) {
 						if (!sp.item_sku) continue;
-						
-						const match = localProducts.find(lp => lp.sku.toLowerCase() === sp.item_sku.toLowerCase());
+						const match = localProducts.find((lp) => lp.sku.toLowerCase() === sp.item_sku.toLowerCase());
 						if (match) {
 							await query(`UPDATE products SET shopee_item_id = $1 WHERE id = $2`, [sp.item_id, match.id]);
 							mappedCount++;
@@ -101,6 +125,7 @@ export const actions: Actions = {
 				}
 			}
 			return { success: true, message: `Berhasil auto-map ${mappedCount} produk berdasarkan SKU!` };
+return { success: true, message: `Berhasil auto-map ${mappedCount} produk berdasarkan SKU!` };
 		} catch (err: any) {
 			return { success: false, message: 'Auto-map gagal: ' + err.message };
 		}
