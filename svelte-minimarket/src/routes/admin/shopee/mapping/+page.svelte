@@ -106,13 +106,13 @@
 										<div class="flex items-center gap-2">
 											<select
 												name="shopee_item_id"
-												class="block w-full min-w-[250px] rounded-lg border-0 py-1.5 pl-3 pr-8 text-slate-900 ring-1 ring-inset {lp.shopee_item_id ? 'ring-emerald-300 bg-emerald-50' : 'ring-slate-300 bg-white'} focus:ring-2 focus:ring-orange-600 sm:text-sm sm:leading-6"
+												class="block w-full w-full min-w-[350px] max-w-xl rounded-lg border-0 py-1.5 pl-3 pr-8 text-slate-900 ring-1 ring-inset {lp.shopee_item_id ? 'ring-emerald-300 bg-emerald-50' : 'ring-slate-300 bg-white'} focus:ring-2 focus:ring-orange-600 sm:text-sm sm:leading-6"
 												onchange={() => document.getElementById(`btn-${lp.id}`)?.click()}
 											>
 												<option value="">-- Belum Ditautkan (Tidak Sync) --</option>
 												{#each data.shopeeProducts as sp}
 													<option value={sp.item_id} selected={Number(lp.shopee_item_id) === sp.item_id}>
-														Shopee: {sp.item_name.substring(0, 30)}{sp.item_name.length > 30 ? '...' : ''} (SKU: {sp.item_sku || '-'})
+														Shopee: {sp.item_name.substring(0, 90)}{sp.item_name.length > 90 ? '...' : ''} (SKU: {sp.item_sku || '-'})
 													</option>
 												{/each}
 											</select>

@@ -341,9 +341,9 @@
 		</head>
 		<body>
 			<table>
-				<tr><td colspan="10" class="header-title">TOKO ANEKA RASA 99 PANGKALPINANG</td></tr>
-				<tr><td colspan="10" class="header-sub">Pusat Oleh-Oleh Khas Bangka & Minimarket Modern</td></tr>
-				<tr><td colspan="10" class="header-sub">Jl. Jend. Sudirman No. 99, Pangkalpinang, Bangka Belitung | Telp: (0717) 432199</td></tr>
+				<tr><td colspan="10" class="header-title">Toko Aneka Rasa 99</td></tr>
+				<tr><td colspan="10" class="header-sub">Agen Kerupuk Mentah & Pusat Oleh-Oleh Khas Bangka</td></tr>
+				<tr><td colspan="10" class="header-sub">Perumahan Poris Indah Blok B 11 No. 1, Kota Tangerang | Telp: 0813-8710-9586</td></tr>
 				<tr><td colspan="10"></td></tr>
 				<tr><td colspan="10" style="font-size: 13pt; font-weight: bold; color: #0f172a;">LAPORAN REKAPITULASI PENJUALAN & LABA BERSIH</td></tr>
 				<tr><td colspan="10">Periode Laporan: <b>${periodLabel}</b> | Waktu Unduh: <b>${printDate}</b> | Pemilik: <b>${ownerName}</b></td></tr>
@@ -432,7 +432,7 @@
 
 			<br><br>
 			<table>
-				<tr><td colspan="7"></td><td colspan="3" class="text-center">Pangkalpinang, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</td></tr>
+				<tr><td colspan="7"></td><td colspan="3" class="text-center">Kota Tangerang, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</td></tr>
 				<tr><td colspan="7"></td><td colspan="3" class="text-center">Mengetahui & Menyetujui,</td></tr>
 				<tr><td colspan="7"></td><td colspan="3" class="text-center"><b>Pemilik Toko (Owner)</b></td></tr>
 				<tr><td colspan="10" style="height: 50px;"></td></tr>
@@ -1035,6 +1035,84 @@
 			</div>
 		{/if}
 	</section>
+
+
+	<!-- 7. Riwayat Tutup Kasir (Z-Report) -->
+	<section class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-xs space-y-4">
+		<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+			<div>
+				<h3 class="text-sm sm:text-base font-black text-slate-900 flex items-center gap-1.5">
+					<Store class="w-4 h-4 text-emerald-600" />
+					Riwayat Tutup Kasir (Z-Report)
+				</h3>
+				<p class="text-xs text-slate-500">Rekapitulasi setoran kasir harian, modal awal, dan selisih kas fisik laci.</p>
+			</div>
+		</div>
+
+		{#if data.recentShifts && data.recentShifts.length > 0}
+			<div class="overflow-x-auto rounded-lg border border-slate-200">
+				<table class="w-full text-left text-xs whitespace-nowrap">
+					<thead>
+						<tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
+							<th class="py-3 px-4 text-center w-10">No</th>
+							<th class="py-3 px-4">Waktu Tutup</th>
+							<th class="py-3 px-4">Kasir</th>
+							<th class="py-3 px-4 text-right">Modal Awal</th>
+							<th class="py-3 px-4 text-right">Tunai Masuk</th>
+							<th class="py-3 px-4 text-right text-red-600">Pengeluaran</th>
+							<th class="py-3 px-4 text-right font-black">Wajib di Laci</th>
+							<th class="py-3 px-4 text-right">Fisik Dihitung</th>
+							<th class="py-3 px-4 text-right">Selisih</th>
+						</tr>
+					</thead>
+					<tbody class="divide-y divide-slate-100">
+						{#each data.recentShifts as shift, idx}
+							<tr class="hover:bg-blue-50/50 transition-colors">
+								<td class="py-3 px-4 text-center text-slate-400 font-mono">{idx + 1}</td>
+								<td class="py-3 px-4 text-slate-700">
+									<span class="font-medium block">{new Date(shift.closed_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+									<span class="text-[10px] text-slate-500">{new Date(shift.closed_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WIB</span>
+								</td>
+								<td class="py-3 px-4 font-bold text-slate-800">
+									<div class="flex items-center gap-2">
+										<div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] text-slate-600 uppercase">{shift.cashier_name.charAt(0)}</div>
+										{shift.cashier_name.split(' ')[0]}
+									</div>
+								</td>
+								<td class="py-3 px-4 text-right font-mono text-slate-600">{Number(shift.starting_cash).toLocaleString('id-ID')}</td>
+								<td class="py-3 px-4 text-right font-mono text-emerald-700 font-semibold">+{Number(shift.total_cash_sales).toLocaleString('id-ID')}</td>
+								<td class="py-3 px-4 text-right font-mono text-red-600">-{Number(shift.total_expenses).toLocaleString('id-ID')}</td>
+								<td class="py-3 px-4 text-right font-mono font-black text-blue-900 bg-blue-50/30">{Number(shift.expected_drawer_cash).toLocaleString('id-ID')}</td>
+								<td class="py-3 px-4 text-right font-mono font-bold text-slate-900">
+									{#if shift.actual_physical_cash !== null}
+										{Number(shift.actual_physical_cash).toLocaleString('id-ID')}
+									{:else}
+										<span class="text-slate-400 italic font-sans text-[10px] px-2 py-0.5 bg-slate-100 rounded-full">N/A</span>
+									{/if}
+								</td>
+								<td class="py-3 px-4 text-right font-mono font-bold">
+									{#if shift.cash_difference !== null}
+										<span class="px-2 py-1 rounded-md text-[11px] {Number(shift.cash_difference) < 0 ? 'bg-red-100 text-red-700' : (Number(shift.cash_difference) > 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600')}">
+											{Number(shift.cash_difference) > 0 ? '+' : ''}{Number(shift.cash_difference).toLocaleString('id-ID')}
+										</span>
+									{:else}
+										-
+									{/if}
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		{:else}
+			<div class="py-8 text-center text-slate-500 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+				<Store class="w-8 h-8 mx-auto text-slate-300 mb-2" />
+				<p class="font-medium">Belum Ada Riwayat Tutup Kasir</p>
+				<p class="text-xs mt-1">Data shift kasir akan muncul di sini setelah kasir melakukan Z-Report.</p>
+			</div>
+		{/if}
+	</section>
+
 </div>
 
 <!-- Modal Pratinjau Dokumen Laporan Resmi A4 (Siap Cetak / Simpan PDF) -->
@@ -1088,10 +1166,10 @@
 					<div class="flex items-center gap-4">
 						<img src="/logo.png" alt="Logo Toko Aneka Rasa 99" class="w-16 h-16 rounded-full object-cover border-2 border-slate-300 shrink-0" />
 						<div>
-							<h1 class="text-xl sm:text-2xl font-black tracking-tight text-slate-950 uppercase">TOKO ANEKA RASA 99</h1>
-							<p class="text-xs font-bold text-slate-700">Pusat Oleh-Oleh Khas Bangka & Minimarket Modern</p>
+							<h1 class="text-xl sm:text-2xl font-black tracking-tight text-slate-950 uppercase">Toko Aneka Rasa 99</h1>
+							<p class="text-xs font-bold text-slate-700">Agen Kerupuk Mentah & Pusat Oleh-Oleh Khas Bangka</p>
 							<p class="text-[11px] text-slate-500 font-sans mt-0.5">
-								Jl. Jend. Sudirman No. 99, Pangkalpinang, Bangka Belitung • Telp: (0717) 432199 / 0812-3456-7890
+								Perumahan Poris Indah Blok B 11 No. 1, Kota Tangerang &bull; Telp: 0813-8710-9586
 							</p>
 						</div>
 					</div>
@@ -1297,7 +1375,7 @@
 				<!-- Lembar Pengesahan Resmi -->
 				<div class="pt-6 border-t border-slate-200 flex justify-end">
 					<div class="text-center font-sans w-56 space-y-1">
-						<p class="text-[11px] text-slate-500">Pangkalpinang, {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+						<p class="text-[11px] text-slate-500">Kota Tangerang, {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
 						<p class="text-xs font-bold text-slate-800">Mengetahui & Menyetujui,</p>
 						<p class="text-[11px] text-slate-600 font-semibold">Pemilik Toko (Owner)</p>
 						<div class="h-14 flex items-center justify-center">
