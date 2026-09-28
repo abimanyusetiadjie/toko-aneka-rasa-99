@@ -183,7 +183,9 @@ export const actions: Actions = {
 
 			updateMemoryProductStock(id, newBalance);
 			if (prod.sku) updateMemoryProductStock(prod.sku, newBalance);
-			if (prod.name) updateMemoryProductStock(prod.name, newBalance);
+			if (prod.name) updateMemoryProductStock(name, newBalance);
+
+			syncShopeeStock([{ product_id: id, newStock: newBalance }]).catch(e => console.error('[Shopee Sync Restock Error]', e));
 
 			broadcastRealtimeEvent({
 				type: 'STOCK_CHANGED',
@@ -289,6 +291,8 @@ export const actions: Actions = {
 			updateMemoryProductStock(id, stock);
 			if (finalBarcode) updateMemoryProductStock(finalBarcode, stock);
 			if (name) updateMemoryProductStock(name, stock);
+
+			syncShopeeStock([{ product_id: id, newStock: stock }]).catch(e => console.error('[Shopee Sync Update Error]', e));
 
 			broadcastRealtimeEvent({
 				type: 'STOCK_CHANGED',

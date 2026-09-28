@@ -1,6 +1,7 @@
 import type { PageServerLoad, Actions } from './$types';
 import { query } from '$lib/server/db';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
+import { syncShopeeStock } from '$lib/server/shopee-service';
 import type { Product } from '$lib/types';
 
 export const load: PageServerLoad = async ({ setHeaders, locals }) => {
@@ -77,6 +78,8 @@ export const actions: Actions = {
 				) VALUES ($1, '11111111-1111-1111-1111-111111111111', $2, 'RESTOCK', $3, $4, $5, $6)`,
 				[crypto.randomUUID(), product_id, qty, newBalance, unitCost, movementNote]
 			);
+
+			syncShopeeStock([{ product_id, newStock: newBalance }]).catch(e => console.error('[Shopee Sync Masuk Error]', e));
 
 			broadcastRealtimeEvent({
 				type: 'STOCK_CHANGED',

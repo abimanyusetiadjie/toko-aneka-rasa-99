@@ -475,6 +475,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 							message: `Penjualan Kasir No: ${receiptNumber}`
 						}
 					});
+					
+					// SHOOPEE SYNC (Realtime POS Postgres)
+					syncShopeeStock(preparedDetails.map(d => ({
+						product_id: d.productId,
+						newStock: Math.max(0, d.currentStock - d.baseQty)
+					}))).catch(e => console.error('[Shopee POS Sync Postgres Error]', e));
 				} catch {}
 
 				try {
@@ -636,6 +642,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				message: `Penjualan Kasir No: ${receiptNumber}`
 			}
 		});
+		
+		// SHOPEE SYNC (Realtime POS In-Memory)
+		syncShopeeStock(preparedDetails.map(d => ({
+			product_id: d.productId,
+			newStock: Math.max(0, d.currentStock - d.baseQty)
+		}))).catch(e => console.error('[Shopee POS Sync In-Memory Error]', e));
 	} catch {}
 
 	try {
