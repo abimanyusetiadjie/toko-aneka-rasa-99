@@ -684,7 +684,7 @@ onMount(() => {
 
 					<!-- Narrative Subtitle -->
 					<p class="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto lg:mx-0">
-						Pusat Kemplang Panggang Arang MM, Getas Super Tenggiri, dan Grosir Kerupuk Mentah di Poris. Siap kirim ke seluruh Indonesia!
+						Sejak 26 September 2020, Aneka Rasa 99 hadir membawa cita rasa khas Bangka ke Tangerang dan berbagai daerah di Indonesia.
 					</p>
 
 					<!-- Action Buttons -->
@@ -813,8 +813,8 @@ onMount(() => {
 					<p class="text-xs sm:text-sm font-bold text-slate-500">Varian Camilan & Oleh-Oleh</p>
 				</div>
 				<div class="space-y-1">
-					<p class="text-3xl sm:text-4xl font-black text-red-600">15+ Thn</p>
-					<p class="text-xs sm:text-sm font-bold text-slate-500">Menjaga Resep Autentik</p>
+					<p class="text-3xl sm:text-4xl font-black text-red-600">Sejak 2020</p>
+					<p class="text-xs sm:text-sm font-bold text-slate-500">Berdiri 26 September</p>
 				</div>
 				<div class="space-y-1">
 					<p class="text-3xl sm:text-4xl font-black text-slate-900">10.000+</p>
