@@ -43,13 +43,13 @@
 	}
 
 	const PRODUCTS: FeaturedProduct[] = [
-		{
+				{
 			id: 'p1',
 			name: 'Kemplang Panggang Cap MM Asli Bangka',
 			category: 'khas-bangka',
 			desc: 'Dipanggang tradisional arang kelapa. Gurih renyah di luar, empuk gurih daging ikan tenggiri di dalam.',
-			price: 47500,
-			originalPrice: 50000,
+			price: 40000,
+			originalPrice: 47500,
 			weight: '250 gr',
 			rating: 5.0,
 			reviewsCount: 142,
@@ -133,19 +133,19 @@
 			badge: '🏆 Klasik',
 			highlight: 'Sejak 1968'
 		},
-		{
+				{
 			id: 'p7',
-			name: 'Kerupuk Mentah Bangka Ikan Tenggiri Yoyo 500g',
+			name: 'Kerupuk Ikan Mentah Palembang 1kg',
 			category: 'kerupuk-mentah',
-			desc: 'Kerupuk mentah kualitas super. Mengembang sempurna dan rasa ikan tenggirinya sangat terasa setelah digoreng.',
-			price: 45000,
-			originalPrice: 50000,
-			weight: '500 gr',
+			desc: 'Kerupuk mentah kualitas super. Mengembang sempurna dan rasa ikan sangat terasa setelah digoreng.',
+			price: 35000,
+			originalPrice: 45000,
+			weight: '1 kg',
 			rating: 4.9,
 			reviewsCount: 88,
 			image: '/images/products/kerupuk mentah  tenggiri.png',
 			webp: '/images/products/kerupuk-mentah-tenggiri.webp',
-			badge: '🟡 Premium',
+			badge: '⭐ Premium',
 			highlight: 'Mengembang Sempurna'
 		},
 		{
