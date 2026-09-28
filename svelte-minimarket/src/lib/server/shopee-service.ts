@@ -750,6 +750,7 @@ export async function callShopeeApi(path: string, payload: any = {}, method = 'P
 export async function syncShopeeStock(items: { product_id?: string; sku?: string; newStock: number }[]) {
 	if (!items || items.length === 0) return { success: true, synced_count: 0 };
 	let synced_count = 0;
+	let error_message = '';
 
 	for (const itm of items) {
 		try {
@@ -768,11 +769,7 @@ export async function syncShopeeStock(items: { product_id?: string; sku?: string
 					stock_list: [
 						{
 							model_id: productRow.shopee_model_id ? Number(productRow.shopee_model_id) : 0,
-							seller_stock: [
-								{
-									stock: itm.newStock
-								}
-							]
+							normal_stock: itm.newStock
 						}
 					]
 				}, 'POST');
@@ -780,7 +777,8 @@ export async function syncShopeeStock(items: { product_id?: string; sku?: string
 			}
 		} catch (err: any) {
 			console.error(`[Shopee Sync Error] Gagal update stok untuk item:`, err.message);
+			error_message = err.message;
 		}
 	}
-	return { success: true, synced_count };
+	return { success: true, synced_count, error_message };
 }

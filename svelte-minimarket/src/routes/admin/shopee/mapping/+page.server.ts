@@ -1,6 +1,6 @@
 import type { PageServerLoad, Actions } from './$types';
 import { query } from '$lib/server/db';
-import { callShopeeApi, getShopeeConnectionStatus } from '$lib/server/shopee-service';
+import { callShopeeApi, getShopeeConnectionStatus, syncShopeeStock } from '$lib/server/shopee-service';
 import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async () => {
@@ -84,7 +84,22 @@ export const actions: Actions = {
 				`UPDATE products SET shopee_item_id = $1, updated_at = NOW() WHERE id = $2`,
 				[shopeeItemId, localId]
 			);
-			return { success: true, message: 'Tautan produk berhasil disimpan!' };
+			
+			// Jika berhasil ditautkan ke Shopee (bukan dilepas tautannya), langsung tembak stok lokal ke Shopee!
+			let syncMsg = '';
+			if (shopeeItemId) {
+			    const prodRows = await query(`SELECT stock, name FROM products WHERE id = $1`, [localId]);
+			    if (prodRows.length > 0) {
+			        const res = await syncShopeeStock([{ product_id: localId, newStock: Number(prodRows[0].stock) }]);
+			        if (res.error_message) {
+			            syncMsg = ' (Stok gagal dikirim ke Shopee: ' + res.error_message + ')';
+			        } else {
+			            syncMsg = ' & stok sinkron!';
+			        }
+			    }
+			}
+			
+			return { success: true, message: 'Tautan disimpan' + syncMsg };
 		} catch (err: any) {
 			return { success: false, message: 'Gagal menautkan produk: ' + err.message };
 		}
@@ -93,7 +108,7 @@ export const actions: Actions = {
 		try {
 			
 			// Auto map based on exact SKU match
-			const localProducts = await query(`SELECT id, sku FROM products WHERE shopee_item_id IS NULL AND sku IS NOT NULL AND sku != ''`);
+			const localProducts = await query(`SELECT id, sku, stock FROM products WHERE shopee_item_id IS NULL AND sku IS NOT NULL AND sku != ''`);
 			
 			let allItemIds = [];
 			let offset = 0;
@@ -110,6 +125,8 @@ export const actions: Actions = {
 			}
 
 			let mappedCount = 0;
+			let stocksToSync = [];
+			
 			for (let i = 0; i < allItemIds.length; i += 50) {
 				const batchIds = allItemIds.slice(i, i + 50);
 				const baseInfoRes = await callShopeeApi('/api/v2/product/get_item_base_info', { item_id_list: batchIds.join(',') }, 'GET');
@@ -119,15 +136,19 @@ export const actions: Actions = {
 						const match = localProducts.find((lp) => lp.sku.toLowerCase() === sp.item_sku.toLowerCase());
 						if (match) {
 							await query(`UPDATE products SET shopee_item_id = $1 WHERE id = $2`, [sp.item_id, match.id]);
+							stocksToSync.push({ product_id: match.id, newStock: Number(match.stock) });
 							mappedCount++;
 						}
 					}
 				}
 			}
-			return { success: true, message: `Berhasil auto-map ${mappedCount} produk berdasarkan SKU!` };
-return { success: true, message: `Berhasil auto-map ${mappedCount} produk berdasarkan SKU!` };
+			
+			if (stocksToSync.length > 0) {
+			    await syncShopeeStock(stocksToSync);
+			}
+			
+			return { success: true, message: `Berhasil auto-map ${mappedCount} produk berdasarkan SKU dan disinkronkan!` };
 		} catch (err: any) {
 			return { success: false, message: 'Auto-map gagal: ' + err.message };
 		}
-	}
-};
+	}};
