@@ -1,5 +1,6 @@
 import type { PageServerLoad, Actions } from './$types';
 import { query, updateMemoryProductStock } from '$lib/server/db';
+import { syncShopeeStock } from '$lib/server/shopee-service';
 import { broadcastRealtimeEvent } from '$lib/server/realtime-hub';
 import type { Product, Category } from '$lib/types';
 import { build6DigitBarcode } from '$lib/server/barcode-cluster';
