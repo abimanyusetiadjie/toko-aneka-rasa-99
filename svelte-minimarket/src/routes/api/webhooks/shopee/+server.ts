@@ -18,7 +18,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			if (!orderSn) return json({ success: true, message: 'Tidak ada order_sn' });
 
 			// Cek apakah order ini sudah ada di database kita
-			const existing = await query(SELECT id, order_status FROM shopee_orders WHERE order_sn = , [orderSn]);
+			const existing = await query(`SELECT id, order_status FROM shopee_orders WHERE order_sn = $1`, [orderSn]);
 			
 			if (existing.length === 0) {
 				// Pesanan baru! Kita harus tarik detailnya dari API Shopee
