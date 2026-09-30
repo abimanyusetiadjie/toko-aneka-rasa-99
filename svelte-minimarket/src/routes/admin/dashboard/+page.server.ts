@@ -54,7 +54,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 			paymentMethodRows
 		] = await Promise.all([
 			// 1. POS Offline Revenue & Count
-			query(
+			query(`
 				SELECT 
 					COALESCE(SUM(total_amount), 0)::float as pos_revenue,
 					COUNT(id)::int as pos_count
@@ -62,7 +62,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 				WHERE status = 'COMPLETED' AND (channel = 'POS' OR channel IS NULL) 
 			),
 			// 2. Shopee Marketplace Revenue & Count
-			query(
+			query(`
 				SELECT 
 					COALESCE(SUM(total_amount), 0)::float as shopee_revenue,
 					COUNT(id)::int as shopee_count,
@@ -71,7 +71,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 				WHERE order_status != 'CANCELLED' 
 			),
 			// 3. POS COGS (Cost of Goods Sold)
-			query(
+			query(`
 				SELECT 
 					COALESCE(SUM(td.qty * td.conversion_factor * COALESCE(td.cost_price_snapshot, p.cost_price, 0)), 0)::float as total_cogs
 				FROM transaction_details td
@@ -80,7 +80,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 				WHERE t.status = 'COMPLETED' 
 			),
 			// 4. Shopee COGS (Cost of Goods Sold via stock movements)
-			query(
+			query(`
 				SELECT COALESCE(SUM(ABS(qty_base_change) * COALESCE(unit_cost_snapshot, 0)), 0)::float as shopee_cogs
 				FROM stock_movements 
 				WHERE reference_type = 'SHOPEE_ORDER' 

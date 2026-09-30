@@ -33,6 +33,20 @@
 	let isPdfModalOpen = $state(false);
 	let txFilter = $state<'ALL' | 'POS' | 'SHOPEE'>('ALL');
 	let showAllTransactions = $state(false);
+	
+	let metricTab = $state<'all' | 'pos' | 'shopee'>('all');
+	let m = $derived(
+		metricTab === 'pos' ? data.posMetrics :
+		metricTab === 'shopee' ? data.shopeeMetrics :
+		{
+			revenue: data.totalRevenue,
+			count: data.totalTransactions,
+			cogs: data.totalCogs,
+			profit: data.grossProfit,
+			margin: data.grossProfitMargin,
+			avg: data.avgBasketSize
+		}
+	);
 	let lastUpdated = $state('');
 
 	let trendChartContainer: HTMLDivElement | undefined = $state();
