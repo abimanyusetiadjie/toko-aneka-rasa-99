@@ -97,7 +97,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 					u.name as cashier_name,
 					COALESCE(SUM(td.qty * td.conversion_factor * COALESCE(td.cost_price_snapshot, p.cost_price, 0)), 0)::float as cogs
 				FROM transactions t
-				LEFT JOIN users u ON t.cashier_id = u.id
+				LEFT JOIN users u ON t.user_id = u.id
 				LEFT JOIN transaction_details td ON td.transaction_id = t.id
 				LEFT JOIN products p ON td.product_id = p.id
 				WHERE t.status = 'COMPLETED' ${txFilterSql}
