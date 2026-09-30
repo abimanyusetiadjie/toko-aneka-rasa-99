@@ -95,7 +95,8 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 					COALESCE(t.payment_method, 'CASH') as payment_method,
 					t.total_amount,
 					u.full_name as cashier_name,
-					COALESCE(SUM(td.qty * td.conversion_factor * COALESCE(td.cost_price_snapshot, p.cost_price, 0)), 0)::float as cogs
+					COALESCE(SUM(td.qty * td.conversion_factor * COALESCE(td.cost_price_snapshot, p.cost_price, 0)), 0)::float as cogs,
+					(t.total_amount - COALESCE(SUM(td.qty * td.conversion_factor * COALESCE(td.cost_price_snapshot, p.cost_price, 0)), 0))::float as gross_profit
 				FROM transactions t
 				LEFT JOIN users u ON t.user_id = u.id
 				LEFT JOIN transaction_details td ON td.transaction_id = t.id
@@ -126,6 +127,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 				SELECT 
 					p.name as product_name,
 					p.stock,
+					COALESCE(p.price, 0)::float as price,
 					MAX(t.created_at) as last_sold_at,
 					COALESCE(SUM(td.qty), 0)::int as qty_sold_period
 				FROM products p
