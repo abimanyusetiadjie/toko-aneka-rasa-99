@@ -54,7 +54,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 			paymentMethodRows
 		] = await Promise.all([
 			// 1. POS Offline Revenue & Count
-			query(`
+			query(
 				SELECT 
 					COALESCE(SUM(total_amount), 0)::float as pos_revenue,
 					COUNT(id)::int as pos_count
@@ -62,7 +62,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 				WHERE status = 'COMPLETED' AND (channel = 'POS' OR channel IS NULL) 
 			),
 			// 2. Shopee Marketplace Revenue & Count
-			query(`
+			query(
 				SELECT 
 					COALESCE(SUM(total_amount), 0)::float as shopee_revenue,
 					COUNT(id)::int as shopee_count,
@@ -71,7 +71,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 				WHERE order_status != 'CANCELLED' 
 			),
 			// 3. POS COGS (Cost of Goods Sold)
-			query(`
+			query(
 				SELECT 
 					COALESCE(SUM(td.qty * td.conversion_factor * COALESCE(td.cost_price_snapshot, p.cost_price, 0)), 0)::float as total_cogs
 				FROM transaction_details td
@@ -80,35 +80,33 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 				WHERE t.status = 'COMPLETED' 
 			),
 			// 4. Shopee COGS (Cost of Goods Sold via stock movements)
-			query(`
+			query(
 				SELECT COALESCE(SUM(ABS(qty_base_change) * COALESCE(unit_cost_snapshot, 0)), 0)::float as shopee_cogs
 				FROM stock_movements 
 				WHERE reference_type = 'SHOPEE_ORDER' 
 			),
 			// 5. Rincian Transaksi untuk Live Ledger & Ekspor Laporan
-			query(`
+			query(
 				SELECT 
 					t.id,
 					t.receipt_number,
 					t.created_at,
 					COALESCE(t.channel, 'POS') as channel,
 					COALESCE(t.payment_method, 'CASH') as payment_method,
-					t.total_amount::float,
-					COALESCE(u.full_name, 'Kasir Operasional') as cashier_name,
-					COALESCE(SUM(td.qty * td.conversion_factor * COALESCE(td.cost_price_snapshot, p.cost_price, 0)), 0)::float as cogs,
-					(t.total_amount - COALESCE(SUM(td.qty * td.conversion_factor * COALESCE(td.cost_price_snapshot, p.cost_price, 0)), 0))::float as gross_profit,
-					COALESCE(SUM(td.qty), 0)::int as total_qty
+					t.total_amount,
+					u.name as cashier_name,
+					COALESCE(SUM(td.qty * td.conversion_factor * COALESCE(td.cost_price_snapshot, p.cost_price, 0)), 0)::float as cogs
 				FROM transactions t
-				LEFT JOIN transaction_details td ON t.id = td.transaction_id
+				LEFT JOIN users u ON t.cashier_id = u.id
+				LEFT JOIN transaction_details td ON td.transaction_id = t.id
 				LEFT JOIN products p ON td.product_id = p.id
-				LEFT JOIN users u ON t.user_id = u.id
-				WHERE t.status = 'COMPLETED' ${txFilterSql}
-				GROUP BY t.id, t.receipt_number, t.created_at, t.channel, t.payment_method, t.total_amount, u.full_name
+				WHERE t.status = 'COMPLETED' 
+				GROUP BY t.id, u.name
 				ORDER BY t.created_at DESC
 				LIMIT 50
-			`),
-			// 5. Top 5 Best Sellers
-			query(`
+			),
+			// 6. Top 5 Best Sellers
+			query(
 				SELECT 
 					p.name as product_name,
 					c.name as category_name,
@@ -118,61 +116,56 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 				JOIN products p ON td.product_id = p.id
 				JOIN categories c ON p.category_id = c.id
 				JOIN transactions t ON td.transaction_id = t.id
-				WHERE t.status = 'COMPLETED' ${txFilterSql}
+				WHERE t.status = 'COMPLETED' 
 				GROUP BY p.name, c.name
 				ORDER BY total_sales DESC
 				LIMIT 5
-			`),
-			// 6. Slow Moving / Dead Stock Alert (Tepat 5 produk)
-			query(`
+			),
+			// 7. Slow Moving / Dead Stock Alert (Tepat 5 produk)
+			query(
 				SELECT 
 					p.name as product_name,
 					p.stock,
-					p.price::float,
-					c.name as category_name
+					MAX(t.created_at) as last_sold_at,
+					COALESCE(SUM(td.qty), 0)::int as qty_sold_period
 				FROM products p
-				JOIN categories c ON p.category_id = c.id
-				WHERE p.stock >= 10 AND p.id NOT IN (
-					SELECT DISTINCT td.product_id 
-					FROM transaction_details td
-					JOIN transactions t ON td.transaction_id = t.id
-					WHERE t.status = 'COMPLETED' ${txFilterSql}
-				)
-				ORDER BY p.stock DESC
+				LEFT JOIN transaction_details td ON p.id = td.product_id
+				LEFT JOIN transactions t ON td.transaction_id = t.id AND t.status = 'COMPLETED' 
+				WHERE p.is_active = true
+				GROUP BY p.id, p.name, p.stock
+				ORDER BY qty_sold_period ASC, p.stock DESC
 				LIMIT 5
-			`),
-			// 7. Trend Penjualan Harian POS Offline
-			query(`
+			),
+			// 8. Trend Penjualan Harian POS Offline
+			query(
 				SELECT 
-					TO_CHAR(t.created_at, 'YYYY-MM-DD') as date_str,
-					COALESCE(SUM(t.total_amount), 0)::float as revenue,
-					COUNT(t.id)::int as tx_count
-				FROM transactions t
-				WHERE t.status = 'COMPLETED' ${txFilterSql}
-				GROUP BY TO_CHAR(t.created_at, 'YYYY-MM-DD')
+					DATE_TRUNC('day', created_at)::date as date_str,
+					COALESCE(SUM(total_amount), 0)::float as revenue
+				FROM transactions
+				WHERE status = 'COMPLETED' AND (channel = 'POS' OR channel IS NULL) 
+				GROUP BY date_str
 				ORDER BY date_str ASC
-			`),
-			// 8. Trend Penjualan Harian Shopee Online
-			query(`
+			),
+			// 9. Trend Penjualan Harian Shopee Online
+			query(
 				SELECT 
-					TO_CHAR(created_at, 'YYYY-MM-DD') as date_str,
-					COALESCE(SUM(total_amount), 0)::float as revenue,
-					COUNT(id)::int as tx_count
+					DATE_TRUNC('day', created_at)::date as date_str,
+					COALESCE(SUM(total_amount), 0)::float as revenue
 				FROM shopee_orders
-				WHERE order_status != 'CANCELLED' ${shopeeFilterSql}
-				GROUP BY TO_CHAR(created_at, 'YYYY-MM-DD')
+				WHERE order_status != 'CANCELLED' 
+				GROUP BY date_str
 				ORDER BY date_str ASC
-			`),
-			// 9. Komposisi Metode Pembayaran (Cash, QRIS, dsb)
-			query(`
+			),
+			// 10. Komposisi Metode Pembayaran (Cash, QRIS, dsb)
+			query(
 				SELECT 
 					COALESCE(t.payment_method, 'CASH') as method,
 					COALESCE(SUM(t.total_amount), 0)::float as total_amount,
 					COUNT(t.id)::int as tx_count
 				FROM transactions t
-				WHERE t.status = 'COMPLETED' ${txFilterSql}
+				WHERE t.status = 'COMPLETED' 
 				GROUP BY COALESCE(t.payment_method, 'CASH')
-			`)
+			)
 		]);
 
 		const posData = (posRows as any)[0] || { pos_revenue: 0, pos_count: 0 };
