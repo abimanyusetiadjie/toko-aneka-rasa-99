@@ -94,14 +94,14 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 					COALESCE(t.channel, 'POS') as channel,
 					COALESCE(t.payment_method, 'CASH') as payment_method,
 					t.total_amount,
-					u.name as cashier_name,
+					u.full_name as cashier_name,
 					COALESCE(SUM(td.qty * td.conversion_factor * COALESCE(td.cost_price_snapshot, p.cost_price, 0)), 0)::float as cogs
 				FROM transactions t
 				LEFT JOIN users u ON t.user_id = u.id
 				LEFT JOIN transaction_details td ON td.transaction_id = t.id
 				LEFT JOIN products p ON td.product_id = p.id
 				WHERE t.status = 'COMPLETED' ${txFilterSql}
-				GROUP BY t.id, u.name
+				GROUP BY t.id, u.full_name
 				ORDER BY t.created_at DESC
 				LIMIT 50
 			`),
