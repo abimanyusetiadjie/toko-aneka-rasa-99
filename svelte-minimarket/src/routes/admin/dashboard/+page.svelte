@@ -360,12 +360,12 @@
 					<td>Rata-rata Basket Size</td>
 				</tr>
 				<tr>
-					<td class="kpi-value">${formatCurrency(data.totalRevenue)}</td>
-					<td class="kpi-value">${formatCurrency(data.totalCogs)}</td>
-					<td class="kpi-value" style="color: #059669;">${formatCurrency(data.grossProfit)}</td>
-					<td class="kpi-value">${data.grossProfitMargin}%</td>
-					<td class="kpi-value text-center">${data.totalTransactions} Transaksi</td>
-					<td class="kpi-value">${formatCurrency(data.avgBasketSize)}</td>
+					<td class="kpi-value">${formatCurrency(m.revenue)}</td>
+					<td class="kpi-value">${formatCurrency(m.cogs)}</td>
+					<td class="kpi-value" style="color: #059669;">${formatCurrency(m.profit)}</td>
+					<td class="kpi-value">${m.margin}%</td>
+					<td class="kpi-value text-center">${m.count} Transaksi</td>
+					<td class="kpi-value">${formatCurrency(m.avg)}</td>
 				</tr>
 			</table>
 
@@ -609,6 +609,30 @@
 		</div>
 	{/if}
 
+	<!-- Segmented Control untuk Filter KPI -->
+	<div class="flex justify-center mb-6">
+		<div class="inline-flex bg-slate-100/80 rounded-xl p-1 border border-slate-200 shadow-inner">
+			<button 
+				onclick={() => metricTab = 'all'}
+				class="flex-1 sm:flex-none px-5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all {metricTab === 'all' ? 'bg-white text-slate-800 shadow-sm border border-slate-200/60' : 'text-slate-500 hover:text-slate-700'}"
+			>
+				🌟 Semua (Gabungan)
+			</button>
+			<button 
+				onclick={() => metricTab = 'pos'}
+				class="flex-1 sm:flex-none px-5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all {metricTab === 'pos' ? 'bg-white text-blue-700 shadow-sm border border-slate-200/60' : 'text-slate-500 hover:text-slate-700'}"
+			>
+				🏪 Kasir Fisik
+			</button>
+			<button 
+				onclick={() => metricTab = 'shopee'}
+				class="flex-1 sm:flex-none px-5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all {metricTab === 'shopee' ? 'bg-white text-orange-600 shadow-sm border border-slate-200/60' : 'text-slate-500 hover:text-slate-700'}"
+			>
+				🛒 Shopee Online
+			</button>
+		</div>
+	</div>
+
 	<!-- 2. 4 Kartu KPI Utama (Besar, Bold, Jelas & Bersih) -->
 	<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 		<!-- 1. Omzet -->
@@ -622,12 +646,12 @@
 					</div>
 				</div>
 				<div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
-					{formatCurrency(data.totalRevenue)}
+					{formatCurrency(m.revenue)}
 				</div>
 			</div>
 			<div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-				<span>Total dari <strong>{data.totalTransactions}</strong> transaksi</span>
-				<span class="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded text-[11px]">Penjualan</span>
+				<span>Total dari <strong>{m.count}</strong> {metricTab === 'shopee' ? 'pesanan' : 'transaksi'}</span>
+				<span class="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded text-[11px]">{metricTab === 'all' ? 'Gabungan' : (metricTab === 'pos' ? 'Kasir' : 'Shopee')}</span>
 			</div>
 		</div>
 
@@ -642,7 +666,7 @@
 					</div>
 				</div>
 				<div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
-					{formatCurrency(data.totalCogs)}
+					{formatCurrency(m.cogs)}
 				</div>
 			</div>
 			<div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
@@ -662,13 +686,13 @@
 					</div>
 				</div>
 				<div class="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight font-mono">
-					{formatCurrency(data.grossProfit)}
+					{formatCurrency(m.profit)}
 				</div>
 			</div>
 			<div class="mt-3 pt-3 border-t border-emerald-100 flex items-center justify-between text-xs">
 				<span class="text-slate-600">Margin Keuntungan:</span>
 				<span class="font-extrabold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-full text-xs font-mono">
-					{data.grossProfitMargin}%
+					{m.margin}%
 				</span>
 			</div>
 		</div>
@@ -684,7 +708,7 @@
 					</div>
 				</div>
 				<div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
-					{formatCurrency(data.avgBasketSize)}
+					{formatCurrency(m.avg)}
 				</div>
 			</div>
 			<div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
@@ -1203,26 +1227,26 @@
 					<div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
 						<div class="p-3 bg-slate-50 border border-slate-300 rounded-lg">
 							<span class="text-[10px] font-bold text-slate-500 uppercase block">Total Omset Kotor</span>
-							<span class="text-base font-black font-mono text-slate-900">{formatCurrency(data.totalRevenue)}</span>
-							<span class="text-[10px] text-slate-500 block mt-0.5">{data.totalTransactions} Total Transaksi</span>
+							<span class="text-base font-black font-mono text-slate-900">{formatCurrency(m.revenue)}</span>
+							<span class="text-[10px] text-slate-500 block mt-0.5">{m.count} Total Transaksi</span>
 						</div>
 
 						<div class="p-3 bg-slate-50 border border-slate-300 rounded-lg">
 							<span class="text-[10px] font-bold text-slate-500 uppercase block">Total Modal Pokok (HPP)</span>
-							<span class="text-base font-black font-mono text-slate-800">{formatCurrency(data.totalCogs)}</span>
+							<span class="text-base font-black font-mono text-slate-800">{formatCurrency(m.cogs)}</span>
 							<span class="text-[10px] text-slate-500 block mt-0.5">Modal Belanja Supplier</span>
 						</div>
 
 						<div class="p-3 bg-emerald-50 border border-emerald-300 rounded-lg">
 							<span class="text-[10px] font-bold text-emerald-800 uppercase block">Laba Bersih Kotor</span>
-							<span class="text-base font-black font-mono text-emerald-700">{formatCurrency(data.grossProfit)}</span>
+							<span class="text-base font-black font-mono text-emerald-700">{formatCurrency(m.profit)}</span>
 							<span class="text-[10px] font-bold text-emerald-800 block mt-0.5">Cuan Bersih Penjualan</span>
 						</div>
 
 						<div class="p-3 bg-blue-50 border border-blue-300 rounded-lg">
 							<span class="text-[10px] font-bold text-blue-800 uppercase block">Gross Profit Margin (GPM)</span>
-							<span class="text-base font-black font-mono text-blue-700">{data.grossProfitMargin}%</span>
-							<span class="text-[10px] text-blue-800 block mt-0.5">Basket: {formatCurrency(data.avgBasketSize)}</span>
+							<span class="text-base font-black font-mono text-blue-700">{m.margin}%</span>
+							<span class="text-[10px] text-blue-800 block mt-0.5">Basket: {formatCurrency(m.avg)}</span>
 						</div>
 					</div>
 				</div>
@@ -1256,8 +1280,8 @@
 							</tr>
 							<tr class="bg-slate-100 font-black">
 								<td class="p-2 border-r border-slate-300">TOTAL GABUNGAN</td>
-								<td class="p-2 text-center border-r border-slate-300">{data.totalTransactions} Transaksi</td>
-								<td class="p-2 text-right font-mono border-r border-slate-300">{formatCurrency(data.totalRevenue)}</td>
+								<td class="p-2 text-center border-r border-slate-300">{m.count} Transaksi</td>
+								<td class="p-2 text-right font-mono border-r border-slate-300">{formatCurrency(m.revenue)}</td>
 								<td class="p-2 text-center">100%</td>
 							</tr>
 						</tbody>

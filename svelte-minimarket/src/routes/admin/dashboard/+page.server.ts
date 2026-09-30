@@ -45,6 +45,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 			posRows,
 			shopeeRows,
 			cogsRows,
+			shopeeCogsRows,
 			txListRows,
 			topProductRows,
 			slowProductRows,
@@ -53,32 +54,38 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 			paymentMethodRows
 		] = await Promise.all([
 			// 1. POS Offline Revenue & Count
-			query(`
+			query(
 				SELECT 
 					COALESCE(SUM(total_amount), 0)::float as pos_revenue,
 					COUNT(id)::int as pos_count
 				FROM transactions
-				WHERE status = 'COMPLETED' AND (channel = 'POS' OR channel IS NULL) ${rawDateFilter}
-			`),
+				WHERE status = 'COMPLETED' AND (channel = 'POS' OR channel IS NULL) 
+			),
 			// 2. Shopee Marketplace Revenue & Count
-			query(`
+			query(
 				SELECT 
 					COALESCE(SUM(total_amount), 0)::float as shopee_revenue,
 					COUNT(id)::int as shopee_count,
 					COUNT(CASE WHEN order_status = 'READY_TO_SHIP' THEN 1 END)::int as ready_to_ship_count
 				FROM shopee_orders
-				WHERE order_status != 'CANCELLED' ${shopeeFilterSql}
-			`),
-			// 3. Total HPP / COGS (Cost of Goods Sold)
-			query(`
+				WHERE order_status != 'CANCELLED' 
+			),
+			// 3. POS COGS (Cost of Goods Sold)
+			query(
 				SELECT 
 					COALESCE(SUM(td.qty * td.conversion_factor * COALESCE(td.cost_price_snapshot, p.cost_price, 0)), 0)::float as total_cogs
 				FROM transaction_details td
 				JOIN products p ON td.product_id = p.id
 				JOIN transactions t ON td.transaction_id = t.id
-				WHERE t.status = 'COMPLETED' ${txFilterSql}
-			`),
-			// 4. Rincian Transaksi untuk Live Ledger & Ekspor Laporan
+				WHERE t.status = 'COMPLETED' 
+			),
+			// 4. Shopee COGS (Cost of Goods Sold via stock movements)
+			query(
+				SELECT COALESCE(SUM(ABS(qty_base_change) * COALESCE(unit_cost_snapshot, 0)), 0)::float as shopee_cogs
+				FROM stock_movements 
+				WHERE reference_type = 'SHOPEE_ORDER' 
+			),
+			// 5. Rincian Transaksi untuk Live Ledger & Ekspor Laporan
 			query(`
 				SELECT 
 					t.id,
@@ -170,17 +177,27 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 
 		const posData = (posRows as any)[0] || { pos_revenue: 0, pos_count: 0 };
 		const shopeeData = (shopeeRows as any)[0] || { shopee_revenue: 0, shopee_count: 0, ready_to_ship_count: 0 };
-		const cogsData = (cogsRows as any)[0] || { total_cogs: 0 };
+		const posCogsData = (cogsRows as any)[0] || { total_cogs: 0 };
+		const shopeeCogsData = (shopeeCogsRows as any)[0] || { shopee_cogs: 0 };
 
 		const posRevenue = Number(posData.pos_revenue) || 0;
 		const posCount = Number(posData.pos_count) || 0;
+		const posCogs = Number(posCogsData.total_cogs) || 0;
+		const posProfit = posRevenue - posCogs;
+		const posMargin = posRevenue > 0 ? Math.round((posProfit / posRevenue) * 1000) / 10 : 0;
+		const posAvg = posCount > 0 ? Math.round(posRevenue / posCount) : 0;
+
 		const shopeeRevenue = Number(shopeeData.shopee_revenue) || 0;
 		const shopeeCount = Number(shopeeData.shopee_count) || 0;
 		const shopeeReadyToShip = Number(shopeeData.ready_to_ship_count) || 0;
+		const shopeeCogs = Number(shopeeCogsData.shopee_cogs) || 0;
+		const shopeeProfit = shopeeRevenue - shopeeCogs;
+		const shopeeMargin = shopeeRevenue > 0 ? Math.round((shopeeProfit / shopeeRevenue) * 1000) / 10 : 0;
+		const shopeeAvg = shopeeCount > 0 ? Math.round(shopeeRevenue / shopeeCount) : 0;
 
 		const totalTransactions = posCount + shopeeCount;
 		const totalRevenue = posRevenue + shopeeRevenue;
-		const totalCogs = Number(cogsData.total_cogs) || 0;
+		const totalCogs = posCogs + shopeeCogs;
 		const grossProfit = totalRevenue - totalCogs;
 		const grossProfitMargin = totalRevenue > 0 ? Math.round((grossProfit / totalRevenue) * 1000) / 10 : 0;
 		const avgBasketSize = totalTransactions > 0 ? Math.round(totalRevenue / totalTransactions) : 0;
@@ -361,6 +378,8 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 			period,
 			dateFrom,
 			dateTo,
+			posMetrics: { revenue: posRevenue, count: posCount, cogs: posCogs, profit: posProfit, margin: posMargin, avg: posAvg },
+			shopeeMetrics: { revenue: shopeeRevenue, count: shopeeCount, cogs: shopeeCogs, profit: shopeeProfit, margin: shopeeMargin, avg: shopeeAvg },
 			totalTransactions,
 			totalRevenue,
 			totalCogs,
