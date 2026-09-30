@@ -34,7 +34,9 @@ export const POST: RequestHandler = async ({ request }) => {
 						sku: i.item_sku || '',
 						name: i.item_name || '',
 						qty: i.model_quantity_purchased || 0,
-						price: i.model_discounted_price || 0
+						price: i.model_discounted_price || 0,
+						shopee_item_id: i.item_id,
+						shopee_model_id: i.model_id
 					}));
 
 					await createShopeeOrder({

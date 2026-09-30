@@ -8,7 +8,7 @@
 	let isAutoMapping = $state(false);
 	let isSubmitting = $state<string | null>(null);
 
-	let mappedShopeeIds = $derived(data.localProducts.map(p => Number(p.shopee_item_id)).filter(id => id > 0));
+	let mappedShopeeIds = $derived(data.localProducts.map((p: any) => Number(p.shopee_item_id)).filter((id: any) => id > 0));
 
 	function formatCurrency(val: number) {
 		return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
@@ -112,7 +112,7 @@
 												onchange={() => document.getElementById(`btn-${lp.id}`)?.click()}
 											>
 												<option value="">-- Belum Ditautkan (Tidak Sync) --</option>
-												{#each data.shopeeProducts.filter(sp => Number(lp.shopee_item_id) === sp.item_id || !mappedShopeeIds.includes(sp.item_id)) as sp}
+												{#each data.shopeeProducts.filter((sp: any) => Number(lp.shopee_item_id) === sp.item_id || !mappedShopeeIds.includes(sp.item_id)) as sp}
 													<option value={sp.item_id} selected={Number(lp.shopee_item_id) === sp.item_id}>
 														Shopee: {sp.item_name.substring(0, 90)}{sp.item_name.length > 90 ? '...' : ''} (SKU: {sp.item_sku || '-'})
 													</option>

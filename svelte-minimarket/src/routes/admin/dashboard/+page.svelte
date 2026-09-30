@@ -374,12 +374,12 @@
 					<td>Rata-rata Basket Size</td>
 				</tr>
 				<tr>
-					<td class="kpi-value">${formatCurrency(m.revenue)}</td>
-					<td class="kpi-value">${formatCurrency(m.cogs)}</td>
-					<td class="kpi-value" style="color: #059669;">${formatCurrency(m.profit)}</td>
-					<td class="kpi-value">${m.margin}%</td>
-					<td class="kpi-value text-center">${m.count} Transaksi</td>
-					<td class="kpi-value">${formatCurrency(m.avg)}</td>
+					<td class="kpi-value">${formatCurrency(m?.revenue || 0)}</td>
+					<td class="kpi-value">${formatCurrency(m?.cogs || 0)}</td>
+					<td class="kpi-value" style="color: #059669;">${formatCurrency(m?.profit || 0)}</td>
+					<td class="kpi-value">${m?.margin || 0}%</td>
+					<td class="kpi-value text-center">${m?.count || 0} Transaksi</td>
+					<td class="kpi-value">${formatCurrency(m?.avg || 0)}</td>
 				</tr>
 			</table>
 
@@ -660,11 +660,11 @@
 					</div>
 				</div>
 				<div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
-					{formatCurrency(m.revenue)}
+					{formatCurrency(m?.revenue || 0)}
 				</div>
 			</div>
 			<div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-				<span>Total dari <strong>{m.count}</strong> {metricTab === 'shopee' ? 'pesanan' : 'transaksi'}</span>
+				<span>Total dari <strong>{m?.count || 0}</strong> {metricTab === 'shopee' ? 'pesanan' : 'transaksi'}</span>
 				<span class="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded text-[11px]">{metricTab === 'all' ? 'Gabungan' : (metricTab === 'pos' ? 'Kasir' : 'Shopee')}</span>
 			</div>
 		</div>
@@ -680,7 +680,7 @@
 					</div>
 				</div>
 				<div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
-					{formatCurrency(m.cogs)}
+					{formatCurrency(m?.cogs || 0)}
 				</div>
 			</div>
 			<div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
@@ -700,13 +700,13 @@
 					</div>
 				</div>
 				<div class="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight font-mono">
-					{formatCurrency(m.profit)}
+					{formatCurrency(m?.profit || 0)}
 				</div>
 			</div>
 			<div class="mt-3 pt-3 border-t border-emerald-100 flex items-center justify-between text-xs">
 				<span class="text-slate-600">Margin Keuntungan:</span>
 				<span class="font-extrabold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-full text-xs font-mono">
-					{m.margin}%
+					{m?.margin || 0}%
 				</span>
 			</div>
 		</div>
@@ -722,7 +722,7 @@
 					</div>
 				</div>
 				<div class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
-					{formatCurrency(m.avg)}
+					{formatCurrency(m?.avg || 0)}
 				</div>
 			</div>
 			<div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
@@ -1241,26 +1241,26 @@
 					<div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
 						<div class="p-3 bg-slate-50 border border-slate-300 rounded-lg">
 							<span class="text-[10px] font-bold text-slate-500 uppercase block">Total Omset Kotor</span>
-							<span class="text-base font-black font-mono text-slate-900">{formatCurrency(m.revenue)}</span>
-							<span class="text-[10px] text-slate-500 block mt-0.5">{m.count} Total Transaksi</span>
+							<span class="text-base font-black font-mono text-slate-900">{formatCurrency(m?.revenue || 0)}</span>
+							<span class="text-[10px] text-slate-500 block mt-0.5">{m?.count || 0} Total Transaksi</span>
 						</div>
 
 						<div class="p-3 bg-slate-50 border border-slate-300 rounded-lg">
 							<span class="text-[10px] font-bold text-slate-500 uppercase block">Total Modal Pokok (HPP)</span>
-							<span class="text-base font-black font-mono text-slate-800">{formatCurrency(m.cogs)}</span>
+							<span class="text-base font-black font-mono text-slate-800">{formatCurrency(m?.cogs || 0)}</span>
 							<span class="text-[10px] text-slate-500 block mt-0.5">Modal Belanja Supplier</span>
 						</div>
 
 						<div class="p-3 bg-emerald-50 border border-emerald-300 rounded-lg">
 							<span class="text-[10px] font-bold text-emerald-800 uppercase block">Laba Bersih Kotor</span>
-							<span class="text-base font-black font-mono text-emerald-700">{formatCurrency(m.profit)}</span>
+							<span class="text-base font-black font-mono text-emerald-700">{formatCurrency(m?.profit || 0)}</span>
 							<span class="text-[10px] font-bold text-emerald-800 block mt-0.5">Cuan Bersih Penjualan</span>
 						</div>
 
 						<div class="p-3 bg-blue-50 border border-blue-300 rounded-lg">
 							<span class="text-[10px] font-bold text-blue-800 uppercase block">Gross Profit Margin (GPM)</span>
-							<span class="text-base font-black font-mono text-blue-700">{m.margin}%</span>
-							<span class="text-[10px] text-blue-800 block mt-0.5">Basket: {formatCurrency(m.avg)}</span>
+							<span class="text-base font-black font-mono text-blue-700">{m?.margin || 0}%</span>
+							<span class="text-[10px] text-blue-800 block mt-0.5">Basket: {formatCurrency(m?.avg || 0)}</span>
 						</div>
 					</div>
 				</div>
@@ -1294,8 +1294,8 @@
 							</tr>
 							<tr class="bg-slate-100 font-black">
 								<td class="p-2 border-r border-slate-300">TOTAL GABUNGAN</td>
-								<td class="p-2 text-center border-r border-slate-300">{m.count} Transaksi</td>
-								<td class="p-2 text-right font-mono border-r border-slate-300">{formatCurrency(m.revenue)}</td>
+								<td class="p-2 text-center border-r border-slate-300">{m?.count || 0} Transaksi</td>
+								<td class="p-2 text-right font-mono border-r border-slate-300">{formatCurrency(m?.revenue || 0)}</td>
 								<td class="p-2 text-center">100%</td>
 							</tr>
 						</tbody>
