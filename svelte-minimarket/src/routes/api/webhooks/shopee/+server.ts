@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './';
-import { createShopeeOrder, updateShopeeOrderStatus, cancelShopeeOrder, callShopeeApi } from '/server/shopee-service';
-import { query } from '/server/db';
+import type { RequestHandler } from './$types';
+import { createShopeeOrder, updateShopeeOrderStatus, cancelShopeeOrder, callShopeeApi } from '$lib/server/shopee-service';
+import { query } from '$lib/server/db';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
@@ -46,18 +46,18 @@ export const POST: RequestHandler = async ({ request }) => {
 						items: items
 					});
 					
-					console.log(✅ [WEBHOOK SHOPEE] Pesanan  berhasil disimpan & stok dipotong.);
+					console.log(`✅ [WEBHOOK SHOPEE] Pesanan ${orderSn} berhasil disimpan & stok dipotong.`);
 				}
 			} else {
 				// Pesanan sudah ada, tinggal update status
 				if (newStatus === 'CANCELLED') {
 					await cancelShopeeOrder(orderSn);
-					console.log(✅ [WEBHOOK SHOPEE] Pesanan  dibatalkan & stok dikembalikan.);
+					console.log(`✅ [WEBHOOK SHOPEE] Pesanan ${orderSn} dibatalkan & stok dikembalikan.`);
 				} else if (newStatus) {
 					// Jika ada nomor resi dari payload webhook (tracking_no_push biasanya code = 4, tapi kadang ikut di 3)
 					const trackingNo = data?.tracking_no || body.tracking_number;
 					await updateShopeeOrderStatus(orderSn, newStatus, trackingNo);
-					console.log(✅ [WEBHOOK SHOPEE] Status pesanan  diubah ke .);
+					console.log(`✅ [WEBHOOK SHOPEE] Status pesanan ${orderSn} diubah ke ${newStatus}.`);
 				}
 			}
 			return json({ success: true, message: 'Push Code 3 diproses.' });
@@ -69,7 +69,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			const trackingNo = data?.tracking_no;
 			if (orderSn && trackingNo) {
 				await updateShopeeOrderStatus(orderSn, 'READY_TO_SHIP', trackingNo);
-				console.log(✅ [WEBHOOK SHOPEE] Resi  tersimpan untuk .);
+				console.log(`✅ [WEBHOOK SHOPEE] Resi ${trackingNo} tersimpan untuk ${orderSn}.`);
 			}
 			return json({ success: true, message: 'Push Code 4 diproses.' });
 		}
