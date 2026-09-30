@@ -133,40 +133,30 @@ export const actions: Actions = {
 			}
 			
 			let newOrdersCount = 0;
+			const { createShopeeOrder } = await import('$lib/server/shopee-service');
 			
 			// Upsert to DB
 			for (const o of detailRes.order_list) {
 				// Cek apakah sudah ada
 				const existing = await query(`SELECT id FROM shopee_orders WHERE order_sn = $1`, [o.order_sn]);
 				if (existing.length === 0) {
-					// Insert new order
-										const itemList = o.item_list || [];
+					const itemList = o.item_list || [];
 					const items = itemList.map((i: any) => ({
-						product_id: null,
 						sku: i.item_sku || '',
 						name: i.item_name || '',
 						qty: i.model_quantity_purchased || 0,
 						price: i.model_discounted_price || 0
 					}));
 					
-										await query(
-						`INSERT INTO shopee_orders (
-							order_sn, store_id, buyer_username, order_status, shipping_carrier,
-							tracking_number, total_amount, shopee_escrow_amount, items,
-							shopee_created_at
-						) VALUES ($1, '11111111-1111-1111-1111-111111111111', $2, $3, $4, $5, $6, $7, $8, TO_TIMESTAMP($9))`,
-						[
-							o.order_sn,
-							o.buyer_username || o.buyer_user_id || 'shopee_user',
-							o.order_status || 'UNKNOWN',
-							o.shipping_carrier || 'Reguler',
-							o.tracking_no || '',
-							o.total_amount || 0,
-							o.estimated_shipping_fee || 0,
-							JSON.stringify(items),
-							o.create_time || Math.floor(Date.now() / 1000)
-						]
-					);
+					await createShopeeOrder({
+						order_sn: o.order_sn,
+						buyer_username: o.buyer_username || o.buyer_user_id || 'shopee_user',
+						shipping_carrier: o.shipping_carrier || 'Reguler',
+						tracking_number: o.tracking_no || '',
+						total_amount: o.total_amount || 0,
+						items: items
+					});
+					
 					newOrdersCount++;
 				}
 			}
