@@ -3,7 +3,10 @@ import re
 with open('src/routes/admin/shopee/mapping/+page.svelte', 'r', encoding='utf-8') as f:
     content = f.read()
 
-old_select = r'''<select\s+name=\"shopee_item_id\"[^>]*>\s*<option value=\"\">-- Belum Ditautkan \(Tidak Sync\) --</option>.*?<\/select>'''
+start_tag = '<select\n\t\t\t\t\t\t\t\t\t\t\t\tname="shopee_item_id"'
+
+# Use a simpler regex
+old_select = r'<select\s+name="shopee_item_id".*?</select>'
 
 new_select = '''<select
 												name=\"shopee_mapping\"
@@ -29,6 +32,7 @@ new_select = '''<select
 											</select>'''
 
 content = re.sub(old_select, new_select, content, flags=re.DOTALL)
+
 with open('src/routes/admin/shopee/mapping/+page.svelte', 'w', encoding='utf-8') as f:
     f.write(content)
-print('Svelte patched')
+print('Patched successfully')

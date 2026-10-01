@@ -75,14 +75,23 @@ export const actions: Actions = {
 	mapProduct: async ({ request }) => {
 		const data = await request.formData();
 		const localId = String(data.get('local_id'));
-		const shopeeItemId = data.get('shopee_item_id') ? Number(data.get('shopee_item_id')) : null;
+		const mappingVal = data.get('shopee_mapping') ? String(data.get('shopee_mapping')) : '';
+		
+		let shopeeItemId = null;
+		let shopeeModelId = null;
+		
+		if (mappingVal && mappingVal.includes('|')) {
+			const parts = mappingVal.split('|');
+			shopeeItemId = Number(parts[0]);
+			shopeeModelId = Number(parts[1]);
+		}
 		
 		if (!localId) return { success: false, message: 'ID Lokal tidak valid' };
 
 		try {
 			await query(
-				`UPDATE products SET shopee_item_id = $1, updated_at = NOW() WHERE id = $2`,
-				[shopeeItemId, localId]
+				`UPDATE products SET shopee_item_id = $1, shopee_model_id = $2, updated_at = NOW() WHERE id = $3`,
+				[shopeeItemId, shopeeModelId, localId]
 			);
 			
 			// Jika berhasil ditautkan ke Shopee (bukan dilepas tautannya), langsung tembak stok lokal ke Shopee!
