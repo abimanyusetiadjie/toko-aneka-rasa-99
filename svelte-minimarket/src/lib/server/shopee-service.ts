@@ -47,6 +47,8 @@ export interface CreateShopeeOrderInput {
 		name: string;
 		qty: number;
 		price: number;
+		shopee_item_id?: number | string;
+		shopee_model_id?: number | string;
 	}[];
 }
 
@@ -113,14 +115,42 @@ export async function createShopeeOrder(input: CreateShopeeOrderInput): Promise<
 			const subtotal = qty * price;
 			totalAmount += subtotal;
 
-			// Cari produk di database berdasarkan SKU atau Nama
-			let prodRes = await client.query(
-				`SELECT id, sku, name, stock, base_hpp, price FROM products WHERE sku = $1 OR name = $2 LIMIT 1 FOR UPDATE`,
-				[itm.sku || '', itm.name]
-			);
+			let prodRes: any = { rows: [] };
+			
+			// PRIORITAS 1: Cari produk di database berdasarkan mapping Shopee Varian (Model ID)
+			if (itm.shopee_model_id && Number(itm.shopee_model_id) > 0) {
+				prodRes = await client.query(
+					`SELECT id, sku, name, stock, base_hpp, price FROM products WHERE shopee_item_id = $1 AND shopee_model_id = $2 LIMIT 1 FOR UPDATE`,
+					[String(itm.shopee_item_id), String(itm.shopee_model_id)]
+				);
+			}
 
-			// Fallback: cari pakai ILIKE jika belum persis
-			if (prodRes.rows.length === 0) {
+			// PRIORITAS 2: Cari produk berdasarkan mapping Shopee Induk (jika tidak ketemu pakai model)
+			if (prodRes.rows.length === 0 && itm.shopee_item_id) {
+				prodRes = await client.query(
+					`SELECT id, sku, name, stock, base_hpp, price FROM products WHERE shopee_item_id = $1 LIMIT 1 FOR UPDATE`,
+					[String(itm.shopee_item_id)]
+				);
+			}
+
+			// PRIORITAS 3: Cari produk berdasarkan SKU persis (jika mapping belum di-set)
+			if (prodRes.rows.length === 0 && itm.sku) {
+				prodRes = await client.query(
+					`SELECT id, sku, name, stock, base_hpp, price FROM products WHERE sku = $1 LIMIT 1 FOR UPDATE`,
+					[itm.sku]
+				);
+			}
+
+			// PRIORITAS 4: Cari produk berdasarkan Nama persis
+			if (prodRes.rows.length === 0 && itm.name) {
+				prodRes = await client.query(
+					`SELECT id, sku, name, stock, base_hpp, price FROM products WHERE name = $1 LIMIT 1 FOR UPDATE`,
+					[itm.name]
+				);
+			}
+			
+			// PRIORITAS 5: Fallback pencarian fuzzy (ILIKE)
+			if (prodRes.rows.length === 0 && itm.name) {
 				prodRes = await client.query(
 					`SELECT id, sku, name, stock, base_hpp, price FROM products WHERE name ILIKE $1 LIMIT 1 FOR UPDATE`,
 					[`%${itm.name.slice(0, 10)}%`]
