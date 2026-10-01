@@ -121,7 +121,7 @@
 																</option>
 															{/each}
 														</optgroup>
-													{#else}
+													{:else}
 														<option value="{sp.item_id}|0" selected={Number(lp.shopee_item_id) === sp.item_id && (!lp.shopee_model_id || lp.shopee_model_id === 0)}>
 															Shopee: {sp.item_name.substring(0, 70)}{sp.item_name.length > 70 ? '...' : ''} (SKU: {sp.item_sku || '-'})
 														</option>
