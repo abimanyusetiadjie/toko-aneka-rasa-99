@@ -42,15 +42,26 @@ export const GET: RequestHandler = async () => {
 			}, 'GET');
 			
 			if (baseInfoRes && baseInfoRes.item_list) {
-				shopeeProducts.push(...baseInfoRes.item_list.map((item: any) => ({
-					item_id: item.item_id,
-					item_name: item.item_name,
-					has_model: item.has_model,
-					models: item.has_model ? item.model_list.map((m: any) => ({
-						model_id: m.model_id,
-						model_name: m.model_name
-					})) : []
-				})));
+				for (const item of baseInfoRes.item_list) {
+					let models = [];
+					if (item.has_model) {
+						// Ambil model list dari API khusus model
+						const modelRes = await callShopeeApi('/api/v2/product/get_model_list', { item_id: item.item_id }, 'GET');
+						if (modelRes && modelRes.model) {
+							models = modelRes.model.map((m: any) => ({
+								model_id: m.model_id,
+								model_name: m.model_name
+							}));
+						}
+					}
+					
+					shopeeProducts.push({
+						item_id: item.item_id,
+						item_name: item.item_name,
+						has_model: item.has_model,
+						models: models
+					});
+				}
 			}
 		}
 
