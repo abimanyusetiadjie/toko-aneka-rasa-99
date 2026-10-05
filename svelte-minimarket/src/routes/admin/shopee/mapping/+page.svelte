@@ -8,7 +8,11 @@
 	let isAutoMapping = $state(false);
 	let isSubmitting = $state<string | null>(null);
 
-	let mappedShopeeIds = $derived(data.localProducts.map((p: any) => Number(p.shopee_item_id)).filter((id: any) => id > 0));
+	let allMappedPairs = $derived(
+		data.localProducts
+			.filter((lp: any) => lp.shopee_item_id)
+			.map((lp: any) => `${lp.shopee_item_id}|${lp.shopee_model_id || 0}`)
+	);
 
 	function formatCurrency(val: number) {
 		return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
@@ -116,13 +120,21 @@
 													{#if sp.has_model && sp.models && sp.models.length > 0}
 														<optgroup label={sp.item_name}>
 															{#each sp.models as mod}
-																<option value="{sp.item_id}|{mod.model_id}" selected={Number(lp.shopee_item_id) === sp.item_id && Number(lp.shopee_model_id) === mod.model_id}>
+																<option 
+																	value="{sp.item_id}|{mod.model_id}" 
+																	selected={Number(lp.shopee_item_id) === sp.item_id && Number(lp.shopee_model_id) === mod.model_id}
+																	hidden={allMappedPairs.includes(`${sp.item_id}|${mod.model_id}`) && !(Number(lp.shopee_item_id) === sp.item_id && Number(lp.shopee_model_id) === mod.model_id)}
+																>
 																	Varian: {mod.model_name} (SKU: {mod.model_sku || '-'})
 																</option>
 															{/each}
 														</optgroup>
 													{:else}
-														<option value="{sp.item_id}|0" selected={Number(lp.shopee_item_id) === sp.item_id && (!lp.shopee_model_id || lp.shopee_model_id === 0)}>
+														<option 
+															value="{sp.item_id}|0" 
+															selected={Number(lp.shopee_item_id) === sp.item_id && (!lp.shopee_model_id || lp.shopee_model_id === 0)}
+															hidden={allMappedPairs.includes(`${sp.item_id}|0`) && !(Number(lp.shopee_item_id) === sp.item_id && (!lp.shopee_model_id || lp.shopee_model_id === 0))}
+														>
 															Shopee: {sp.item_name.substring(0, 70)}{sp.item_name.length > 70 ? '...' : ''} (SKU: {sp.item_sku || '-'})
 														</option>
 													{/if}
