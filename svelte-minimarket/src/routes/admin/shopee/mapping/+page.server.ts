@@ -57,7 +57,11 @@ export const load: PageServerLoad = async () => {
 				})));
 			}
 		}
-return {
+		
+		// Sort alphabetically to prevent UI jumping when Shopee API order changes due to stock updates
+		shopeeProducts.sort((a, b) => a.item_name.localeCompare(b.item_name));
+
+		return {
 			localProducts,
 			shopeeProducts
 		};
