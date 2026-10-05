@@ -352,7 +352,7 @@ export const GET = async () => {
 		// Local: kue semprong arwama -> Shopee: Kue gamerose mini 160 gram
 		await query(`UPDATE products SET shopee_item_id = $1, shopee_model_id = NULL, updated_at = NOW() WHERE id = $2`, [12339194772, '56b64ead-b334-455a-aa4f-213057330440']);
 		count++;
-		return json({ success: true, message: Berhasil menautkan  produk! });
+		return json({ success: true, message: `Berhasil menautkan ${count} produk!` });
 	} catch (err: any) {
 		return json({ error: err.message });
 	}
