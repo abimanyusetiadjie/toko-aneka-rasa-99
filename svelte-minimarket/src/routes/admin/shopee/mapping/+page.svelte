@@ -113,7 +113,6 @@
 											<select
 												name="shopee_mapping"
 												class="block w-full min-w-[350px] max-w-xl rounded-lg border-0 py-1.5 pl-3 pr-8 text-slate-900 ring-1 ring-inset {lp.shopee_item_id ? 'ring-emerald-300 bg-emerald-50' : 'ring-slate-300 bg-white'} focus:ring-2 focus:ring-orange-600 sm:text-sm sm:leading-6"
-												onchange={() => document.getElementById(`btn-${lp.id}`)?.click()}
 											>
 												<option value="">-- Belum Ditautkan (Tidak Sync) --</option>
 												{#each data.shopeeProducts as sp}
@@ -140,8 +139,10 @@
 													{/if}
 												{/each}
 											</select>
+											<button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-4 rounded-lg text-sm transition-colors shadow-sm">
+												{isSubmitting === lp.id ? '...' : 'Simpan'}
+											</button>
 										</div>
-										<button type="submit" id="btn-{lp.id}" class="hidden">Submit</button>
 									</form>
 								</td>
 								<td class="px-4 py-3 text-right">
