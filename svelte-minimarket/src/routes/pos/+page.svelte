@@ -1375,7 +1375,6 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 	}
 
 	// Sprint 3: Auto-logout (AFK Timer 15 menit) - DINONAKTIFKAN
-	let idleTimeout: ReturnType<typeof setTimeout>;
 	function resetIdleTimer() {
 		// timer dinonaktifkan
 	}
@@ -1538,7 +1537,6 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 	onDestroy(() => {
 		scannerDriver?.detach();
 		stopCameraScan();
-		if (idleTimeout) clearTimeout(idleTimeout);
 		if (posSseSource) posSseSource.close();
 		if (shopeePollingInterval) clearInterval(shopeePollingInterval);
 	});
