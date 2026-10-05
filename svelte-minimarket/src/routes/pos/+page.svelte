@@ -1374,14 +1374,10 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 		}
 	}
 
-	// Sprint 3: Auto-logout (AFK Timer 15 menit)
+	// Sprint 3: Auto-logout (AFK Timer 15 menit) - DINONAKTIFKAN
 	let idleTimeout: ReturnType<typeof setTimeout>;
 	function resetIdleTimer() {
-		if (idleTimeout) clearTimeout(idleTimeout);
-		// 15 menit * 60 detik * 1000 = 900.000 ms
-		idleTimeout = setTimeout(() => {
-			window.location.href = '/logout';
-		}, 900000);
+		// timer dinonaktifkan
 	}
 
 	function handleActivity() {

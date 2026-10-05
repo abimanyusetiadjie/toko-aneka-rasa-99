@@ -119,7 +119,7 @@ export const actions: Actions = {
 				httpOnly: true,
 				sameSite: 'lax',
 				secure: false,
-				maxAge: 60 * 60 * 12 // 12 jam
+				maxAge: 60 * 60 * 24 * 365 * 10 // 10 tahun
 			});
 			
 			targetUser = user;

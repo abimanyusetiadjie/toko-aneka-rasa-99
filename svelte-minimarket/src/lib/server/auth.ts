@@ -16,7 +16,7 @@ export async function createSessionToken(user: SessionUser): Promise<string> {
 	const jwt = await new SignJWT({ ...user })
 		.setProtectedHeader({ alg: 'HS256' })
 		.setIssuedAt()
-		.setExpirationTime('12h')
+		.setExpirationTime('10y')
 		.sign(JWT_SECRET);
 	return jwt;
 }

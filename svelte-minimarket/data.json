@@ -1,0 +1,2439 @@
+{
+  "PLEASE_COPY_PASTE_THIS_TO_AI": "Yes, copy everything below and send to the AI chat",
+  "local_unmapped": [
+    {
+      "id": "56676484-5a3b-419d-9120-b0c8423ca1dd",
+      "name": "Abon Ikan Belincis"
+    },
+    {
+      "id": "07b28ac3-f9dc-4769-b0da-8d154ae794c5",
+      "name": "Abon Ikan Ciu/selar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000048",
+      "name": "Amplang @100g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000004",
+      "name": "Asam kuning Bangka spesial @ 250 gram"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000059",
+      "name": "Asem kuning Bangka spesial 250 gram"
+    },
+    {
+      "id": "66314614-6194-4d48-8548-c365536d1ed4",
+      "name": "BUBLE WRAP KPK 3KG"
+    },
+    {
+      "id": "45940ea3-a49b-44a2-82fb-2e0f8d908c92",
+      "name": "Basreng@140g"
+    },
+    {
+      "id": "becb08ae-8563-46c8-9d5a-21bbfb711bb5",
+      "name": "Bong Li Piang 89"
+    },
+    {
+      "id": "254d963c-b090-4b26-af6e-07d52b56f405",
+      "name": "Bong Li Piang Tobowali"
+    },
+    {
+      "id": "ecd512aa-d7d9-41be-8b04-941cecc20ed7",
+      "name": "BubbleWrap 1m Hitam/Putih"
+    },
+    {
+      "id": "712f6c07-6eb6-4680-b002-76f508b8a3d7",
+      "name": "BubbleWrap KPK  3.1kg Hitam"
+    },
+    {
+      "id": "4e0c1b82-fec3-4e92-89ba-03f66015993e",
+      "name": "BubbleWrap KPK  3.1kg Putih"
+    },
+    {
+      "id": "89c112a9-297f-48c5-8bda-d4d695d41b18",
+      "name": "BubbleWrap KPK  3.3kg Hitam"
+    },
+    {
+      "id": "3a956d91-d540-41db-822a-fb204b52dce6",
+      "name": "BubbleWrap KPK 1/2 Hitam 3.3kg"
+    },
+    {
+      "id": "2694255f-da5d-45f8-82f1-a5727e29774c",
+      "name": "BubbleWrap KPK 1/2 Putih 3.1kg"
+    },
+    {
+      "id": "586f96fa-9721-4080-a98e-eddccb54afe7",
+      "name": "BubbleWrap KPK Hitam 3,1kg"
+    },
+    {
+      "id": "ab7b5874-f00e-4c9b-8f52-edf49a3df591",
+      "name": "BubbleWrap KPM 3.3kg HITAM"
+    },
+    {
+      "id": "c5ef81a8-9c1f-496c-86a2-2def05dc39d7",
+      "name": "BubbleWrap NiagaMAS  3kg Hitam"
+    },
+    {
+      "id": "d16c95e0-0351-4c6a-871d-68b71c126c34",
+      "name": "Dahkota kerupuk  bawang warna warni"
+    },
+    {
+      "id": "41772730-1142-4ef0-a3d2-4e738cf13435",
+      "name": "Emping Besar Manis Pedas 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000061",
+      "name": "Emping Kecil Manis Pedas 250g"
+    },
+    {
+      "id": "b2dbf278-2a90-4eb4-82dd-f3f0643e5db4",
+      "name": "Engpiang Goreng"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000051",
+      "name": "Getas 2 Kunci Panjang@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000054",
+      "name": "Getas AMC Bulat@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000053",
+      "name": "Getas AMC Panjang@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000049",
+      "name": "Getas CAP Ikan Tenggiri@200g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000065",
+      "name": "Getas Lonceng Mas Bulat@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000064",
+      "name": "Getas Lonceng Mas Panjang@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000067",
+      "name": "Getas Obor Biru Bulat@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000066",
+      "name": "Getas Obor Biru Panjang@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000063",
+      "name": "Getas Obor Merah Bulat@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000062",
+      "name": "Getas Obor Merah Panjang@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000057",
+      "name": "Getas S Sari Laut Bulat@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000069",
+      "name": "Gula Aren / Gula Kabung Bangka 1 Turus Isi 5 Butir"
+    },
+    {
+      "id": "9605d025-4cb7-4b68-bd7b-7e42b0276893",
+      "name": "Gula Aren 1pcs"
+    },
+    {
+      "id": "48e96c98-389d-4326-ac16-4aa7a6d50aee",
+      "name": "HANOAMAN UDANG merah"
+    },
+    {
+      "id": "5ffaa1c3-222d-4441-baf9-081cb99cf0e2",
+      "name": "Hanoman Sari Udang Orange Tua 1 ball 5 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000071",
+      "name": "Indomie Kaldu Udang Bangka"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000072",
+      "name": "Kacang Atom SP @250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000001",
+      "name": "Kacang Atom SP @500g"
+    },
+    {
+      "id": "4fbf224a-2e1f-4884-87ea-76803444b398",
+      "name": "Kacang Bawang @250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000073",
+      "name": "Kacang Bawang @500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000082",
+      "name": "Kacang Medan SP 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000078",
+      "name": "Kacang Mede goreng super 250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000081",
+      "name": "Kacang medan SP @250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000085",
+      "name": "Kecap Asin Kuda Terbang@300ml"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000087",
+      "name": "Kecap Asin Rose 600ml"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000089",
+      "name": "Kecap Asin SS Botol Besar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000088",
+      "name": "Kecap Gajah Besar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000014",
+      "name": "Kecap Gajah Biasa kecil"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000091",
+      "name": "Kecap Istimewa cap Siong/Gajah kecil"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000086",
+      "name": "Kecap Mawar Kecil"
+    },
+    {
+      "id": "8fb72607-55ab-42a4-981f-f9db58e69cd5",
+      "name": "Kembang Tahu / Fucuk"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000033",
+      "name": "Kemplang Goreng Cumi RJS"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000036",
+      "name": "Kemplang Goreng Ikan Ciu"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000034",
+      "name": "Kemplang Goreng Ikan RJS"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000035",
+      "name": "Kemplang Goreng Udang RJS"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000029",
+      "name": "Kemplang Koin cumi San Crispy"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000028",
+      "name": "Kemplang Koin ikan San Crispy"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000101",
+      "name": "Kemplang Koin udang San Crispy"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000043",
+      "name": "Kemplang MM Bulat"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000042",
+      "name": "Kemplang MM Kotak"
+    },
+    {
+      "id": "aabb7551-d4bb-4378-a0b4-425c4ed05c6e",
+      "name": "Kemplang Mentah Cumi Bangka 500g"
+    },
+    {
+      "id": "4b4e3064-c8c8-4b49-8c0a-c59829769078",
+      "name": "Kemplang Mentah Ikan Bangka 250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000102",
+      "name": "Kemplang Mentah Ikan Bangka 500g"
+    },
+    {
+      "id": "11b53335-9321-4faf-bbd9-b9804382ba69",
+      "name": "Kemplang Mentah Udang Bangka 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000031",
+      "name": "Kemplang OVN Cumi RJS"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000032",
+      "name": "Kemplang OVN Ikan RJS"
+    },
+    {
+      "id": "68240132-740c-4c33-beb2-e0baf6e28114",
+      "name": "Kemplang OVN Sambal Terasi"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000030",
+      "name": "Kemplang OVN Udang RJS"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000041",
+      "name": "Kemplang P Sari Laut Besar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000039",
+      "name": "Kemplang Panggang 323"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000038",
+      "name": "Kemplang Panggang 33 Besar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000037",
+      "name": "Kemplang Panggang 33 Kecil"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000040",
+      "name": "Kemplang Panggang Sanjaya Besar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000025",
+      "name": "Kemplang goreng pasir Achon Bantet"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000027",
+      "name": "Kemplang goreng pasir Achon Besar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000026",
+      "name": "Kemplang goreng pasir Achon Kecil"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000024",
+      "name": "Kemplang goreng pasir Asui Kecil"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000022",
+      "name": "Kemplang goreng pasir Asui Lebar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000016",
+      "name": "Kemplang goreng pasir Tjokro Hijau"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000117",
+      "name": "Keripik Pangsit Goreng@200g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000118",
+      "name": "Keripik Pisang Asin"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000119",
+      "name": "Keripik Pisang Manis@150g"
+    },
+    {
+      "id": "3a248fb5-8f0e-4fe8-905c-58976e47114f",
+      "name": "Keripik Pisang Manis@200g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000120",
+      "name": "Keripik Singkong Balado berat 200 gram"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000121",
+      "name": "Keripik Singkong Original@200g"
+    },
+    {
+      "id": "5c9ccf6f-2fcf-4946-92a3-27d5ed04070f",
+      "name": "Keripik Sukun"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000002",
+      "name": "Keripik Tempe Kotak"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000122",
+      "name": "Keripik Tempe bulat"
+    },
+    {
+      "id": "ff36289e-be2d-424a-b28e-87821f38dc24",
+      "name": "Kerupuk  dakota Bawang Mentah Polos 1 ball 5 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000123",
+      "name": "Kerupuk / Kemplang Ikan Ampera 89 500g"
+    },
+    {
+      "id": "dbca4974-78ec-43e2-8d50-48b10f692558",
+      "name": "Kerupuk Bawang  Bibir mentah 1 ball berat 5 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000124",
+      "name": "Kerupuk Bawang Bentuk Kancing 1 Ball 5kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000127",
+      "name": "Kerupuk Bawang Bibir Mentah 3kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000131",
+      "name": "Kerupuk Bawang Mentah Polos 1 Ball 3kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000133",
+      "name": "Kerupuk Bawang Polos 250g"
+    },
+    {
+      "id": "c74d46f5-922b-446a-a075-88fe65747da3",
+      "name": "Kerupuk Hanoman Bawang Polos 5 kg"
+    },
+    {
+      "id": "9955dbed-1b5d-4e30-9773-3b0dd6993c47",
+      "name": "Kerupuk Hanoman Bibir 5 kg"
+    },
+    {
+      "id": "4ee09a50-3daf-496e-a3be-59dc9e85fb52",
+      "name": "Kerupuk Hanoman Sari Udang Orange Muda 5 kg"
+    },
+    {
+      "id": "4bd45333-bcb8-493b-8616-eedda063e599",
+      "name": "Kerupuk Hanoman Sari Udang Orange Tua 1 ball 5 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000137",
+      "name": "Kerupuk Jengkol Bulat 1 Ball 5kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000138",
+      "name": "Kerupuk Jengkol Bulat 1kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000143",
+      "name": "Kerupuk Jengkol Sisir 1kg"
+    },
+    {
+      "id": "e87615aa-b1dc-46e9-90b4-c360ddcb7b23",
+      "name": "Kerupuk Keriting Biasa Bangka@1kg"
+    },
+    {
+      "id": "b50bcd15-8ea2-414a-bdbf-1e6af9b5682c",
+      "name": "Kerupuk Keriting Biasa Bangka@250g"
+    },
+    {
+      "id": "b8a6a02d-f80a-4e6a-9ad1-b051aeb64c36",
+      "name": "Kerupuk Keriting Biasa Bangka@500g"
+    },
+    {
+      "id": "e5b91adb-4af8-4a69-9dea-9903dfa81ea9",
+      "name": "Kerupuk Keriting Kecil Bangka@250g"
+    },
+    {
+      "id": "f19ae23e-92ac-44c0-bf91-116ca8e1cd9a",
+      "name": "Kerupuk Keriting Kecil Bangka@500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000151",
+      "name": "Kerupuk Keriting Mawar Warna Warni Mentah 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000149",
+      "name": "Kerupuk Keriting Mawar Warna Warni mentah 5kg"
+    },
+    {
+      "id": "be1df03d-847f-4719-8ec7-0bbc5d136526",
+      "name": "Kerupuk Keriting Menta sedang  Palembang 250 gr"
+    },
+    {
+      "id": "df08b310-0c71-474c-8019-793653bf172d",
+      "name": "Kerupuk Keriting Mentah Palembang  5kg"
+    },
+    {
+      "id": "67ca53a0-0e6d-4720-9a98-9e2bbb600fef",
+      "name": "Kerupuk Keriting Mentah Palembang 1 kg"
+    },
+    {
+      "id": "37780267-a6fb-4e62-8a91-3f2ea34e73f4",
+      "name": "Kerupuk Keriting Mentah Palembang Mini 5 kg"
+    },
+    {
+      "id": "bf1c3fb6-89b4-4846-8def-580971ef8d87",
+      "name": "Kerupuk Keriting Mentah mini Palembang 250 gr"
+    },
+    {
+      "id": "287fcff3-7aa7-4789-b0c0-942bf82960f9",
+      "name": "Kerupuk Keriting ikan Mentah Palembang sedang 500 gr"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000152",
+      "name": "Kerupuk Keriting palembang  Mentah Ukuran Mini 1kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000153",
+      "name": "Kerupuk Keriting palembang Mentah Ukuran Mini 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000157",
+      "name": "Kerupuk Mentah Bangka Ikan  500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000158",
+      "name": "Kerupuk Mentah Bangka Super Mini Ikan Tenggiri 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000159",
+      "name": "Kerupuk Mentah Bangka Super Ukuran Mini Ikan Tenggiri 1kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000167",
+      "name": "Kerupuk Mentah Rasa Bawang Bentuk Kancing 1kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000171",
+      "name": "Kerupuk Mentah Sari Udang Warna Orange Tua 1 Ball 5kg"
+    },
+    {
+      "id": "2fef7769-c0e4-457f-bdc0-bbc6ab7a0e46",
+      "name": "Kerupuk Mentah Tersanjung 1 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000172",
+      "name": "Kerupuk Mentah Tersanjung 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000174",
+      "name": "Kerupuk Mie Kuning Mentah Ukuran Mini 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000175",
+      "name": "Kerupuk Mie Kuning Mentah Ukuran Sedang 1kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000176",
+      "name": "Kerupuk Mie Kuning Mentah Ukuran Sedang 500g"
+    },
+    {
+      "id": "d28ae9e5-5165-4425-a10c-0dda5b673b47",
+      "name": "Kerupuk Mie Kuning Mini 5 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000177",
+      "name": "Kerupuk Mie Kuning Ukuran Mini Mentah 1kg"
+    },
+    {
+      "id": "8f437db9-640e-4498-a1ee-c5dd7cd1c283",
+      "name": "Kerupuk Sari Udang  mentah warna Orange Muda 1 Kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000181",
+      "name": "Kerupuk Sari Udang Ampera 89 Warna Putih 1 Ball 5kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000179",
+      "name": "Kerupuk Sari Udang Ampera 89 warna  Putih 1kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000180",
+      "name": "Kerupuk Sari Udang Ampera 89 warna Putih 500gram"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000182",
+      "name": "Kerupuk Sari Udang Orange Tua dakota di repack 1kg"
+    },
+    {
+      "id": "7975c59b-eb0a-42fc-8ed2-5ca4c29cac69",
+      "name": "Kerupuk Sari Udang Warna Orange Muda Mentah 500 Gr"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000183",
+      "name": "Kerupuk Sari Udang warna Orange Tua di repack 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000140",
+      "name": "Kerupuk Sisir Warna 1 Ball 5kg"
+    },
+    {
+      "id": "dab3babd-dd1f-443f-a150-c22683abe6c3",
+      "name": "Kerupuk Tempe 1 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000186",
+      "name": "Kerupuk Tempe 250g"
+    },
+    {
+      "id": "6b4d0439-0203-4165-81b2-38ce0a94b29f",
+      "name": "Kerupuk Tempe 5 kg"
+    },
+    {
+      "id": "eb145fa7-dcc2-4bda-bff1-4a18aea01bd7",
+      "name": "Kerupuk Tempe 500 gr"
+    },
+    {
+      "id": "907e233f-e8a5-46e5-9496-1537a4502699",
+      "name": "Kerupuk Terasi Putih Berat 1 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000018",
+      "name": "Kerupuk VN Besar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000017",
+      "name": "Kerupuk VN kecil"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000189",
+      "name": "Kerupuk Warna Warni Bentuk Kepang / Rantai 500g"
+    },
+    {
+      "id": "8598e035-342f-41cc-9177-20e233732852",
+      "name": "Kerupuk Warna-Warni Bentuk Kepang/Rantai 1 kg"
+    },
+    {
+      "id": "9b03ae37-e6c4-4b5b-a7aa-7fb659fc8a46",
+      "name": "Kerupuk Warna-Warni Bentuk Kepang\\Rantai 1ball 5 kg"
+    },
+    {
+      "id": "e902c5cd-e8d0-422f-9676-e1b28cf4d975",
+      "name": "Kerupuk bawang mentah bentuk  Angka 8 1 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000134",
+      "name": "Kerupuk ikan item cap Rajawali"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000019",
+      "name": "Kerupuk ikan pancing besar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000144",
+      "name": "Kerupuk ikan pancing kecil"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000136",
+      "name": "Kerupuk ikan putih cap Rajawali"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000142",
+      "name": "Kerupuk jengkol sisir Warna Hitam berat 250 gram"
+    },
+    {
+      "id": "07c41754-d452-4218-b0ce-27a780449b75",
+      "name": "Kerupuk keriting  Mawar biasa  Putih 5 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000021",
+      "name": "Kerupuk keriting Sanjaya Besar"
+    },
+    {
+      "id": "60fe6a22-82fc-42bc-a49c-f2675416b8e6",
+      "name": "Kerupuk keriting Sanjaya Kecil"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000170",
+      "name": "Kerupuk mentah Sari Udang Warna Orange Muda mentah 1 Ball 5kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000165",
+      "name": "Kerupuk mentah putih bentuk lidah 1 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000162",
+      "name": "Kerupuk warna-warni  Bentuk Kepang/Rantai 250 gram"
+    },
+    {
+      "id": "b4cf4c22-8d94-4297-837a-747b86917632",
+      "name": "Kiamboi Merah"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000192",
+      "name": "Kiamboi Putih"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000196",
+      "name": "Kopi Cap 1 Biru 250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000195",
+      "name": "Kopi Cap 1 Biru 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000199",
+      "name": "Kopi Cap 1 Premium"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000197",
+      "name": "Kopi Cap 1 Silver"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000193",
+      "name": "Kopi Kingkong Merah 200g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000194",
+      "name": "Kopi Kingkong Merah 450g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000010",
+      "name": "Kopi Kingkong Merah 70g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000009",
+      "name": "Kopi Kingkong hitam 200gram"
+    },
+    {
+      "id": "afb307a3-ec76-4a79-a7d1-9fe446f71222",
+      "name": "Kopi Kingkong hitam 400 grram"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000008",
+      "name": "Kopi Kingkong hitam 80 gram"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000201",
+      "name": "Kue Bangkit / Kue Rintak LN"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000007",
+      "name": "Kue Bangkit / Kue Rintak bravery"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000202",
+      "name": "Kue Bulan kose"
+    },
+    {
+      "id": "4abf072d-02f2-48e5-ba42-811572df4d6a",
+      "name": "Kue Cetak Satu"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000207",
+      "name": "Kue Sagon  Mr. Jo"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000208",
+      "name": "Kue Sempret  ED"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000200",
+      "name": "Kue angka 8 cap Anugrah"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000203",
+      "name": "Kue gamerose mini @160g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000006",
+      "name": "Kue gamerose mini @250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000205",
+      "name": "Kue masin 89@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000227",
+      "name": "Kuping Gajah@200gram"
+    },
+    {
+      "id": "7e7cd529-4041-4b97-b965-f18754fd3b2d",
+      "name": "LADA BUTIR"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000204",
+      "name": "Lapis Legit friend"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000212",
+      "name": "Madu Manis 1kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000011",
+      "name": "Madu Pahit 1kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000214",
+      "name": "Michang / Bipang / Cha Liau Bangka"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000216",
+      "name": "Pang Pang@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000215",
+      "name": "Pang Pang@500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000217",
+      "name": "Permen Gula Aren"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000218",
+      "name": "Permen Hack@14 Pcs"
+    },
+    {
+      "id": "36c47bbc-428a-45f7-9a13-ccd0db8a0198",
+      "name": "Permen warna-warni"
+    },
+    {
+      "id": "b7be2757-f8ad-4172-a422-8eb139095764",
+      "name": "Pilus Putih@160"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000221",
+      "name": "Roti Kering Gula Mr. Jo Rokerz Asli"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000222",
+      "name": "Rusip"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000236",
+      "name": "Sagu Tapioka Cap Kampung Tani kuning@500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000237",
+      "name": "Sagu Tapioka cap kampung tani@1 kg hijau"
+    },
+    {
+      "id": "1cf38a77-4f3d-42f2-8736-e7f8a11ec4ae",
+      "name": "Sambal Balado Super Pedas 72 300 ml"
+    },
+    {
+      "id": "abf0a67c-f07e-45da-8fa7-1d9df08e7782",
+      "name": "Sambal Super Pedas 72 @140ml"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000225",
+      "name": "Sikat Coklat Khas Bangka"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000228",
+      "name": "Spring Roll / Sumpia Udang 250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000229",
+      "name": "Spring Roll / Sumpia Udang 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000044",
+      "name": "Stik 99@200g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000046",
+      "name": "Stik JS@250g"
+    },
+    {
+      "id": "97e2b5c1-daca-4021-bfc9-03a23972c064",
+      "name": "Stik Jagung Bakar@160g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000047",
+      "name": "Stik Kuda Laut@250"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000045",
+      "name": "Stik SSS@250g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000233",
+      "name": "Stik balado"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000231",
+      "name": "Stik keju/telur gabus 160g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000234",
+      "name": "Tauco Bangka"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000235",
+      "name": "Teng Teng Kacang"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000238",
+      "name": "Terasi AB No. 1 Pulau Bangka 100g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000239",
+      "name": "Terasi AB No. 1 Pulau Bangka 500g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000005",
+      "name": "Terasi Bangka Toboali \"AMS\" 250 gram"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000240",
+      "name": "Terasi Bangka Toboali \"AMS\" 500 gram"
+    },
+    {
+      "id": "cebbb336-ee18-46f7-9366-47447629c808",
+      "name": "Terasi Bubuk AMS"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000242",
+      "name": "Terasi Panggang Piring Khas Bangka Cap Juwita"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000244",
+      "name": "Terasi Udang samudera jaya@100g"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000243",
+      "name": "Terasi Udang samudera jaya@225g"
+    },
+    {
+      "id": "db53a02b-b1c5-461b-9aab-f638e022fcc2",
+      "name": "getas  bulat cap 99"
+    },
+    {
+      "id": "84816cde-363d-47fe-a760-f828d74ece81",
+      "name": "getas sumber sari laut panjang 250 gr"
+    },
+    {
+      "id": "92a0ad9d-0f55-4fde-beb3-35b078c67ddf",
+      "name": "kecap gajah cap siong besar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000012",
+      "name": "kecap rusa besar"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000013",
+      "name": "kecap rusa kecil"
+    },
+    {
+      "id": "99938728-0e6b-4352-a80b-78b499d297c3",
+      "name": "kelubi besar"
+    },
+    {
+      "id": "b2f552de-2546-4207-b3cc-5e1f59a710ad",
+      "name": "kelubi kecil"
+    },
+    {
+      "id": "b1e171f6-ea68-4f2d-9985-fa2bc275791f",
+      "name": "kemplang bong han"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000015",
+      "name": "kemplang pasir 2 putera"
+    },
+    {
+      "id": "692e96bb-0471-4557-b514-c79bd97a1896",
+      "name": "kerupuk keriting mawar warna-warni memntah 500 gram"
+    },
+    {
+      "id": "db3e378c-ff7a-4fe8-8f07-acf5d57a65b0",
+      "name": "kerupuk keriting mawar warna-warni mentah 3 kg"
+    },
+    {
+      "id": "a9900000-0000-0000-0000-000000000191",
+      "name": "kerupuk/kempelang udang mentah Bangka 1 kg"
+    },
+    {
+      "id": "5d1851fe-22e8-4e88-9a90-eb94308e4647",
+      "name": "kerupuk/kemplang ikan ampera 89 1 kg"
+    },
+    {
+      "id": "bf69d042-3c85-40ec-96a2-7f92d19522a5",
+      "name": "kerupuk/kemplang ikan ampera 89 1 kg mini tebal"
+    },
+    {
+      "id": "c14609b6-e5b4-44dd-9b94-91dcfcf7a00f",
+      "name": "kerupuk/kemplang ikan ampera 89 5 kg"
+    },
+    {
+      "id": "9231debf-2064-4155-8560-bf2cbefa3623",
+      "name": "kerupuk/kemplang ikan ampera 89 5 kg mini tebal"
+    },
+    {
+      "id": "799ac16f-65f2-4295-8a90-148f2286b599",
+      "name": "kerupuk/kemplang ikan ampera 89 500 gr mini tebal (putih)"
+    },
+    {
+      "id": "88253d54-8fb3-4104-818a-8a3b9b431039",
+      "name": "kerupuk/kemplang sari udang mini 5 kg"
+    },
+    {
+      "id": "1bafa1c9-e667-450c-b487-4f6fb0ab64c7",
+      "name": "kerupuk/kemplang udang ampera 89 1 kg mini tebal (putih)"
+    },
+    {
+      "id": "0df11b10-2d00-4beb-9d72-e1d8d6d99795",
+      "name": "kerupuk/kemplang udang ampera 89 250 gr mini tebal"
+    },
+    {
+      "id": "3f5c7418-2c46-40ea-b784-4e1b7d011f97",
+      "name": "kerupuk/kemplang udang ampera 89 5 kg mini tebal"
+    },
+    {
+      "id": "453e8181-8151-49e5-ad62-65396b9ced15",
+      "name": "kerupuk/kemplang udang ampera 89 500 gr mini tebal"
+    },
+    {
+      "id": "c4f7ec1f-8c86-40c8-9b87-0fc2ed0a0e36",
+      "name": "kue masin jills"
+    },
+    {
+      "id": "56b64ead-b334-455a-aa4f-213057330440",
+      "name": "kue semprong arwama"
+    },
+    {
+      "id": "52e4977c-7f7b-45ee-bb8c-807fafe2cdbc",
+      "name": "lakban bening 1 pcs"
+    },
+    {
+      "id": "6352f8cb-15e4-48db-811c-61e821a5f8cc",
+      "name": "lakban bening 6 pcs"
+    },
+    {
+      "id": "ddcf2553-a737-4b53-8922-c2f7a0ec6486",
+      "name": "lakban cokelat 1 pcs"
+    },
+    {
+      "id": "86b663a9-c084-4b1f-a825-205bec250641",
+      "name": "lakban cokelat 6 pcs"
+    },
+    {
+      "id": "ab336ae9-88f4-4ac8-8ca3-524a563bcb79",
+      "name": "lakban fragile 6 pcs"
+    },
+    {
+      "id": "28232a92-0ed5-4083-ae17-e1fbeca964cb",
+      "name": "lakban merah 1 pcs"
+    }
+  ],
+  "shopee_available": [
+    {
+      "item_id": 29804656094,
+      "item_name": "Asam kuning Bangka spesial 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19179909482,
+      "item_name": "Sambal balado 72 Super Pedas140 ml",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 17135626219,
+      "item_name": "Kerupuk keriting ikan tenggiri Sanjaya 230 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 49858139261,
+      "item_name": "Kerupuk mentah Sari Udang warna orange muda 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 5055896965,
+      "item_name": "kerupuk keriting ikan mentah Palembang Ampera 89 ukuran sedang 5 kg(khusus untuk gosend dan grab)",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 7435456563,
+      "item_name": "Kerupuk keriting Ikan Mentah Palembang 3kg",
+      "has_model": true,
+      "models": [
+        {
+          "model_id": 50927949752,
+          "model_name": "3Kg Besar"
+        }
+      ]
+    },
+    {
+      "item_id": 6853177317,
+      "item_name": "kerupuk keriting ikan Palembang mentah 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 8800950900,
+      "item_name": "Kopi bubuk cap No. 1 yg premium berat 250 gram khas Bangka kemasan baru",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 13975879606,
+      "item_name": "Sikat coklat khas  Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4535452392,
+      "item_name": "Getas Cap Longceng Mas Bulat Makanan Khas Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 18423166823,
+      "item_name": "Terasi Bangka Toboali \"AMS\" 480 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 3366353962,
+      "item_name": "KEMPLANG PANGGANG 323 KEMASAN BESAR / KEMPLANG KERUPUK KHAS BANGKA  isi 10 pcs",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 50956940645,
+      "item_name": "Kacang Bawang Super Original di repack 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 53412787684,
+      "item_name": "Kiamboi putih asin, asem , manis 60 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26720383651,
+      "item_name": "Kerupuk/kemplang mentah sari udang Ampera 89 ukuran mini 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 21317363638,
+      "item_name": "Kacang telur/kacang medan cap SP 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 22468840350,
+      "item_name": "Sambal balado 72 super pedas 300 ml",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 14290421359,
+      "item_name": "Michang/Bipang/cha liau Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26804654386,
+      "item_name": "Asam kuning Bangka spesial @ 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4461261796,
+      "item_name": "Abon Ikan Ciu/selar Super Sambalingkung Khas Bangka",
+      "has_model": true,
+      "models": [
+        {
+          "model_id": 51693176293,
+          "model_name": "200 Gram"
+        }
+      ]
+    },
+    {
+      "item_id": 40909842575,
+      "item_name": "kerupuk mentah Bangka ikan tenggiri yang biasa ukuran mini 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 5666436877,
+      "item_name": "SAGU RAKRUT / SAGU ASLI BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26623495812,
+      "item_name": "Kerupuk/kemplang mentah sari udang ukuran mini Ampera 89 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 24695019633,
+      "item_name": "Kerupuk mentah Bangka ukuran mini ikan tenggiri yg biasa berat 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 3469125252,
+      "item_name": "Kecap asin Bangka cap SS botol besar",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 5524336228,
+      "item_name": "Kerupuk Keriting Ikan Mentah Palembang 500 Gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 8903368474,
+      "item_name": "kecap asin Bangka cap SS botol kecil",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 23504480192,
+      "item_name": "Kerupuk bawang bentuk kancing 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19460542905,
+      "item_name": "Kerupuk bawang mentah bentuk angka 8 1ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 46412820325,
+      "item_name": "Permen gula aren Bangka berat 100 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 7858479928,
+      "item_name": "kerupuk tersanjung mentah 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 9814047099,
+      "item_name": "KUE BULAN BANGKA CAP KO SE ANUGRAH \u2013 KOSE KUE BULAN KUE BANGKA / SNACK BANGKA / KUE KHAS BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4252405436,
+      "item_name": "kerupuk udang ukuran besar 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 29058608983,
+      "item_name": "Kerupuk ikan Tenggiri cap VN Belinyu Bangka isi 9 pcs",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26223486595,
+      "item_name": "Kerupuk/kemplang mentah sari udang ukuran mini Ampera 89 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26486157459,
+      "item_name": "Kerupuk mentah Bangka ikan tenggiri yg biasa ukuran mini berat 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26003587262,
+      "item_name": "Kecap asin Bangka cap kuda terbang botol kecil 300ml",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 9514016364,
+      "item_name": "BONGLIPIANG 89 KHAS BANGKA - BONG LI PIANG - PIANG NANAS MAKANAN KUE KHAS BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 29954654970,
+      "item_name": "Kembang tahu/ Fucuk khas Bangka 90-100 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 7435451487,
+      "item_name": "Kerupuk Keriting Ikan Mentah Palembang Ampera 89 ukuran sedang5kg",
+      "has_model": true,
+      "models": [
+        {
+          "model_id": 21836180652,
+          "model_name": "5kg besar"
+        }
+      ]
+    },
+    {
+      "item_id": 4979727732,
+      "item_name": "KUE SEMPRET - KUE KERING BANGKA CAP ED - KUE BANGKA - SNACK BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 7564510132,
+      "item_name": "Kemplang Koin Udang San Crispy ( Kerupuk / Getas / Kemplang Makanan Snack Khas Bangka)",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 6266410446,
+      "item_name": "TERASI UDANG ASLI BANGKA / TERASI UDANG SAMUDRA JAYA BANGKA 100 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 9798392584,
+      "item_name": "Kerupuk jengkol bulat 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 27787175046,
+      "item_name": "Tepung Tapioka/Sagu Tani kwalitas super cap kampung tanii berat 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 12339194772,
+      "item_name": "Kue gamerose mini 160 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 25082517830,
+      "item_name": "Tauco  asli dari Bangka kuning berat 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 53956932610,
+      "item_name": "Tepung Tapioka/  sagu cap kampung Tani berat 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26257969286,
+      "item_name": "Steak Telor Cumi/Kericu cap Kuda Laut 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 3173021463,
+      "item_name": "Kemplang Koin Cumi San Crispy ( Kerupuk / Getas / Kemplang Makanan Khas Bangka)",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 27923500164,
+      "item_name": "Kerupuk/kemplang ikan  Ampera 89 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 23247713642,
+      "item_name": "Kerupuk Sari Udang warna orange tua di repack 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 21556817314,
+      "item_name": "Kerupuk warna warni bentuk kepang/rantai 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 8838324747,
+      "item_name": "kerupuk mie kuning mentah  500 gram ukuran sedang",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 27058611274,
+      "item_name": "Kemplang goreng pasir lebar cap enak produksi Asui Sungailiat",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 9638337615,
+      "item_name": "kerupuk mie kuning mentah ukuran mini 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 13097114963,
+      "item_name": "Kerupuk jengkol bulat 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 27108620277,
+      "item_name": "Kemplang goreng pasir mini cap Enak produksi Asui Sungailiat",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26723497457,
+      "item_name": "Kerupuk keriting mentah ukuran mini Ampera 89 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 8400966383,
+      "item_name": "TERASI UDANG ASLI BANGKA / TERASI UDANG SAMUDRA JAYA BANGKA 200-225GRAM",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 49862822157,
+      "item_name": "Snack Kuping  gajah berat 200 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 9116824127,
+      "item_name": "KUE LAPIS  LEGIT BANGKA / KUE LAPIS SUSU BANGKA / BOLU LAPIS BANGKA / BOLU BANGKA / LAPIS BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4866259091,
+      "item_name": "KEMPLANG PANGGANG 33 / KEMPLANG KERUPUK KHAS BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 7752012010,
+      "item_name": "kerupuk bawang bibir mentah 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 28984014152,
+      "item_name": "Kerupuk mentah Bangka super ukuran mini ikan tenggiri berat 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19417356194,
+      "item_name": "Kemplang panggang Bangka cap Sanjaya",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 40707501764,
+      "item_name": "Kerupuk ikan item Bangka cap Rajawali",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 7279797133,
+      "item_name": "KEMPLANG PANGGANG MM (MEMANG MANTAP ) IBENTUK KOTAK ASLI BANGKA MAKANAN KHAS BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 20156822007,
+      "item_name": "Kerupuk jengkol sisir 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 43159852619,
+      "item_name": "Kerupuk mentah tersanjung berat 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26738598823,
+      "item_name": "Kerupuk ikan yang putih cap Rajawali",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 22304479945,
+      "item_name": "Kerupuk bawang bentuk kancing 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 17930044586,
+      "item_name": "Kerupuk mentah Bawang Polos 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4152017649,
+      "item_name": "Kerupuk bawang bibir mentah 1 ball berat 5 kg (Khusus Order Via Grab)",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 14050279184,
+      "item_name": "Kerupuk jengkol bulat 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 9138329497,
+      "item_name": "Kerupuk mie kuning mentah ukuran sedang 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 55762777912,
+      "item_name": "Kacang Mede goreng super berat 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26823500568,
+      "item_name": "Kerupuk/Kemplang ikan Ampera 89 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 56262849839,
+      "item_name": "Kerupuk Terasi putih berat 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 46012820417,
+      "item_name": "Permen hack  isi 14 pcs",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 52912791329,
+      "item_name": "Getas Super cap ikan tenggiri  khas Bangka berat 200 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 7853181664,
+      "item_name": "kerupuk keriting mawar warna warni mentah 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 14750280231,
+      "item_name": "Kerupuk jengkol sisir 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 17198062204,
+      "item_name": "Kerupuk Sari udang warna orange tua di repack 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 16779113761,
+      "item_name": "Kemplang panggang Bangka cap 33 kecil bantat",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 5052408733,
+      "item_name": "kerupuk mie kuning ukuran mini mentah 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 2916890727,
+      "item_name": "TENG TENG BANGKA KACANG BIASA \u2013 Teng teng KACANG KHAS BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 28845155951,
+      "item_name": "Kacang Mede goreng super berat 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 24240458287,
+      "item_name": "Kerupuk/kemplang ikan Ampera 89 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 15864113992,
+      "item_name": "Getas cap lonceng bentuk panjang",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 3652116200,
+      "item_name": "Kerupuk mentah bawang bibir 1 ball berat  5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4366437197,
+      "item_name": "KECALO UDANG REBON CAP AMS 300GRAM KHAS BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26984018503,
+      "item_name": "Kerupuk mentah Bangka super ukuran mini  ikan tenggiri 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 20223142340,
+      "item_name": "Kerupuk Sari udang mentah warna orange muda 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 22047710190,
+      "item_name": "Kerupuk sisir warna di repack 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4565098655,
+      "item_name": "Kemplang Koin Ikan San Crispy ( Kerupuk / Getas / Kemplang  Makanan Snack Khas Bangka)",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 43873997468,
+      "item_name": "Kemplang/kerupuk oven ikan tenggiri Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 23747704683,
+      "item_name": "Kerupuk mentah Sari Udang warna orange tua 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 5266437214,
+      "item_name": "RUSIP AMS  KHAS BANGKA / RUSIP TERI BANGKA / IKAN FERMENTASI",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 15950281508,
+      "item_name": "Kerupuk jengkol sisir 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4169047477,
+      "item_name": "Kecap Istimewa cap Siong/Gajah",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4353185504,
+      "item_name": "kerupuk keriting mawar warna warni mentah 3 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 18560546609,
+      "item_name": "Kemplang goreng cumi khas Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 12183462095,
+      "item_name": "Kerupuk bawang mentah polos 1ball 3 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 25170588611,
+      "item_name": "Kerupuk bawang bentuk kancing 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19914266793,
+      "item_name": "Kerupuk sari udang Ampera 89 warna putih 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 25522626927,
+      "item_name": "Getas Super cap Ikan Tenggiri khas Bangka 100 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19136962564,
+      "item_name": "Amplang/Getas ikan tenggiri",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 2931419239,
+      "item_name": "Getas Super Cap Obor Tiga Roda Bulat kantong biru 250 Gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 5865087632,
+      "item_name": "Getas Tenggiri Cap Sumber Sari Laut Bulat ( Kerupuk / Kemplang / Getas Makanan Snack Khas Bangka)",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4635451815,
+      "item_name": "Getas Bulat Cap 99 Makanan Khas Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4166370786,
+      "item_name": "KUE SAGON BANGKA BULAT KECIL CAP MR JO - KUE BANGKA / SNACK BANGKA / SNACK KHAS BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 7852011284,
+      "item_name": "kerupuk bawang bibir mentah 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 11137936501,
+      "item_name": "Kopi bubuk asli cap kingkong kantong merah 450 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 40259856978,
+      "item_name": "Kerupuk mawar warna warni berat 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 29875523696,
+      "item_name": "Pesanan khusus kerupuk bawang kancing 5 ball",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 16133253852,
+      "item_name": "Keripik pisang kepok asin 180 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 17235862796,
+      "item_name": "Kerupuk mentah rasa bawang bentuk  kancing 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 28703417973,
+      "item_name": "Kecap asin Bangka cap Rose/Mawar botol kecil 300ml",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 28503410406,
+      "item_name": "Kecap asin Bangka cap rusa botol besar 650 ml",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 13435636487,
+      "item_name": "Kemplang mentah ikan Bangka 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 7724353647,
+      "item_name": "Getas Bulat Obor Merah Cap Tiga Roda Makanan Khas Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 17135852827,
+      "item_name": "Kerupuk mentah putih bentuk lidah 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26437180406,
+      "item_name": "Kue masin 89 berat 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 13739159829,
+      "item_name": "Kemplang goreng pasir Bangka cap Achon",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 7552017952,
+      "item_name": "Kerupuk bawang bibir mentah 3 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 3163931079,
+      "item_name": "kerupuk mawar warna warni mentah 5 kg(khusus gosend dan grab)",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 27453402227,
+      "item_name": "Getas super cap obor tiga roda kantong  merah bentuk lonjong panjang",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 14265839220,
+      "item_name": "Kerupuk Bawang Mentah Polos 1kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 7051833156,
+      "item_name": "kerupuk keriting mawar biasa putih 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19223175700,
+      "item_name": "Terasi Panggang piring khas Bangka cap Anugrah 88/Sambel terasi panggang piring pedas",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 14468669211,
+      "item_name": "Kerupuk mentah  putih bentuk lidah 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 10423085994,
+      "item_name": "Terasi AB No. 1 pulau Bangka 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 54406932360,
+      "item_name": "Keripik Tempe berat 150 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26053584311,
+      "item_name": "Kecap asin Bangka cap rusa botol kecil 300ml",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19981763365,
+      "item_name": "Kemplang goreng pasir mini cap Achon",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 5353182765,
+      "item_name": "kerupuk keriting mawar warna warni 1kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4453189980,
+      "item_name": "kerupuk keriting mawar warna warni mentah 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 17935850428,
+      "item_name": "Kerupuk mentah putih bentuk lidah 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 9085715333,
+      "item_name": "Terasi AB No..1 pulau Bangka 100 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 10837933001,
+      "item_name": "Kopi bubuk asli cap kingkong kantong merah 200 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 10337931762,
+      "item_name": "Kopi bubussk asli cap kingkong  kantong merah 70 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 6052004091,
+      "item_name": "kerupuk bawang bibir mentah 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 12006429431,
+      "item_name": "Emping kecil manis pedas 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 8617079510,
+      "item_name": "KEMPLANG PANGGANG CAP MM (MEMANG MANTAP) ASLI BANGKA - KEMPLANG BANGKA KERUPUK IKAN",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 16230026407,
+      "item_name": "Kerupuk Bawang Polos 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 16389719949,
+      "item_name": "Terasi bubuk Toboali \"AMS\" 100 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 13639159139,
+      "item_name": "Kemplang panggang Bangka cap Sari Laut",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 9803370296,
+      "item_name": "kecap asin Bangka cap Siong/Gajah botol kecil",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 8629084574,
+      "item_name": "Getas Super Cap Obor Tiga Roda Panjang kantong biru 250 Gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 8800421484,
+      "item_name": "ROTI KERING GULA MR JO ROKERS ASLI BANGKA  ROKER ROTI BANGKA  ROTI KERING BAGELEN BANGKA CAP ROCKERS",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4166392453,
+      "item_name": "MADU ASLI BANGKA  MADU MANIS  / MADU PAHIT 1KG",
+      "has_model": true,
+      "models": [
+        {
+          "model_id": 22917516514,
+          "model_name": "MADU PAHIT"
+        },
+        {
+          "model_id": 22917516513,
+          "model_name": "MADU MANIS"
+        }
+      ]
+    },
+    {
+      "item_id": 50006931173,
+      "item_name": "Pang Pang berat 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 18623137304,
+      "item_name": "Kerupuk tempe mentah 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 15627856445,
+      "item_name": "Spring rol/Sumpia udang 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 3174056940,
+      "item_name": "INDOMIE GORENG BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 54006924456,
+      "item_name": "Kacang Atom Satelit Palapa di repack 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 24540449957,
+      "item_name": "Kacang Koro kupas 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 18859344976,
+      "item_name": "Kemplang oven ikan sambel terasi",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 5962000928,
+      "item_name": "kerupuk/kempelang  udang mentah Bangka 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 44906944622,
+      "item_name": "Kacang Atom Satelit Palapa di repack 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 13696828151,
+      "item_name": "Kerupuk keriting mawar putih 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4935451958,
+      "item_name": "Kericu Stik Telur Cumi 99 Makanan Khas Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 46406949218,
+      "item_name": "Kacang Koro berkulit berat 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 28873502410,
+      "item_name": "Kerupuk keriting mentah ukuran mini Ampera 89 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 27373492515,
+      "item_name": "Kacang Koro kupas 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 18091496953,
+      "item_name": "Kerupuk Mentah Ikan Ampera 89 ukuran mini 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 46806960888,
+      "item_name": "Kacang Koro berkulit berat 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26603409895,
+      "item_name": "Kecap asin Bangka cap Siong/Gajah botol besar 620ml",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 56906935974,
+      "item_name": "Keripik Singkong Balado  berat 200 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 13135650711,
+      "item_name": "Kemplang mentah udang Bangka 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 16333304874,
+      "item_name": "Makaroni bantet pedas 200 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 6879058614,
+      "item_name": "Kue Rintak cap LN kue tradisional khas Bangka 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4862004509,
+      "item_name": "kerupuk/kempelang cumi mentah Bangka 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 57856936156,
+      "item_name": "Stik Kentang balado rasa sapi bakar berat 200 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 16535627984,
+      "item_name": "Kerupuk keriting ikan tenggiri Sanjaya 100 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 8000987236,
+      "item_name": "INDOMIE KALDU UDANG EDISI HANYA DI BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 18781773414,
+      "item_name": "Kopi Bubuk cap 1 kantong biru dari Bangka 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4066269485,
+      "item_name": "KEMPLANG GORENG PASIR TJOKRO / KEMPLANG KERUPUK KHAS BANGKA",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 20417364941,
+      "item_name": "Kacang telur/Kacang medan cap SP 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19456818359,
+      "item_name": "Kerupuk warna warni bentuk kepang/rantai 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 20723130744,
+      "item_name": "Kerupuk tempe mentah 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 47456948229,
+      "item_name": "Pang Pang beratnya 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 27275254180,
+      "item_name": "Kericu steak telor cumi cap JS 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 11391305155,
+      "item_name": "Kerupuk keriting ikan tenggiri cap pancing asli dari Belinyu-Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26942890178,
+      "item_name": "Kemplang/kerupuk oven rasa cumi khas Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 6864423039,
+      "item_name": "Asinan Buah Kelubi",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 2744788305,
+      "item_name": "Kericu Stik Telur Cumi Cap SSS Makanan Khas Bangka 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 10365607307,
+      "item_name": "Kemplang goreng Ikan Selar/ikan ciu 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 5765814102,
+      "item_name": "Kerupuk Sanjaya Lebar Ikan Tenggiri Khas Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 15427854591,
+      "item_name": "Spring rol/Sumpia udang 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 18360547084,
+      "item_name": "Kemplang goreng udang khas Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 4558646586,
+      "item_name": "kerupuk tersanjung mentah 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 5335455002,
+      "item_name": "Kerupuk keriting mawar putih 1kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 11891016901,
+      "item_name": "Stik keju/telur gabus 160 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 46656956187,
+      "item_name": "Keripik Singkong Original berat 200 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19514257996,
+      "item_name": "Kerupuk sari udang Ampera 89 warna putih 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 22447712134,
+      "item_name": "Kerupuk Sisir warna 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 3962100786,
+      "item_name": "kerupuk/kempelang ikan mentah Bangka 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 18760546489,
+      "item_name": "Kemplang goreng ikan tenggiri khas Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 20174909813,
+      "item_name": "Kopi bubuk cap 1 kantong silver dari Bangka 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 12535656494,
+      "item_name": "Kemplang mentah cumi Bangka 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 21423138463,
+      "item_name": "Kerupuk tempe mentah 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 29357974529,
+      "item_name": "Kopi bubuk Cap 1 kantong biru 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19660542613,
+      "item_name": "Kerupuk bawang mentah bentuk angka 8 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 12206419324,
+      "item_name": "Emping kecil manis pedas 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 18360541854,
+      "item_name": "Kerupuk bawang mentah bentuk angka 8 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 26507964031,
+      "item_name": "Kopi bubuk cap Kingkong kantong hitam 400 grram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 20356818162,
+      "item_name": "Kerupuk warna warni bentuk kepang/rantai 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 14350329664,
+      "item_name": "Gula Aren/gula kabung Bangka 1 keping",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19117360785,
+      "item_name": "Lada putih bubuk halus Bangka 100 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 41553033631,
+      "item_name": "Keripik bawang/pangsit goreng berat 200 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 18617361888,
+      "item_name": "Lada putih bubuk halus Bangka 70 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 29837175128,
+      "item_name": "Kue angka 8 cap Anugrah 200 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 18981685146,
+      "item_name": "Kerupuk Sisir warna di repack 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 40703033424,
+      "item_name": "Stik rasa sambal Balado berat 160 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 42623997938,
+      "item_name": "Kemplang/kerupuk oven rasa udang khas Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 40559849423,
+      "item_name": "Kerupuk mentah bentuk kepang berat 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 12199342567,
+      "item_name": "Kerupuk mentah sari udang Ampera 89 warna merah repack 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 27425262788,
+      "item_name": "Tisu mini super lembut",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 29339043281,
+      "item_name": "Kerupuk jengkol sisir berat 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19689071428,
+      "item_name": "Lada Putih Asli Bangka 100 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 14388564103,
+      "item_name": "Kerupuk sari udang Ampera 89 warna putih 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 40709839993,
+      "item_name": "Kerupuk mentah tersanjung 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 42159849543,
+      "item_name": "Kerupuk mawar putih berat 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 15550332547,
+      "item_name": "Gula Aren/gula kabung Bangka 1 turos isi 5 keping",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 24751882873,
+      "item_name": "Kerupuk mentah sari udang Ampera 89 warna merah repack 1 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 12239195446,
+      "item_name": "Kue Bangkit/kue Rinta Bravery",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 19923147556,
+      "item_name": "Kerupuk sari udang warna orange muda mentah 500 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 14865304003,
+      "item_name": "Keripik Pisang Kepok Manis",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 29623493022,
+      "item_name": "Kerupuk keriting mentah ukuran mini Ampera 89 250 gram",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 20656818900,
+      "item_name": "Kerupuk warna warni bentuk kepang/rantai 1 ball 5 kg",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 13075900940,
+      "item_name": "Sikat hitam khas Bangka",
+      "has_model": false,
+      "models": []
+    },
+    {
+      "item_id": 28757968314,
+      "item_name": "Kopi bubuk cap Kingkong kantong hitam 200 gram",
+      "has_model": false,
+      "models": []
+    }
+  ]
+}
