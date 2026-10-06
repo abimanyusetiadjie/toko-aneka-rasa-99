@@ -237,43 +237,7 @@ export async function createShopeeOrder(input: CreateShopeeOrderInput): Promise<
 			]
 		);
 
-		// 4. Catat transaksi finansial dengan channel 'SHOPEE'
-		const txId = crypto.randomUUID();
-		await client.query(
-			`INSERT INTO transactions (
-				id, store_id, user_id, receipt_number, idempotency_key, subtotal_amount,
-				discount_amount, total_amount, status, payment_method, channel, external_order_sn, created_at
-			) VALUES ($1, $2, '932ba9fe-2627-463b-898a-62a4c2b5ae41', $3, $4, $5, 0, $6, 'COMPLETED', 'SHOPEE_ESCROW', 'SHOPEE', $7, NOW())`,
-			[
-				txId,
-				storeId,
-				`SHP-${orderSn}`,
-				`idemp-shopee-${orderSn}`,
-				finalTotal,
-				finalTotal,
-				orderSn
-			]
-		);
 
-		// 5. Catat transaction_details
-		for (const itm of preparedItems) {
-			if (itm.product_id) {
-				await client.query(
-					`INSERT INTO transaction_details (
-						id, transaction_id, product_id, qty, conversion_factor, base_qty, price_per_unit, cost_price_snapshot, subtotal
-					) VALUES ($1, $2, $3, $4, 1, $5, $6, 0, $7)`,
-					[
-						crypto.randomUUID(),
-						txId,
-						itm.product_id,
-						itm.qty,
-						itm.qty,
-						itm.price,
-						itm.subtotal
-					]
-				);
-			}
-		}
 
 		await client.query('COMMIT');
 
@@ -499,9 +463,6 @@ export async function cancelShopeeOrder(orderSn: string) {
 
 		// Update status jadi CANCELLED
 		await client.query(`UPDATE shopee_orders SET order_status = 'CANCELLED', updated_at = NOW() WHERE order_sn = $1`, [orderSn]);
-
-		// Update transaksi
-		await client.query(`UPDATE transactions SET status = 'VOID' WHERE external_order_sn = $1`, [orderSn]);
 
 		await client.query('COMMIT');
 
