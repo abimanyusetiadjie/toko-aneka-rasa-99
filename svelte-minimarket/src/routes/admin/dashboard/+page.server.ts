@@ -340,17 +340,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 			});
 		}
 
-		// Tambahkan Shopee jika ada
-		if (shopeeRevenue > 0) {
-			paymentMethods.push({
-				method: 'SHOPEEPAY',
-				label: 'Marketplace Shopee',
-				amount: shopeeRevenue,
-				count: shopeeCount,
-				color: '#EA580C',
-				percent: 0
-			});
-		}
+
 
 		// Fallback jika belum ada pembayaran sama sekali
 		if (paymentMethods.length === 0) {
