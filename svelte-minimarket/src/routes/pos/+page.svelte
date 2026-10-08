@@ -100,7 +100,7 @@
 	);
 	let storeName = $state('Toko Aneka Rasa 99');
 	let storeAddress = $state('Poris Indah Blok B 11 No.1');
-	let storePhone = $state('0812-3456-7890');
+	let storePhone = $state('0813-8710-9586');
 	let receiptItems = $state<{ name: string; qty: number; price: number }[]>([]);
 
 	// Modals & Actionable Error Dialog
@@ -153,7 +153,7 @@
 	let showOpeningModal = $state(false);
 	let countedPhysicalCash = $state<number | null>(null);
 	let todayTransactions = $state<any[]>([]);
-	let ownerWhatsApp = $state('081234567890');
+	let ownerWhatsApp = $state('081387109586');
 	let isPrintingClosing = $state(false);
 	let isClosingShift = $state(false);
 	let shiftNotes = $state('');
@@ -2790,7 +2790,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 				</div>
 				<div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs">
 					<label class="block text-slate-700 font-bold mb-1.5 text-[11px] tracking-wide flex items-center gap-1.5"><MessageCircle class="w-3.5 h-3.5 text-emerald-600"/> NO. WA OWNER (LAPORAN):</label>
-					<input type="text" bind:value={ownerWhatsApp} oninput={(e) => { const val = (e.target as HTMLInputElement).value; if (typeof window !== 'undefined') localStorage.setItem('aneka_pos_owner_wa', val); }} placeholder="08123..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 outline-none focus:border-emerald-600 text-slate-900 text-xs font-mono font-bold" />
+					<input type="text" bind:value={ownerWhatsApp} oninput={(e) => { const val = (e.target as HTMLInputElement).value; if (typeof window !== 'undefined') localStorage.setItem('aneka_pos_owner_wa', val); }} placeholder="08138..." class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 outline-none focus:border-emerald-600 text-slate-900 text-xs font-mono font-bold" />
 				</div>
 			</div>
 
