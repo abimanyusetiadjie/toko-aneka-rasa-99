@@ -28,50 +28,58 @@ export const GET = async () => {
 			if (baseInfoRes && baseInfoRes.item_list) {
 				for (const sp of baseInfoRes.item_list) {
 					// Jika produk ini ternyata punya model/varian di Shopee
-					if (sp.has_model && sp.model_list && sp.model_list.length > 0) {
-						
-						// Cari produk lokal mana saja yang nge-link ke item ini
-						const linkedLocalProducts = products.filter(p => Number(p.shopee_item_id) === sp.item_id);
-						
-						for (const lp of linkedLocalProducts) {
-							let bestModel = null;
-							let bestScore = -1;
+					if (sp.has_model) {
+						let modelListRes = null;
+						try {
+							modelListRes = await callShopeeApi('/api/v2/product/get_model_list', { item_id: Number(sp.item_id) }, 'GET');
+						} catch (e) {
+							console.error(`Gagal get_model_list untuk ${sp.item_id}`);
+						}
 
-							const localName = lp.name.toLowerCase();
+						if (modelListRes && modelListRes.model && modelListRes.model.length > 0) {
+							// Cari produk lokal mana saja yang nge-link ke item ini
+							const linkedLocalProducts = products.filter(p => Number(p.shopee_item_id) === sp.item_id);
+							
+							for (const lp of linkedLocalProducts) {
+								let bestModel = null;
+								let bestScore = -1;
 
-							for (const mod of sp.model_list) {
-								const modName = mod.model_name.toLowerCase();
-								let score = 0;
+								const localName = lp.name.toLowerCase();
 
-								// Pencocokan logika ukuran/gram
-								const sizes = ['250', '500', '100', '200', '300', '1kg', '5kg', '3kg', 'besar', 'kecil', 'mini'];
-								for (const s of sizes) {
-									if (localName.includes(s) && modName.includes(s)) score += 10;
-									if (localName.includes(s) && !modName.includes(s)) score -= 5;
+								for (const mod of modelListRes.model) {
+									const modName = (mod.model_name || '').toLowerCase();
+									let score = 0;
+
+									// Pencocokan logika ukuran/gram
+									const sizes = ['250', '500', '100', '200', '300', '1kg', '5kg', '3kg', 'besar', 'kecil', 'mini'];
+									for (const s of sizes) {
+										if (localName.includes(s) && modName.includes(s)) score += 10;
+										if (localName.includes(s) && !modName.includes(s)) score -= 5;
+									}
+
+									// Pencocokan kata spesifik
+									const words = modName.split(/[\s,]+/);
+									for (const w of words) {
+										if (w.length > 2 && localName.includes(w)) score += 5;
+									}
+
+									if (score > bestScore) {
+										bestScore = score;
+										bestModel = mod;
+									}
 								}
 
-								// Pencocokan kata spesifik
-								const words = modName.split(/[\s,]+/);
-								for (const w of words) {
-									if (w.length > 2 && localName.includes(w)) score += 5;
+								if (bestModel && bestScore >= 0) {
+									await query(`UPDATE products SET shopee_model_id = $1 WHERE id = $2`, [bestModel.model_id, lp.id]);
+									fixedCount++;
+									results.push(`Fix: ${lp.name} -> Varian: ${bestModel.model_name} (Score: ${bestScore})`);
+								} else {
+									// Fallback: ambil varian pertama jika mentok
+									const firstModel = modelListRes.model[0];
+									await query(`UPDATE products SET shopee_model_id = $1 WHERE id = $2`, [firstModel.model_id, lp.id]);
+									fixedCount++;
+									results.push(`Fallback First: ${lp.name} -> Varian: ${firstModel.model_name}`);
 								}
-
-								if (score > bestScore) {
-									bestScore = score;
-									bestModel = mod;
-								}
-							}
-
-							if (bestModel && bestScore >= 0) {
-								await query(`UPDATE products SET shopee_model_id = $1 WHERE id = $2`, [bestModel.model_id, lp.id]);
-								fixedCount++;
-								results.push(`Fix: ${lp.name} -> Varian: ${bestModel.model_name} (Score: ${bestScore})`);
-							} else {
-								// Fallback: ambil varian pertama jika mentok
-								const firstModel = sp.model_list[0];
-								await query(`UPDATE products SET shopee_model_id = $1 WHERE id = $2`, [firstModel.model_id, lp.id]);
-								fixedCount++;
-								results.push(`Fallback First: ${lp.name} -> Varian: ${firstModel.model_name}`);
 							}
 						}
 					}
