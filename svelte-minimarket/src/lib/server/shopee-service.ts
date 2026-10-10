@@ -760,7 +760,12 @@ export async function syncShopeeStock(items: { product_id?: string; sku?: string
 					stock_list: [
 						{
 							model_id: productRow.shopee_model_id ? Number(productRow.shopee_model_id) : 0,
-							normal_stock: itm.newStock
+							normal_stock: itm.newStock,
+							seller_stock: [
+								{
+									stock: itm.newStock
+								}
+							]
 						}
 					]
 				}, 'POST');
