@@ -25,11 +25,11 @@ export const GET: RequestHandler = async () => {
 		// Eksekusi fungsi sinkronisasi (mendorong stok lokal ke etalase Shopee)
 		const res = await syncShopeeStock(syncPayload);
 
-		if (res.error_message) {
+		if (res.failed_items && res.failed_items.length > 0) {
 			return json({ 
 				success: true, 
-				message: `Berhasil sinkron ${res.synced_count} produk, namun ada beberapa yang gagal.`, 
-				error_details: res.error_message, 
+				message: `Berhasil sinkron ${res.synced_count} produk, namun ada ${res.failed_items.length} yang gagal.`, 
+				error_details: res.failed_items, 
 				synced_count: res.synced_count,
 				total_mapped: products.length
 			});
