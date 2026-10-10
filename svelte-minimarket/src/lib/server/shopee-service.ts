@@ -755,23 +755,75 @@ export async function syncShopeeStock(items: { product_id?: string; sku?: string
 			}
 
 			if (productRow && productRow.shopee_item_id) {
-				const apiRes = await callShopeeApi('/api/v2/product/update_stock', {
-					item_id: Number(productRow.shopee_item_id),
-					stock_list: [
-						{
-							model_id: productRow.shopee_model_id ? Number(productRow.shopee_model_id) : 0,
-							normal_stock: itm.newStock,
-							seller_stock: [
-								{
-									stock: itm.newStock
-								}
-							]
-						}
-					]
-				}, 'POST');
+				const doUpdate = async (modelId: number) => {
+					return await callShopeeApi('/api/v2/product/update_stock', {
+						item_id: Number(productRow.shopee_item_id),
+						stock_list: [
+							{
+								model_id: modelId,
+								normal_stock: itm.newStock,
+								seller_stock: [{ stock: itm.newStock }]
+							}
+						]
+					}, 'POST');
+				};
+
+				let currentModelId = productRow.shopee_model_id ? Number(productRow.shopee_model_id) : 0;
+				let apiRes = await doUpdate(currentModelId);
 				
 				if (apiRes && apiRes.failure_list && apiRes.failure_list.length > 0) {
-					throw new Error(`Shopee menolak update stok: ${apiRes.failure_list[0].failed_reason || 'Unknown reason'}`);
+					const reason = apiRes.failure_list[0].failed_reason || '';
+					
+					// SELF-HEALING: Jika ditolak karena minta model_id, cari otomatis!
+					if (reason.includes('model_id is mandatory')) {
+						console.log(`[Self-Healing] Memperbaiki model_id untuk ${productRow.name}...`);
+						await new Promise(resolve => setTimeout(resolve, 300)); // jeda napas
+						const modelListRes = await callShopeeApi('/api/v2/product/get_model_list', { item_id: Number(productRow.shopee_item_id) }, 'GET');
+						
+						if (modelListRes && modelListRes.model && modelListRes.model.length > 0) {
+							let bestModel = modelListRes.model[0];
+							let bestScore = -1;
+							const localName = (productRow.name || '').toLowerCase();
+
+							for (const mod of modelListRes.model) {
+								const modName = (mod.model_name || '').toLowerCase();
+								let score = 0;
+								const sizes = ['250', '500', '100', '200', '300', '1kg', '5kg', '3kg', 'besar', 'kecil', 'mini'];
+								for (const s of sizes) {
+									if (localName.includes(s) && modName.includes(s)) score += 10;
+									if (localName.includes(s) && !modName.includes(s)) score -= 5;
+								}
+								const words = modName.split(/[\s,]+/);
+								for (const w of words) {
+									if (w.length > 2 && localName.includes(w)) score += 5;
+								}
+								if (score > bestScore) {
+									bestScore = score;
+									bestModel = mod;
+								}
+							}
+
+							currentModelId = bestModel.model_id;
+							
+							// Simpan permanen ke database
+							let pId = itm.product_id;
+							if (!pId && itm.sku) {
+								const pRows = await query(`SELECT id FROM products WHERE sku = $1`, [itm.sku]);
+								if (pRows.length > 0) pId = pRows[0].id;
+							}
+							if (pId) {
+								await query(`UPDATE products SET shopee_model_id = $1 WHERE id = $2`, [currentModelId, pId]);
+							}
+
+							// Coba update stok sekali lagi
+							apiRes = await doUpdate(currentModelId);
+						}
+					}
+
+					// Jika masih gagal juga, lemparkan error
+					if (apiRes && apiRes.failure_list && apiRes.failure_list.length > 0) {
+						throw new Error(`Shopee menolak: ${apiRes.failure_list[0].failed_reason || 'Unknown'}`);
+					}
 				}
 				synced_count++;
 			}
