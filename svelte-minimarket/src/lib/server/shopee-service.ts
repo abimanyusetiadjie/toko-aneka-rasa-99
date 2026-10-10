@@ -755,7 +755,7 @@ export async function syncShopeeStock(items: { product_id?: string; sku?: string
 			}
 
 			if (productRow && productRow.shopee_item_id) {
-				await callShopeeApi('/api/v2/product/update_stock', {
+				const apiRes = await callShopeeApi('/api/v2/product/update_stock', {
 					item_id: Number(productRow.shopee_item_id),
 					stock_list: [
 						{
@@ -764,6 +764,10 @@ export async function syncShopeeStock(items: { product_id?: string; sku?: string
 						}
 					]
 				}, 'POST');
+				
+				if (apiRes && apiRes.failure_list && apiRes.failure_list.length > 0) {
+					throw new Error(`Shopee menolak update stok: ${apiRes.failure_list[0].failed_reason || 'Unknown reason'}`);
+				}
 				synced_count++;
 			}
 		} catch (err: any) {
