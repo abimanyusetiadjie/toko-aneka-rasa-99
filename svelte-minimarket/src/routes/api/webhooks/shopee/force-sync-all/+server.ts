@@ -26,14 +26,20 @@ export const GET: RequestHandler = async () => {
 		const res = await syncShopeeStock(syncPayload);
 
 		if (res.error_message) {
-            return json({ success: false, message: 'Beberapa gagal sinkron', error: res.error_message, data: products });
+			return json({ 
+				success: true, 
+				message: `Berhasil sinkron ${res.synced_count} produk, namun ada beberapa yang gagal.`, 
+				error_details: res.error_message, 
+				synced_count: res.synced_count,
+				total_mapped: products.length
+			});
         }
 
 		return json({
 			success: true,
-			message: `Berhasil memeriksa dan memaksa sinkronisasi ${products.length} produk yang sudah di-mapping!`,
-			synced_count: res.synced_count || products.length,
-			details: products.map((p: any) => `${p.name} (Stok Kasir: ${p.stock}) -> Tersinkron ke Shopee.`)
+			message: `Berhasil memeriksa dan memaksa sinkronisasi ${res.synced_count} produk yang sudah di-mapping!`,
+			synced_count: res.synced_count,
+			total_mapped: products.length
 		});
 	} catch (err: any) {
 		return json({ success: false, error: err.message });
