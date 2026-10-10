@@ -27,12 +27,13 @@ export const GET = async () => {
 			
 			if (baseInfoRes && baseInfoRes.item_list) {
 				for (const sp of baseInfoRes.item_list) {
-					// Paksa memanggil get_model_list tanpa mempedulikan has_model (karena API sering tidak akurat)
+					// Paksa memanggil get_model_list dengan jeda agar tidak terkena rate-limit Shopee API
 					let modelListRes = null;
 					try {
+						await new Promise(resolve => setTimeout(resolve, 200));
 						modelListRes = await callShopeeApi('/api/v2/product/get_model_list', { item_id: Number(sp.item_id) }, 'GET');
-					} catch (e) {
-						// Abaikan jika memang tidak ada model
+					} catch (e: any) {
+						console.error(`[Rate Limit / Gagal Model] ID ${sp.item_id}: ${e.message}`);
 					}
 
 					if (modelListRes && modelListRes.model && modelListRes.model.length > 0) {
