@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ locals, url, setHeaders }) => {
 		throw redirect(303, '/admin/inventory');
 	}
 
-	const period = url.searchParams.get('period') || 'weekly'; // 'daily' | 'weekly' | 'monthly' | 'all' | 'custom'
+	const period = url.searchParams.get('period') || 'daily'; // 'daily' | 'weekly' | 'monthly' | 'all' | 'custom'
 	const dateFrom = url.searchParams.get('from') || '';
 	const dateTo = url.searchParams.get('to') || '';
 

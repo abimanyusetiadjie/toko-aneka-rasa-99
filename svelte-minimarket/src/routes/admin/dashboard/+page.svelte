@@ -31,10 +31,10 @@
 	let { data } = $props();
 
 	let isPdfModalOpen = $state(false);
-	let txFilter = $state<'ALL' | 'POS' | 'SHOPEE'>('ALL');
+	let txFilter = $state<'ALL' | 'POS' | 'SHOPEE'>('POS');
 	let showAllTransactions = $state(false);
 	
-	let metricTab = $state<'all' | 'pos' | 'shopee'>('all');
+	let metricTab = $state<'all' | 'pos' | 'shopee'>('pos');
 	let m = $derived(
 		metricTab === 'pos' ? data.posMetrics :
 		metricTab === 'shopee' ? data.shopeeMetrics :
