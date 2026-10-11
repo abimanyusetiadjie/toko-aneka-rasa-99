@@ -822,21 +822,43 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 		cameraError = '';
 	}
 
-	// Diskon Manual (Edit Total)
+	// Diskon Manual (Edit Total) & Diskon Cepat
 	let isEditingTotal = $state(false);
 	let customTotalOverride = $state<number | null>(null);
+	let quickDiscountAmount = $state<number>(0);
+
 	let manualDiscountAmount = $derived(
 		customTotalOverride !== null 
 			? Math.max(0, $total - pointDiscountAmount - customTotalOverride)
-			: 0
+			: quickDiscountAmount
 	);
 
 	// Nominal tagihan final
 	let finalPayTotal = $derived(
 		customTotalOverride !== null 
 			? customTotalOverride
-			: Math.max(0, $total - pointDiscountAmount)
+			: Math.max(0, $total - pointDiscountAmount - quickDiscountAmount)
 	);
+
+	function applyQuickDiscount(amount: number) {
+		const baseTotal = Math.max(0, $total - pointDiscountAmount);
+		if (baseTotal <= 0) return;
+
+		// Toggle off jika nominal yang sama ditekan kembali
+		if (quickDiscountAmount === amount && customTotalOverride === null) {
+			quickDiscountAmount = 0;
+		} else {
+			quickDiscountAmount = Math.min(amount, baseTotal);
+			customTotalOverride = null;
+		}
+	}
+
+	$effect(() => {
+		if ($cart.length === 0) {
+			quickDiscountAmount = 0;
+			customTotalOverride = null;
+		}
+	});
 
 	function formatCurrency(val: number): string {
 		return new Intl.NumberFormat('id-ID', {
@@ -1328,6 +1350,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 		currentMember = null;
 		pointDiscountAmount = 0;
 		customTotalOverride = null;
+		quickDiscountAmount = 0;
 		isEditingTotal = false;
 		barcodeInput?.focus();
 	}
@@ -1800,7 +1823,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 				<div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 space-y-1">
 					<div class="flex justify-between items-center text-xs text-slate-600">
 						<span>Subtotal ({$cart.reduce((s, i) => s + i.qty, 0)} item):</span>
-						<span class="font-mono text-slate-900">{formatCurrency($subtotal)}</span>
+						<span class="font-mono text-sm font-bold text-slate-900">{formatCurrency($subtotal)}</span>
 					</div>
 
 					{#if pointDiscountAmount > 0}
@@ -1821,7 +1844,7 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 						<div class="flex items-center gap-1.5">
 							<span class="text-xs font-bold text-slate-700 uppercase font-mono">TOTAL TAGIHAN</span>
 							{#if !isEditingTotal}
-								<button type="button" onclick={() => { isEditingTotal = true; customTotalOverride = customTotalOverride || Math.max(0, $total - pointDiscountAmount); }} class="text-slate-300 hover:text-blue-600 transition-colors p-1" title="Diskon Manual (Edit Total)">
+								<button type="button" onclick={() => { isEditingTotal = true; customTotalOverride = customTotalOverride || finalPayTotal; quickDiscountAmount = 0; }} class="text-slate-300 hover:text-blue-600 transition-colors p-1" title="Diskon Manual (Edit Total)">
 									<Pen class="w-3.5 h-3.5" />
 								</button>
 							{/if}
@@ -1829,19 +1852,73 @@ ${shiftNotes.trim() ? `📝 *Catatan Kasir:* ${shiftNotes.trim()}\n-------------
 						{#if isEditingTotal}
 							<div class="flex items-center gap-1.5 animate-in fade-in slide-in-from-right-2">
 								<span class="text-sm font-bold text-slate-600">Rp</span>
-								<input type="number" min="0" bind:value={customTotalOverride} class="w-32 px-2 py-1 bg-blue-50 border border-blue-300 rounded-lg text-right font-mono text-xl font-black text-blue-800 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none" placeholder={Math.max(0, $total - pointDiscountAmount).toString()} />
+								<input type="number" min="0" bind:value={customTotalOverride} class="w-32 px-2 py-1 bg-blue-50 border border-blue-300 rounded-lg text-right font-mono text-xl font-black text-blue-800 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none" placeholder={finalPayTotal.toString()} />
 								<button type="button" onclick={() => isEditingTotal = false} class="bg-blue-600 text-white p-1.5 rounded-lg hover:bg-blue-700 transition-colors shadow-sm cursor-pointer" title="Simpan Harga"><CheckCircle2 class="w-4 h-4" /></button>
 							</div>
 						{:else}
 							<div class="flex flex-col items-end">
-								<span class="font-mono text-3xl font-black text-slate-900 tracking-tight cursor-pointer hover:text-blue-700 transition-colors" onclick={() => { isEditingTotal = true; customTotalOverride = customTotalOverride || Math.max(0, $total - pointDiscountAmount); }} title="Klik untuk mengedit total (Diskon Manual)">
+								<span class="font-mono text-3xl font-black text-slate-900 tracking-tight cursor-pointer hover:text-blue-700 transition-colors" onclick={() => { isEditingTotal = true; customTotalOverride = customTotalOverride || finalPayTotal; quickDiscountAmount = 0; }} title="Klik untuk mengedit total (Diskon Manual)">
 									{formatCurrency(finalPayTotal)}
 								</span>
 								{#if manualDiscountAmount > 0}
-									<span class="text-[10px] text-orange-600 font-bold bg-orange-100 border border-orange-200 px-1.5 py-0.5 rounded-md mt-1 animate-in fade-in zoom-in-95">Diskon Manual: -{formatCurrency(manualDiscountAmount)}</span>
+									<span class="text-[10px] text-orange-600 font-bold bg-orange-100 border border-orange-200 px-1.5 py-0.5 rounded-md mt-1 animate-in fade-in zoom-in-95">Diskon: -{formatCurrency(manualDiscountAmount)}</span>
 								{/if}
 							</div>
 						{/if}
+					</div>
+
+					<!-- Diskon Cepat 4 Kotak (-1k, -2k, -3k, -5k) -->
+					<div class="pt-2 border-t border-slate-200 space-y-1">
+						<div class="flex items-center justify-between text-[10px] text-slate-600 font-mono">
+							<span class="font-bold">DISKON CEPAT:</span>
+							{#if manualDiscountAmount > 0}
+								<button
+									type="button"
+									onclick={() => { quickDiscountAmount = 0; customTotalOverride = null; }}
+									class="text-red-600 hover:text-red-700 font-bold hover:underline cursor-pointer text-[10px] flex items-center gap-0.5"
+								>
+									✕ Reset Diskon
+								</button>
+							{/if}
+						</div>
+						<div class="grid grid-cols-4 gap-1">
+							<button
+								type="button"
+								onclick={() => applyQuickDiscount(1000)}
+								disabled={$cart.length === 0}
+								class="py-1.5 border rounded text-[11px] font-mono font-bold transition-all {$cart.length === 0 ? 'opacity-40 cursor-not-allowed bg-slate-100 border-slate-200 text-slate-400' : (quickDiscountAmount === 1000 && customTotalOverride === null) ? 'bg-amber-500 text-white border-amber-600 shadow-xs' : 'bg-slate-100 border-slate-300 text-slate-800 hover:bg-slate-200 cursor-pointer'}"
+								title="Diskon Rp 1.000"
+							>
+								-1k
+							</button>
+							<button
+								type="button"
+								onclick={() => applyQuickDiscount(2000)}
+								disabled={$cart.length === 0}
+								class="py-1.5 border rounded text-[11px] font-mono font-bold transition-all {$cart.length === 0 ? 'opacity-40 cursor-not-allowed bg-slate-100 border-slate-200 text-slate-400' : (quickDiscountAmount === 2000 && customTotalOverride === null) ? 'bg-amber-500 text-white border-amber-600 shadow-xs' : 'bg-slate-100 border-slate-300 text-slate-800 hover:bg-slate-200 cursor-pointer'}"
+								title="Diskon Rp 2.000"
+							>
+								-2k
+							</button>
+							<button
+								type="button"
+								onclick={() => applyQuickDiscount(3000)}
+								disabled={$cart.length === 0}
+								class="py-1.5 border rounded text-[11px] font-mono font-bold transition-all {$cart.length === 0 ? 'opacity-40 cursor-not-allowed bg-slate-100 border-slate-200 text-slate-400' : (quickDiscountAmount === 3000 && customTotalOverride === null) ? 'bg-amber-500 text-white border-amber-600 shadow-xs' : 'bg-slate-100 border-slate-300 text-slate-800 hover:bg-slate-200 cursor-pointer'}"
+								title="Diskon Rp 3.000"
+							>
+								-3k
+							</button>
+							<button
+								type="button"
+								onclick={() => applyQuickDiscount(5000)}
+								disabled={$cart.length === 0}
+								class="py-1.5 border rounded text-[11px] font-mono font-bold transition-all {$cart.length === 0 ? 'opacity-40 cursor-not-allowed bg-slate-100 border-slate-200 text-slate-400' : (quickDiscountAmount === 5000 && customTotalOverride === null) ? 'bg-amber-500 text-white border-amber-600 shadow-xs' : 'bg-slate-100 border-slate-300 text-slate-800 hover:bg-slate-200 cursor-pointer'}"
+								title="Diskon Rp 5.000"
+							>
+								-5k
+							</button>
+						</div>
 					</div>
 
 					<!-- Transparansi Pajak (Include PPN) -->

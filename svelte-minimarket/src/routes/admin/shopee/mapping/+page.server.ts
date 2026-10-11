@@ -104,8 +104,8 @@ export const actions: Actions = {
 			    const prodRows = await query(`SELECT stock, name FROM products WHERE id = $1`, [localId]);
 			    if (prodRows.length > 0) {
 			        const res = await syncShopeeStock([{ product_id: localId, newStock: Number(prodRows[0].stock) }]);
-			        if (res.error_message) {
-			            syncMsg = ' (Stok gagal dikirim ke Shopee: ' + res.error_message + ')';
+			        if (res.failed_items && res.failed_items.length > 0) {
+			            syncMsg = ' (Stok gagal dikirim ke Shopee: ' + (res.failed_items[0]?.error || 'Error') + ')';
 			        } else {
 			            syncMsg = ' & stok sinkron!';
 			        }
